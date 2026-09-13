@@ -115,3 +115,7 @@ code { background: #f2f4f7; border-radius: 5px; padding: 2px 5px; }
 /* Future ad / content extension hooks */
 .ad-slot { min-height: 0; margin: 18px 0; }
 .site-section { margin-top: 22px; }
+
+.policy p { line-height: 1.75; margin: 0 0 14px; }
+.policy h2 { margin-top: 28px; }
+.policy h2:first-child { margin-top: 0; }
