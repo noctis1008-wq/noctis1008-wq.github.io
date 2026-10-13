@@ -119,3 +119,11 @@ code { background: #f2f4f7; border-radius: 5px; padding: 2px 5px; }
 .policy p { line-height: 1.75; margin: 0 0 14px; }
 .policy h2 { margin-top: 28px; }
 .policy h2:first-child { margin-top: 0; }
+
+/* アクセスカウンター */
+.visitor-counter {
+  margin-top: 10px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.65;
+}
