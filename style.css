@@ -46,6 +46,18 @@ code { background: #f2f4f7; border-radius: 5px; padding: 2px 5px; }
 
 
 /* NER Converter title */
+/* v15: 見出しをロゴ画像に差し替え。
+   h1 は SEO/読み上げのため残し、元の見出し文言を img の alt に保持している。
+   .brand-title は旧テキスト見出し用。現在は未使用だが参考のため残す。 */
+.brand { margin: 0; line-height: 0; }
+.brand-logo {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
 .brand-title {
   font-size: 0.72em;
   letter-spacing: 0.08em;
