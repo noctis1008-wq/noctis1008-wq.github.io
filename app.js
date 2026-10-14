@@ -3,10 +3,12 @@
 //
 // バージョンは連番。更新のたびに 1 つ増やす。
 // 旧 ZIP の v1 … v7 の続きとして v8 から開始している。
-// この値・配布 ZIP のファイル名・CHANGELOG.md の 3 つを必ず一致させること。
+// この値・配布 ZIP のファイル名・CHANGELOG.md、そして index.html / privacy.html の
+// 各タグ末尾にある ?v= の 5 つを必ず一致させること。
+// ?v= を上げ忘れると、ブラウザが古い JS / CSS を使い続けて更新が反映されない。
 // ===========================================================================
-const APP_VERSION = "12";
-const APP_VERSION_DATE = "2026-10-13";
+const APP_VERSION = "14";
+const APP_VERSION_DATE = "2026-10-14";
 
 // ---------------------------------------------------------------------------
 // セーブ構造の根拠 (2026-09-21 に日本語版ROMの実バイトで確定)
@@ -197,6 +199,10 @@ async function convert(file) {
   status.textContent = "変換に成功しました。";
   status.className = "status";
   result.classList.remove("hidden");
+
+  // 変換回数カウンターを +1 する (counter.js が定義する)。
+  // カウンターが落ちていても変換には影響しないよう、存在確認してから呼ぶ。
+  if (typeof window.nerCountConversion === "function") window.nerCountConversion();
 }
 
 fileInput.addEventListener("change", () => {
