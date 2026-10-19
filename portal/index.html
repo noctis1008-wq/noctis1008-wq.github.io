@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>ネル2048 | NER Tools</title>
+<meta name="description" content="ネル2048 が作っているポケモンのセーブデータ用ツール(NER Converter・NER Pokémon Recovery)とアプリ、YouTube・X のまとめページです。">
+<meta property="og:title" content="ネル2048 | NER Tools">
+<meta property="og:description" content="ポケモンのセーブデータ用ツールとアプリ、YouTube・X のまとめ">
+<meta property="og:image" content="https://noctis1008-wq.github.io/portal/img/recovery.png">
+<style>
+:root{
+  --bg:#f4f6f8;--card:#fff;--line:#e4e7ec;--text:#17202a;--sub:#667085;--accent:#2f6bff;
+  --shadow:0 12px 36px rgba(16,24,40,.07);--chip:#f2f4f7;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",sans-serif;color:var(--text);background:var(--bg)
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--card:#171e2c;--line:#283246;--text:#eef2f7;--sub:#98a2b3;--accent:#7aa2ff;--shadow:0 12px 36px rgba(0,0,0,.35);--chip:#222b3c}}
+:root[data-theme="dark"]{--bg:#0f1420;--card:#171e2c;--line:#283246;--text:#eef2f7;--sub:#98a2b3;--accent:#7aa2ff;--shadow:0 12px 36px rgba(0,0,0,.35);--chip:#222b3c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text)}
+a{color:inherit}
+.wrap{max-width:880px;margin:0 auto;padding:44px 16px 40px}
+/* ヘッダー */
+.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:30px}
+.hero-name{margin:0;font-size:clamp(30px,6vw,44px);letter-spacing:-.03em;line-height:1.05}
+.hero-name small{display:block;font-size:13px;letter-spacing:.18em;color:var(--sub);font-weight:800;margin-bottom:8px}
+.hero-lead{margin:10px 0 0;color:var(--sub);line-height:1.7;font-size:15px}
+.sns{display:flex;gap:10px}
+.sns a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;font-size:14px;padding:10px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .15s}
+.sns a:hover{transform:translateY(-2px)}
+.sns svg{width:20px;height:20px;flex:none}
+/* 見出し */
+h2{font-size:18px;margin:34px 0 12px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:6px;height:18px;border-radius:3px;background:var(--accent)}
+/* ツール */
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tool{display:flex;flex-direction:column;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;transition:transform .15s,box-shadow .15s}
+.tool:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,24,40,.12)}
+.tool-logo{display:grid;place-items:center;padding:18px 18px 6px;aspect-ratio:720/260}
+.tool-logo img{width:100%;height:auto;max-width:340px}
+.tool-body{padding:4px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.tool-body b{font-size:16px}
+.tool-body p{margin:0;color:var(--sub);font-size:13.5px;line-height:1.65;flex:1}
+.tool-go{margin-top:8px;font-weight:800;font-size:14px;color:var(--accent)}
+/* アプリ */
+.app{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.app-icon{width:72px;height:72px;border-radius:18px;flex:none;display:grid;place-items:center;font-weight:900;font-size:22px;color:#fff;background:linear-gradient(135deg,#ff5a5f,#ffb347 55%,#ffd56b)}
+.app-main{flex:1;min-width:200px}
+.app-main b{font-size:17px}
+.app-main p{margin:4px 0 0;color:var(--sub);font-size:13.5px;line-height:1.6}
+.soon{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--chip);color:var(--sub);vertical-align:2px}
+.stores{display:flex;gap:10px;flex-wrap:wrap;width:100%}
+.store{display:inline-flex;align-items:center;gap:10px;min-width:170px;padding:8px 16px 8px 12px;border-radius:10px;background:#000;color:#fff;text-decoration:none;border:1px solid #444}
+.store svg{width:26px;height:26px;flex:none}
+.store span{display:flex;flex-direction:column;line-height:1.1}
+.store small{font-size:10px;opacity:.85}
+.store strong{font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.store[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+/* 動画 */
+.video{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.video-frame{position:relative;aspect-ratio:16/9;background:#000}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;font-size:14px;flex-wrap:wrap}
+.video-foot a{font-weight:800;color:var(--accent);text-decoration:none}
+.video-empty{display:flex;align-items:center;gap:14px;padding:22px;text-decoration:none}
+.video-empty svg{width:48px;height:48px;flex:none}
+.video-empty b{display:block;font-size:16px}
+.video-empty span{color:var(--sub);font-size:13.5px}
+footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-height:1.8}
+@media (max-width:640px){
+  .wrap{padding-top:30px}
+  .tools{grid-template-columns:1fr}
+  .store{flex:1;min-width:0;justify-content:center;padding:8px 10px}
+  .store strong{font-size:15px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div>
+      <h1 class="hero-name"><small>NER TOOLS</small>ネル2048</h1>
+      <p class="hero-lead">ポケモンのセーブデータを守るツールを作っています。</p>
+    </div>
+    <nav class="sns" aria-label="SNS">
+      <a href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#ff0033"/><path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/></svg>YouTube</a>
+      <a href="https://x.com/ner2048" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77zm-1.08 16.18h1.7L7.4 4.73H5.58z"/></svg>X</a>
+    </nav>
+  </header>
+
+  <h2>ツール</h2>
+  <section class="tools">
+    <a class="tool" href="../">
+      <div class="tool-logo"><img src="img/converter.png" width="720" height="245" alt="NER Converter" decoding="async"></div>
+      <div class="tool-body">
+        <b>NER Converter</b>
+        <p>金・銀・クリスタルのセーブデータを、3DS のバーチャルコンソール版で遊べる形に変換します。ポケムーバーにも対応。</p>
+        <span class="tool-go">ツールを開く →</span>
+      </div>
+    </a>
+    <a class="tool" href="../Pokemon-Save-Rescue/">
+      <div class="tool-logo"><img src="img/recovery.png" width="720" height="232" alt="NER Pokémon Recovery" decoding="async"></div>
+      <div class="tool-body">
+        <b>NER Pokémon Recovery</b>
+        <p>壊れた X・Y / オメガルビー・アルファサファイアのセーブデータから、ポケモンや道具を救出します。</p>
+        <span class="tool-go">ツールを開く →</span>
+      </div>
+    </a>
+  </section>
+
+  <h2>アプリ</h2>
+  <section class="app">
+    <div class="app-icon" aria-hidden="true">PT</div>
+    <div class="app-main">
+      <b>Poke tools</b><span class="soon">近日公開</span>
+      <p>スマホで使えるポケモンのツールアプリです。公開したら、ここからダウンロードできます。</p>
+    </div>
+    <div class="stores">
+      <!-- 公開したら href を入れて aria-disabled を消す -->
+      <a class="store" aria-disabled="true" title="近日公開" role="link">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#00d7fe" d="M3.84 2.15 13.69 12l-9.85 9.85A1.6 1.6 0 0 1 3 20.5v-17c0-.59.34-1.11.84-1.35z"/><path fill="#ffce00" d="m17.89 9.5 2.27 1.31c.34.27.59.69.59 1.19s-.22.9-.57 1.18l-2.29 1.32L15.39 12z"/><path fill="#00f076" d="M6.05 2.66 16.81 8.88l-2.27 2.27z"/><path fill="#f63448" d="m16.81 15.12-10.76 6.22 8.49-8.49z"/></svg>
+        <span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+      <a class="store" aria-disabled="true" title="近日公開" role="link">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        <span><small>Download on the</small><strong>App Store</strong></span></a>
+    </div>
+  </section>
+
+  <h2>最新動画</h2>
+  <section class="video" id="video"></section>
+
+  <footer>© ネル2048(NER)<br>ポケモン・ポケットモンスター・Pokémon は任天堂・クリーチャーズ・ゲームフリークの登録商標です。このサイトは公式とは関係ありません。</footer>
+</main>
+<script>
+// YouTube のチャンネル ID(UC で始まる文字列)を入れると、最新の動画がここに表示される。
+// 空のあいだは、チャンネルへのリンクだけを出す。
+const YT_CHANNEL_ID = "";
+const YT_URL = "https://www.youtube.com/@%E3%83%8D%E3%83%AB2048";
+(function(){
+  const box=document.getElementById('video');
+  const ytIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#ff0033"/><path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/></svg>';
+  if(/^UC[\w-]{22}$/.test(YT_CHANNEL_ID)){
+    // チャンネルの「アップロード動画」の再生リスト(UC → UU)。いちばん新しい動画から再生される
+    const list='UU'+YT_CHANNEL_ID.slice(2);
+    box.innerHTML='<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+list+'" title="ネル2048 の最新動画" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>'+
+      '<div class="video-foot"><span>ネル2048 の YouTube チャンネル</span><a href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">チャンネルを見る →</a></div>';
+  }else{
+    box.innerHTML='<a class="video-empty" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">'+ytIcon+'<div><b>YouTube で最新動画を見る</b><span>ネル2048 のチャンネルを開きます</span></div></a>';
+  }
+})();
+</script>
+</body>
+</html>
