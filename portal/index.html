@@ -45,7 +45,7 @@ h2::before{content:"";width:6px;height:18px;border-radius:3px;background:var(--a
 .tool-go{margin-top:8px;font-weight:800;font-size:14px;color:var(--accent)}
 /* アプリ */
 .app{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-.app-icon{width:72px;height:72px;border-radius:18px;flex:none;display:grid;place-items:center;font-weight:900;font-size:22px;color:#fff;background:linear-gradient(135deg,#ff5a5f,#ffb347 55%,#ffd56b)}
+.app-icon{width:72px;height:72px;flex:none;filter:drop-shadow(0 4px 10px rgba(16,24,40,.18))}
 .app-main{flex:1;min-width:200px}
 .app-main b{font-size:17px}
 .app-main p{margin:4px 0 0;color:var(--sub);font-size:13.5px;line-height:1.6}
@@ -131,7 +131,7 @@ footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-
 
   <h2>アプリ</h2>
   <section class="app">
-    <div class="app-icon" aria-hidden="true">PT</div>
+    <img class="app-icon" src="img/poketools.png" width="216" height="216" alt="Poke tools のアイコン">
     <div class="app-main">
       <b>Poke tools</b><span class="soon">近日公開</span>
       <p>スマホで使えるポケモンのツールアプリです。公開したら、ここからダウンロードできます。</p>
