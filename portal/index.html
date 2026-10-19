@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache">
-<title>ネル2048 | NER Tools</title>
-<meta name="description" content="ネル2048 が作っているポケモンのセーブデータ用ツール(NER Converter・NER Pokémon Recovery)とアプリ、YouTube・X のまとめページです。">
-<meta property="og:title" content="ネル2048 | NER Tools">
+<title>ネル@脱法レスキュー隊 | NER PORTAL SITE</title>
+<meta name="description" content="公式からの救い手が及ばないポケモン達を救出するために活動しています。NER Converter・NER Pokémon Recovery とアプリ、YouTube・X のまとめページです。">
+<meta property="og:title" content="ネル@脱法レスキュー隊 | NER PORTAL SITE">
 <meta property="og:description" content="ポケモンのセーブデータ用ツールとアプリ、YouTube・X のまとめ">
 <meta property="og:image" content="https://noctis1008-wq.github.io/portal/img/recovery.png">
 <style>
@@ -23,7 +23,7 @@ a{color:inherit}
 .wrap{max-width:880px;margin:0 auto;padding:44px 16px 40px}
 /* ヘッダー */
 .hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:30px}
-.hero-name{margin:0;font-size:clamp(30px,6vw,44px);letter-spacing:-.03em;line-height:1.05}
+.hero-name{margin:0;font-size:clamp(26px,6vw,44px);word-break:keep-all;overflow-wrap:anywhere;letter-spacing:-.03em;line-height:1.05}
 .hero-name small{display:block;font-size:13px;letter-spacing:.18em;color:var(--sub);font-weight:800;margin-bottom:8px}
 .hero-lead{margin:10px 0 0;color:var(--sub);line-height:1.7;font-size:15px}
 .sns{display:flex;gap:10px}
@@ -80,8 +80,8 @@ footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-
 <main class="wrap">
   <header class="hero">
     <div>
-      <h1 class="hero-name"><small>NER TOOLS</small>ネル2048</h1>
-      <p class="hero-lead">ポケモンのセーブデータを守るツールを作っています。</p>
+      <h1 class="hero-name"><small>NER PORTAL SITE</small>ネル@脱法レスキュー隊</h1>
+      <p class="hero-lead">公式からの救い手が及ばないポケモン達を救出するために活動しています。</p>
     </div>
     <nav class="sns" aria-label="SNS">
       <a href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer">
@@ -132,7 +132,7 @@ footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-
   <h2>最新動画</h2>
   <section class="video" id="video"></section>
 
-  <footer>© ネル2048(NER)<br>ポケモン・ポケットモンスター・Pokémon は任天堂・クリーチャーズ・ゲームフリークの登録商標です。このサイトは公式とは関係ありません。</footer>
+  <footer>© ネル@脱法レスキュー隊(NER)<br>ポケモン・ポケットモンスター・Pokémon は任天堂・クリーチャーズ・ゲームフリークの登録商標です。このサイトは公式とは関係ありません。</footer>
 </main>
 <script>
 // YouTube のチャンネル ID(UC で始まる文字列)を入れると、最新の動画がここに表示される。
@@ -145,10 +145,10 @@ const YT_URL = "https://www.youtube.com/@%E3%83%8D%E3%83%AB2048";
   if(/^UC[\w-]{22}$/.test(YT_CHANNEL_ID)){
     // チャンネルの「アップロード動画」の再生リスト(UC → UU)。いちばん新しい動画から再生される
     const list='UU'+YT_CHANNEL_ID.slice(2);
-    box.innerHTML='<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+list+'" title="ネル2048 の最新動画" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>'+
-      '<div class="video-foot"><span>ネル2048 の YouTube チャンネル</span><a href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">チャンネルを見る →</a></div>';
+    box.innerHTML='<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+list+'" title="ネル@脱法レスキュー隊 の最新動画" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>'+
+      '<div class="video-foot"><span>ネル@脱法レスキュー隊 の YouTube チャンネル</span><a href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">チャンネルを見る →</a></div>';
   }else{
-    box.innerHTML='<a class="video-empty" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">'+ytIcon+'<div><b>YouTube で最新動画を見る</b><span>ネル2048 のチャンネルを開きます</span></div></a>';
+    box.innerHTML='<a class="video-empty" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">'+ytIcon+'<div><b>YouTube で最新動画を見る</b><span>ネル@脱法レスキュー隊 のチャンネルを開きます</span></div></a>';
   }
 })();
 </script>
