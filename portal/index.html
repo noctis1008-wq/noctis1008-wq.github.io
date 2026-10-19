@@ -74,6 +74,22 @@ footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-
   .store{flex:1;min-width:0;justify-content:center;padding:8px 10px}
   .store strong{font-size:15px}
 }
+.sns{align-items:center}
+.sns-channel{position:relative;padding:0!important;width:52px;height:52px;border-radius:50%!important;overflow:visible}
+.sns-channel img{width:100%;height:100%;border-radius:50%;display:block}
+.sns-channel .yt-badge{position:absolute;right:-6px;bottom:-4px;width:24px;height:24px;border-radius:7px;background:var(--card);display:grid;place-items:center;box-shadow:0 2px 6px rgba(16,24,40,.25)}
+.sns-channel .yt-badge svg{width:18px;height:18px}
+.sns a:not(.sns-channel){height:52px}
+.video-foot{text-decoration:none;color:inherit}
+.video-foot .ch-icon,.video-empty .ch-icon{width:40px;height:40px;border-radius:50%;flex:none}
+.video-empty .ch-icon{width:52px;height:52px}
+.video-foot>span:nth-of-type(1){display:flex;flex-direction:column;line-height:1.3;margin-right:auto}
+.video-foot small{color:var(--sub);font-size:12px}
+.video-foot .ch-go{font-weight:800;color:var(--accent);font-size:13.5px}
+.video-foot{justify-content:flex-start!important;flex-wrap:nowrap!important}
+.video-foot .ch-go{white-space:nowrap}
+.video-foot b{display:block}
+.video-foot>span:nth-of-type(1){min-width:0}
 </style>
 </head>
 <body>
@@ -84,12 +100,14 @@ footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-
       <p class="hero-lead">公式からの救い手が及ばないポケモン達を救出するために活動しています。</p>
     </div>
     <nav class="sns" aria-label="SNS">
-      <a href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#ff0033"/><path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/></svg>YouTube</a>
+      <a class="sns-channel" href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer" aria-label="YouTube チャンネル" title="YouTube チャンネル"><img src="img/channel.png" width="192" height="192" alt=""><span class="yt-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#ff0033"/><path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/></svg></span></a>
       <a href="https://x.com/ner2048" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77zm-1.08 16.18h1.7L7.4 4.73H5.58z"/></svg>X</a>
     </nav>
   </header>
+
+  <h2>最新動画</h2>
+  <section class="video" id="video"></section>
 
   <h2>ツール</h2>
   <section class="tools">
@@ -129,9 +147,6 @@ footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-
     </div>
   </section>
 
-  <h2>最新動画</h2>
-  <section class="video" id="video"></section>
-
   <footer>© ネル@脱法レスキュー隊(NER)<br>ポケモン・ポケットモンスター・Pokémon は任天堂・クリーチャーズ・ゲームフリークの登録商標です。このサイトは公式とは関係ありません。</footer>
 </main>
 <script>
@@ -146,9 +161,9 @@ const YT_URL = "https://www.youtube.com/@%E3%83%8D%E3%83%AB2048";
     // チャンネルの「アップロード動画」の再生リスト(UC → UU)。いちばん新しい動画から再生される
     const list='UU'+YT_CHANNEL_ID.slice(2);
     box.innerHTML='<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+list+'" title="ネル@脱法レスキュー隊 の最新動画" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>'+
-      '<div class="video-foot"><span>ネル@脱法レスキュー隊 の YouTube チャンネル</span><a href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">チャンネルを見る →</a></div>';
+      '<a class="video-foot" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer"><img class="ch-icon" src="img/channel.png" width="192" height="192" alt=""><span><b>ネル@脱法レスキュー隊</b><small>@ネル2048</small></span><span class="ch-go">チャンネルを見る →</span></a>';
   }else{
-    box.innerHTML='<a class="video-empty" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">'+ytIcon+'<div><b>YouTube で最新動画を見る</b><span>ネル@脱法レスキュー隊 のチャンネルを開きます</span></div></a>';
+    box.innerHTML='<a class="video-empty" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">'+'<img class="ch-icon" src="img/channel.png" width="192" height="192" alt="">'+'<div><b>YouTube で最新動画を見る</b><span>ネル@脱法レスキュー隊 のチャンネルを開きます</span></div></a>';
   }
 })();
 </script>
