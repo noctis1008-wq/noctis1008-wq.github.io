@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache">
+<!-- YouTube の埋め込みは、どのサイトから開いたか(リファラー)が届かないと「エラー 153」になる -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="google-adsense-account" content="ca-pub-9139206140818266">
 <title>ネル@脱法レスキュー隊 | NER PORTAL SITE</title>
 <meta name="description" content="公式からの救い手が及ばないポケモン達を救出するために活動しています。NER Converter・NER Pokémon Recovery とアプリ、YouTube・X のまとめページです。">
@@ -157,7 +159,7 @@ const YT_URL = "https://www.youtube.com/@%E3%83%8D%E3%83%AB2048";
   if(/^UC[\w-]{22}$/.test(YT_CHANNEL_ID)){
     // チャンネルの「アップロード動画」の再生リスト(UC → UU)。いちばん新しい動画から再生される
     const list='UU'+YT_CHANNEL_ID.slice(2);
-    box.innerHTML='<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+list+'" title="ネル@脱法レスキュー隊 の最新動画" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>'+
+    box.innerHTML='<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+list+'" title="ネル@脱法レスキュー隊 の最新動画" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>'+
       '<a class="video-foot" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer"><img class="ch-icon" src="img/channel.png" width="192" height="192" alt=""><span><b>ネル@脱法レスキュー隊</b><small>@ネル2048</small></span><span class="ch-go">チャンネルを見る →</span></a>';
   }else{
     box.innerHTML='<a class="video-empty" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">'+'<img class="ch-icon" src="img/channel.png" width="192" height="192" alt="">'+'<div><b>YouTube で最新動画を見る</b><span>ネル@脱法レスキュー隊 のチャンネルを開きます</span></div></a>';
