@@ -38,10 +38,6 @@ h2::before{content:"";width:6px;height:18px;border-radius:3px;background:var(--a
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .tool{display:flex;flex-direction:column;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;transition:transform .15s,box-shadow .15s}
 .tool:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,24,40,.12)}
-.tool-soon{cursor:default}
-.tool-soon:hover{transform:none;box-shadow:var(--shadow)}
-.tool-soon .tool-logo{opacity:.55}
-.tool-soon .tool-go{color:var(--sub)}
 .tool-logo{display:grid;place-items:center;padding:18px 18px 6px;aspect-ratio:720/260}
 .tool-logo img{width:100%;height:auto;max-width:340px}
 .tool-body{padding:4px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
@@ -119,15 +115,15 @@ footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-
         <span class="tool-go">ツールを開く →</span>
       </div>
     </a>
-    <!-- 公開したら div を <a class="tool" href="Pokemon-Save-Rescue/"> に戻し、近日公開の表示を消す -->
-    <div class="tool tool-soon" aria-disabled="true">
+    <!-- いまは修復依頼ページへつなぐ。Recovery を公開したら href を Pokemon-Save-Rescue/ にし、近日公開の表示と説明文を戻す -->
+    <a class="tool" href="repair-request/">
       <div class="tool-logo"><img src="img/recovery.png" width="720" height="232" alt="NER Pokémon Recovery" decoding="async"></div>
       <div class="tool-body">
         <b>NER Pokémon Recovery<span class="soon">近日公開</span></b>
-        <p>壊れた X・Y / オメガルビー・アルファサファイアのセーブデータから、ポケモンや道具を救出します。</p>
-        <span class="tool-go">近日公開</span>
+        <p>壊れた X・Y / オメガルビー・アルファサファイアのセーブデータから、ポケモンや道具を救出するツールです。公開までは、セーブデータの修復をこちらで受け付けています。</p>
+        <span class="tool-go">修復を依頼する →</span>
       </div>
-    </div>
+    </a>
   </section>
 
   <h2>アプリ</h2>
