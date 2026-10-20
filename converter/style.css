@@ -139,3 +139,9 @@ code { background: #f2f4f7; border-radius: 5px; padding: 2px 5px; }
   font-variant-numeric: tabular-nums;
   opacity: 0.65;
 }
+
+/* NER PORTAL SITE へのリンク(YouTube・X の右に固定) */
+.portal-badge{height:42px;display:inline-flex;align-items:center;gap:8px;padding:0 15px 0 6px;border-radius:999px;text-decoration:none;color:#fff;background:linear-gradient(120deg,#1ec8d8 0%,#2563eb 50%,#7c3aed 100%);box-shadow:0 3px 12px rgba(0,0,0,.22);transition:transform .15s ease,opacity .15s ease;font:800 13px/1 system-ui,-apple-system,"Hiragino Sans",sans-serif;letter-spacing:.06em;white-space:nowrap}
+.portal-badge:hover{transform:translateY(-2px) scale(1.03);opacity:.92}
+.portal-badge svg{width:30px;height:30px;flex:none;border-radius:50%;background:rgba(255,255,255,.14)}
+@media(max-width:600px){.portal-badge{height:38px;font-size:12px;padding:0 12px 0 5px;gap:6px}.portal-badge svg{width:28px;height:28px}}
