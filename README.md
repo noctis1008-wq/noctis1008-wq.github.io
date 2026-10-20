@@ -1,6 +1,11 @@
 # NER Converter
 
-**バージョン: v15**(2026-10-14 / 変更履歴は `CHANGELOG.md`)
+**バージョン: v16**(2026-10-20 / 変更履歴は `CHANGELOG.md`)
+
+## サイトの構成
+- `/` … ポータル(`index.html`、画像は `img/`)
+- `/converter/` … NER Converter 本体
+- `/portal/`・`/privacy.html` … 旧 URL からの転送ページ
 
 日本語版ポケットモンスター 金・銀・クリスタルのセーブデータを、3DS VC版で使用できる `sav.dat` に変換するWebツールです。
 

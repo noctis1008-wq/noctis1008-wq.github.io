@@ -7,6 +7,19 @@
 
 ---
 
+## v16 — 2026-10-20
+
+サイトの入り口を入れ替えた。**変換ロジックに変更はない**。
+
+- Converter 一式(`index.html`・`privacy.html`・`app.js`・`analytics.js`・`counter.js`・`style.css`・`logo.webp`)を
+  `converter/` に移した。新しい URL は https://noctis1008-wq.github.io/converter/ 。
+- サイトのトップ(`/`)は、これまで `/portal/` にあったポータルになった。画像は `img/` に移した。
+- 古い URL のために転送ページを置いた: `/portal/` → `/`、`/privacy.html` → `/converter/privacy.html`。
+  古い Converter のリンク(`/`)はポータルに着く(ポータルから Converter へは 1 タップ)。
+- Converter のフッターとプライバシーポリシーにポータルへのリンクを追加。
+
+---
+
 ## v15 — 2026-10-14
 
 ページ見出しをロゴ画像に差し替えた。**変換ロジックに変更はない**。
