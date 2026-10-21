@@ -1155,6 +1155,9 @@ body:not(.app) .obsapp{display:none!important}
 .ivlkt{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:700}
 .ivlkt b{color:var(--mon)}
 .ivlk .btn{flex:none;height:36px;padding:0 12px}
+.ivlk .ivlkbtn{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--mon);border-color:color-mix(in srgb,var(--mon) 55%,var(--line));background:color-mix(in srgb,var(--mon) 7%,var(--surface));font-weight:800}
+.ivlkt{cursor:pointer}
+.ivpsp{display:block;font-size:11px;color:var(--muted);font-weight:500}
 .ivhead,.ivr{display:grid;grid-template-columns:minmax(0,1fr) 56px 50px 48px minmax(0,1fr);gap:4px;align-items:center}
 .ivhead{font-size:11px;font-weight:700;color:var(--muted);padding-bottom:4px;text-align:center}
 .ivhead span:first-child{text-align:left}
@@ -4320,9 +4323,7 @@ function renderIvLink(){
   const x=ivLinked(),box=document.getElementById('ivLink');
   box.innerHTML=x
     ?`<div class="ivlk"><span class="ivlkt">個体管理：<b>${esc(monLabel(x))}</b>${x.iv&&x.iv.r?'（記録あり）':''}</span><button class="btn" id="ivRec" type="button">結果を記録</button><button class="btn" id="ivUnl" type="button" aria-label="個体管理との連動を外す">外す</button></div>`
-    :(()=>{const L=S.mon.list.filter(y=>y.sp&&ivList().some(e=>e.d===y.sp)).sort((p,q)=>q.id-p.id);
-      const note=L.length?'個体管理から読み込む':S.mon.list.length?'ポケモンを選んだ個体がありません':'個体管理に登録すると、ここから読み込めます';
-      return `<div class="ivlk"><label class="tysel2 ivload${L.length?'':' off'}"><span>${note}</span><select id="ivLoad" aria-label="個体管理から読み込む"${L.length?'':' disabled'}><option value="">読み込む個体を選ぶ</option>${L.map(y=>`<option value="${y.id}">${esc(monLabel(y))}${y.nick?'（'+esc(monSp(y))+'）':''}${y.lv?' Lv.'+esc(y.lv):''}${y.iv&&y.iv.r?'・記録あり':''}</option>`).join('')}</select></label><button class="btn" id="ivRec" type="button" aria-label="結果を個体管理に記録（新しく登録）">結果を記録</button></div>`})();
+    :`<div class="ivlk"><button class="btn ivlkbtn" id="ivPick" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>個体管理とつなぐ</button><button class="btn" id="ivRec" type="button">結果を記録</button></div>`;
 }
 function renderIv(){
   ivNorm();
@@ -4378,6 +4379,45 @@ function ivGrid(r){const L=LABELS[S.lm==='abc'?'abc':'kanji'];let lo=0,hi=0,all=
   const c=EVK.map((k,i)=>{const v=r[i];if(!v){all=false;return `<span class="mivc"><small>${esc(L[i])}</small><b>－</b></span>`}lo+=v[0];hi+=v[1];const a=ivLev(v[0]),b=ivLev(v[1]);
     return `<span class="mivc j${Math.min(a,b)}" title="${esc(STATS[i].n)}：${esc(a===b?ivWord(v[0]):ivWord(v[0])+'〜'+ivWord(v[1]))}"><small>${esc(L[i])}</small><b${v[0]===v[1]?'':' class="rg"'}>${v[0]===v[1]?v[0]:v[0]+'〜'+v[1]}</b></span>`}).join('');
   return `<span class="miv">${c}</span><small class="mivt">合計 ${all?(lo===hi?lo:lo+'〜'+hi):'－'}</small>`}
+// 個体値ジャッジ → 個体管理とつなぐ（努力値カウンターと同じ形の選択画面）
+function ivMonPicker(){
+  const x=ivLinked(),e=ivCur(),R=ivSolve(),has=R.rows.some(r=>r.st==='ok');
+  monEdit=null;monParentsOpen=false;monSheet.hidden=false;document.body.classList.add('modal');
+  let h=`<div class="sheet-in"><div class="sh-head"><h3>個体管理とつなぐ</h3><button class="btn" type="button" data-ivpclose="1">閉じる</button></div>
+    <p class="note" style="margin:0">個体値ジャッジの結果（個体値・レベル・せいかく・努力値）を、個体管理の個体に記録します。</p>`;
+  if(x){
+    h+=`<div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">つないでいる個体</span></div>
+      <p class="monrbn"><b style="color:var(--mon)">${esc(monLabel(x))}</b>${x.lv?`<span>Lv.${esc(x.lv)}</span>`:''}</p>
+      <div class="monmeta"><span>📍 ${esc(monWhere(x))}</span><span>個体値：${x.iv&&x.iv.r?esc(ivTxt(x.iv.r)):'記録なし'}</span></div>
+      <div class="row2"><button class="btn" type="button" data-ivpgo="1">個体管理で開く</button><button class="btn" type="button" data-ivpun="1">連動を外す</button></div></div>`;
+  }else{
+    const sp=e?e.d:0,L=S.mon.list.filter(y=>y.sp&&ivList().some(v=>v.d===y.sp)).sort((a,b)=>(b.sp===sp)-(a.sp===sp)||b.id-a.id);
+    h+=`<button class="btn primary" type="button" data-ivpnew="1"${e?'':' disabled'}>${e?`${esc(tyShortName(e.n))}を個体管理に登録してつなぐ`:'先にポケモンを選んでください'}</button>
+      <div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">登録済みの個体とつなぐ</span></div>
+      ${L.length?`<div class="monlist">${L.map(y=>`<button type="button" class="monrow evmpick" data-ivplink="${y.id}"><span class="mrn">${esc(monLabel(y))}${y.nick?`<small class="ivpsp">${esc(monSp(y))}</small>`:''}</span><span class="mrg ${y.gender==='♂'?'m':y.gender==='♀'?'f':''}">${y.gender&&y.gender!=='不明'?y.gender:'－'}</span><span class="mrl">${y.lv?esc(y.lv):'－'}</span><span class="mra">${y.iv&&y.iv.r?'個体値 記録あり':'個体値 なし'}</span></button>`).join('')}</div>
+        <p class="note" style="margin:0">${has&&e?`${esc(tyShortName(e.n))}の個体を選ぶと、いまの結果で上書きします。ほかのポケモンの個体を選ぶと、その個体の記録を読み込みます。`:'選んだ個体の記録を読み込みます。'}</p>`
+        :'<p class="note" style="margin:0">個体管理に、つなげる個体がありません。</p>'}</div>`;
+  }
+  monSheet.innerHTML=h+'</div>';
+  monSheet.querySelector('[data-ivpclose]')?.focus();
+}
+monSheet.addEventListener('click',ev=>{
+  const b=ev.target.closest('button');if(!b)return;const d=b.dataset;
+  if(!(d.ivpclose||d.ivpgo||d.ivpun||d.ivpnew||d.ivplink))return;
+  ev.stopImmediatePropagation();
+  const fin=()=>{monClose();save();renderIv()};
+  if(d.ivpclose){monClose();return}
+  if(d.ivpun){const x=ivLinked();S.iv.link=0;fin();toast((x?monLabel(x)+' との':'')+'連動を外しました');return}
+  if(d.ivpgo){const id=S.iv.link;monClose();setView('mon');renderMon();if(id)monCardOpen(id);return}
+  if(d.ivpnew){const e=ivCur();if(!e)return;const R=ivSolve();
+    const x={id:monNewId(),sp:e.d,nick:'',lv:'',gender:'',nature:'',ability:'',item:'',purpose:'',soft:'',place:'box',box:'',pos:'',placeNote:'',parent:'',tags:[],memo:'',rb:'',ball:'',ev:zero()};
+    {const fx=monGFix(e.d);if(fx)x.gender=fx;const A=ABL[e.d-1]||[],n=A.filter(a=>a[1]===0);if(n.length===1)x.ability=n[0][0]}
+    S.mon.list.push(x);ivRecTo(x,R);if(!R.rows.some(r=>r.st==='ok'))x.iv.r=null;S.iv.link=x.id;fin();toast('個体管理に登録してつなぎました');return}
+  if(d.ivplink){const x=S.mon.list.find(y=>y.id===+d.ivplink);if(!x)return;
+    const e=ivCur(),R=ivSolve();
+    if(e&&e.d===x.sp&&R.rows.some(r=>r.st==='ok')){ivRecTo(x,R);S.iv.link=x.id;fin();toast(monLabel(x)+' とつなぎ、いまの結果で上書きしました');return}
+    if(!ivLinkMon(x))return;fin();toast(monLabel(x)+' とつなぎ、記録を読み込みました');return}
+},true);
 function ivFromMon(x){if(!ivLinkMon(x))return;save();setView('iv');toast(monLabel(x)+' を個体値ジャッジで開きました')}
 const ivTxt=r=>EVK.map((k,i)=>EVL[i]+(r[i]?(r[i][0]===r[i][1]?r[i][0]:r[i][0]+'〜'+r[i][1]):'－')).join(' ');
 ivEl.addEventListener('input',e=>{
@@ -4406,14 +4446,12 @@ ivEl.addEventListener('click',e=>{
   const mb=t.closest('[data-ivmon]');if(mb){ivPick(mb.dataset.ivmon);return}
   if(t.closest('#ivQx')){ivQSet('');document.getElementById('ivQ').focus();renderIvRecent();return}
   if(t.closest('#ivClr')){const v=S.iv;v.mon='';v.nat='';v.link=0;v.real={};v.ev={};ivNorm();ivQSet('');document.getElementById('ivRes').innerHTML='';save();renderIv();return}
+  if(t.closest('#ivPick')||t.closest('.ivlkt')){ivMonPicker();return}
   if(t.closest('#ivUnl')){S.iv.link=0;save();renderIvLink();ivCalc();toast('個体管理との連動を外しました');return}
   if(t.closest('#ivRec')){
     let x=ivLinked();const R=ivSolve();
     if(!R.rows.some(r=>r.st==='ok')){toast('記録できる結果がありません');return}
-    let made=false;
-    if(!x){const e=ivCur();if(!e){toast('ポケモンを選んでください');return}
-      x={id:monNewId(),sp:e.d,nick:'',lv:String(S.iv.lv||''),gender:'',nature:ivNat(S.iv.nat)?S.iv.nat:'',ability:'',item:'',purpose:'',soft:'',place:'box',box:'',pos:'',placeNote:'',parent:'',tags:[],memo:'',rb:'',ball:'',ev:Object.assign(zero(),S.iv.ev)};
-      S.mon.list.push(x);S.iv.link=x.id;made=true}
+    const made=false;if(!x){ivMonPicker();return}
     ivRecTo(x,R);
     save();renderIvLink();ivCalc();toast(made?'個体管理に新しく登録して、個体値を記録しました':monLabel(x)+' に個体値を記録しました');return}
 });
