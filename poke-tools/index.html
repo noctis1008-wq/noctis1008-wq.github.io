@@ -1513,6 +1513,84 @@ body:not(.app) .obsapp{display:none!important}
 .ivmsg{height:36px;overflow:hidden;font-size:12px;line-height:18px;margin:2px 0 0;color:var(--muted)}
 .ivmsg.w{color:var(--weak);font-weight:700}
 .ivmsg.ok{color:var(--iv);font-weight:700}
+
+/* 努力値カウンター：新デザイン */
+#vEv{gap:10px}
+:root{--evx-hero:linear-gradient(135deg,color-mix(in srgb,var(--b1) 78%,#fff) 0%,var(--b1) 55%,color-mix(in srgb,var(--b1) 72%,#000) 100%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--evx-hero:linear-gradient(135deg,color-mix(in srgb,var(--b1) 88%,#fff) 0%,color-mix(in srgb,var(--b1) 85%,#000) 55%,color-mix(in srgb,var(--b1) 55%,#000) 100%)}}
+:root[data-theme="dark"]{--evx-hero:linear-gradient(135deg,color-mix(in srgb,var(--b1) 88%,#fff) 0%,color-mix(in srgb,var(--b1) 85%,#000) 55%,color-mix(in srgb,var(--b1) 55%,#000) 100%)}
+#evCond{font:inherit}
+.evx-chip{color:color-mix(in srgb,var(--c) 85%,var(--ink));border-color:color-mix(in srgb,var(--c) 45%,var(--line));background:color-mix(in srgb,var(--c) 12%,var(--surface))}
+#vEv .evx-hero{height:142px;background:var(--evx-hero);box-shadow:0 6px 18px -8px color-mix(in srgb,var(--b1) 70%,transparent)}
+#vEv .evx-hero .num{justify-content:flex-start;height:56px;margin-top:2px}
+#vEv .evx-hero .num b{font-size:46px;line-height:56px}
+.evx-tn{margin-left:auto;align-self:center;display:flex;flex-direction:column;align-items:flex-end;min-width:0;max-width:58%;font-size:11.5px;font-weight:700;line-height:16px;font-family:var(--f-num)}
+.evx-tn>span{display:flex;align-items:center;gap:4px;max-width:100%;white-space:nowrap}
+.evx-tn .n{font-family:var(--f-body);min-width:0;overflow:hidden;text-overflow:ellipsis;opacity:.92}
+.evx-tn em{flex:none;width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 1.5px rgb(255 255 255 / .85)}
+#vEv .evx-hero .shx-chain .max{color:color-mix(in srgb,var(--c) 80%,#000);max-width:30%;overflow:hidden;text-overflow:ellipsis}
+.evx-sh{display:flex;align-items:center;gap:8px;height:30px;margin-bottom:8px}
+.evx-sh h2{margin:0;font-size:14px;letter-spacing:0;color:var(--ink)}
+.evx-sh .evx-join{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.evx-sh .h2btns{flex:none}
+.evx-hb{display:flex;align-items:center;gap:4px;height:30px;padding:0 9px;font-size:12px;white-space:nowrap}
+.evx-hb svg{width:15px;height:15px}
+#party .mon{height:132px;gap:5px;justify-content:flex-start}
+#party .mhead{height:24px;flex:none}
+#party .mon .mname{height:24px;line-height:24px}
+.evx-gain{flex:none;font-family:var(--f-num);font-size:11px;font-weight:700;color:#fff;background:var(--c);border-radius:6px;padding:0 5px;line-height:18px}
+#party .mopts{height:28px;flex:none}
+#party .isel,#party .rus{height:28px}
+.evx-sb{flex:none;display:flex;height:8px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}
+.evx-sb span{display:block;height:100%}
+.evx-nm{flex:none;display:flex;align-items:center;justify-content:space-between;gap:4px;height:18px;font-size:11px;white-space:nowrap}
+.evx-nm .cur{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.evx-nm i,.evx-gl i{font-style:normal;font-family:var(--f-num);font-weight:700;color:color-mix(in srgb,var(--c) 85%,var(--ink));margin-right:3px}
+.evx-nm .z{color:var(--muted)}
+.evx-nm .total{flex:none;font-family:var(--f-num);color:var(--muted)}
+.evx-nm .total b{color:var(--ink);font-size:13px}
+.evx-gl{flex:none;display:flex;align-items:center;gap:4px;height:18px;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden}
+.evx-gl .g{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.evx-gl i{opacity:.8}
+.evx-gl .mb{flex:none}
+#party .ptile{height:132px;min-height:0}
+.evx-list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:4px}
+.evx-row{display:flex;align-items:center;gap:10px;height:56px;width:100%;padding:0 12px;border:none;background:none;color:var(--ink);text-align:left;font:inherit;-webkit-tap-highlight-color:transparent}
+.evx-row:active{background:var(--sunken)}
+.evx-row~.evx-row{border-top:1px solid var(--line)}
+.evx-row .tx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.evx-row .tx span{font-size:14px;font-weight:700}
+.evx-row .tx small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evx-row .chev{display:flex;color:var(--muted);transition:transform .15s}
+.evx-row .chev svg{width:16px;height:16px}
+.evx-row[aria-expanded=true] .chev{transform:rotate(90deg)}
+.evx-pan{padding:2px 12px 14px}
+.evx-pan .note{margin-top:8px}
+#evCondSheet section{margin-top:14px}
+#evCondSheet .note:empty{display:none}
+/* 画面下：−1｜撃破ボタン｜全画面 */
+.evbar:not(.fs) .gauge .gl{flex:none;font-size:11px;font-weight:700;color:var(--muted)}
+.evbar:not(.fs) .gt{height:8px}.evbar.fs .gauge .gl{display:none}
+.evbar:not(.fs) .gv{font-size:12px;min-width:3em}
+.evbar:not(.fs) .bar-in{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;grid-template-areas:"g g g" "u t f";gap:8px}
+.evbar:not(.fs) .gauge{grid-area:g}
+.evbar:not(.fs) .countrow{display:contents}
+.evbar:not(.fs) .countrow>small,.evbar:not(.fs) .countrow>b,.evbar:not(.fs) .countrow>.unit{display:none}
+.evbar:not(.fs) .undo{grid-area:u}
+.evbar:not(.fs) .fsbtn{grid-area:f}
+.evbar:not(.fs) .taps{grid-area:t;height:84px}
+.evbar:not(.fs) .undo,.evbar:not(.fs) .fsbtn{margin:0;height:84px;min-width:0;padding:0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:700;color:var(--ink);background:var(--sunken);border:1px solid var(--line)}
+.evbar .undo .big{font-family:var(--f-num);font-size:19px;line-height:1}
+.evbar:not(.fs) .undo .ul,.evbar:not(.fs) .fsbtn .fl{font-size:10px;line-height:1.2;color:var(--muted)}
+.evbar .fsbtn svg{width:20px;height:20px}
+.evbar.fs .fsbtn svg,.evbar.fs .undo .big{display:none}
+.evbar:not(.fs) .taps .tap{border-radius:16px;justify-content:center;padding:8px 6px}
+.evbar:not(.fs) .taps .empty{padding:8px;display:flex;align-items:center;justify-content:center}
+/* 撃破対象が3体のときは横のボタンを細くして、撃破ボタンを広くする */
+.evbar:not(.fs) .bar-in:has(.tapw:nth-child(3)){grid-template-columns:44px minmax(0,1fr) 44px;gap:6px}
+.evbar:not(.fs) .bar-in:has(.tapw:nth-child(3)) .tap .ty{font-size:10px;letter-spacing:-.03em}
+.evbar:not(.fs) .bar-in:has(.tapw:nth-child(3)) .undo .ul,.evbar:not(.fs) .bar-in:has(.tapw:nth-child(3)) .fsbtn .fl{font-size:9px;letter-spacing:-.02em}
+@media (max-width:374px){.evbar:not(.fs) .bar-in{grid-template-columns:50px minmax(0,1fr) 50px}.evx-hb{padding:0 7px}.evx-sh .evx-join{font-size:11px}}
 /* 色違い厳選：案A */
 :root{--shx-hero:linear-gradient(135deg,#e2ad1d 0%,#c18a0c 55%,#9b6a05 100%);--shx-rst:#d0473a}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--shx-hero:linear-gradient(135deg,#c99a18 0%,#9e700a 55%,#6f4c03 100%);--shx-rst:#ff7a6b}}
@@ -1655,24 +1733,21 @@ body:not(.app) .obsapp{display:none!important}
 </div>
 
 <div class="wrap view" id="vEv">
+  <button id="evCond" class="shx-card shx-cond" type="button" aria-haspopup="dialog" aria-label="作品と撃破対象を変更"><span class="shx-ic" style="--c:var(--b1)"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="tx"><span class="t1" id="evCondT"></span><span class="shx-chips" id="evChips"></span></span><span class="shx-edit">変更<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <div class="shx-hero evx-hero">
+    <div class="lab"><span class="gl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6L9 21l-6-6z"/><path d="M5 13l6 6"/></svg>撃破数</span><span id="evJoin"></span></div>
+    <div class="num"><b id="evCount">0</b><span>体</span><span class="evx-tn" id="evTn"></span></div>
+    <div class="shx-chain" id="evLeft"></div>
+  </div>
 
-  <section>
-    <h2>作品（世代）</h2>
-    <select id="gen" class="gensel" aria-label="作品（世代）"></select>
-  </section>
-
-  <section>
-    <h2>撃破対象（最大3体）</h2>
-    <div id="targets"></div>
-  </section>
-
-  <section>
-    <div class="h2row"><h2>手持ち</h2><span class="h2btns"><button id="evBtn" class="btn primary" type="button">努力値・目標を編集</button><button id="moveBtn" class="btn mvbtn" type="button" aria-pressed="false" aria-label="並び替え"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/><path d="M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/></svg><span>並び替え</span></button></span></div>
+  <section class="evx-party">
+    <div class="evx-sh"><span class="shx-ic" style="--c:var(--b1)"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><h2>手持ち</h2><span class="evx-join" id="evJoin2"></span><span class="h2btns"><button id="evBtn" class="btn evx-hb" type="button" aria-label="努力値・目標を編集"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><span>編集</span></button><button id="moveBtn" class="btn mvbtn evx-hb" type="button" aria-pressed="false" aria-label="並び替え"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg><span>並び替え</span></button></span></div>
     <div id="party" class="party"></div>
   </section>
 
-  <section>
-    <h2>手持ちプリセット</h2>
+  <div class="evx-list">
+  <button class="evx-row" type="button" data-evx="evxPreset" aria-expanded="false" aria-controls="evxPreset"><span class="shx-ic" style="--c:var(--b2)"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg></span><span class="tx"><span>手持ちプリセット</span><small>今の手持ちを保存・読み込み・削除</small></span><span class="chev"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <section class="evx-pan" id="evxPreset" hidden>
     <div class="stack">
       <div class="row2">
         <input id="presetName" type="text" placeholder="プリセット名（例：SV対戦用）" aria-label="プリセット名">
@@ -1687,8 +1762,8 @@ body:not(.app) .obsapp{display:none!important}
     <p class="note">名前・持ち物・努力値・目標をまとめて保存します。同じ名前で保存すると上書きします。</p>
   </section>
 
-  <section>
-    <h2>バックアップ</h2>
+  <button class="evx-row" type="button" data-evx="evxBackup" aria-expanded="false" aria-controls="evxBackup"><span class="shx-ic" style="--c:var(--b3)"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span><span class="tx"><span>バックアップ</span><small>全部のツールのデータを書き出す・読み込む</small></span><span class="chev"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <section class="evx-pan" id="evxBackup" hidden>
     <div class="stack">
       <div class="row2">
         <button id="bkExport" class="btn" type="button">書き出す</button>
@@ -1702,13 +1777,14 @@ body:not(.app) .obsapp{display:none!important}
     <p class="note">データはこのブラウザの中にだけ保存されています。書き出した文字列をメモアプリなどに貼っておけば、消えたときや別の端末で読み込んで元に戻せます。</p>
   </section>
 
-  <section>
-    <h2>リセット</h2>
+  <button class="evx-row" type="button" data-evx="evxReset" aria-expanded="false" aria-controls="evxReset"><span class="shx-ic" style="--c:var(--accent)"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span><span class="tx"><span>リセット</span><small>撃破数だけ0／努力値を全部0</small></span><span class="chev"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <section class="evx-pan" id="evxReset" hidden>
     <div class="tools">
       <button id="resetCount" type="button">撃破数だけ0にする</button>
       <button id="resetAll" type="button">努力値を全部0にする</button>
     </div>
   </section>
+  </div>
 </div>
 
 <div class="wrap view" id="vShiny" hidden>
@@ -1985,6 +2061,18 @@ body:not(.app) .obsapp{display:none!important}
     </ol>
     <p class="note obsweb">数字はあなたのアカウントだけが読める場所に保存されます。claude.aiの画面の枠も映るので、OBSの「クロップ」で数字の部分だけ切り取ってください。</p>
 </div></div>
+<div id="evCondSheet" class="sheet shx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="evCondH"><div class="sheet-in">
+  <div class="sh-head"><h3 id="evCondH">作品と撃破対象</h3><button class="btn" type="button" data-evclose="1">閉じる</button></div>
+  <section>
+    <h2>作品（世代）</h2>
+    <select id="gen" class="gensel" aria-label="作品（世代）"></select>
+    <p class="note" id="genNote"></p>
+  </section>
+  <section>
+    <h2>撃破対象（最大3体）</h2>
+    <div id="targets"></div>
+  </section>
+</div></div>
 <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
 <div id="dxSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="ポケモンの詳細"></div>
 <div id="dxSetSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxSetT"><div class="sheet-in">
@@ -2077,13 +2165,13 @@ body:not(.app) .obsapp{display:none!important}
 <div id="toast" class="toast" role="status" hidden></div>
 <div id="pad" class="pad" hidden></div>
 <div id="fx" class="fx" aria-hidden="true"></div>
-<div class="bar">
+<div class="bar evbar">
   <div class="bar-in">
     <div id="gauge" class="gauge" aria-label="目標までの進捗"></div>
     <div class="countrow">
       <small>撃破数</small><b id="count">0</b><span class="unit">体</span>
-      <button id="fsBtn" class="fsbtn" type="button" aria-pressed="false">全画面ボタン</button>
-      <button id="undo" class="undo" type="button">1つ戻す</button>
+      <button id="fsBtn" class="fsbtn" type="button" aria-pressed="false" aria-label="全画面ボタン"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="fl">全画面</span></button>
+      <button id="undo" class="undo" type="button" aria-label="1つ戻す"><span class="big">−1</span><span class="ul">1つ戻す</span></button>
     </div>
     <div id="taps" class="taps"></div>
   </div>
@@ -2363,7 +2451,7 @@ const RUS_ICON='<svg viewBox="0 0 20 20" aria-hidden="true"><g fill="currentColo
 function renderParty(){
   partyEl.classList.toggle('picking',pick!==null);
   if(pick!==null){renderPick();renderGauge();return}
-  const C=CAP(),G=gen(),rel=new Set(relStats().map(s=>s.k));
+  const C=CAP(),G=gen(),rel=new Set(relStats().map(s=>s.k)),ct=evCurT();
   partyEl.innerHTML=S.members.map((m,i)=>{
     const t=sum(m.ev);
     const shown=STATS.filter(s=>m.ev[s.k]>0||rel.has(s.k)||goalOf(m,s.k)!=null);
@@ -2375,17 +2463,23 @@ function renderParty(){
     }).join('');
     const warn=canGain(m)&&S.targets.some(tg=>overs(m,tg).length);
     const badges=[G.lv100&&m.lv100?'<span class="mb">Lv100</span>':'',hasGoal(m)&&goalDone(m)?'<span class="mb ok">目標達成</span>':'',warn?'<span class="mb bad">次で超過</span>':''].join('');
+    const gn=evGainN(m,ct),seg=STATS.filter(s=>m.ev[s.k]>0).map(s=>`<span style="width:${m.ev[s.k]/510*100}%;background:${s.c}"></span>`).join('');
+    const ab=k=>LABELS.abc[STATS.findIndex(s=>s.k===k)];
+    const cur=STATS.filter(s=>m.ev[s.k]>0).map(s=>`<i style="--c:${s.c}">${ab(s.k)}${m.ev[s.k]}</i>`).join('')||'<span class="z">まだ0</span>';
+    const gls=hasGoal(m)?STATS.filter(s=>goalOf(m,s.k)>0).map(s=>`<i style="--c:${s.c}">${ab(s.k)}${goalOf(m,s.k)}</i>`).join('')||'すべて0':'';
     return `<article class="mon${m.on?'':' off'}${warn?' warn':''}" data-i="${i}">
       <div class="mhead">
         <button class="toggle sm" type="button" data-act="on" aria-pressed="${m.on}" aria-label="${esc(m.name)}を参加させる"></button>
         <button class="mname" type="button" data-act="edit" aria-label="${esc(m.name)}の名前・努力値・目標を編集">${esc(m.name)}</button>
+        ${gn>0?`<span class="evx-gain" style="--c:${bc(ct.i)}" title="${esc(ct.t.name||'未選択')}を1体倒すと増える努力値">+${gn}</span>`:''}
       </div>
-      ${bars?`<div class="bars">${bars}</div>`:'<p class="nobars">努力値はまだ0です</p>'}
       <div class="mopts">
         <span class="isel"><span class="ilab">${SHORT_ITEM[ITEMS.some(it=>it.id===m.item&&(!it.s||G.pw))?m.item:'none']}</span><select id="item_${i}" data-act="item" aria-label="${esc(m.name)}の持ち物">${ITEMS.filter(it=>!it.s||G.pw).map(it=>`<option value="${it.id}"${it.id===m.item?' selected':''}>${SHORT_ITEM[it.id]}</option>`).join('')}</select></span>
         <button class="rus${G.rus?'':' na'}" type="button" data-act="rus" aria-pressed="${G.rus?m.rus:false}" aria-label="ポケルス${G.rus?'':'（この作品にはありません）'}">${RUS_ICON}</button>
       </div>
-      <div class="mfoot">${badges}<span class="total">合計 <b>${t}</b>/510</span></div>
+      <div class="evx-sb" role="img" aria-label="努力値の合計${t}／510">${seg}</div>
+      <div class="evx-nm"><span class="cur">${cur}</span><span class="total"><b>${t}</b>/510</span></div>
+      <div class="evx-gl"><span class="g">${gls?`目標 ${gls}`:'目標なし'}</span>${badges}</div>
     </article>`;
   }).join('');
   partyEl.style.setProperty('--rows',Math.max(1,...S.members.map(m=>STATS.filter(s=>m.ev[s.k]>0||rel.has(s.k)||goalOf(m,s.k)!=null).length)));
@@ -2415,9 +2509,50 @@ function renderGauge(){
     const pct=goal?Math.floor(got/goal*100):100;
     const c=stats.length===1?stats[0].c:'var(--b1)';
     g.hidden=false;
-    g.innerHTML=`<span class="gt"><span style="--c:${c};width:${pct}%"></span></span><span class="gv${pct>=100?' max':''}" style="--c:${c}">${pct}%</span>`;
+    g.innerHTML=`<span class="gl">目標まで</span><span class="gt"><span style="--c:${c};width:${pct}%"></span></span><span class="gv${pct>=100?' max':''}" style="--c:${c}">${pct}%</span>`;
   }
-  setBarH();
+  setBarH();renderEvTop();
+}
+/* ---------- 画面上部：まとめの行・撃破数のカード ---------- */
+// いまの撃破対象：最後に倒した相手（なければ1番目）
+function evCurT(){
+  for(let k=S.history.length-1;k>=0;k--){const h=S.history[k];if(h.kind==='defeat'){const i=S.targets.findIndex(t=>t.id===h.tid);if(i>=0)return {t:S.targets[i],i};break}}
+  return S.targets.length?{t:S.targets[0],i:0}:null;
+}
+// その相手を1体倒すと増える努力値の合計（上限・510を考える）
+function evGainN(m,ct){
+  if(!ct||!canGain(m))return 0;
+  const x={ev:{...m.ev}};applyGain(x,gainOf(m,ct.t.y));return sum(x.ev)-sum(m.ev);
+}
+// その相手だけを倒し続けたとき、増える能力のうち目標を決めたものが目標に届くまでの数
+function evNeed(m,t){
+  const g=gainOf(m,t.y),ks=STATS.filter(s=>g[s.k]>0&&goalOf(m,s.k)!=null&&m.ev[s.k]<aimOf(m,s.k));if(!ks.length)return null; // 目標を決めた能力だけを見る
+  const x={ev:{...m.ev}},fin=()=>sum(x.ev)>=510||ks.every(s=>x.ev[s.k]>=aimOf(m,s.k));
+  let n=0;
+  while(!fin()){const b=sum(x.ev);applyGain(x,g);n++;if(sum(x.ev)===b||n>1000)return null}
+  return n;
+}
+const EV_SPARK='<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></svg>';
+function renderEvTop(){
+  const T=document.getElementById('evCondT');if(!T)return;
+  T.textContent=`${gen().n}・撃破対象 ${S.targets.length}体`;
+  document.getElementById('evChips').innerHTML=S.targets.length?S.targets.map((t,i)=>`<span class="shx-chip evx-chip" style="--c:${bc(i)}">${esc(t.name||'未選択')} ${esc(yText(t.y))}</span>`).join(''):'<span class="shx-chip">撃破対象なし・タップで追加</span>';
+  const on=S.members.filter(m=>m.on).length;
+  document.getElementById('evJoin').textContent=`参加中 ${on}匹`;
+  document.getElementById('evJoin2').textContent=`参加中 ${on} / ${S.members.length}`;
+  document.getElementById('evTn').innerHTML=S.targets.map((t,i)=>`<span><em style="background:${bc(i)}"></em><span class="n">${esc(t.name||'未選択')}</span> ${t.n}</span>`).join('');
+  const L=document.getElementById('evLeft'),ct=evCurT();
+  let html='';
+  if(!ct)html=`${EV_SPARK}<span class="t">撃破対象を追加すると、ここに目安が出ます</span>`;
+  else{
+    let best=null;
+    S.members.forEach(m=>{if(!canGain(m)||!hasGoal(m)||goalDone(m))return;const n=evNeed(m,ct.t);if(n&&(!best||n<best.n))best={m,n}});
+    if(best)html=`${EV_SPARK}<span class="t">${esc(best.m.name)}の目標まで あと</span><span class="cv">${best.n}</span><span class="u">体</span><span class="max" style="--c:${bc(ct.i)}">${esc(ct.t.name||'未選択')}</span>`;
+    else if(S.members.some(m=>canGain(m)&&hasGoal(m)))html=`${EV_SPARK}<span class="t">参加中のポケモンは、この相手で増える能力が目標に届いています</span>`;
+    else html=`${EV_SPARK}<span class="t">目標を決めると「あと何体」が出ます（編集から）</span>`;
+  }
+  L.innerHTML=html;
+  document.getElementById('evCount').textContent=S.count;
 }
 partyEl.addEventListener('click',e=>{
   const b=e.target.closest('button[data-act]');if(!b)return;
@@ -2561,10 +2696,11 @@ function renderTaps(){
 }
 // 撃破対象の名前が1行に収まるように、はみ出すときだけ文字を小さくする
 function fitNames(){
-  document.querySelectorAll('.tap .tn,.pbtn .pnm').forEach(el=>{
+  document.querySelectorAll('.tap .tn,.pbtn .pnm,#party .mon .mname').forEach(el=>{
     el.style.fontSize='';if(!el.clientWidth)return;
     let f=parseFloat(getComputedStyle(el).fontSize);
-    while(el.scrollWidth>el.clientWidth+.5&&f>8){f-=.5;el.style.fontSize=f+'px'}
+    const ow=()=>{let w=el.scrollWidth;if(el.tagName==='BUTTON'){const r=document.createRange();r.selectNodeContents(el);const cs=getComputedStyle(el);w=Math.max(w,r.getBoundingClientRect().width+parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+1)}return w};
+    while(ow()>el.clientWidth+.5&&f>8){f-=.5;el.style.fontSize=f+'px'}
   });
 }
 addEventListener('resize',()=>fitNames());
@@ -2572,6 +2708,8 @@ try{document.fonts&&document.fonts.ready.then(()=>fitNames())}catch(e){}
 function renderCount(bump){
   countEl.textContent=S.count;undoBtn.disabled=!S.history.length;
   if(bump){countEl.classList.remove('bump');void countEl.offsetWidth;countEl.classList.add('bump')}
+  renderEvTop();
+  const hc=document.getElementById('evCount');if(bump&&hc){hc.classList.remove('bump');void hc.offsetWidth;hc.classList.add('bump')}
 }
 function defeat(id,x,y,times=1){
   const i=S.targets.findIndex(t=>t.id===id);if(i<0)return;
@@ -2631,7 +2769,7 @@ function renderPad(){
 }
 function setFs(on){
   fsOn=on;document.body.classList.toggle('fs',on);barEl.classList.toggle('fs',on);pad.hidden=!on;
-  fsBtn.setAttribute('aria-pressed',on);fsBtn.textContent=on?'全画面をやめる':'全画面ボタン';
+  fsBtn.setAttribute('aria-pressed',on);fsBtn.querySelector('.fl').textContent=on?'全画面をやめる':'全画面';fsBtn.setAttribute('aria-label',on?'全画面をやめる':'全画面ボタン');
   setBarH();fitNames();
   if(on){try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(w=>wake=w).catch(()=>{})}catch(e){}}
   else{try{wake&&wake.release()}catch(e){}wake=null}
@@ -2779,7 +2917,25 @@ const genSel=document.getElementById('gen');
 genSel.innerHTML=GENS.map(g=>`<option value="${g.id}">${g.n}</option>`).join('');
 function renderGen(){
   genSel.value=String(gen().id);
+  const n=document.getElementById('genNote');if(n)n.textContent=gen().note||'';
 }
+/* 作品と撃破対象のシート、下の折りたたみ */
+const evCondSheet=document.getElementById('evCondSheet');
+function evCond(on){
+  evCondSheet.hidden=!on;
+  if(on){renderGen();renderTargets();document.body.classList.add('modal');evCondSheet.querySelector('.sheet-in').scrollTop=0;return}
+  editId=null;delArm=false;renderTargets();
+  if(!document.querySelector('.sheet:not([hidden]),#monCard:not([hidden]),#monFind:not([hidden])')&&drawer.hidden&&shPad.hidden)document.body.classList.remove('modal');
+  document.getElementById('evCond').focus({preventScroll:true});
+}
+document.getElementById('evCond').addEventListener('click',()=>evCond(true));
+evCondSheet.addEventListener('click',e=>{if(e.target===evCondSheet||e.target.closest('[data-evclose]'))evCond(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!evCondSheet.hidden)evCond(false)});
+document.getElementById('vEv').addEventListener('click',e=>{
+  const b=e.target.closest('[data-evx]');if(!b)return;
+  const p=document.getElementById(b.dataset.evx),open=p.hidden;
+  p.hidden=!open;b.setAttribute('aria-expanded',String(open));
+});
 genSel.addEventListener('change',()=>{S.gen=+genSel.value;save();renderAll()});
 const labelSeg=document.getElementById('labelSeg');
 const renderLabelSeg=()=>labelSeg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lm===S.lm)));
