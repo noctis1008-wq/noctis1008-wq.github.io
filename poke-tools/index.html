@@ -824,6 +824,78 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mondr{display:grid;grid-template-columns:6em 1fr;gap:8px;font-size:13px}
 .mondr span{color:var(--muted);font-size:12px}
 .mondr b{font-weight:500}
+/* 個体のステータス画面（ポップアップ） */
+@media (min-width:700px){#monCard{align-items:center}#monCard .sheet-in{border-radius:20px;max-height:88%}}
+#monCard .sheet-in{gap:10px;max-width:560px}
+.mc-hero{position:relative;border-radius:16px;padding:14px;color:#fff;overflow:hidden;
+  background:linear-gradient(135deg,var(--a1),color-mix(in srgb,var(--a2) 85%,#000 15%));box-shadow:0 6px 18px color-mix(in srgb,var(--a1) 30%,transparent)}
+.mc-hero::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;border:22px solid rgb(255 255 255 / .12)}
+.mc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.mc-name{min-width:0}
+.mc-name b{display:block;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
+.mc-name small{display:block;font-size:12px;font-weight:700;opacity:.9;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-lv{flex:none;text-align:right;font-family:var(--f-num);line-height:1}
+.mc-lv small{font-size:12px;font-weight:700;opacity:.85}
+.mc-lv b{font-size:30px;font-weight:800;letter-spacing:-.02em;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
+.mc-lv i{font-style:normal;display:block;margin-top:4px;font-size:16px;font-weight:800}
+.mc-types{display:flex;gap:6px;margin-top:10px;position:relative;z-index:1;align-items:center;min-height:24px}
+.mc-types .tyc{box-shadow:0 0 0 1.5px rgb(255 255 255 / .7)}
+.mc-types .mc-no{font-family:var(--f-num);font-size:12px;font-weight:800;opacity:.9;margin-right:2px}
+.mc-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.mc-fact{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:7px 10px;min-width:0;height:50px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center}
+.mc-fact span{font-size:11px;color:var(--muted);font-weight:700}
+.mc-fact b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-fact b small{font-size:11px;margin-left:4px;font-weight:700}
+.mc-fact .up{color:var(--warn)}.mc-fact .dn{color:#3a7fe4}
+.mc-fact b.none{color:var(--muted);font-weight:500}
+.mc-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.mc-ch{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mc-ch h4{margin:0;font-size:14px}
+.mc-ch span{font-size:12px;color:var(--muted);font-weight:700}
+.mc-ch span b{font-size:16px;color:var(--ink);margin-left:3px;font-family:var(--f-num)}
+.mc-radar{display:block;width:100%;max-width:300px;height:auto;margin:0 auto;overflow:visible}
+.mc-radar .mcg{fill:none;stroke:var(--line);stroke-width:1}
+.mc-radar .mcg.max{stroke:color-mix(in srgb,var(--iv) 45%,var(--line));stroke-width:1.5}
+.mc-radar .mca{stroke:var(--line);stroke-width:1}
+.mc-radar .mclo{fill:color-mix(in srgb,var(--iv) 32%,transparent);stroke:var(--iv);stroke-width:2;stroke-linejoin:round}
+.mc-radar .mchi{fill:none;stroke:var(--iv);stroke-width:1.5;stroke-dasharray:4 3;stroke-linejoin:round}
+.mc-radar .mcd{fill:var(--iv);stroke:var(--surface);stroke-width:1.5}
+.mc-radar .mcl{font-size:11.5px;font-weight:700;fill:var(--muted)}
+.mc-radar .mcl.up{fill:var(--warn)}.mc-radar .mcl.dn{fill:#3a7fe4}
+.mc-radar .mcv{font-size:14px;font-weight:800;fill:var(--ink);font-family:var(--f-num)}
+.mc-radar .mcv.j5{fill:var(--iv)}.mc-radar .mcv.j0{fill:var(--weak)}
+.mc-radar .mcrl{font-size:9px;fill:var(--muted);font-family:var(--f-num)}
+.mc-empty{height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px;text-align:center}
+.mc-leg{display:flex;justify-content:center;gap:14px;font-size:11px;color:var(--muted);margin-top:2px;height:16px}
+.mc-leg i{display:inline-block;width:16px;height:0;border-top:2px solid var(--iv);vertical-align:middle;margin-right:4px}
+.mc-leg i.d{border-top-style:dashed}
+.mc-st{display:grid;grid-template-columns:4.6em minmax(0,1fr) 3.3em 3em 4em;column-gap:0;align-items:center}
+.mc-st>*:not(:nth-child(5n+1)),.mc-sr>*:not(:first-child){padding-left:6px}
+.mc-st>.h{font-size:10.5px;color:var(--muted);font-weight:700;text-align:right;height:18px;line-height:18px}
+.mc-st>.h:first-child,.mc-st>.h:nth-child(2){text-align:left}
+.mc-sr{display:contents}
+.mc-sr>*{height:34px;display:flex;align-items:center;border-top:1px solid var(--line)}
+.mc-sn{font-size:12.5px;font-weight:800;gap:4px;white-space:nowrap}
+.mc-sn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.mc-sn .up{color:var(--warn)}.mc-sn .dn{color:#3a7fe4}
+.mc-bar{gap:6px;font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--muted)}
+.mc-bar em{font-style:normal;width:2.1em;text-align:right;flex:none}
+.mc-bar span{flex:1;height:8px;border-radius:99px;background:var(--sunken);overflow:hidden}
+.mc-bar span i{display:block;height:100%;width:var(--w);background:var(--c);border-radius:99px}
+.mc-iv,.mc-ev,.mc-real{justify-content:flex-end;font-family:var(--f-num);font-weight:800;white-space:nowrap}
+.mc-iv{font-size:14px}.mc-iv.rg{font-size:11.5px}.mc-iv.j5{color:var(--iv)}.mc-iv.j0{color:var(--weak)}.mc-iv.none,.mc-ev.none,.mc-real.none{color:var(--muted);font-weight:500}
+.mc-ev{font-size:13px}
+.mc-real{font-size:15px}.mc-real.rg{font-size:12px}
+.mc-tot{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:8px;font-size:12px;color:var(--muted);font-weight:700;font-family:var(--f-num)}
+.mc-tot b{color:var(--ink);font-size:13px;margin-left:3px}
+.mc-tot b.bad{color:var(--warn)}
+.mc-info{display:flex;flex-direction:column;gap:6px}
+.mc-info .mondr{grid-template-columns:5.5em 1fr}
+.mc-acts{display:flex;gap:8px;position:sticky;bottom:calc(-20px - env(safe-area-inset-bottom,0px));background:var(--bg);margin:0 -16px calc(-20px - env(safe-area-inset-bottom,0px));padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.mc-acts .btn{flex:1;height:44px;padding:0 6px;white-space:nowrap}
+.mc-acts .btn.primary{flex:1.3;background:var(--mon);border-color:var(--mon);color:#fff}
+.monrow .mrchev{display:none}
+
 .mondrw{grid-template-columns:1fr;gap:4px}
 .miv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;max-width:420px}
 .mivc{height:30px;display:flex;align-items:center;justify-content:space-between;gap:2px;padding:0 6px;border-radius:8px;background:var(--sunken);line-height:1;overflow:hidden}
@@ -1555,6 +1627,7 @@ body:not(.app) .obsapp{display:none!important}
 <p class="ppcontact">メール：<a href="mailto:noctis1008@yahoo.co.jp">noctis1008@yahoo.co.jp</a></p>
 </div></div></div>
 <div id="monSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="個体の登録"></div>
+<div id="monCard" class="sheet" hidden role="dialog" aria-modal="true" aria-label="個体のステータス"></div>
 <div id="toast" class="toast" role="status" hidden></div>
 <div id="pad" class="pad" hidden></div>
 <div id="fx" class="fx" aria-hidden="true"></div>
@@ -3526,9 +3599,9 @@ function renderMon(){
   const L=monShown();
   document.getElementById('monCount').textContent=M.list.length?`${L.length}匹を表示（全${M.list.length}匹）`:'';
   const row=(k,v)=>v?`<div class="mondr"><span>${k}</span><b>${v}</b></div>`:'';
-  document.getElementById('monList').innerHTML=L.length?`<div class="monrow monhead" aria-hidden="true"><span>ポケモン</span><span style="text-align:center">性</span><span style="text-align:right">Lv</span><span>親・ID</span><span>とくせい</span></div>`+L.map(m=>{const p=monParent(m),open=monOpenRows.has(m.id);
+  document.getElementById('monList').innerHTML=L.length?`<div class="monrow monhead" aria-hidden="true"><span>ポケモン</span><span style="text-align:center">性</span><span style="text-align:right">Lv</span><span>親・ID</span><span>とくせい</span></div>`+L.map(m=>{const p=monParent(m),open=false;
     const x=monRb(m),t=x&&monRbTally(x);
-    return `<div class="monitem${open?' open':''}"><button type="button" class="monrow" data-montoggle="${m.id}" aria-expanded="${open}">
+    return `<div class="monitem${open?' open':''}"><button type="button" class="monrow" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(monLabel(m))}のステータスを開く">
       <span class="mrn">${esc(monLabel(m))}</span><span class="mrg ${m.gender==='♂'?'m':m.gender==='♀'?'f':''}">${m.gender&&m.gender!=='不明'?m.gender:'－'}</span><span class="mrl">${m.lv?esc(m.lv):'－'}</span>
       <span class="mrp">${p?`<span>${esc(p.name)}</span><small>${esc(p.tid)}</small>`:'－'}</span><span class="mra">${m.ability?esc(m.ability):'－'}</span></button>
       ${open?`<div class="mondet">
@@ -3546,7 +3619,7 @@ function monOpen(id){
   monEdit=Object.assign({id:0,sp:0,nick:'',lv:'',gender:'',nature:'',ability:'',item:'',purpose:'',soft:'',place:'box',box:'',pos:'',placeNote:'',parent:'',tags:[],memo:'',rb:'',ball:''},m?JSON.parse(JSON.stringify(m)):{});
   monEdit._k=Date.now();monRbOpen=false;monParentsOpen=false;monSheet.hidden=false;document.body.classList.add('modal');renderMonSheet();
 }
-function monClose(){monSheet.hidden=true;monEdit=null;monParentsOpen=false;document.body.classList.remove('modal')}
+function monClose(){monSheet.hidden=true;monEdit=null;monParentsOpen=false;document.body.classList.remove('modal');if(monCardBack){const id=monCardBack;monCardBack=0;if(S.mon.list.some(x=>x.id===id))monCardOpen(id)}}
 function renderMonSheet(){
   const e=monEdit;if(!e&&!monParentsOpen)return;
   if(monParentsOpen){renderMonParents();return}
@@ -3652,7 +3725,7 @@ document.getElementById('vMon').addEventListener('click',e=>{
   if(d.monopen){monOpen(+d.monopen);return}
   if(d.montype){const x=M.list.find(y=>y.id===+d.montype);if(x)tyFromMon(x);return}
   if(d.moniv){const x=M.list.find(y=>y.id===+d.moniv);if(x)ivFromMon(x);return}
-  if(d.montoggle){const id=+d.montoggle;monOpenRows.has(id)?monOpenRows.delete(id):monOpenRows.add(id);renderMon();return}
+  if(d.montoggle){monCardOpen(+d.montoggle);return}
   if(d.monsort){M.sort=d.monsort;save();renderMon();return}
   if(d.mondir){M.dir=d.mondir;save();renderMon();return}
   if(b.id==='monTagBtn'){monTagOpen=!monTagOpen;renderMon();return}
@@ -4344,6 +4417,80 @@ ivEl.addEventListener('click',e=>{
   q.addEventListener('blur',()=>setTimeout(()=>{if(document.activeElement!==q)document.getElementById('ivRes').innerHTML=''},250));
   q.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=document.querySelector('#ivRes [data-ivmon]');if(b){e.preventDefault();ivPick(b.dataset.ivmon)}}});}
 
+/* 個体のステータス画面（行をタップすると開くポップアップ） */
+const monCard=document.getElementById('monCard');let monCardId=0,monCardBack=0;
+function monBase(m){const L=ivList();return (m.iv&&m.iv.mon&&L.find(e=>e.n===m.iv.mon&&e.d===m.sp))||L.find(e=>e.d===m.sp)||null}
+// レーダーチャート：上から時計回りに HP・攻撃・防御・素早さ・特防・特攻（ゲームのジャッジと同じ並び）
+const MC_ORD=[0,1,2,5,4,3];
+function mcRadar(r,nat){
+  const W=300,H=262,cx=150,cy=132,R=88,L=LABELS.kanji;
+  const pt=(j,v)=>{const a=-Math.PI/2+j*Math.PI/3,d=R*v/31;return [cx+d*Math.cos(a),cy+d*Math.sin(a)]};
+  const poly=f=>MC_ORD.map((i,j)=>pt(j,f(i)).map(n=>n.toFixed(1)).join(',')).join(' ');
+  let g='';
+  [10,20,31].forEach(v=>{g+=`<polygon class="mcg${v===31?' max':''}" points="${poly(()=>v)}"/>`});
+  MC_ORD.forEach((i,j)=>{const [x,y]=pt(j,31);g+=`<line class="mca" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`});
+  [10,20].forEach(v=>{const [x,y]=pt(0,v);g+=`<text class="mcrl" x="${(x+5).toFixed(1)}" y="${(y+(v===31?12:3)).toFixed(1)}">${v}</text>`});
+  const has=r.some(Boolean),rg=r.some(v=>v&&v[0]!==v[1]);
+  if(has){
+    g+=`<polygon class="mclo" points="${poly(i=>r[i]?r[i][0]:0)}"/>`;
+    if(rg)g+=`<polygon class="mchi" points="${poly(i=>r[i]?r[i][1]:0)}"/>`;
+    MC_ORD.forEach((i,j)=>{if(!r[i])return;const [x,y]=pt(j,r[i][0]);g+=`<circle class="mcd" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5"/>`});
+  }
+  MC_ORD.forEach((i,j)=>{
+    const a=-Math.PI/2+j*Math.PI/3,d=R+24,x=cx+d*Math.cos(a),y=cy+d*Math.sin(a);
+    const anc=Math.abs(Math.cos(a))<.1?'middle':Math.cos(a)>0?'start':'end',v=r[i];
+    const cls=nat&&nat.up===i?' up':nat&&nat.dn===i?' dn':'',mk=nat&&nat.up===i?'↑':nat&&nat.dn===i?'↓':'';
+    const yy=j===0?y-8:j===3?y+4:y-6;
+    const tv=v?(v[0]===v[1]?v[0]:v[0]+'〜'+v[1]):'－',jl=v?Math.min(ivLev(v[0]),ivLev(v[1])):-1;
+    g+=`<text class="mcl${cls}" x="${x.toFixed(1)}" y="${yy.toFixed(1)}" text-anchor="${anc}">${esc(L[i])}${mk}</text><text class="mcv${jl===5?' j5':jl===0?' j0':''}" x="${x.toFixed(1)}" y="${(yy+16).toFixed(1)}" text-anchor="${anc}">${tv}</text>`;
+  });
+  return `<svg class="mc-radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="個体値のレーダーチャート">${g}</svg>`;
+}
+function renderMonCard(){
+  const m=S.mon.list.find(x=>x.id===monCardId);if(!m){monCardClose();return}
+  const e=monBase(m),L=LABELS.kanji,nat=ivNat(m.nature),r=(m.iv&&m.iv.r)||[null,null,null,null,null,null];
+  const lv=ivNum(m.lv),lvOk=lv!=null&&lv>=1&&lv<=100,ev=m.ev||{};
+  const a1=e?TY_C[e.t[0]]:'var(--mon)',a2=e?TY_C[e.t[1]!=null?e.t[1]:e.t[0]]:'var(--mon)';
+  const g=m.gender==='♂'?'<i style="color:#bcd6ff">♂</i>':m.gender==='♀'?'<i style="color:#ffc6dc">♀</i>':'';
+  const fact=(k,v)=>`<div class="mc-fact"><span>${k}</span><b${v?'':' class="none"'}>${v||'－'}</b></div>`;
+  const natV=m.nature?esc(m.nature)+(nat&&nat.up>=0?`<small><span class="up">${L[nat.up]}↑</span> <span class="dn">${L[nat.dn]}↓</span></small>`:nat?'<small>補正なし</small>':''):'';
+  const ivAll=r.every(Boolean),ivLo=r.reduce((s,v)=>s+(v?v[0]:0),0),ivHi=r.reduce((s,v)=>s+(v?v[1]:0),0),n31=r.filter(v=>v&&v[0]===31).length;
+  const evT=EVK.reduce((s,k)=>s+(+ev[k]||0),0);
+  const rows=STATS.map((s,i)=>{
+    const b=e?e.b[i]:null,v=r[i],evv=+ev[s.k]||0,mk=nat&&nat.up===i?'<span class="up">↑</span>':nat&&nat.dn===i?'<span class="dn">↓</span>':'';
+    let real='－',rc=' none';
+    if(e&&v&&lvOk&&(i===0||nat)){const mm=i===0?10:nat.up===i?11:nat.dn===i?9:10,lo=ivStat(i,b,v[0],evv,lv,mm),hi=ivStat(i,b,v[1],evv,lv,mm);real=lo===hi?lo:lo+'〜'+hi;rc=lo===hi?'':' rg'}
+    const jl=v?Math.min(ivLev(v[0]),ivLev(v[1])):-1;
+    return `<div class="mc-sr" style="--c:${s.c}"><span class="mc-sn">${esc(L[i])}${mk}</span><span class="mc-bar"><em>${b??'－'}</em><span><i style="--w:${b?Math.min(100,b/2.55).toFixed(1):0}%"></i></span></span><span class="mc-iv${v?(v[0]!==v[1]?' rg':'')+(jl===5?' j5':jl===0?' j0':''):' none'}">${v?(v[0]===v[1]?v[0]:v[0]+'〜'+v[1]):'－'}</span><span class="mc-ev${evv?'':' none'}">${evv||'0'}</span><span class="mc-real${rc}">${real}</span></div>`}).join('');
+  const p=monParent(m),t=monRb(m)&&monRbTally(monRb(m));
+  const row=(k,v)=>v?`<div class="mondr"><span>${k}</span><b>${v}</b></div>`:'';
+  const info=row('何の個体か',esc(m.purpose||''))+row('場所',esc(monWhere(m)))+(p?row('親',`${esc(p.name)}（ID ${esc(p.tid)}）${p.soft?'・'+esc(p.soft):''}`):'')+(t?row('リボン',`🎀 ${t.got}/${t.total}${t.mtotal?`・あかし ${t.mgot}/${t.mtotal}`:''}`):'')+(m.goal?row('努力値の目標',esc(evTxt(m.goal))):'')
+    +((m.tags||[]).length?`<div class="montags">${m.tags.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'')+(m.memo?`<p class="monmemo">${esc(m.memo)}</p>`:'');
+  monCard.innerHTML=`<div class="sheet-in"><div class="sh-head"><h3>ステータス</h3><button class="btn" type="button" data-mcclose="1">閉じる</button></div>
+  <div class="mc-hero" style="--a1:${a1};--a2:${a2}"><div class="mc-top"><div class="mc-name"><b>${esc(monLabel(m))}</b><small>${m.nick&&m.sp?esc(e?tyShortName(e.n):monSp(m)):e&&e.n!==monSp(m)?esc(e.n):'\u00a0'}</small></div><div class="mc-lv"><small>Lv.</small><b>${lvOk?lv:'－'}</b>${g}</div></div>
+    <div class="mc-types">${e?`<span class="mc-no">No.${pad3(e.d)}</span>${e.t.map(x=>tyChip(x)).join('')}`:'<span class="mc-no">ポケモン未設定</span>'}</div></div>
+  <div class="mc-facts">${fact('性格',natV)}${fact('特性',esc(m.ability||''))}${fact('持ち物',esc(m.item||''))}${fact('ボール',esc(m.ball||''))}</div>
+  <div class="mc-card"><div class="mc-ch"><h4>個体値</h4><span>合計<b>${r.some(Boolean)?(ivAll?(ivLo===ivHi?ivLo:ivLo+'〜'+ivHi):'－'):'－'}</b> / 186${n31?`・31が${n31}つ`:''}</span></div>
+    ${r.some(Boolean)?mcRadar(r,nat)+`<div class="mc-leg">${r.some(v=>v&&v[0]!==v[1])?'<span><i></i>少ないほう</span><span><i class="d"></i>多いほう</span>':''}</div>`
+      :`<div class="mc-empty">個体値はまだ記録されていません。${m.sp?'<button class="btn" type="button" data-mciv="1">個体値ジャッジで調べる</button>':''}</div>`}</div>
+  <div class="mc-card"><div class="mc-ch"><h4>能力</h4><span>${lvOk?'Lv.'+lv+'の実数値':'レベルを入れると実数値が出ます'}</span></div>
+    <div class="mc-st"><span class="h">能力</span><span class="h">種族値</span><span class="h">個体値</span><span class="h">努力値</span><span class="h">実数値</span>${rows}</div>
+    <div class="mc-tot"><span>種族値の合計<b>${e?e.b.reduce((s,v)=>s+v,0):'－'}</b></span><span>努力値の合計<b class="${evT>510?'bad':''}">${evT}</b> / 510</span></div></div>
+  ${info?`<div class="mc-card mc-info">${info}</div>`:''}
+  <div class="mc-acts"><button class="btn primary" type="button" data-mcedit="1">編集する</button>${m.sp?'<button class="btn" type="button" data-mciv="1">個体値ジャッジ</button><button class="btn" type="button" data-mcty="1">タイプ相性</button>':''}</div></div>`;
+}
+function monCardOpen(id){monCardId=id;monCard.hidden=false;document.body.classList.add('modal');renderMonCard();monCard.querySelector('.sheet-in').scrollTop=0;monCard.querySelector('[data-mcclose]')?.focus()}
+function monCardClose(){monCard.hidden=true;monCardId=0;if(monSheet.hidden&&sheetEl.hidden)document.body.classList.remove('modal')}
+monCard.addEventListener('click',ev=>{
+  if(ev.target===monCard){monCardClose();return}
+  const b=ev.target.closest('button');if(!b)return;const d=b.dataset,id=monCardId,x=S.mon.list.find(y=>y.id===id);
+  if(d.mcclose){monCardClose();return}
+  if(!x)return;
+  if(d.mcedit){monCard.hidden=true;monCardBack=id;monOpen(id);return}
+  if(d.mciv){monCardClose();ivFromMon(x);return}
+  if(d.mcty){monCardClose();tyFromMon(x);return}
+});
+monCard.addEventListener('keydown',ev=>{if(ev.key==='Escape')monCardClose()});
 const VIEWS={ev:{t:'努力値カウンター',el:'vEv'},shiny:{t:'色違い厳選カウンター',el:'vShiny'},ribbon:{t:'リボン管理',el:'vRibbon'},dex:{t:'図鑑埋め支援',el:'vDex'},pb:{t:'ポロック・ポフィン',el:'vPb'},mon:{t:'個体管理',el:'vMon'},iv:{t:'個体値ジャッジ',el:'vIv'},type:{t:'タイプ相性',el:'vType'},settings:{t:'設定',el:'vSettings'}};
 const drawer=document.getElementById('drawer'),menuBtn=document.getElementById('menuBtn');
 function openMenu(){drawer.hidden=false;menuBtn.setAttribute('aria-expanded','true');document.body.classList.add('modal');drawer.querySelector('[aria-current="page"]')?.focus()}
