@@ -1271,6 +1271,18 @@ html.rot body.onbo #rotScroll{overflow:hidden}
 .mnx-r .l1 .rt .tera-ic{filter:drop-shadow(0 1px 1px rgb(0 0 0 / .25))}
 .mc-types .mc-tera{margin-left:6px;display:inline-flex;align-items:center;gap:4px;height:24px;box-sizing:border-box;padding:0 8px 0 4px;border-radius:7px;background:rgb(255 255 255 / .92);color:#1b2340;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 1px 3px rgb(0 0 0 / .2)}
 .mc-types .mc-tera small{font-size:10px;font-weight:800;color:#5b6482;margin-right:3px}
+/* 一覧のカード（案A）：1段目 名前・性別・Lv、右はしにテラ／2段目 ソフト・居場所・持ち物／3段目 性格・特性・タグ */
+.mnx-r .l1 .lv2{flex:none;font-family:var(--f-num);font-weight:700;font-size:12.5px;color:var(--muted)}
+.mnx-r .l1 b{flex:0 1 auto}
+.mnx-r .l1 .tr{flex:none;margin-left:auto;display:flex;align-items:center;height:20px;align-self:center}
+.mnx-r .pc{flex:none;font-size:10px;font-weight:800;line-height:15px;height:15px;padding:0 5px;border-radius:4px;background:var(--sunken);border:1px solid var(--line);color:var(--ink);margin-right:5px;align-self:center}
+.mnx-r .pc.ja{font-size:9.5px}
+.mnx-r .l2{align-items:center}
+.mnx-r .nt{flex:none;color:var(--ink);font-weight:700}
+.mnx-r .nt i{font-style:normal;font-size:10.5px;margin-left:3px}.mnx-r .nt i.up{color:#d9472b}.mnx-r .nt i.dn{color:#3a7fe4}
+.mnx-r .l3 .na{flex:none;display:flex;align-items:center;gap:6px;font-size:11.5px;line-height:20px;height:20px;padding:0 8px 0 0;border:none;background:none;color:var(--muted);font-weight:500;margin-right:2px}
+.mnx-r .l3 .na .ab{border:none;background:none;padding:0;height:auto;line-height:20px;color:var(--muted);font-weight:500;font-size:11.5px}
+.mnx-r .l3 .pu{border:none!important;background:none!important;padding:0!important;font-weight:500!important;color:var(--muted)!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto!important;min-width:0}
 .monbar{display:flex;gap:8px}
 .monbar .btn{min-height:48px;font-size:15px;border-radius:12px}
 .monbar .btn.primary{flex:1;background:var(--mon);border-color:var(--mon);color:#fff}
@@ -5029,11 +5041,19 @@ const MNX_DIR={add:{asc:'古い順',desc:'新しい順'},name:{asc:'あ→ん',d
 function monQcOk(m){const q=S.mon.qc||'';if(!q)return true;if(q==='fav')return !!m.fav;if(q.startsWith('t:'))return (m.tags||[]).includes(q.slice(2));return true}
 // 一覧の1行：タイプの色の丸＋名前の1文字（公式の絵は使わない）
 function mnxRow(m){
-  const e=m.sp?monBase(m):null,t=e?e.t:[],c1=t.length?TY_C[t[0]]:'',c2=t.length>1?TY_C[t[1]]:c1;
-  const lab=monLabel(m),ch=m.sp||m.nick?Array.from(lab)[0]:'?';
+  const lab=monLabel(m);
   const nm=m.nick&&m.sp?`${esc(m.nick)}<small>（${esc(monSp(m))}）</small>`:esc(lab);
   const g=m.gender==='♂'?'<span class="g m" aria-label="オス">♂</span>':m.gender==='♀'?'<span class="g f" aria-label="メス">♀</span>':'';
-  return `<div class="mnx-it"><button type="button" class="mnx-r" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(lab)}のステータスを開く"><span class="mid"><span class="l1"><b>${nm}</b>${g}<span class="rt">${monTeraTag(m)}<span class="lv">${m.lv?'Lv.'+esc(m.lv):''}</span></span></span><span class="l2"><span class="pl">${esc(monWhere(m))}</span>${m.item?`<span class="it">${esc(m.item)}</span>`:''}</span><span class="l3">${(m.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</span></span></button><button type="button" class="mnx-fv" data-monfav="${m.id}" aria-pressed="${!!m.fav}" aria-label="${esc(lab)}をお気に入り">${MNX_STAR}</button></div>`;
+  const lv=m.lv?`<span class="lv2">Lv.${esc(m.lv)}</span>`:'';
+  // 2段目：ソフトの小さな札＋ボックス・場所＋持ち物
+  const ab=monSoftAb(m.soft);let pl=monWhere(m);if(ab&&pl.startsWith(ab))pl=pl.slice(ab.length).replace(/^・/,'');
+  const soft=m.soft?`<span class="${monSoftCls(m.soft)} pc">${esc(ab)}</span>`:'';
+  // 3段目：性格（↑↓）・特性・タグ。どれもないときは用途
+  const nx=m.nature?ivNat(m.nature):null,tags=m.tags||[];
+  const nat=m.nature?`<span class="nt">${esc(m.nature)}${nx&&nx.up>=0?`<i class="up">${LABELS.abc[nx.up]}↑</i><i class="dn">${LABELS.abc[nx.dn]}↓</i>`:''}</span>`:'';
+  const na=m.nature||m.ability?`<span class="na">${nat}${m.ability?`<span class="ab">${esc(m.ability)}</span>`:''}</span>`:'';
+  const pu=!tags.length&&!m.nature&&!m.ability&&m.purpose?`<span class="pu">${esc(m.purpose)}</span>`:'';
+  return `<div class="mnx-it"><button type="button" class="mnx-r" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(lab)}のステータスを開く"><span class="mid"><span class="l1"><b>${nm}</b>${g}${lv}<span class="tr">${monTeraTag(m)}</span></span><span class="l2">${soft}<span class="pl">${esc(pl)}</span>${m.item?`<span class="it">${esc(m.item)}</span>`:''}</span><span class="l3">${na}${tags.map(x=>`<span>${esc(x)}</span>`).join('')}${pu}</span></span></button><button type="button" class="mnx-fv" data-monfav="${m.id}" aria-pressed="${!!m.fav}" aria-label="${esc(lab)}をお気に入り">${MNX_STAR}</button></div>`;
 }
 
 /* 個体の登録・編集シート */
