@@ -1372,6 +1372,117 @@ body:not(.app) .obsapp{display:none!important}
 .ivmsg{height:36px;overflow:hidden;font-size:12px;line-height:18px;margin:2px 0 0;color:var(--muted)}
 .ivmsg.w{color:var(--weak);font-weight:700}
 .ivmsg.ok{color:var(--iv);font-weight:700}
+/* 色違い厳選：案A */
+:root{--shx-hero:linear-gradient(135deg,#e2ad1d 0%,#c18a0c 55%,#9b6a05 100%);--shx-rst:#d0473a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--shx-hero:linear-gradient(135deg,#c99a18 0%,#9e700a 55%,#6f4c03 100%);--shx-rst:#ff7a6b}}
+:root[data-theme="dark"]{--shx-hero:linear-gradient(135deg,#c99a18 0%,#9e700a 55%,#6f4c03 100%);--shx-rst:#ff7a6b}
+#vShiny{gap:10px}
+.shx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.shx-ic{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:color-mix(in srgb,var(--c) 80%,var(--ink));background:color-mix(in srgb,var(--c) 18%,transparent)}
+.shx-ic svg{width:15px;height:15px}
+.shx-cond{display:flex;align-items:center;gap:10px;padding:10px 12px;height:66px;width:100%;text-align:left;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.shx-cond:active{background:var(--sunken)}
+.shx-cond .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.shx-cond .t1{font-size:13px;font-weight:700;line-height:18px;height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shx-chips{display:flex;gap:4px;overflow:hidden;white-space:nowrap;height:20px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.shx-chip{flex:none;font-size:11px;font-weight:700;line-height:18px;height:20px;padding:0 7px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);color:var(--muted)}
+.shx-chip.on{color:color-mix(in srgb,var(--sh) 85%,var(--ink));border-color:color-mix(in srgb,var(--sh) 45%,var(--line));background:color-mix(in srgb,var(--sh) 12%,var(--surface))}
+.shx-edit{flex:none;font-size:12px;font-weight:700;padding:6px 8px 6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--sunken);display:flex;align-items:center;gap:1px}
+.shx-edit svg{width:15px;height:15px}
+.shx-hero{position:relative;overflow:hidden;border-radius:16px;padding:12px 16px;color:#fff;height:150px;flex:none;background:var(--shx-hero);box-shadow:0 6px 18px -8px rgb(155 106 5 / .6)}
+.shx-hero::after{content:"";position:absolute;right:-34px;top:-50px;width:130px;height:130px;border-radius:50%;border:20px solid rgb(255 255 255 / .13);pointer-events:none}
+.shx-hero .lab{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;line-height:18px;height:18px}
+.shx-hero .lab .gl{display:inline-flex;align-items:center;gap:4px}
+.shx-hero .lab svg{width:14px;height:14px}
+.shx-hero .num{position:relative;z-index:1;overflow:hidden;display:flex;align-items:baseline;justify-content:center;gap:6px;margin-top:2px;height:62px;white-space:nowrap}
+.shx-hero .num b{font-family:var(--f-display);font-weight:400;font-size:54px;line-height:62px;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgb(0 0 0 / .15)}
+.shx-hero .num b.bump{animation:bump .25s ease-out}
+.shx-hero .num>span{font-size:15px;font-weight:700}
+.shx-chain{position:relative;z-index:1;display:flex;align-items:center;gap:6px;margin-top:8px;height:34px;padding:0 6px 0 10px;border-radius:10px;background:rgb(0 0 0 / .16);font-size:12px;font-weight:700;white-space:nowrap}
+.shx-chain svg{width:16px;height:16px;flex:none}
+.shx-chain .t{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.shx-chain .cv{flex:none;font-family:var(--f-num);font-size:16px}
+.shx-chain .u{flex:none}
+.shx-chain .max{flex:none;margin-left:auto;font-size:11px;line-height:18px;padding:1px 8px;border-radius:999px;background:rgb(255 255 255 / .92);color:#8a5d00}
+.shx-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.shx-tile{height:100px;display:flex;flex-direction:column;gap:2px;padding:10px 12px;min-width:0}
+.shx-tile .hd{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap;height:22px}
+.shx-tile .hd .shx-ic{width:22px;height:22px;border-radius:7px}
+.shx-tile .hd .shx-ic svg{width:13px;height:13px}
+.shx-tile b{font-family:var(--f-display);font-weight:400;font-size:26px;line-height:32px;height:32px;color:var(--sh);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+.shx-tile .sub{font-size:11px;color:var(--muted);line-height:15px;height:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shx-bar{height:6px;flex:none;border-radius:999px;background:var(--sunken);border:1px solid var(--line);overflow:hidden;margin-top:auto}
+.shx-bar span{display:block;height:100%;background:var(--sh);border-radius:999px;transition:width .2s}
+.shx-ctl{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;gap:10px;height:100px;flex:none}
+.shx-ctl:has(>.sh5:not([hidden])){grid-template-columns:56px minmax(0,1fr) 60px 56px;gap:8px}
+#vShiny .shx-plus{min-width:0;height:auto;border:none;border-radius:18px;padding:0;background:linear-gradient(180deg,color-mix(in srgb,var(--b1) 82%,#fff),var(--b1));color:#fff;box-shadow:0 5px 0 color-mix(in srgb,var(--b1) 55%,#000),0 10px 20px -8px color-mix(in srgb,var(--b1) 70%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#vShiny .shx-plus .pl{font-family:var(--f-display);font-weight:400;font-size:40px;line-height:44px;white-space:nowrap}
+#vShiny .shx-plus small{font-family:var(--f-body);font-size:12px;font-weight:700;opacity:.92;white-space:nowrap}
+#vShiny .shx-plus:active{transform:translateY(3px);box-shadow:0 2px 0 color-mix(in srgb,var(--b1) 55%,#000)}
+.shx-side{min-width:0;border-radius:16px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:700;padding:0 2px;-webkit-tap-highlight-color:transparent}
+.shx-side:active{background:var(--sunken)}
+.shx-side:disabled{opacity:.45}
+.shx-side .big{font-family:var(--f-num);font-size:22px;line-height:1}
+.shx-side svg{width:22px;height:22px}
+.shx-side small{font-size:10.5px;color:var(--muted);white-space:nowrap}
+#vShiny .sh5.shx-side{position:static;box-shadow:none;border:1.5px solid color-mix(in srgb,var(--sh) 55%,var(--line));background:color-mix(in srgb,var(--sh) 10%,var(--surface));color:color-mix(in srgb,var(--sh) 85%,var(--ink));font-size:12.5px;line-height:1.25;text-align:center;padding:0 4px;border-radius:16px}
+.shx-sub{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;height:44px;flex:none}
+.shx-sbtn{min-width:0;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;padding:0 6px}
+.shx-sbtn svg{width:16px;height:16px;flex:none}
+.shx-rst{color:var(--shx-rst)}
+.shx-rst::before{content:"";width:16px;height:16px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 3-6.7L3 8'/%3E%3Cpath d='M3 3v5h5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12a9 9 0 1 0 3-6.7L3 8'/%3E%3Cpath d='M3 3v5h5'/%3E%3C/svg%3E") center/contain no-repeat}
+.shx-rst.warn{background:var(--shx-rst);border-color:var(--shx-rst);color:#fff}
+.shx-got{border:1.5px solid var(--sh);background:color-mix(in srgb,var(--sh) 12%,var(--surface));color:color-mix(in srgb,var(--sh) 80%,var(--ink))}
+.shx-got span{overflow:hidden;text-overflow:ellipsis}
+.shx-sec{display:flex;flex-direction:column;gap:10px}
+.shx-sh{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}
+.shx-plan{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.shx-plan input[type=number]{width:120px;font-family:var(--f-num);font-weight:700;padding:8px 10px;border-radius:10px}
+.shx-planout{display:flex;flex-direction:column;gap:8px;height:50px;justify-content:flex-end}
+.shx-planout .res{display:flex;align-items:baseline;gap:6px;font-size:13px;height:32px;white-space:nowrap;overflow:hidden}
+.shx-planout .res b{font-family:var(--f-display);font-weight:400;font-size:24px;line-height:32px;color:var(--sh)}
+.shx-planout .res.none{align-items:center;font-size:12px;color:var(--muted);white-space:normal;line-height:1.35}
+.shx-planout .shx-bar{margin-top:0}
+.shx-ms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.shx-ms>div{height:48px;border-radius:10px;background:var(--sunken);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+.shx-ms small{font-size:10.5px;color:var(--muted);font-weight:700;line-height:14px}
+.shx-ms b{font-family:var(--f-num);font-size:15px;line-height:20px;white-space:nowrap}
+.shx-ms>div.done{border-color:color-mix(in srgb,var(--sh) 50%,var(--line));background:color-mix(in srgb,var(--sh) 10%,var(--surface))}
+.shx-ms>div.done b,.shx-ms>div.done small{color:color-mix(in srgb,var(--sh) 85%,var(--ink))}
+.shx-note{font-size:11.5px;color:var(--muted);margin:0;line-height:1.5}
+.shx-sec .shx-note{min-height:3em}
+.shx-row{display:flex;align-items:center;gap:10px;height:62px;width:100%;text-align:left;color:var(--ink)}
+.shx-row:active{background:var(--sunken)}
+.shx-row .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.shx-row .tx>span{font-size:14px;font-weight:700}
+.shx-row .tx small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shx-row>svg{width:16px;height:16px;color:var(--muted);flex:none}
+.shx-sheet section{display:flex;flex-direction:column}
+.shx-gens{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.shx-gens button,.shx-meth button{min-width:0;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:700}
+.shx-gens button{height:54px;padding:2px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11.5px;line-height:1.15}
+.shx-gens button small{display:block;font-size:9.5px;color:var(--muted);font-weight:500;line-height:13px}
+.shx-meth{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.shx-meth button{min-height:44px;padding:4px 6px;font-size:12.5px;line-height:1.25}
+.shx-gens button[aria-pressed=true],.shx-meth button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.shx-gens button[aria-pressed=true] small{color:var(--bg);opacity:.75}
+.shx-opts{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 12px}
+.shx-opts:empty{display:none}
+.shx-opt{display:flex;align-items:center;gap:10px;min-height:54px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+.shx-opt:last-child{border-bottom:none}
+.shx-opt .l{flex:1;min-width:0;display:flex;flex-direction:column}
+.shx-opt .l small{font-size:11px;color:var(--muted);font-weight:500;line-height:1.35}
+.shx-opt select{flex:0 1 52%;min-width:0}
+.shx-opt .seg{margin-left:0;flex:none}
+.shx-opt .seg button{min-width:40px;padding:7px 8px}
+.shx-step{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:36px;flex:none;background:var(--surface)}
+.shx-step button{width:36px;height:100%;border:none;background:var(--sunken);color:var(--ink);font-size:18px;font-weight:700;padding:0}
+.shx-step input[type=number]{width:62px;height:100%;border:none;border-radius:0;background:var(--surface);text-align:center;font-family:var(--f-num);font-weight:700;padding:0 2px;-moz-appearance:textfield;appearance:textfield}
+.shx-step input::-webkit-outer-spin-button,.shx-step input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.shx-ok{height:48px;flex:none;border:none;border-radius:14px;background:var(--ink);color:var(--bg);font-size:15px;font-weight:700}
+.shx-sheet .obsrow{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:700}
+.shx-sheet .obsrow .shl{flex:1}
+.shx-sheet .obshow{margin:0}
 </style>
 
 <header class="appbar"><div class="appbar-in">
@@ -1449,70 +1560,34 @@ body:not(.app) .obsapp{display:none!important}
 </div>
 
 <div class="wrap view" id="vShiny" hidden>
-  <div class="shbox foldbox" data-foldbox="sh">
-  <button type="button" class="foldhd" aria-expanded="true"><span class="foldt">設定</span><span class="foldsum" id="shFoldSum"></span><svg class="foldchev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
-  <div class="foldbody">
-  <section>
-    <h2>作品（世代）</h2>
-    <select id="shGen" class="gensel" aria-label="色違い厳選の作品（世代）"></select>
-  </section>
-  <section>
-    <h2>厳選方法</h2>
-    <select id="shSit" class="gensel" aria-label="厳選方法"></select>
-    <div id="shOpts" class="stack shopts"></div>
-    <p id="shNote" class="note"></p>
-  </section>
+  <button id="shCond" class="shx-card shx-cond" type="button" aria-haspopup="dialog" aria-label="厳選の条件を変更"><span class="shx-ic" style="--c:var(--sh)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="tx"><span class="t1" id="shCondT"></span><span class="shx-chips" id="shChips"></span></span><span class="shx-edit">変更<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <div class="shx-hero">
+    <div class="lab"><span class="gl"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>遭遇数</span><span id="shScrLab"></span></div>
+    <div class="num"><b id="shCount">0</b><span>回</span></div>
+    <div class="shx-chain" id="shChainRow"></div>
   </div>
+  <div class="shx-two">
+    <div class="shx-card shx-tile"><span class="hd"><span class="shx-ic" style="--c:var(--sh)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.3" fill="currentColor"/><circle cx="15" cy="15" r="1.3" fill="currentColor"/><circle cx="15" cy="9" r="1.3" fill="currentColor"/><circle cx="9" cy="15" r="1.3" fill="currentColor"/></svg></span>今の確率</span><b id="shNext">-</b><span class="sub" id="shNextInv"></span></div>
+    <div class="shx-card shx-tile"><span class="hd"><span class="shx-ic" style="--c:var(--b1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>ここまでに出る確率</span><b id="shSoFar">-</b><span class="sub" id="shSoFarSub"></span><div class="shx-bar"><span id="shMeter"></span></div></div>
   </div>
-  <div class="shbox">
-  <section class="shcount">
-    <div class="shcnum"><small>遭遇数</small><b id="shCount">0</b><span class="unit">回</span></div>
-    <div class="shbtnrow">
-      <button id="shReset" class="shreset" type="button">リセット</button>
-      <span class="shpluswrap"><button id="shPlus" class="shplus" type="button" aria-label="カウント"><span class="pl">+1</span><small class="ps">遭遇をカウント</small></button><button class="sh5" type="button" hidden aria-label="群れバトルで5体分カウント">群れ×5</button></span>
-      <button id="shMinus" class="shminus" type="button" aria-label="1つ戻す">−1</button>
-    </div>
-    <button id="shFsBtn" class="btn shfs" type="button">全画面ボタン</button>
-    <button id="shGotBtn" class="btn shgot" type="button">✨ 色違いが出た！個体管理に登録</button>
-  </section>
-  <section>
-    <h2 id="shCountLabel">確率</h2>
-    <div class="shres">
-      <div class="stat main"><small>現在の色違い確率</small><b id="shNext">-</b><span class="sub" id="shNextInv"></span></div>
-      <div class="stat"><small id="shSoFarLabel">ここまでに1回以上出ている確率</small>
-        <div class="meter"><span id="shMeter"></span></div>
-        <b id="shSoFar">-</b><span class="sub" id="shSoFarSub"></span></div>
-    </div>
-  </section>
-  <section>
-    <h2>回数を決めて計算</h2>
-    <div class="stat">
-      <label class="planrow" for="shPlan"><input id="shPlan" type="number" min="1" inputmode="numeric" placeholder="例：3000"><span>回まで続けたとき</span></label>
-      <div id="shPlanOut" class="planout"></div>
-    </div>
-  </section>
+  <div class="shx-ctl" id="shCtl">
+    <button id="shMinus" class="shx-side" type="button" aria-label="1つ戻す"><span class="big">−1</span><small>1つ戻す</small></button>
+    <button id="shPlus" class="shplus shx-plus" type="button" aria-label="カウント"><span class="pl">+1</span><small class="ps">遭遇をカウント</small></button>
+    <button class="sh5 shx-side" type="button" hidden aria-label="群れバトルで5体分カウント">群れ×5</button>
+    <button id="shFsBtn" class="shx-side" type="button" aria-label="全画面ボタン"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><small>全画面</small></button>
   </div>
-  <p class="note">確率は1回ごとに独立した抽選として計算しています。運が良ければ早く、悪ければ何倍もかかることがあります。</p>
-  <div class="shbox obsbox">
-  <section>
-    <h2>配信表示（OBS）</h2>
-    <div class="shrowopt"><span class="shl">配信に送る</span><button id="obsToggle" class="toggle" type="button" aria-pressed="false" aria-label="配信に送る"></button><span id="obsStatus" class="obsst">オフ</span></div>
-    <ol class="obshow obsapp">
-      <li>スマホでこのスイッチをオンにします。あなた専用の<b>配信コード</b>が使われます：<span class="obsurl"><span id="obsCodeApp" class="obscode">-</span></span></li>
-      <li>PCのOBSで「ブラウザ」ソースを追加し、URLに次のアドレスを入れます。<span class="obsurl"><code id="obsUrlApp">-</code><button id="obsShare" class="btn" type="button">PCに送る</button></span><span class="obsst">「PCに送る」で、メールやLINEなどからPCにアドレスを送れます。</span></li>
-      <li>幅800・高さ400くらいにすると見やすいです。緑の背景はOBSの「クロマキー」フィルタで消せます。黒背景にしたいときは、アドレスの末尾の <code>green</code> を <code>black</code> にします。</li>
-    </ol>
-    <p class="note obsapp">ログインは不要です。送られるのは「配信コード」と「遭遇数」だけで、コードを知っている人なら数字を見られます。コードが他の人に知られたときは作り直してください。 <button id="obsRenew" class="btn" type="button" style="padding:4px 10px;font-size:12px">コードを作り直す</button></p>
-    <ol class="obshow obsweb">
-      <li>スマホでこのスイッチをオンにします。</li>
-      <li>PCのOBSで「ブラウザ」ソースを追加し、URLに次のアドレスを入れます。<span class="obsurl"><code id="obsUrl">https://claude.ai/artifact/Sz2ovpuSgRoUYeLAcZeGK2#obs</code><button id="obsCopy" class="btn" type="button">コピー</button></span></li>
-      <li>OBSでそのソースを右クリック→「対話」を開き、スマホと同じアカウントでclaude.aiにサインインします。</li>
-      <li>緑の背景は、OBSの「クロマキー」フィルタで消せます。黒背景にしたいときは末尾を <code>#obs-black</code> にします。</li>
-    </ol>
-    <p class="note obsweb">数字はあなたのアカウントだけが読める場所に保存されます。claude.aiの画面の枠も映るので、OBSの「クロップ」で数字の部分だけ切り取ってください。</p>
-  </section>
+  <div class="shx-sub"><button id="shReset" class="shx-sbtn shx-rst" type="button">リセット</button><button id="shGotBtn" class="shx-sbtn shx-got" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg><span>色違いが出た！登録</span></button></div>
+  <div class="shx-card shx-sec">
+    <div class="shx-sh"><span class="shx-ic" style="--c:var(--b2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span>回数を決めて計算</div>
+    <label class="shx-plan" for="shPlan"><input id="shPlan" type="number" min="1" inputmode="numeric" placeholder="例：3000"><span>回まで続けると</span></label>
+    <div id="shPlanOut" class="shx-planout"></div>
+    <div class="shx-ms" id="shMs"></div>
+    <p class="shx-note" id="shPlanSub"></p>
   </div>
+  <button id="shObsRow" class="shx-card shx-row obsbox" type="button" aria-haspopup="dialog"><span class="shx-ic" style="--c:var(--b3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><span class="tx"><span>配信表示（OBS）</span><small id="shObsSum">オフ・タップで設定</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  <p class="shx-note">確率は1回ごとに独立した抽選として計算しています。運が良ければ早く、悪ければ何倍もかかることがあります。</p>
 </div>
+
 
 <div class="wrap view" id="vRibbon" hidden>
   <section>
@@ -1770,6 +1845,31 @@ body:not(.app) .obsapp{display:none!important}
     </div>
   </div>
 </div>
+<div id="shSetSheet" class="sheet shx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shSetT"><div class="sheet-in">
+  <div class="sh-head"><h3 id="shSetT">厳選の条件</h3><button class="btn" type="button" data-shclose="1">閉じる</button></div>
+  <section><h2>作品（世代）</h2><div class="shx-gens" id="shGenBtns" role="group" aria-label="作品（世代）"></div><select id="shGen" class="gensel" hidden aria-label="色違い厳選の作品（世代）"></select></section>
+  <section><h2>厳選方法</h2><div class="shx-meth" id="shSitBtns" role="group" aria-label="厳選方法"></div><select id="shSit" class="gensel" hidden aria-label="厳選方法"></select></section>
+  <div id="shOpts" class="shx-opts"></div>
+  <p id="shNote" class="shx-note"></p>
+  <button class="shx-ok" type="button" data-shclose="1">この条件で数える</button>
+</div></div>
+<div id="shObsSheet" class="sheet shx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shObsT"><div class="sheet-in">
+  <div class="sh-head"><h3 id="shObsT">配信表示（OBS）</h3><button class="btn" type="button" data-shclose="1">閉じる</button></div>
+  <div class="obsrow"><span class="shl">配信に送る</span><button id="obsToggle" class="toggle" type="button" aria-pressed="false" aria-label="配信に送る"></button><span id="obsStatus" class="obsst">オフ</span></div>
+    <ol class="obshow obsapp">
+      <li>スマホでこのスイッチをオンにします。あなた専用の<b>配信コード</b>が使われます：<span class="obsurl"><span id="obsCodeApp" class="obscode">-</span></span></li>
+      <li>PCのOBSで「ブラウザ」ソースを追加し、URLに次のアドレスを入れます。<span class="obsurl"><code id="obsUrlApp">-</code><button id="obsShare" class="btn" type="button">PCに送る</button></span><span class="obsst">「PCに送る」で、メールやLINEなどからPCにアドレスを送れます。</span></li>
+      <li>幅800・高さ400くらいにすると見やすいです。緑の背景はOBSの「クロマキー」フィルタで消せます。黒背景にしたいときは、アドレスの末尾の <code>green</code> を <code>black</code> にします。</li>
+    </ol>
+    <p class="note obsapp">ログインは不要です。送られるのは「配信コード」と「遭遇数」だけで、コードを知っている人なら数字を見られます。コードが他の人に知られたときは作り直してください。 <button id="obsRenew" class="btn" type="button" style="padding:4px 10px;font-size:12px">コードを作り直す</button></p>
+    <ol class="obshow obsweb">
+      <li>スマホでこのスイッチをオンにします。</li>
+      <li>PCのOBSで「ブラウザ」ソースを追加し、URLに次のアドレスを入れます。<span class="obsurl"><code id="obsUrl">https://claude.ai/artifact/Sz2ovpuSgRoUYeLAcZeGK2#obs</code><button id="obsCopy" class="btn" type="button">コピー</button></span></li>
+      <li>OBSでそのソースを右クリック→「対話」を開き、スマホと同じアカウントでclaude.aiにサインインします。</li>
+      <li>緑の背景は、OBSの「クロマキー」フィルタで消せます。黒背景にしたいときは末尾を <code>#obs-black</code> にします。</li>
+    </ol>
+    <p class="note obsweb">数字はあなたのアカウントだけが読める場所に保存されます。claude.aiの画面の枠も映るので、OBSの「クロップ」で数字の部分だけ切り取ってください。</p>
+</div></div>
 <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
 <div id="dxSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="ポケモンの詳細"></div>
 <div id="extDlg" class="extdlg" hidden><div class="extin" role="dialog" aria-modal="true" aria-labelledby="extT"><p id="extT" class="extt">ブラウザで開きます</p><p class="extd"><span id="extN">開発者ポータルサイト</span>を、ブラウザで開きます。</p><p class="extu" id="extU"></p><div class="extbtns"><button type="button" class="extno" data-extno="1">キャンセル</button><a id="extGo" class="extgo" href="#" target="_blank" rel="noopener">開く</a></div></div></div>
@@ -2626,25 +2726,30 @@ const invTxt=p=>p>0?`約 1/${p>=0.01?(1/p).toFixed(1).replace(/\.0$/,''):Math.ro
 const shGenSel=document.getElementById('shGen'),shSitSel=document.getElementById('shSit'),shOptsEl=document.getElementById('shOpts');
 shGenSel.innerHTML=SH_GENS.map(g=>`<option value="${g.id}">${g.n}</option>`).join('');
 const shHorde=()=>shG().id===6&&S.sh.sit==='wild';
+const SH_GAB={2:'金銀',3:'RSE FRLG',4:'DPt HGSS',5:'BW BW2',6:'XY ORAS',7:'SM USUM',8:'剣盾 BDSP LA',9:'SV'};
+const shSitName=(g,k)=>{const t=g.id===8&&SH_NAMES8[k]?SH_NAMES8[k]:SITS[k].n;return g.id===9?t.replace(/（SV）$/,''):t};
 function renderShSetup(){
   const g=shG(),s=shSit(),c=shCtx();
   shGenSel.value=String(g.id);
   shSitSel.innerHTML=SH_LIST[g.id].map(k=>`<option value="${k}">${g.id===8&&SH_NAMES8[k]?SH_NAMES8[k]:SITS[k].n}</option>`).join('');
   shSitSel.value=S.sh.sit;
-  const row=(lab,ctl)=>`<div class="shrowopt"><span class="shl">${lab}</span>${ctl}</div>`;
+  document.getElementById('shGenBtns').innerHTML=SH_GENS.map(x=>`<button type="button" data-shgen="${x.id}" aria-pressed="${x.id===g.id}"><small>第${x.id}世代</small><span>${SH_GAB[x.id]||x.n}</span></button>`).join('');
+  document.getElementById('shSitBtns').innerHTML=SH_LIST[g.id].map(k=>`<button type="button" data-shsit="${k}" aria-pressed="${k===S.sh.sit}">${shSitName(g,k)}</button>`).join('');
+  const row=(lab,ctl,sub)=>`<div class="shx-opt"><span class="l"><span>${lab}</span>${sub!=null?`<small>${sub}</small>`:''}</span>${ctl}</div>`;
+  const step=(id,inp)=>`<div class="shx-step"><button type="button" data-shstep="${id}" data-d="-1" aria-label="1つ減らす">−</button>${inp}<button type="button" data-shstep="${id}" data-d="1" aria-label="1つ増やす">＋</button></div>`;
   let h='';
   if(g.charm&&!s.noCharm)h+=row('ひかるおまもり',`<button class="toggle" type="button" data-sh="charm" aria-pressed="${!!S.sh.charm}" aria-label="ひかるおまもり"></button>`);
   if(s.chain){
     const ch=s.chain;
     if(ch.on)h+=row(ch.onLabel,`<button class="toggle" type="button" data-sht="${ch.on}" aria-pressed="${!!c.o[ch.on]}" aria-label="${ch.onLabel}"></button>`);
-    if(!ch.on||c.o[ch.on])h+=row(`<label for="sho_${ch.id}">${ch.n}</label>`,`<span class="shnum"><input id="sho_${ch.id}" type="number" min="0" inputmode="numeric" data-shn="${ch.id}" value="${c.o[ch.id]}"><span class="unit">${ch.unit||''}</span><span class="shnext" id="shChainNext"></span></span>`);
+    if(!ch.on||c.o[ch.on])h+=row(`<label for="sho_${ch.id}">${ch.n}${ch.unit?`（${ch.unit}）`:''}</label>`,step(ch.id,`<input id="sho_${ch.id}" type="number" min="0" inputmode="numeric" data-shn="${ch.id}" value="${c.o[ch.id]}">`),'<span id="shChainNext"></span>');
   }
   shOptList().forEach(op=>{
     if(op.tg){h+=row(op.n,`<button class="toggle" type="button" data-sht="${op.id}" aria-pressed="${!!c.o[op.id]}" aria-label="${op.n}"></button>`);return}
-    if(op.seg){h+=row(op.n,`<div class="seg" role="group" aria-label="${op.n}">${op.seg.map(v=>`<button type="button" data-shs="${op.id}" data-v="${v}" aria-pressed="${c.o[op.id]===v}">${v}</button>`).join('')}</div>`);return}
+    if(op.seg){h+=row(op.n,`<div class="seg" role="group" aria-label="${op.n}">${[0,...op.seg].map(v=>`<button type="button" data-shs="${op.id}" data-v="${v}" aria-pressed="${c.o[op.id]===v}">${v||'なし'}</button>`).join('')}</div>`);return}
     h+=row(`<label for="sho_${op.id}">${op.n}</label>`,`<select id="sho_${op.id}" data-sho="${op.id}">${op.v.map(([t,v])=>`<option value="${v}"${c.o[op.id]===v?' selected':''}>${t}</option>`).join('')}</select>`);
   });
-  h+=row('<label for="shScreens">同時厳選画面数</label>',`<span class="shnum"><input id="shScreens" type="number" min="1" max="99" inputmode="numeric" value="${shScreens()}"><span class="unit">画面</span></span>`);
+  h+=row('<label for="shScreens">同時に厳選する画面</label>',step('screens',`<input id="shScreens" type="number" min="1" max="99" inputmode="numeric" value="${shScreens()}">`),'+1ボタン1回で増える数');
   shOptsEl.innerHTML=h;
   const notes=[typeof s.note==='function'?s.note(g):s.note,g.charm&&!s.noCharm?g.cn:''].filter(Boolean);
   const ne=document.getElementById('shNote');ne.textContent=notes.join(' ');ne.hidden=!notes.length;
@@ -2652,26 +2757,38 @@ function renderShSetup(){
   document.querySelectorAll('.sh5').forEach(b=>b.hidden=!shHorde());
   updateShLabels();
 }
+// 確率xに届く合計の回数（連鎖ありは、いまの連鎖の伸び方で見込む）
+function shReach(x){
+  const ch=shChain(),n=S.sh.count;
+  if(!ch){const p=shP();if(!(p>0))return null;if(p>=1)return {T:1,done:n>=1};const T=Math.ceil(Math.log(1-x)/Math.log(1-p));return {T,done:n>=T}}
+  if(shSoFar().P>=x)return {T:0,done:true};
+  let lo=n,hi=n+1;while(shProject(hi).P<x){lo=hi;hi*=2;if(hi>1e9)return null}
+  while(hi-lo>1){const m=Math.floor((lo+hi)/2);if(shProject(m).P>=x)hi=m;else lo=m}
+  return {T:hi,done:false};
+}
+// 数字が枠からはみ出すときだけ、文字を小さくする（枠の大きさは変えない）
+const shFit=(el,box,max,min)=>{el.style.fontSize='';if(!box.clientWidth)return;let f=max;while(box.scrollWidth>box.clientWidth+1&&f>min){f-=2;el.style.fontSize=f+'px'}};
+function shFitAll(){const c=document.getElementById('shCount'),a=document.getElementById('shNext'),b=document.getElementById('shSoFar');shFit(c,c.parentNode,54,24);shFit(a,a,26,14);shFit(b,b,26,14)}
+document.fonts&&document.fonts.ready.then(()=>shFitAll());addEventListener('resize',()=>shFitAll());
 function renderShiny(bump){
   const ch=shChain(),p=shP(),sf=shSoFar(),n=S.sh.count;
   ['shCount','shPadCount'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.textContent=n.toLocaleString();if(bump){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump')}});
-  document.getElementById('shMinus').disabled=n<=0;
+    document.getElementById('shMinus').disabled=n<=0;
   const inv=p>0?1/p:0,near=Math.abs(inv-Math.round(inv))<0.05;
-  document.getElementById('shNext').textContent=p>=0.01?pctTxt(p):`${near?'':'約'}1/${Math.round(inv).toLocaleString()}`;
-  document.getElementById('shNextInv').textContent=(p>=0.01?invTxt(p):pctTxt(p))+(ch?`（${ch.n} ${S.sh.o[ch.id]||0}のとき）`:'');
-  document.getElementById('shSoFar').textContent=pctTxt(sf.P);
-  document.getElementById('shSoFarSub').textContent=`${n.toLocaleString()}回で、出る色違いの数の期待値は${sf.E.toFixed(2)}匹`;
+  const nx=document.getElementById('shNext');nx.textContent=p>=0.01?pctTxt(p):`${near?'':'約'}1/${Math.round(inv).toLocaleString()}`;
+  document.getElementById('shNextInv').textContent=p>=0.01?invTxt(p):`1回あたり ${pctTxt(p)}`;
+  const sfe=document.getElementById('shSoFar');sfe.textContent=pctTxt(sf.P);
+  document.getElementById('shSoFarSub').textContent=`出る数の期待値 ${sf.E.toFixed(2)}匹`;
   document.getElementById('shMeter').style.width=`${Math.min(100,sf.P*100)}%`;
   const cn=document.getElementById('shChainNext'),sc=shSit().chain;
   if(cn&&sc)cn.textContent=nextTxt(parseInt(S.sh.o[sc.id])||0,sc.steps,sc.unit||'');
-  const out=document.getElementById('shPlanOut'),T=parseInt(S.sh.plan);
-  if(!T||T<1){out.innerHTML='<p class="none">回数を入れると、その回数までに色違いが1回以上出る確率を計算します。</p>';return}
-  const r=shProject(T);
-  let extra='';
-  if(!ch&&p>0&&p<1){const k=x=>Math.ceil(Math.log(1-x)/Math.log(1-p)).toLocaleString();extra=`<p class="hint">この方法で50%に届くのは${k(.5)}回、90%に届くのは${k(.9)}回です。</p>`}
-  out.innerHTML=`<div class="meter"><span style="width:${Math.min(100,r.P*100)}%"></span></div>
-    <p><b>${pctTxt(r.P)}</b> の確率で1回以上出ます</p>
-    <p class="hint">出る色違いの数の期待値は${r.E.toFixed(2)}匹${T>n?`・いまから あと${(T-n).toLocaleString()}回`:''}</p>${extra}`;
+  const out=document.getElementById('shPlanOut'),sub=document.getElementById('shPlanSub'),T=parseInt(S.sh.plan);
+  if(!T||T<1){out.innerHTML='<div class="res none">回数を入れると、その回数までに色違いが1回以上出る確率を計算します。</div>';sub.textContent='下の3つは、その確率に届く合計の回数の目安です。'}
+  else{const r=shProject(T);
+    out.innerHTML=`<div class="res"><b>${pctTxt(r.P)}</b><span>の確率で1回以上出ます</span></div><div class="shx-bar"><span style="width:${Math.min(100,r.P*100)}%"></span></div>`;
+    sub.textContent=`${T>n?`いまから あと${(T-n).toLocaleString()}回。`:''}出る色違いの数の期待値は${r.E.toFixed(2)}匹です。`}
+  shFitAll();
+  document.getElementById('shMs').innerHTML=[.5,.9,.99].map(x=>{const r=shReach(x);return `<div class="${r&&r.done?'done':''}"><small>${Math.round(x*100)}%${r&&r.done?' ✓':''}</small><b>${!r?'-':r.T?r.T.toLocaleString()+'回':'達成'}</b></div>`}).join('');
 }
 function shChanged(){save();renderShSetup();renderShiny()}
 const _renderShiny=renderShiny;renderShiny=function(b){_renderShiny(b);obsQueue();
@@ -2682,6 +2799,9 @@ const _renderShiny=renderShiny;renderShiny=function(b){_renderShiny(b);obsQueue(
 shGenSel.addEventListener('change',()=>{S.sh.gen=+shGenSel.value;shSit();shChanged()});
 shSitSel.addEventListener('change',()=>{S.sh.sit=shSitSel.value;shChanged()});
 shOptsEl.addEventListener('click',e=>{
+  const st=e.target.closest('[data-shstep]');if(st){const id=st.dataset.shstep,d=+st.dataset.d;
+    if(id==='screens'){S.sh.screens=Math.max(1,Math.min(99,shScreens()+d));document.getElementById('shScreens').value=S.sh.screens;save();updateShLabels();renderShiny();return}
+    S.sh.o[id]=Math.max(0,(parseInt(S.sh.o[id])||0)+d);const ib=document.getElementById('sho_'+id);if(ib)ib.value=S.sh.o[id];save();renderShiny();return}
   const t=e.target.closest('[data-sht]');if(t){const id=t.dataset.sht;S.sh.o[id]=S.sh.o[id]?0:1;shChanged();return}
   const sg=e.target.closest('[data-shs]');if(sg){const id=sg.dataset.shs,v=+sg.dataset.v;S.sh.o[id]=S.sh.o[id]===v?0:v;shChanged();return}
   if(e.target.closest('[data-sh="charm"]')){S.sh.charm=!S.sh.charm;shChanged()}
@@ -2689,7 +2809,7 @@ shOptsEl.addEventListener('click',e=>{
 shOptsEl.addEventListener('change',e=>{const id=e.target.dataset.sho;if(id){S.sh.o[id]=+e.target.value;save();renderShiny()}});
 shOptsEl.addEventListener('input',e=>{
   const id=e.target.dataset.shn;if(id){S.sh.o[id]=Math.max(0,parseInt(e.target.value)||0);save();renderShiny();return}
-  if(e.target.id==='shScreens'){S.sh.screens=Math.max(1,Math.min(99,parseInt(e.target.value)||1));save();updateShLabels()}
+  if(e.target.id==='shScreens'){S.sh.screens=Math.max(1,Math.min(99,parseInt(e.target.value)||1));save();updateShLabels();renderShiny()}
 });
 document.getElementById('shPlan').addEventListener('input',e=>{S.sh.plan=e.target.value;save();renderShiny()});
 function updateShLabels(){
@@ -3098,7 +3218,7 @@ async function obsFlush(){
   obsWriting=false;
   if(obsPending){obsPending=false;obsFlush()}
 }
-function obsStatus(t){const el=document.getElementById('obsStatus');if(el)el.textContent=t}
+function obsStatus(t){const el=document.getElementById('obsStatus');if(el)el.textContent=t;const e2=document.getElementById('shObsSum');if(e2)e2.textContent=S.sh.obs?`オン・${t}`:'オフ・タップで設定'}
 function renderObsCtl(){
   const b=document.getElementById('obsToggle');if(!b)return;
   b.setAttribute('aria-pressed',String(!!S.sh.obs));
@@ -3322,12 +3442,45 @@ document.querySelectorAll('.foldhd').forEach(h=>h.addEventListener('click',()=>{
   const k=h.closest('[data-foldbox]').dataset.foldbox;if(k!=='sh'&&k!=='dx')return;
   if(k==='sh')S.sh.fold=!S.sh.fold;else S.dx.fold=!S.dx.fold;save();renderFold(k);setBarH&&setBarH();
 }));
+const SHX_IC={chain:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>'};
 function renderShFoldSum(){
-  const el=document.getElementById('shFoldSum');if(!el)return;
-  el.textContent=`${shGenSel.selectedOptions[0]?.textContent||''}・${shSitSel.selectedOptions[0]?.textContent||''}`;
-  renderFold('sh');
+  const t=document.getElementById('shCondT');if(!t)return;
+  const g=shG(),s=shSit(),c=shCtx(),ch=shChain(),n=shScreens();
+  t.textContent=`${g.n}・${shSitName(g,S.sh.sit)}`;
+  const chips=[],on=(x,a)=>chips.push(`<span class="shx-chip${a?' on':''}">${x}</span>`);
+  if(g.charm&&!s.noCharm)on(S.sh.charm?'おまもり':'おまもりなし',S.sh.charm);
+  if(s.chain&&s.chain.on)on(c.o[s.chain.on]?s.chain.onLabel:`${s.chain.onLabel}なし`,!!c.o[s.chain.on]);
+  shOptList().forEach(op=>{const v=c.o[op.id];
+    if(op.tg)on(v?op.n:`${op.n}なし`,!!v);
+    else if(op.seg){const nm=op.n.replace('パワー','');on(v?`${nm}${v}`:`${nm}なし`,!!v)}
+    else{const x=op.v.find(y=>y[1]===v);on(x?x[0]:'',v!==op.v[0][1])}});
+  on(`${n}画面`,n>1);
+  document.getElementById('shChips').innerHTML=chips.join('');
+  document.getElementById('shScrLab').textContent=`同時 ${n}画面`;
+  const row=document.getElementById('shChainRow');
+  if(ch){const k=parseInt(S.sh.o[ch.id])||0,nx=ch.steps.find(x=>k<x),u=ch.unit||'';
+    row.innerHTML=`${SHX_IC.chain}<span class="t">${ch.n}</span><span class="cv">${k.toLocaleString()}</span><span class="u">${u}</span><span class="max">${nx==null?'確率は最大':`あと${nx-k}${u}でアップ`}</span>`}
+  else{let m=null;for(const x of [.5,.9,.99]){const r=shReach(x);if(r&&!r.done){m=[x,r];break}}
+    row.innerHTML=m?`${SHX_IC.target}<span class="t">${Math.round(m[0]*100)}%に届くまで あと</span><span class="cv">${(m[1].T-S.sh.count).toLocaleString()}</span><span class="u">回</span><span class="max">目安</span>`:`${SHX_IC.target}<span class="t">99%に届く回数をこえました</span>`}
 }
 {const _r=renderShiny;renderShiny=function(b){_r(b);renderShFoldSum()}}
+/* 条件と配信のシート */
+const shSetSheet=document.getElementById('shSetSheet'),shObsSheet=document.getElementById('shObsSheet');
+function shSheet(el,on,back){
+  el.hidden=!on;
+  if(on){document.body.classList.add('modal');el.querySelector('.sheet-in').scrollTop=0;return}
+  if(!document.querySelector('.sheet:not([hidden]),#monCard:not([hidden]),#monFind:not([hidden])')&&drawer.hidden&&shPad.hidden)document.body.classList.remove('modal');
+  if(back)document.getElementById(back)?.focus({preventScroll:true});
+}
+document.getElementById('shCond').addEventListener('click',()=>{renderShSetup();renderShiny();shSheet(shSetSheet,true)});
+document.getElementById('shObsRow').addEventListener('click',()=>{renderObsCtl();shSheet(shObsSheet,true)});
+shSetSheet.addEventListener('click',e=>{
+  if(e.target===shSetSheet||e.target.closest('[data-shclose]')){shSheet(shSetSheet,false,'shCond');return}
+  const gb=e.target.closest('[data-shgen]');if(gb){S.sh.gen=+gb.dataset.shgen;shSit();shChanged();return}
+  const sb=e.target.closest('[data-shsit]');if(sb){S.sh.sit=sb.dataset.shsit;shChanged();return}
+});
+shObsSheet.addEventListener('click',e=>{if(e.target===shObsSheet||e.target.closest('[data-shclose]'))shSheet(shObsSheet,false,'shObsRow')});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!shSetSheet.hidden)shSheet(shSetSheet,false,'shCond');else if(!shObsSheet.hidden)shSheet(shObsSheet,false,'shObsRow')});
 
 /* 図鑑：作品やタグに応じた注意書き */
 function dxNotes(){
