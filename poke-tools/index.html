@@ -1204,6 +1204,38 @@ body.modal .bkn,body.fs .bkn,body.obsmode .bkn,body.onbo .bkn{display:none}
 .bkn-go{border:none;background:var(--iv);color:#fff}
 :root[data-theme="dark"] .bkn-go{background:color-mix(in srgb,var(--iv) 70%,#000)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bkn-go{background:color-mix(in srgb,var(--iv) 70%,#000)}}
+/* はじめての人への案内 */
+.onb{position:fixed;inset:0;z-index:45;background:rgb(8 12 28 / .55);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+body.onbo{overflow:hidden}
+html.rot body.onbo #rotScroll{overflow:hidden}
+.onb-card{width:100%;max-width:420px;height:min(520px,100%);background:var(--bg);border-radius:22px;box-shadow:0 20px 50px -10px rgb(0 0 0 / .5);display:flex;flex-direction:column;overflow:hidden}
+.onb-vp{flex:1;min-height:0;overflow:hidden;touch-action:pan-y}
+.onb-tr{display:flex;height:100%;transition:transform .3s ease}
+.onb-s{flex:0 0 100%;box-sizing:border-box;height:100%;padding:18px 18px 0;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.onb-art{flex:none;height:128px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:14px;background:color-mix(in srgb,var(--c,var(--b1)) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--c,var(--b1)) 28%,var(--line))}
+.onb-art .ni{width:54px;height:54px;border-radius:16px;font-size:19px;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 60%,#000)}
+.onb-art.all{display:grid;grid-template-columns:repeat(5,40px);gap:10px;align-content:center;justify-content:center}
+.onb-art.all .ni{width:40px;height:40px;border-radius:12px;font-size:14px;box-shadow:0 3px 0 color-mix(in srgb,var(--c) 60%,#000)}
+.onb-bar{width:86%;height:56px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;justify-items:center;box-shadow:0 6px 16px -8px rgb(0 0 0 / .3)}
+.onb-bar span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.onb-bar .ni{width:28px;height:24px;border-radius:7px;font-size:10.5px;box-shadow:none}
+.onb-s h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.3}
+.onb-s p{margin:0;font-size:14px;line-height:1.65}
+.onb-li{display:flex;flex-direction:column;gap:6px}
+.onb-it{display:flex;align-items:center;gap:10px;height:50px;padding:0 10px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-sizing:border-box}
+.onb-it .ni{width:32px;height:32px;font-size:12px}
+.onb-it>span:last-child{min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.onb-it b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.onb-it small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.onb-ic{flex:none;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:color-mix(in srgb,var(--c) 80%,var(--ink));background:color-mix(in srgb,var(--c) 18%,transparent)}
+.onb-ic svg{width:18px;height:18px}
+.onb-dots{flex:none;display:flex;justify-content:center;gap:6px;height:28px;align-items:center}
+.onb-dots button{width:20px;height:28px;border:none;padding:0;background:none;display:grid;place-items:center}
+.onb-dots button::before{content:"";width:8px;height:8px;border-radius:4px;background:var(--line);transition:width .2s,background .2s}
+.onb-dots button[aria-current=true]::before{width:18px;background:var(--ink)}
+.onb-act{flex:none;display:grid;grid-template-columns:1fr 1.6fr;gap:10px;padding:4px 18px 16px}
+.onb-act .btn{height:48px;font-size:15px;font-weight:700;margin:0}
+.onb-act .onb-skip.off{visibility:hidden}
 .monbar{display:flex;gap:8px}
 .monbar .btn{min-height:48px;font-size:15px;border-radius:12px}
 .monbar .btn.primary{flex:1;background:var(--mon);border-color:var(--mon);color:#fff}
@@ -2349,6 +2381,7 @@ body:not(.app) .obsapp{display:none!important}
   <section>
     <h2 class="stx-gl">このアプリについて</h2>
     <div class="stx-list">
+      <button id="onbBtn" class="stx-row" type="button" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--b1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h7a3 3 0 0 1 2 1 3 3 0 0 1 2-1h7v14h-7a3 3 0 0 0-2 1 3 3 0 0 0-2-1H3z"/><path d="M12 6v14"/></svg></span><span class="stx-tx"><span>使いかたの案内</span><small>ツールの紹介を、もう一度見る</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
       <button id="ppBtn" class="stx-row" type="button" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6" stroke-linecap="round"/></svg></span><span class="stx-tx"><span>プライバシーポリシー</span></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
       <div class="stx-row"><span class="stx-ic" style="--c:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg></span><span class="stx-tx"><span>バージョン</span></span><span class="stx-pill" id="appVer"></span></div>
     </div>
@@ -2372,6 +2405,7 @@ body:not(.app) .obsapp{display:none!important}
 
 <nav id="tabBar" class="tabbar" aria-label="よく使うツール"><div class="tabbar-in" id="tabBarIn"></div></nav>
 <div id="bkNudge" class="bkn" hidden role="status"><span class="bkn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></svg></span><span class="bkn-tx"><b>バックアップをしておきませんか</b><small id="bkNudgeSub"></small></span><div class="bkn-act"><button type="button" class="bkn-later" id="bkLater">あとで</button><button type="button" class="bkn-go" id="bkGo">バックアップする</button></div></div><!--/bkNudge-->
+<div id="onb" class="onb" hidden role="dialog" aria-modal="true" aria-label="使いかたの案内"><div class="onb-card"><div class="onb-vp" id="onbVp"><div class="onb-tr" id="onbTr"></div></div><div class="onb-dots" id="onbDots" role="group" aria-label="ページ"></div><div class="onb-act"><button type="button" class="btn onb-skip" id="onbSkip">とばす</button><button type="button" class="btn primary onb-next" id="onbNext">つぎへ</button></div></div></div>
 <div id="obsView" class="obsview" hidden>
   <div class="obsmethod"></div>
   <div class="obsline"><span class="obscount">0</span></div>
@@ -2586,6 +2620,7 @@ function sample(){
       m('ディンルー','none'),m('オーガポン','p_hp',false),m('イーユイ','none',false)]};
 }
 let S;
+const FIRST_RUN=(()=>{try{return localStorage.getItem(KEY)==null&&localStorage.getItem(OLD)==null}catch(e){return false}})();
 try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!S||!Array.isArray(S.members)||!Array.isArray(S.targets)){
   S=sample();
@@ -6002,6 +6037,60 @@ function bkCheck(){
 document.getElementById('bkLater').addEventListener('click',()=>{S.bk=Object.assign({},S.bk||{},{snz:Date.now()+BK_SNZ*BK_DAY});save();document.getElementById('bkNudge').hidden=true;toast(BK_SNZ+'日後に、もう一度お知らせします')});
 document.getElementById('bkGo').addEventListener('click',()=>{S.bk=Object.assign({},S.bk||{},{snz:Date.now()+BK_DAY});save();document.getElementById('bkNudge').hidden=true;closeMenu();if(S.view!=='settings')setView('settings');stOpen('bkx')});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')bkCheck()});
+/* ---------- はじめての人への案内（はじめて開いたときだけ自動で出す。設定からもう一度見られる） ---------- */
+const ONB_K='ner-onb';
+const ONB_DESC={ev:'倒したポケモンから、努力値を数えます',iv:'能力の数値から、個体値を調べます',pb:'ポロック・ポフィンのレシピを計算します',shiny:'色違いが出るまでの数を数えます',dex:'図鑑のどこが埋まっているかを記録します',ribbon:'リボンとあかしの集まり具合を記録します',mon:'育てたポケモンを1匹ずつ記録します',type:'タイプの相性を調べます',speed:'すばやさを比べて、先に動けるかを調べます',spd:'すばやさを比べて、先に動けるかを調べます',spe:'すばやさを比べて、先に動けるかを調べます'};
+const ONB_IC={bar:'<rect x="3" y="15" width="18" height="6" rx="2"/><path d="M7 18h.01M12 18h.01M17 18h.01" stroke-width="3"/>',menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',set:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'};
+let onbI=0,onbN=0;
+function onbSlides(){
+  const keys=TOOL_KEYS.filter(k=>VIEWS[k]&&TOOL_META[k]);
+  const G=[['育てるときに',['ev','iv','pb']],['集めるときに',['shiny','dex','ribbon']],['記録する・調べる',['mon','type']]].map(([t,a])=>[t,a.filter(k=>keys.includes(k))]);
+  const used=G.flatMap(g=>g[1]);G[2][1]=G[2][1].concat(keys.filter(k=>!used.includes(k)));
+  const it=k=>`<div class="onb-it">${toolNi(k)}<span><b>${esc(VIEWS[k].t)}</b>${ONB_DESC[k]?`<small>${ONB_DESC[k]}</small>`:''}</span></div>`;
+  const ic=(k,c,t,d)=>`<div class="onb-it"><span class="onb-ic" style="--c:var(${c})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ONB_IC[k]}</svg></span><span><b>${t}</b><small>${d}</small></span></div>`;
+  const S0=`<div class="onb-s"><div class="onb-art all" style="grid-template-columns:repeat(${Math.min(5,Math.ceil(keys.length/2))},40px)">${keys.map(toolNi).join('')}</div><h3>NER poke tools へようこそ</h3><p>ポケモンの育成や厳選を手伝う、ファンが作った非公式のツールです。何ができるかを、かんたんに紹介します。</p></div>`;
+  const SG=G.filter(g=>g[1].length).map(([t,a])=>`<div class="onb-s"><div class="onb-art" style="--c:var(${TOOL_META[a[0]].c})">${a.slice(0,4).map(toolNi).join('')}</div><h3>${t}</h3><div class="onb-li">${a.map(it).join('')}</div></div>`);
+  const SL=`<div class="onb-s"><div class="onb-art" style="--c:var(--mon)"><div class="onb-bar">${S.tabs.map(k=>`<span>${toolNi(k)}${TOOL_META[k].s}</span>`).join('')}</div></div><h3>画面の動かしかた</h3><div class="onb-li">${ic('bar','--mon','下のバー','よく使う5つのツールに、すぐ移れます')}${ic('menu','--b2','左上のメニュー','全部のツールが、ここに並んでいます')}${ic('set','--b3','設定','並び替えや、データのバックアップ')}</div></div>`;
+  return [S0,...SG,SL];
+}
+function onbGo(i){
+  onbI=Math.max(0,Math.min(onbN-1,i));
+  document.getElementById('onbTr').style.transform=`translateX(${-onbI*100}%)`;
+  document.querySelectorAll('#onbDots button').forEach((b,j)=>b.setAttribute('aria-current',String(j===onbI)));
+  document.querySelectorAll('#onbTr .onb-s').forEach((s,j)=>s.setAttribute('aria-hidden',String(j!==onbI)));
+  const last=onbI===onbN-1;document.getElementById('onbNext').textContent=last?'はじめる':'つぎへ';
+  document.getElementById('onbSkip').classList.toggle('off',last);
+}
+function onbOpen(){
+  const sl=onbSlides();onbN=sl.length;
+  const tr=document.getElementById('onbTr');tr.style.transition='none';tr.innerHTML=sl.join('');
+  document.getElementById('onbDots').innerHTML=sl.map((_,j)=>`<button type="button" data-onbdot="${j}" aria-label="${j+1}ページ目"></button>`).join('');
+  document.getElementById('onbNext').textContent='つぎへ';
+  closeMenu();document.getElementById('onb').hidden=false;document.body.classList.add('onbo');document.getElementById('bkNudge').hidden=true;
+  onbGo(0);void tr.offsetWidth;tr.style.transition='';
+  document.getElementById('onbNext').focus({preventScroll:true});
+}
+function onbClose(){
+  const o=document.getElementById('onb');if(o.hidden)return;o.hidden=true;document.body.classList.remove('onbo');
+  try{localStorage.setItem(ONB_K,'1')}catch(e){}
+  bkCheck();
+}
+// はじめて開いたとき（保存データがまだ無い）だけ自動で出す。前から使っている人には出さない。
+// テスト用のページ（window.__errs がある）では、__onbTest を付けたときだけ出す。
+function onbBoot(){
+  let f=null;try{f=localStorage.getItem(ONB_K)}catch(e){}
+  if(f)return false;
+  if(!FIRST_RUN||location.hash.startsWith('#obs')||(window.__errs&&!window.__onbTest)){if(!FIRST_RUN)try{localStorage.setItem(ONB_K,'1')}catch(e){}return false}
+  onbOpen();return true;
+}
+document.getElementById('onbNext').addEventListener('click',()=>{if(onbI>=onbN-1)onbClose();else onbGo(onbI+1)});
+document.getElementById('onbSkip').addEventListener('click',onbClose);
+document.getElementById('onbDots').addEventListener('click',e=>{const b=e.target.closest('[data-onbdot]');if(b)onbGo(+b.dataset.onbdot)});
+document.getElementById('onb').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();onbClose()}else if(e.key==='ArrowRight')onbGo(onbI+1);else if(e.key==='ArrowLeft')onbGo(onbI-1)});
+{let sx=0,sy=0,ok=false;const vp=document.getElementById('onbVp');
+  vp.addEventListener('touchstart',e=>{ok=e.touches.length===1;const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});
+  vp.addEventListener('touchend',e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.4)onbGo(onbI+(dx<0?1:-1))},{passive:true})}
+document.getElementById('onbBtn').addEventListener('click',onbOpen);
 document.getElementById('vSettings').addEventListener('click',e=>{
   const so=e.target.closest('[data-stopen]');if(so){stOpen(so.dataset.stopen);return}
   if(e.target.classList.contains('stx-sheet')||e.target.closest('[data-stclose]')){stClose();return}
@@ -6056,7 +6145,7 @@ if(OBS_APP)document.body.classList.add('appobs');
 renderLabelSeg();renderSound();renderTheme();renderAll();
 if(location.hash.startsWith('#obs'))obsView();
 else{setView(S.view||'ev');obsLast=JSON.stringify(obsPayload());renderObsCtl()}
-bkRenderLast();bkCheck();
+bkRenderLast();if(!onbBoot())bkCheck();
 
 /* ---------- 横向きにしても縦画面のまま（アプリ全体を回して表示） ---------- */
 const ROT={on:0,a:90,W:0,H:0,sc:null,undo:[]};
