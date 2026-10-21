@@ -302,13 +302,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 a.navitem{text-decoration:none}
 /* 下のタブバー・縦向き固定 */
 body{--tabh:calc(56px + env(safe-area-inset-bottom,0px))}
-body.fs,body.obsmode{--tabh:0px}
+body.obsmode{--tabh:0px}
 body{padding-bottom:calc(var(--barh,190px) + var(--tabh) + 24px)}
-body:not(.fs) .bar{bottom:var(--tabh);padding-bottom:10px}
+.bar{bottom:var(--tabh);padding-bottom:10px}
+.pad{bottom:calc(var(--barh,90px) + var(--tabh) + 8px)}
+#monCard{bottom:var(--tabh)}
+body:has(#monCard:not([hidden])) .tabbar{z-index:31}
 .rinfo{padding-bottom:calc(12px + var(--tabh))}
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:6;height:var(--tabh);background:var(--surface);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
-body.fs .tabbar{display:none}
 .tabbar-in{max-width:640px;height:56px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
 .tab{position:relative;border:none;background:none;padding:0 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:700;line-height:1.2;min-width:0;-webkit-tap-highlight-color:transparent}
 .tab .ni{width:30px;height:26px;border-radius:8px;font-size:11px;color:color-mix(in srgb,var(--c) 75%,var(--ink));background:color-mix(in srgb,var(--c) 18%,transparent);transition:background .15s,color .15s}
@@ -332,6 +334,24 @@ body.fs .tabbar{display:none}
 .mvb:disabled{opacity:.3;cursor:default}
 .mvb:not(:disabled):active{background:var(--line)}
 .rstbtn{padding:5px 10px;font-size:12px}
+.tabset{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;gap:10px}
+.tsbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:2px}
+.tslot,.tsopt{position:relative;min-width:0;padding:0 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:700;line-height:1.2;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.tslot{height:60px;border:2px solid transparent;border-radius:10px;background:none;padding:0;font-size:10px;letter-spacing:-.02em}
+.tslot .ni{width:30px;height:26px;border-radius:8px;font-size:11px}
+.tslot.sel{border-color:var(--accent);background:var(--surface);box-shadow:0 2px 6px rgb(0 0 0 / .08)}
+.tslot.moved{animation:rowflash .6s ease}
+.tsl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tsctl{display:flex;align-items:center;gap:8px;height:36px}
+.tscur{flex:1;min-width:0;display:flex;align-items:baseline;justify-content:center;gap:6px;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden}
+.tscur small{font-size:11px;color:var(--muted);font-family:var(--f-num)}
+.tscap{margin:2px 0 -4px;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.tspick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tsopt{height:56px;border:1px solid var(--line);background:var(--sunken);border-radius:10px}
+.tsopt .ni{width:26px;height:22px;border-radius:7px;font-size:10px}
+.tsopt i{position:absolute;top:3px;right:5px;font-style:normal;font-family:var(--f-num);font-size:10px;font-weight:700;color:var(--muted)}
+.tsopt.cur{border:2px solid var(--accent);background:var(--accent-soft)}
+.tsopt.cur i{color:var(--accent)}
 .rotov{display:none;position:fixed;inset:0;z-index:200;background:var(--bg);color:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px}
 .rotov svg{width:64px;height:64px;color:var(--accent);margin-bottom:4px}
 .rotov b{font-family:var(--f-display);font-weight:400;font-size:20px}
@@ -1675,8 +1695,8 @@ body:not(.app) .obsapp{display:none!important}
   </section>
   <section>
     <div class="h2row"><h2>下のバーに表示するツール</h2><button id="tabRst" class="btn rstbtn" type="button">元に戻す</button></div>
-    <div class="setlist" id="tabSet"></div>
-    <p class="note">いちばん下のバーに、左から順に5つ並びます。すでに並んでいるツールを選ぶと、場所が入れ替わります。</p>
+    <div class="tabset" id="tabSet"></div>
+    <p class="note">上の5つが、いちばん下のバーと同じ並びです。場所をタップして選び、◀ ▶ で移動。一覧からツールを選ぶと入れ替わります。</p>
   </section>
   <section>
     <div class="h2row"><h2>メニューの並び順</h2><button id="navRst" class="btn rstbtn" type="button">元に戻す</button></div>
@@ -4801,17 +4821,26 @@ function renderTabs(){
 }
 function markTabs(){const v=document.body.dataset.view;document.querySelectorAll('#tabBarIn [data-tab]').forEach(b=>{if(b.dataset.tab===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
 const mvBtns=(attr,i,n,name)=>`<button class="mvb" type="button" ${attr}="${i}" data-dir="-1" aria-label="${name}を上へ"${i===0?' disabled':''}>${UP_SVG}</button><button class="mvb" type="button" ${attr}="${i}" data-dir="1" aria-label="${name}を下へ"${i===n-1?' disabled':''}>${DN_SVG}</button>`;
+let tabSelI=0;
+const LT_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>',RT_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 function renderUiSet(moved){
   const ts=document.getElementById('tabSet');if(!ts)return;
-  ts.innerHTML=S.tabs.map((k,i)=>`<div class="setrow${moved&&moved[0]==='t'&&moved[1]===i?' moved':''}"><span class="setno">${i+1}</span>${toolNi(k)}<select data-tabsel="${i}" aria-label="${i+1}番目のツール">${TOOL_KEYS.map(o=>`<option value="${o}"${o===k?' selected':''}>${TOOL_META[o].s}</option>`).join('')}</select>${mvBtns('data-tabmv',i,S.tabs.length,VIEWS[k].t)}</div>`).join('');
+  const si=Math.min(Math.max(tabSelI,0),S.tabs.length-1),sk=S.tabs[si];
+  ts.innerHTML=`<div class="tsbar" role="group" aria-label="下のバーの並び">${S.tabs.map((k,i)=>`<button type="button" class="tslot${i===si?' sel':''}${moved&&moved[0]==='t'&&moved[1]===i?' moved':''}" data-tslot="${i}" aria-pressed="${i===si}" aria-label="${i+1}番目 ${VIEWS[k].t}">${toolNi(k)}<span class="tsl">${TOOL_META[k].s}</span></button>`).join('')}</div>
+  <div class="tsctl"><button class="mvb" type="button" data-tsmv="-1" aria-label="${VIEWS[sk].t}を左へ"${si===0?' disabled':''}>${LT_SVG}</button><span class="tscur"><small>${si+1}番目</small>${TOOL_META[sk].s}</span><button class="mvb" type="button" data-tsmv="1" aria-label="${VIEWS[sk].t}を右へ"${si===S.tabs.length-1?' disabled':''}>${RT_SVG}</button></div>
+  <p class="tscap">${si+1}番目に入れるツール</p>
+  <div class="tspick">${TOOL_KEYS.map(o=>{const j=S.tabs.indexOf(o);return `<button type="button" class="tsopt${o===sk?' cur':''}" data-tspick="${o}" aria-pressed="${o===sk}" aria-label="${VIEWS[o].t}${j>=0?`（いま${j+1}番目）`:''}">${toolNi(o)}<span class="tsl">${TOOL_META[o].s}</span>${j>=0?`<i>${j+1}</i>`:''}</button>`}).join('')}</div>`;
   document.getElementById('navSet').innerHTML=S.navOrder.map((k,i)=>`<div class="setrow${moved&&moved[0]==='n'&&moved[1]===i?' moved':''}"><span class="setno">${i+1}</span>${toolNi(k)}<span class="snt">${VIEWS[k].t}</span>${mvBtns('data-navmv',i,S.navOrder.length,VIEWS[k].t)}</div>`).join('');
   document.getElementById('tabRst').disabled=S.tabs.join()===TAB_DEF.join();
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
 document.getElementById('vSettings').addEventListener('click',e=>{
-  const t=e.target.closest('[data-tabmv],[data-navmv],#tabRst,#navRst');if(!t||t.disabled)return;
-  if(t.id==='tabRst'){S.tabs=[...TAB_DEF];uiApply();toast('下のバーを元に戻しました');return}
+  const t=e.target.closest('[data-tslot],[data-tsmv],[data-tspick],[data-navmv],#tabRst,#navRst');if(!t||t.disabled)return;
+  if(t.dataset.tslot){tabSelI=+t.dataset.tslot;renderUiSet();document.querySelector(`[data-tslot="${tabSelI}"]`)?.focus();return}
+  if(t.dataset.tsmv){const i=tabSelI,d=+t.dataset.tsmv,j=i+d;if(j<0||j>=S.tabs.length)return;[S.tabs[i],S.tabs[j]]=[S.tabs[j],S.tabs[i]];tabSelI=j;uiApply(['t',j],`[data-tsmv="${d}"]`);if(document.activeElement===document.body)document.querySelector(`[data-tsmv="${-d}"]`)?.focus();return}
+  if(t.dataset.tspick){const i=tabSelI,k=t.dataset.tspick,j=S.tabs.indexOf(k);if(j===i)return;if(j>=0)S.tabs[j]=S.tabs[i];S.tabs[i]=k;uiApply(['t',i]);return}
+  if(t.id==='tabRst'){S.tabs=[...TAB_DEF];tabSelI=0;uiApply();toast('下のバーを元に戻しました');return}
   if(t.id==='navRst'){S.navOrder=[...TOOL_KEYS];uiApply();toast('メニューの並びを元に戻しました');return}
   const isT=t.hasAttribute('data-tabmv'),a=isT?S.tabs:S.navOrder,i=+(isT?t.dataset.tabmv:t.dataset.navmv),d=+t.dataset.dir,j=i+d;
   if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];
@@ -4819,13 +4848,7 @@ document.getElementById('vSettings').addEventListener('click',e=>{
   uiApply([isT?'t':'n',j],`[${at}="${j}"][data-dir="${d}"]`);
   if(document.activeElement===document.body||!document.activeElement)document.querySelector(`[${at}="${j}"][data-dir="${-d}"]`)?.focus();
 });
-document.getElementById('vSettings').addEventListener('change',e=>{
-  const s=e.target.closest('[data-tabsel]');if(!s)return;
-  const i=+s.dataset.tabsel,k=s.value,j=S.tabs.indexOf(k);
-  if(j>=0&&j!==i)S.tabs[j]=S.tabs[i];
-  S.tabs[i]=k;uiApply(['t',i]);
-});
-document.getElementById('tabBar').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b&&b.dataset.tab!==document.body.dataset.view)setView(b.dataset.tab)});
+document.getElementById('tabBar').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;if(!monCard.hidden){monCardClose();if(!monFind.hidden)monFindClose()}if(b.dataset.tab!==document.body.dataset.view)setView(b.dataset.tab)});
 uiNorm();renderNav();renderTabs();
 try{if(!location.hash.startsWith('#obs')&&screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{})}catch(e){}
 
