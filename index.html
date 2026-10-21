@@ -16,144 +16,231 @@
 <meta property="og:image" content="https://noctis1008-wq.github.io/img/converter.png">
 <style>
 :root{
-  --bg:#f4f6f8;--card:#fff;--line:#e4e7ec;--text:#17202a;--sub:#667085;--accent:#2f6bff;
-  --shadow:0 12px 36px rgba(16,24,40,.07);--chip:#f2f4f7;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",sans-serif;color:var(--text);background:var(--bg)
+  --bg:#f6f7fb;--card:#fff;--glass:rgba(255,255,255,.74);--line:rgba(15,23,42,.09);--text:#0f172a;--sub:#475467;--mute:#667085;
+  --blue:#2563eb;--blue2:#1d4ed8;--violet:#7c3aed;--violet-btn:#6d28d9;--red:#e11d48;--ok:#067647;
+  --soft-b:rgba(37,99,235,.1);--soft-v:rgba(124,58,237,.11);--soft-r:rgba(225,29,72,.1);--soft-ok:rgba(6,118,71,.1);--chip:#eef2f7;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 8px 24px rgba(15,23,42,.06);--glow1:rgba(37,99,235,.16);--glow2:rgba(124,58,237,.16);--glow3:rgba(255,206,0,.10);
+  --top:rgba(246,247,251,.82);--pri-bg:#0f172a;--pri-fg:#fff;--x-bg:#000;--x-fg:#fff;
+  color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--card:#171e2c;--line:#283246;--text:#eef2f7;--sub:#98a2b3;--accent:#7aa2ff;--shadow:0 12px 36px rgba(0,0,0,.35);--chip:#222b3c}}
-:root[data-theme="dark"]{--bg:#0f1420;--card:#171e2c;--line:#283246;--text:#eef2f7;--sub:#98a2b3;--accent:#7aa2ff;--shadow:0 12px 36px rgba(0,0,0,.35);--chip:#222b3c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1020;--card:#121a2e;--glass:rgba(18,26,46,.72);--line:rgba(255,255,255,.1);--text:#eef2ff;--sub:#b6c0d4;--mute:#8d99b0;
+  --blue:#6b95ff;--blue2:#8fb0ff;--violet:#a78bfa;--violet-btn:#7c3aed;--red:#fb7185;--ok:#4ade80;
+  --soft-b:rgba(107,149,255,.14);--soft-v:rgba(167,139,250,.15);--soft-r:rgba(251,113,133,.14);--soft-ok:rgba(74,222,128,.12);--chip:#1d273d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);--glow1:rgba(37,99,235,.28);--glow2:rgba(124,58,237,.30);--glow3:rgba(255,206,0,0);
+  --top:rgba(11,16,32,.8);--pri-bg:#eef2ff;--pri-fg:#0b1020;--x-bg:#fff;--x-fg:#000;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1020;--card:#121a2e;--glass:rgba(18,26,46,.72);--line:rgba(255,255,255,.1);--text:#eef2ff;--sub:#b6c0d4;--mute:#8d99b0;
+  --blue:#6b95ff;--blue2:#8fb0ff;--violet:#a78bfa;--violet-btn:#7c3aed;--red:#fb7185;--ok:#4ade80;
+  --soft-b:rgba(107,149,255,.14);--soft-v:rgba(167,139,250,.15);--soft-r:rgba(251,113,133,.14);--soft-ok:rgba(74,222,128,.12);--chip:#1d273d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);--glow1:rgba(37,99,235,.28);--glow2:rgba(124,58,237,.30);--glow3:rgba(255,206,0,0);
+  --top:rgba(11,16,32,.8);--pri-bg:#eef2ff;--pri-fg:#0b1020;--x-bg:#fff;--x-fg:#000;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text)}
-a{color:inherit}
-.wrap{max-width:880px;margin:0 auto;padding:44px 16px 40px}
-/* ヘッダー */
-.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:30px}
-.hero-name{margin:0;font-size:clamp(26px,6vw,44px);word-break:keep-all;overflow-wrap:anywhere;letter-spacing:-.03em;line-height:1.05}
-.hero-name small{display:block;font-size:13px;letter-spacing:.18em;color:var(--sub);font-weight:800;margin-bottom:8px}
-.hero-lead{margin:10px 0 0;color:var(--sub);line-height:1.7;font-size:15px}
-.sns{display:flex;gap:10px}
-.sns a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;font-size:14px;padding:10px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .15s}
-.sns a:hover{transform:translateY(-2px)}
-.sns svg{width:20px;height:20px;flex:none}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN",system-ui,-apple-system,"Segoe UI","Yu Gothic UI",Meiryo,sans-serif;
+  font-feature-settings:"palt";-webkit-font-smoothing:antialiased;word-break:auto-phrase;line-break:strict;
+  background-image:radial-gradient(60% 600px at 88% -80px,var(--glow2),transparent 70%),radial-gradient(55% 520px at 0% 160px,var(--glow1),transparent 70%),radial-gradient(40% 380px at 70% 420px,var(--glow3),transparent 70%);background-repeat:no-repeat}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:10px}
+/* 上部バー */
+.top{position:sticky;top:0;z-index:10;background:var(--top);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid transparent}
+.top-in{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 10px 0 18px}
+.brand{display:flex;align-items:center;gap:10px;min-height:44px}
+.brand img{width:30px;height:30px;border-radius:8px;box-shadow:0 2px 6px rgba(16,24,40,.18)}
+.brand span{display:flex;flex-direction:column;line-height:1.15;font-weight:700;font-size:14px}
+.brand small{font-size:9.5px;letter-spacing:.16em;color:var(--mute);font-weight:700}
+.nav{display:flex;align-items:center}
+.nav .lk{display:none;font-size:14px;font-weight:600;color:var(--sub);padding:0 14px;height:44px;align-items:center}
+.nav .lk:hover{color:var(--text)}
+/* 小さいアイコンは見た目の大きさのまま、押せる範囲を 44px にする */
+.hit{width:44px;height:44px;display:grid;place-items:center;border-radius:50%}
+.si{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.18);transition:transform .15s}
+.hit:hover .si{transform:translateY(-1px)}
+.yt{background:#f00}.yt i{width:0;height:0;margin-left:3px;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid #fff}
+.xx{background:var(--x-bg);color:var(--x-fg)}.xx svg{width:15px;height:15px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+/* 最初の画面 */
+.hero{padding-top:26px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--blue);padding:6px 12px 6px 8px;border-radius:999px;background:var(--glass);border:1px solid var(--line)}
+.eyebrow .dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));display:grid;place-items:center}
+.eyebrow .dot::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+h1{font-weight:900;letter-spacing:-.035em;line-height:1.18;font-size:34px;margin:18px 0 14px}
+h1 .l{display:block;word-break:keep-all}
+.grad{background-image:linear-gradient(100deg,var(--blue) 10%,var(--violet) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:15px;line-height:1.75;color:var(--sub);margin:0;text-wrap:pretty}
+.ctas{display:flex;gap:10px;margin-top:24px}
+.btn{min-height:50px;padding:0 20px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;white-space:nowrap;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.pri{background:var(--pri-bg);color:var(--pri-fg);box-shadow:0 8px 20px rgba(15,23,42,.18);flex:1.2}
+.btn.sec{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);flex:1}
+.btn .si{width:22px;height:22px;box-shadow:none}.btn .yt i{border-top-width:4px;border-bottom-width:4px;border-left-width:7px;margin-left:2px}
+.float{display:none}
+.kicker{font-size:13px;font-weight:700;color:var(--mute);letter-spacing:.06em;margin:34px 0 12px}
+.picks{display:grid;gap:10px}
+.pick{display:flex;align-items:center;gap:14px;padding:14px 12px 14px 14px;border-radius:18px;background:var(--glass);border:1px solid var(--line);box-shadow:var(--shadow);min-height:72px;transition:transform .15s,border-color .15s}
+.pick:hover{transform:translateY(-2px);border-color:rgba(37,99,235,.35)}
+.ic{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center}
+.ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic.r{background:var(--soft-r);color:var(--red)}.ic.c{background:var(--soft-b);color:var(--blue)}.ic.p{background:var(--soft-v);color:var(--violet)}
+.pt{flex:1;min-width:0}
+.pt b{display:block;font-size:15px;font-weight:700;line-height:1.4;text-wrap:pretty}
+.pt small{display:block;font-size:12.5px;color:var(--mute);margin-top:2px;line-height:1.45}
+.chev{flex:none;width:28px;height:28px;display:grid;place-items:center;color:var(--mute)}
+.chev svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 /* 見出し */
-h2{font-size:18px;margin:34px 0 12px;display:flex;align-items:center;gap:8px}
-h2::before{content:"";width:6px;height:18px;border-radius:3px;background:var(--accent)}
+h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:44px 0 14px}
 /* ツール */
-.tools{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.tool{display:flex;flex-direction:column;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;transition:transform .15s,box-shadow .15s}
-.tool:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(16,24,40,.12)}
-.tool-logo{display:grid;place-items:center;padding:18px 18px 6px;aspect-ratio:720/260}
-.tool-logo img{width:100%;height:auto;max-width:340px}
-.tool-body{padding:4px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
-.tool-body b{font-size:16px}
-.tool-body p{margin:0;color:var(--sub);font-size:13.5px;line-height:1.65;flex:1}
-.tool-go{margin-top:8px;font-weight:800;font-size:14px;color:var(--accent)}
-/* アプリ */
-.app{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-.app-icon{width:72px;height:72px;flex:none;filter:drop-shadow(0 4px 10px rgba(16,24,40,.18))}
-.app-main{flex:1;min-width:200px}
-.app-main b{font-size:17px}
-.app-main p{margin:4px 0 0;color:var(--sub);font-size:13.5px;line-height:1.6}
-.soon{display:inline-block;margin-left:6px;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--chip);color:var(--sub);vertical-align:2px}
-.stores{display:flex;gap:10px;flex-wrap:wrap;width:100%}
-.store{display:inline-flex;align-items:center;gap:10px;min-width:170px;padding:8px 16px 8px 12px;border-radius:10px;background:#000;color:#fff;text-decoration:none;border:1px solid #444}
-.store svg{width:26px;height:26px;flex:none}
-.store span{display:flex;flex-direction:column;line-height:1.1}
-.store small{font-size:10px;opacity:.85}
-.store strong{font-size:17px;letter-spacing:-.01em;white-space:nowrap}
-.store[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
-/* 動画 */
-.video{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.tools{display:grid;gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.tool{padding:16px;display:flex;flex-direction:column}
+.tool-top{display:flex;align-items:center;gap:12px}
+.tool-top .logo{width:128px;height:auto;flex:none}
+.tool-top .icon{width:56px;height:56px;flex:none;border-radius:14px;filter:drop-shadow(0 3px 8px rgba(16,24,40,.18))}
+.tool-top b{display:block;font-size:16px;line-height:1.35}
+.tag{display:inline-flex;align-items:center;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--chip);color:var(--sub);margin:5px 4px 0 0}
+.tag.b{background:var(--soft-b);color:var(--blue2)}.tag.ok{background:var(--soft-ok);color:var(--ok)}
+.tool p{font-size:14px;color:var(--sub);line-height:1.75;margin:12px 0 0;flex:1}
+.tool .btn{margin-top:14px;background:#2563eb;color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.25);font-size:16px}
+.tool .btn.v{background:var(--violet-btn);box-shadow:0 6px 16px rgba(109,40,217,.25)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding:0;list-style:none}
+.chips li{font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:10px;background:var(--soft-v);color:var(--violet)}
+.chips li.hl{background:var(--violet-btn);color:#fff}
+.stores{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:12px;font-size:13px;color:var(--mute)}
+.store{flex:none;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:8px;background:var(--chip);color:var(--sub);font-weight:700;font-size:12.5px;cursor:default}
+.store svg{width:15px;height:15px}
+/* 動画・このサイトについて */
+.lower{display:grid;gap:12px}
+.video{overflow:hidden}
 .video-frame{position:relative;aspect-ratio:16/9;background:#000}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.video-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;font-size:14px;flex-wrap:wrap}
-.video-foot a{font-weight:800;color:var(--accent);text-decoration:none}
-.video-empty{display:flex;align-items:center;gap:14px;padding:22px;text-decoration:none}
-.video-empty svg{width:48px;height:48px;flex:none}
-.video-empty b{display:block;font-size:16px}
-.video-empty span{color:var(--sub);font-size:13.5px}
-footer{text-align:center;margin-top:40px;color:var(--sub);font-size:12.5px;line-height:1.8}
-@media (max-width:640px){
-  .wrap{padding-top:30px}
-  .tools{grid-template-columns:1fr}
-  .store{flex:1;min-width:0;justify-content:center;padding:8px 10px}
-  .store strong{font-size:15px}
-  .store-web{flex:1 1 100%}
-}
-.video-foot{text-decoration:none;color:inherit}
-.video-foot .ch-icon,.video-empty .ch-icon{width:40px;height:40px;border-radius:50%;flex:none}
+.video-foot{display:flex;align-items:center;gap:10px;padding:10px 14px;min-height:60px}
+.ch-icon{width:40px;height:40px;border-radius:50%;flex:none}
+.video-foot>span:nth-of-type(1){display:flex;flex-direction:column;line-height:1.3;margin-right:auto;min-width:0}
+.video-foot b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.video-foot small{font-size:12px;color:var(--mute)}
+.ch-go{font-weight:700;font-size:14px;color:var(--blue2);white-space:nowrap}
+.video-empty{display:flex;align-items:center;gap:14px;padding:22px}
 .video-empty .ch-icon{width:52px;height:52px}
-.video-foot>span:nth-of-type(1){display:flex;flex-direction:column;line-height:1.3;margin-right:auto}
-.video-foot small{color:var(--sub);font-size:12px}
-.video-foot .ch-go{font-weight:800;color:var(--accent);font-size:13.5px}
-.video-foot{justify-content:flex-start!important;flex-wrap:nowrap!important}
-.video-foot .ch-go{white-space:nowrap}
-.video-foot b{display:block}
-.video-foot>span:nth-of-type(1){min-width:0}
+.video-empty b{display:block;font-size:16px}.video-empty span{color:var(--sub);font-size:13.5px}
+.side{display:grid;gap:12px;align-content:start}
+.trust{display:flex;gap:10px;padding:14px;border-radius:14px;background:var(--soft-ok);color:var(--text);font-size:13.5px;line-height:1.7}
+.trust svg{width:20px;height:20px;flex:none;margin-top:2px;fill:none;stroke:var(--ok);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.trust b{display:block;font-size:14.5px}
+.trust a{color:var(--blue2);font-weight:700;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;min-height:44px;padding:0 2px}
+.trust .pp{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;margin-top:2px;color:var(--mute);font-size:13px}
+.box{padding:14px}
+.box h3{margin:2px 0 10px;font-size:15px;font-weight:800}
+.sns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sns a{min-height:48px;border-radius:14px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:14px;background:var(--card)}
+.sns a:hover{border-color:rgba(37,99,235,.35)}
+.sns .si{width:22px;height:22px;box-shadow:none}.sns .yt i{border-top-width:4px;border-bottom-width:4px;border-left-width:7px;margin-left:2px}.sns .xx svg{width:11px;height:11px}
+footer{text-align:center;margin:40px 0 0;padding:0 16px 32px;color:var(--mute);font-size:12.5px;line-height:1.8}
+@media (min-width:900px){
+  .top-in{height:68px;padding:0 30px 0 40px}
+  .brand img{width:34px;height:34px}.brand span{font-size:15px}
+  .nav .lk{display:inline-flex}.nav .gap{width:10px}
+  .wrap{padding:0 40px}
+  .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding-top:40px}
+  h1{font-size:60px;line-height:1.12;margin:22px 0 18px}
+  .lead{font-size:17px}
+  .btn{min-height:54px;padding:0 26px;font-size:16px}
+  .btn.pri,.btn.sec{flex:none}
+  .float{display:block;position:relative;height:360px}
+  .fc{position:absolute;background:var(--glass);border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 60px rgba(15,23,42,.12);padding:18px;transition:transform .2s}
+  .fc img{display:block;height:auto}
+  .fc.f1{left:10px;top:20px;transform:rotate(-4deg)}.fc.f1 img{width:250px}
+  .fc.f2{right:0;top:130px;transform:rotate(3deg)}.fc.f2 img{width:240px}
+  .fc.f3{left:70px;top:236px;display:flex;align-items:center;gap:12px;transform:rotate(-1.5deg)}.fc.f3 img{width:54px;border-radius:14px}
+  .fc.f3 b{font-size:15px;display:block}.fc.f3 small{font-size:12px;color:var(--mute)}
+  .kicker{margin:30px 0 12px}
+  .picks{grid-template-columns:repeat(3,1fr);gap:14px}
+  .pick{padding:18px;min-height:88px}
+  .tools{grid-template-columns:repeat(3,1fr);gap:16px}
+  .tool .btn{margin-top:auto}
+  .tool p{margin-bottom:16px}
+  .lower{grid-template-columns:1.45fr 1fr;gap:16px;align-items:start}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
 </head>
 <body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="./" aria-label="NER PORTAL SITE トップ"><img src="img/portal-icon-192.png" width="192" height="192" alt=""><span><small>NER PORTAL SITE</small>ネル@脱法レスキュー隊</span></a>
+  <nav class="nav" aria-label="サイト内とSNS">
+    <a class="lk" href="#tools">ツール</a><a class="lk" href="#latest">最新動画</a><span class="gap"></span>
+    <a class="hit" href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span class="si yt"><i></i></span></a>
+    <a class="hit" href="https://x.com/ner2048" target="_blank" rel="noopener noreferrer" aria-label="X"><span class="si xx"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77zm-1.08 16.18h1.7L7.4 4.73H5.58z"/></svg></span></a>
+  </nav>
+</div></header>
 <main class="wrap">
-  <header class="hero">
+  <section class="hero">
     <div>
-      <h1 class="hero-name"><small>NER PORTAL SITE</small>ネル@脱法レスキュー隊</h1>
-      <p class="hero-lead">公式からの救い手が及ばないポケモン達を救出するために活動しています。</p>
+      <span class="eyebrow"><span class="dot"></span>非公式のファンツール</span>
+      <h1><span class="l">公式の救いが届かない</span><span class="l"><span class="grad">ポケモン達を救出する</span></span><span class="l">ツールとアプリ</span></h1>
+      <p class="lead">ネル@脱法レスキュー隊（NER）のツール・アプリ・YouTube をまとめています。</p>
+      <div class="ctas">
+        <a class="btn pri" href="#tools">ツールを見る<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+        <a class="btn sec" href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer"><span class="si yt"><i></i></span>YouTube</a>
+      </div>
     </div>
-    <nav class="sns" aria-label="SNS">
-      <a href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#ff0033"/><path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/></svg>YouTube</a>
-      <a href="https://x.com/ner2048" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77zm-1.08 16.18h1.7L7.4 4.73H5.58z"/></svg>X</a>
-    </nav>
-  </header>
+    <div class="float" aria-hidden="true">
+      <div class="fc f1"><img src="img/converter.png" width="720" height="245" alt=""></div>
+      <div class="fc f2"><img src="img/recovery.png" width="720" height="232" alt=""></div>
+      <div class="fc f3"><img src="img/poketools.png" width="216" height="216" alt=""><span><b>Poke tools</b><small>Web 版はブラウザで使えます</small></span></div>
+    </div>
+  </section>
 
-  <h2>最新動画</h2>
-  <section class="video" id="video"></section>
+  <p class="kicker" id="pick-h">困っていることから選ぶ</p>
+  <nav class="picks" aria-labelledby="pick-h">
+    <a class="pick" href="repair-request/"><span class="ic r" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></svg></span><span class="pt"><b>「レポートがこわれています」と出た</b><small>X・Y / ORAS のセーブの修復を受け付けています</small></span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></a>
+    <a class="pick" href="converter/"><span class="ic c" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></span><span class="pt"><b>金・銀・クリスタルのポケモンをバンクへ</b><small>セーブを 3DS の VC 版で遊べる形に変換</small></span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></a>
+    <a class="pick" href="poke-tools/"><span class="ic p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z"/><path d="M7 8h1.5M16 8h1.5"/></svg></span><span class="pt"><b>図鑑埋めや色違い厳選を記録したい</b><small>Poke tools の Web 版（ブラウザで使えます）</small></span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></a>
+  </nav>
 
-  <h2>ツール</h2>
+  <h2 id="tools">ツール</h2>
   <section class="tools">
-    <a class="tool" href="converter/">
-      <div class="tool-logo"><img src="img/converter.png" width="720" height="245" alt="NER Converter" decoding="async"></div>
-      <div class="tool-body">
-        <b>NER Converter</b>
-        <p>金・銀・クリスタルのセーブデータを、3DS のバーチャルコンソール版で遊べる形に変換します。ポケムーバーにも対応。</p>
-        <span class="tool-go">ツールを開く →</span>
-      </div>
-    </a>
-    <!-- いまは修復依頼ページへつなぐ。Recovery を公開したら href を Pokemon-Save-Rescue/ にし、近日公開の表示と説明文を戻す -->
-    <a class="tool" href="repair-request/">
-      <div class="tool-logo"><img src="img/recovery.png" width="720" height="232" alt="NER Pokémon Recovery" decoding="async"></div>
-      <div class="tool-body">
-        <b>NER Pokémon Recovery<span class="soon">近日公開</span></b>
-        <p>壊れた X・Y / オメガルビー・アルファサファイアのセーブデータから、ポケモンや道具を救出するツールです。公開までは、セーブデータの修復をこちらで受け付けています。</p>
-        <span class="tool-go">修復を依頼する →</span>
-      </div>
-    </a>
+    <article class="card tool">
+      <div class="tool-top"><img class="logo" src="img/converter.png" width="720" height="245" alt="NER Converter" decoding="async"><div><b>NER Converter</b><span class="tag b">金・銀・クリスタル</span><span class="tag ok">すぐ使える</span></div></div>
+      <p>金・銀・クリスタルのセーブデータを、3DS のバーチャルコンソール版で遊べる形に変換します。ポケムーバーにも対応。</p>
+      <a class="btn" href="converter/">ツールを開く</a>
+    </article>
+    <!-- いまは修復依頼ページへつなぐ。Recovery を公開したら href を Pokemon-Save-Rescue/ にし、近日公開の札と説明文・ボタンの文言を戻す -->
+    <article class="card tool">
+      <div class="tool-top"><img class="logo" src="img/recovery.png" width="720" height="232" alt="NER Pokémon Recovery" decoding="async"><div><b>NER Pokémon Recovery</b><span class="tag b">X・Y / ORAS</span><span class="tag">近日公開</span></div></div>
+      <p>壊れた X・Y / オメガルビー・アルファサファイアのセーブデータから、ポケモンや道具を救出するツールです。公開までは、セーブデータの修復をこちらで受け付けています。</p>
+      <a class="btn" href="repair-request/">修復を依頼する</a>
+    </article>
+    <article class="card tool">
+      <div class="tool-top"><img class="icon" src="img/poketools.png" width="216" height="216" alt="Poke tools のアイコン" decoding="async"><div><b>Poke tools</b><span class="tag ok">Web 版は使える</span><span class="tag">アプリは近日公開</span></div></div>
+      <p>スマホで使えるポケモンのツールアプリです。</p>
+      <ul class="chips" aria-label="入っているツール"><li>努力値カウンター</li><li>色違い厳選カウンター</li><li>リボン管理</li><li class="hl">図鑑埋め支援</li><li>ポロック・ポフィン</li><li>個体管理</li><li>個体値ジャッジ</li><li>タイプ相性</li><li>すばやさ比べ</li></ul>
+      <a class="btn v" href="poke-tools/">Web 版を開く</a>
+      <!-- アプリを公開したら、下の2つを href 付きの <a> にして「近日公開」を消す -->
+      <div class="stores">アプリ版（近日公開）:
+        <span class="store" aria-disabled="true" title="近日公開"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#00a2c7" d="M3.84 2.15 13.69 12l-9.85 9.85A1.6 1.6 0 0 1 3 20.5v-17c0-.59.34-1.11.84-1.35z"/><path fill="#f2b600" d="m17.89 9.5 2.27 1.31c.34.27.59.69.59 1.19s-.22.9-.57 1.18l-2.29 1.32L15.39 12z"/><path fill="#00b85c" d="M6.05 2.66 16.81 8.88l-2.27 2.27z"/><path fill="#f63448" d="m16.81 15.12-10.76 6.22 8.49-8.49z"/></svg>Google Play</span>
+        <span class="store" aria-disabled="true" title="近日公開"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>App Store</span></div>
+    </article>
   </section>
 
-  <h2>アプリ</h2>
-  <section class="app">
-    <img class="app-icon" src="img/poketools.png" width="216" height="216" alt="Poke tools のアイコン">
-    <div class="app-main">
-      <b>Poke tools</b><span class="soon">近日公開</span>
-      <p>スマホで使えるポケモンのツールアプリです。公開したら、ここからダウンロードできます。</p>
+  <h2 id="latest">最新動画</h2>
+  <div class="lower">
+    <section class="card video" id="video"></section>
+    <div class="side">
+      <section class="card box">
+        <div class="trust"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div><b>非公式のファンツールです</b>このサイトは公式とは関係ありません。セーブデータの扱いは、各ツールのプライバシーポリシーに書いています。<span class="pp">プライバシーポリシー:<a href="converter/privacy.html">Converter</a><a href="repair-request/privacy.html">修復の依頼</a></span></div></div>
+      </section>
+      <section class="card box">
+        <h3>YouTube・X</h3>
+        <div class="sns">
+          <a href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer"><span class="si yt" aria-hidden="true"><i></i></span>YouTube</a>
+          <a href="https://x.com/ner2048" target="_blank" rel="noopener noreferrer"><span class="si xx" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77zm-1.08 16.18h1.7L7.4 4.73H5.58z"/></svg></span>X（@ner2048）</a>
+        </div>
+      </section>
     </div>
-    <div class="stores">
-      <a class="store store-web" href="poke-tools/">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="#4da3ff" stroke-width="1.8"/><path d="M2.5 12h19M12 2.5c2.6 2.7 3.9 5.9 3.9 9.5s-1.3 6.8-3.9 9.5c-2.6-2.7-3.9-5.9-3.9-9.5S9.4 5.2 12 2.5z" fill="none" stroke="#4da3ff" stroke-width="1.8"/></svg>
-        <span><small>ブラウザで使う</small><strong>Web版</strong></span></a>
-      <!-- 公開したら href を入れて aria-disabled を消す -->
-      <a class="store" aria-disabled="true" title="近日公開" role="link">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#00d7fe" d="M3.84 2.15 13.69 12l-9.85 9.85A1.6 1.6 0 0 1 3 20.5v-17c0-.59.34-1.11.84-1.35z"/><path fill="#ffce00" d="m17.89 9.5 2.27 1.31c.34.27.59.69.59 1.19s-.22.9-.57 1.18l-2.29 1.32L15.39 12z"/><path fill="#00f076" d="M6.05 2.66 16.81 8.88l-2.27 2.27z"/><path fill="#f63448" d="m16.81 15.12-10.76 6.22 8.49-8.49z"/></svg>
-        <span><small>GET IT ON</small><strong>Google Play</strong></span></a>
-      <a class="store" aria-disabled="true" title="近日公開" role="link">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        <span><small>Download on the</small><strong>App Store</strong></span></a>
-    </div>
-  </section>
-
-  <footer>ネル@脱法レスキュー隊(NER)<br>ポケモン・ポケットモンスター・Pokémon は任天堂・クリーチャーズ・ゲームフリークの登録商標です。このサイトは公式とは関係ありません。</footer>
+  </div>
 </main>
+<footer>ネル@脱法レスキュー隊(NER)<br>ポケモン・ポケットモンスター・Pokémon は任天堂・クリーチャーズ・ゲームフリークの登録商標です。このサイトは公式とは関係ありません。</footer>
 <script>
 // YouTube のチャンネル ID(UC で始まる文字列)を入れると、最新の動画がここに表示される。
 // 空のあいだは、チャンネルへのリンクだけを出す。
@@ -161,12 +248,11 @@ const YT_CHANNEL_ID = "UCuv7zpLLJHIHn0xw_sAEwPQ";
 const YT_URL = "https://www.youtube.com/@%E3%83%8D%E3%83%AB2048";
 (function(){
   const box=document.getElementById('video');
-  const ytIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#ff0033"/><path d="M10 8.8v6.4l5.6-3.2z" fill="#fff"/></svg>';
-  if(/^UC[\w-]{22}$/.test(YT_CHANNEL_ID)){
+    if(/^UC[\w-]{22}$/.test(YT_CHANNEL_ID)){
     // チャンネルの「アップロード動画」の再生リスト(UC → UU)。いちばん新しい動画から再生される
     const list='UU'+YT_CHANNEL_ID.slice(2);
     box.innerHTML='<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list='+list+'" title="ネル@脱法レスキュー隊 の最新動画" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>'+
-      '<a class="video-foot" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer"><img class="ch-icon" src="img/channel.png" width="192" height="192" alt=""><span><b>ネル@脱法レスキュー隊</b><small>@ネル2048</small></span><span class="ch-go">チャンネルを見る →</span></a>';
+      '<a class="video-foot" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer"><img class="ch-icon" src="img/channel.png" width="192" height="192" alt=""><span><b>ネル@脱法レスキュー隊</b><small>@ネル2048</small></span><span class="ch-go">チャンネルを見る ›</span></a>';
   }else{
     box.innerHTML='<a class="video-empty" href="'+YT_URL+'" target="_blank" rel="noopener noreferrer">'+'<img class="ch-icon" src="img/channel.png" width="192" height="192" alt="">'+'<div><b>YouTube で最新動画を見る</b><span>ネル@脱法レスキュー隊 のチャンネルを開きます</span></div></a>';
   }
