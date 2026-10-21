@@ -4386,7 +4386,7 @@ function ivCalc(){
   document.getElementById('ivMon').innerHTML=e?`<span class="ivno">No.${pad3(e.d)}</span>${e.t.map(t=>tyChip(t)).join('')}<span class="ivbst">種族値の合計 ${e.b.reduce((a,b)=>a+b,0)}</span>`:'<span>ポケモンを選ぶと、種族値が入ります</span>';
   const q=document.getElementById('ivQ');
   document.getElementById('ivClr').disabled=!S.iv.mon&&!q.value&&!S.iv.nat&&!S.iv.link&&!EVK.some(k=>S.iv.real[k]!==''||+S.iv.ev[k]>0);
-  const rec=document.getElementById('ivRec');if(rec)rec.disabled=!rows.some(r=>r.st==='ok');
+  const rec=document.getElementById('ivRec');if(rec)rec.disabled=false;
   return R;
 }
 function ivLinked(){const x=S.iv.link?S.mon.list.find(y=>y.id===S.iv.link):null;if(!x&&S.iv.link)S.iv.link=0;return x||null}
@@ -4439,7 +4439,7 @@ function ivLinkMon(x){
   v.ev=Object.assign(zero(),x.ev||{});v.link=x.id;ivAddRecent(v.mon);
   return true;
 }
-function ivRecTo(x,R){x.iv={mon:S.iv.mon,lv:S.iv.lv,nat:S.iv.nat,real:Object.assign({},S.iv.real),r:R.rows.map(r=>r.st==='ok'?[r.lo,r.hi]:null)};
+function ivRecTo(x,R){const ok=R.rows.some(r=>r.st==='ok'),old=x.iv&&x.iv.r;x.iv={mon:S.iv.mon,lv:S.iv.lv,nat:S.iv.nat,real:Object.assign({},S.iv.real),r:ok?R.rows.map(r=>r.st==='ok'?[r.lo,r.hi]:null):(old||null)};
   // レベル・せいかく・努力値も、ジャッジの内容で上書きする
   const lv=ivNum(S.iv.lv);if(lv!=null&&lv>=1&&lv<=100)x.lv=String(lv);
   if(ivNat(S.iv.nat))x.nature=S.iv.nat;
@@ -4521,10 +4521,9 @@ ivEl.addEventListener('click',e=>{
   if(t.closest('#ivUnl')){S.iv.link=0;save();renderIvLink();ivCalc();toast('個体管理との連動を外しました');return}
   if(t.closest('#ivRec')){
     let x=ivLinked();const R=ivSolve();
-    if(!R.rows.some(r=>r.st==='ok')){toast('記録できる結果がありません');return}
-    const made=false;if(!x){ivMonPicker();return}
-    ivRecTo(x,R);
-    save();renderIvLink();ivCalc();toast(made?'個体管理に新しく登録して、個体値を記録しました':monLabel(x)+' に個体値を記録しました');return}
+    if(!x){ivMonPicker();return}
+    const ok=R.rows.some(r=>r.st==='ok');ivRecTo(x,R);
+    save();renderIvLink();ivCalc();toast(ok?monLabel(x)+' に個体値を記録しました':monLabel(x)+' にレベル・性格・努力値を記録しました（個体値はまだ判定できていません）');return}
 });
 {const q=document.getElementById('ivQ');
   q.addEventListener('focus',()=>{const e=ivCur();if(e&&q.value===tyShortName(e.n)){q.select();renderIvRecent()}else renderIvRes()});
