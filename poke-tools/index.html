@@ -787,7 +787,7 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .monDel.warn{background:var(--warn);color:#fff}
 .monpar{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .monpar+.monpar{border-top:1px solid var(--line);padding-top:8px}
-.monpar div{display:flex;flex-direction:column}
+.monpar:not(.ed)>div:first-child{display:flex;flex-direction:column;min-width:0}
 .monpar small{font-size:12px;color:var(--muted)}
 .monrbimp{min-height:44px;margin-top:-10px}
 .monrbline{font-size:12px;font-weight:700;color:var(--rib)}
@@ -918,6 +918,11 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mf-lv{text-align:right;font-family:var(--f-num);font-weight:800;font-size:13px}
 .mf-none{text-align:center;padding:16px 0}
 .mc-info{gap:8px}
+.monparb{display:flex;gap:6px;flex:none}
+.monpar.ed .row2 .btn{flex:1}
+.mc-soft.ja{font-family:inherit;font-size:10px}
+.monpar small .mc-soft{margin-right:6px;vertical-align:1px}
+.monpar.ed{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:10px;border-radius:12px;border:2px solid var(--mon);background:color-mix(in srgb,var(--mon) 6%,var(--surface))}
 .mc-pur{font-size:14px;font-weight:700;line-height:1.45;padding:8px 12px;border-radius:10px;background:color-mix(in srgb,var(--mon) 10%,var(--surface));border-left:4px solid var(--mon)}
 .mc-its{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .mc-it{min-width:0;min-height:62px;box-sizing:border-box;padding:8px 10px;border-radius:12px;background:var(--sunken);display:flex;flex-direction:column;gap:4px}
@@ -3637,19 +3642,20 @@ pbEl.querySelector('[data-foldbox="pb"] .foldhd').addEventListener('click',()=>{
 /* ---------- 個体管理 ---------- */
 const MON_GFIX="............................fffmmm..............................................nn.................nn....mm.....f.f....nn..f...m...n....n......nnn...nn.................................................n...............................n..mmf..ffnnn...nnn........................................n....................mf......................nn....nn.............................nnnnnnfmnnnnn..........................fm.f...................nn..f.....................n...........nm..fnnnnnn.nnfnnnnnn...........................................mm........ff.................................................nnn.............n......nn...mmff.......nnnmmnnmnnnn...................fff...............................n............nnnnnn....................................f..fff........nnn......n...nnnnnnnnnnnnnnnnnnnnnnnnn............................................nnfffmmm......ffn.........nnnn....nnn..nnnnnn......f..........m.......nn...............................fff........................nnnnnnnnnnnn...nnnnnnnnnnnn.nnmmmf..nnnn.n"; // n=性別なし m=オスのみ f=メスのみ
 const monGFix=sp=>sp?{n:'不明',m:'♂',f:'♀'}[MON_GFIX[sp-1]]||'':'';
-const MON_SOFTS=['ポケモンHOME','ポケモンチャンピオンズ',...DX_GAMES.filter(g=>g.id!=='home').map(g=>g.n),'ポケモンGO','その他'];
+const MON_SOFTS=['ポケモンHOME','ポケモンチャンピオンズ',...DX_GAMES.filter(g=>g.id!=='home').flatMap(g=>g.id==='frlg'?[g.n,'ポケモンコロシアム','ポケモンXD 闇の旋風ダーク・ルギア']:[g.n]),'ポケモンGO','その他'];
 const MON_PLACES=[['box','ボックス'],['party','手持ち'],['day','育て屋・預かり屋'],['bbox','バトルボックス'],['other','その他']];
 const MON_BALLS=['モンスターボール','スーパーボール','ハイパーボール','マスターボール','プレミアボール','ネットボール','ダイブボール','ネストボール','リピートボール','タイマーボール','ゴージャスボール','ヒールボール','ダークボール','クイックボール','プレシャスボール','ドリームボール','ウルトラボール','サファリボール','コンペボール','パークボール','ストレンジボール','ガンテツボール：レベルボール','ガンテツボール：ルアーボール','ガンテツボール：ムーンボール','ガンテツボール：フレンドボール','ガンテツボール：ラブラブボール','ガンテツボール：ヘビーボール','ガンテツボール：スピードボール','ヒスイ：モンスターボール','ヒスイ：スーパーボール','ヒスイ：ハイパーボール','ヒスイ：ヘビーボール','ヒスイ：メガトンボール','ヒスイ：ギガトンボール','ヒスイ：フェザーボール','ヒスイ：ウイングボール','ヒスイ：ジェットボール','ヒスイ：オリジンボール'];
 const MON_TAG0=['色違い','対戦用','理想個体','6V','5V','夢特性','厳選中','育成済み','未育成','孵化余り','国際孵化','配布','交換用','図鑑用','リボン','証持ち','伝説・幻','ボール厳選'];
 S.mon=Object.assign({list:[],parents:[],tags:MON_TAG0.slice(),q:'',qi:'',ftags:[],f:{},sort:'add',dir:'desc',uid:0},S.mon||{});
-let monTagOpen=false,monEdit=null,monParentsOpen=false;const monOpenRows=new Set();let monRbOpen=false;
+let monTagOpen=false,monEdit=null,monParentsOpen=false,monPEdit='';const monOpenRows=new Set();let monRbOpen=false;
 const monSheet=document.getElementById('monSheet');
 const monNewId=()=>{const mx=S.mon.list.reduce((a,x)=>Math.max(a,+x.id||0),0);S.mon.uid=Math.max(S.mon.uid||0,mx)+1;return S.mon.uid};
 const monSp=m=>m.sp?SPDB[m.sp-1][0]:'';
 const monLabel=m=>m.nick||monSp(m)||'名前なし';
 // ソフト名の略称（HGSS など）
-const MON_SOFT_AB={'ポケモンHOME':'HOME','ポケモンチャンピオンズ':'チャンピオンズ','ポケモンGO':'GO','赤・緑・青・ピカチュウ':'赤緑青ピ','金・銀・クリスタル':'金銀ク','ルビー・サファイア・エメラルド':'RSE','ファイアレッド・リーフグリーン':'FRLG','ダイヤモンド・パール':'DP','プラチナ':'Pt','ハートゴールド・ソウルシルバー':'HGSS','ブラック・ホワイト':'BW','ブラック2・ホワイト2':'BW2','X・Y':'XY','オメガルビー・アルファサファイア':'ORAS','サン・ムーン':'SM','ウルトラサン・ウルトラムーン':'USUM',"Let's Go! ピカチュウ・イーブイ":'ピカブイ','ソード・シールド':'剣盾','ブリリアントダイヤモンド・シャイニングパール':'BDSP','LEGENDS アルセウス':'アルセウス','スカーレット・バイオレット':'SV','LEGENDS Z-A':'Z-A'};
+const MON_SOFT_AB={'ポケモンコロシアム':'コロシアム','ポケモンXD 闇の旋風ダーク・ルギア':'XD','ポケモンHOME':'HOME','ポケモンチャンピオンズ':'チャンピオンズ','ポケモンGO':'GO','赤・緑・青・ピカチュウ':'赤緑青ピ','金・銀・クリスタル':'金銀ク','ルビー・サファイア・エメラルド':'RSE','ファイアレッド・リーフグリーン':'FRLG','ダイヤモンド・パール':'DP','プラチナ':'Pt','ハートゴールド・ソウルシルバー':'HGSS','ブラック・ホワイト':'BW','ブラック2・ホワイト2':'BW2','X・Y':'XY','オメガルビー・アルファサファイア':'ORAS','サン・ムーン':'SM','ウルトラサン・ウルトラムーン':'USUM',"Let's Go! ピカチュウ・イーブイ":'ピカブイ','ソード・シールド':'剣盾','ブリリアントダイヤモンド・シャイニングパール':'BDSP','LEGENDS アルセウス':'アルセウス','スカーレット・バイオレット':'SV','LEGENDS Z-A':'Z-A'};
 const monSoftAb=s=>s?(MON_SOFT_AB[s]||s):'';
+const monSoftCls=s=>/[^\x00-\x7f]/.test(monSoftAb(s))?'mc-soft ja':'mc-soft';
 function monPlaceTxt(m){const pl=MON_PLACES.find(p=>p[0]===m.place);if(!pl)return '';
   let t=m.place==='box'?(m.box?'ボックス'+m.box+(m.pos?`の${m.pos}番`:''):(m.soft?'ボックス':'')):pl[1];
   if(m.place==='other'&&m.placeNote)t+=`（${m.placeNote}）`;return t}
@@ -3759,7 +3765,10 @@ function renderMonSheet(){
 function renderMonParents(){
   const M=S.mon;
   monSheet.innerHTML=`<div class="sheet-in"><div class="sh-head"><h3>親の管理</h3><button class="btn" type="button" data-monpback="1">${monEdit?'戻る':'閉じる'}</button></div>
-    <div class="srow">${M.parents.length?M.parents.map(p=>`<div class="monpar"><div><b>${esc(p.name)}</b><small>ID ${esc(p.tid)}${p.soft?'・'+esc(p.soft):''}</small></div><button class="btn" type="button" data-monpdel="${p.id}">削除</button></div>`).join(''):'<p class="note" style="margin:0">まだ登録していません。</p>'}</div>
+    <div class="srow">${M.parents.length?M.parents.map(p=>p.id===monPEdit?`<div class="monpar ed"><div class="monrow2"><label class="monf"><span>トレーナー名</span><input id="monPEName" type="text" maxlength="12" value="${esc(p.name)}"></label><label class="monf"><span>ID（表ID）</span><input id="monPEId" type="text" inputmode="numeric" maxlength="6" value="${esc(p.tid)}"></label></div>
+      <label class="monf"><span>ソフト</span><select id="monPESoft"><option value="">－</option>${MON_SOFTS.map(s=>`<option${s===p.soft?' selected':''}>${esc(s)}</option>`).join('')}</select></label>
+      <div class="row2"><button class="btn" type="button" data-monpcancel="1">やめる</button><button class="btn primary" type="button" data-monpsave="${p.id}">保存する</button></div></div>`
+      :`<div class="monpar"><div><b>${esc(p.name)}</b><small>${p.soft?`<span class="${monSoftCls(p.soft)}">${esc(monSoftAb(p.soft))}</span>`:''}ID ${esc(p.tid)}</small></div><div class="monparb"><button class="btn" type="button" data-monpedit="${p.id}">編集</button><button class="btn" type="button" data-monpdel="${p.id}">削除</button></div></div>`).join(''):'<p class="note" style="margin:0">まだ登録していません。</p>'}</div>
     <div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">親を追加</span></div>
       <div class="monrow2"><label class="monf"><span>トレーナー名</span><input id="monPName" type="text" maxlength="12"></label><label class="monf"><span>ID（表ID）</span><input id="monPId" type="text" inputmode="numeric" maxlength="6"></label></div>
       <label class="monf"><span>ソフト</span><select id="monPSoft"><option value="">－</option>${MON_SOFTS.map(s=>`<option>${esc(s)}</option>`).join('')}</select></label>
@@ -3770,7 +3779,12 @@ monSheet.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset,M=S.mon,m=monEdit;
   if(d.monclose){monClose();return}
   if(d.monpman){monCollect();monParentsOpen=true;renderMonSheet();return}
-  if(d.monpback){monParentsOpen=false;if(monEdit)renderMonSheet();else monClose();return}
+  if(d.monpedit){monPEdit=d.monpedit;renderMonParents();setTimeout(()=>document.getElementById('monPEName')?.focus(),0);return}
+  if(d.monpcancel){monPEdit='';renderMonParents();return}
+  if(d.monpsave){const p=M.parents.find(x=>x.id===d.monpsave);const n=document.getElementById('monPEName').value.trim(),t=document.getElementById('monPEId').value.trim();
+    if(!n||!t){toast('トレーナー名とIDを入れてください');return}
+    if(p){p.name=n;p.tid=t;p.soft=document.getElementById('monPESoft').value}monPEdit='';save();renderMonParents();renderMon();toast('親を更新しました');return}
+  if(d.monpback){monPEdit='';monParentsOpen=false;if(monEdit)renderMonSheet();else monClose();return}
   if(d.monpadd){const n=document.getElementById('monPName').value.trim(),t=document.getElementById('monPId').value.trim(),s=document.getElementById('monPSoft').value;
     if(!n||!t){toast('トレーナー名とIDを入れてください');return}
     const p={id:'p'+(++M.uid),name:n,tid:t,soft:s};M.parents.push(p);if(monEdit&&!monEdit.parent)monEdit.parent=p.id;save();renderMonParents();toast('親を追加しました');return}
@@ -4609,7 +4623,7 @@ function renderMonCard(){
   const p=monParent(m),t=monRb(m)&&monRbTally(monRb(m));
   const IC={pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',user:'<circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>',rb:'<circle cx="12" cy="9" r="5"/><path d="M9 13.5 7.5 21l4.5-2.5 4.5 2.5-1.5-7.5"/>',goal:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/>',memo:'<path d="M5 4h14v16H5z"/><path d="M8.5 9h7M8.5 13h7M8.5 17h4"/>'};
   const ic=k=>`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]}</svg>`;
-  const chip=v=>v?`<span class="mc-soft">${esc(monSoftAb(v))}</span>`:'';
+  const chip=v=>v?`<span class="${monSoftCls(v)}">${esc(monSoftAb(v))}</span>`:'';
   const tile=(k,lab,body,wide)=>`<div class="mc-it${wide?' w':''}"><span class="mc-il">${ic(k)}${lab}</span><div class="mc-iv2">${body}</div></div>`;
   const plT=monPlaceTxt(m),noPl=m.place==='box'&&!m.box&&!m.soft;
   const tiles=tile('pin','場所',noPl?'<b class="none">未登録</b>':`${chip(m.soft)}<b>${esc(plT)}</b>`)
