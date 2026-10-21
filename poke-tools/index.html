@@ -1702,7 +1702,13 @@ body:not(.app) .obsapp{display:none!important}
 #party .mon{height:132px;gap:5px;justify-content:flex-start}
 #party .mhead{height:24px;flex:none}
 #party .mon .mname{height:24px;line-height:24px}
-.evx-gain{flex:none;font-family:var(--f-num);font-size:11px;font-weight:700;color:#fff;background:var(--c);border-radius:6px;padding:0 5px;line-height:18px}
+.evx-gain{flex:none;max-width:52%;height:20px;box-sizing:border-box;display:flex;flex-wrap:nowrap;align-items:center;align-content:center;justify-content:flex-start;column-gap:3px;overflow:hidden;white-space:nowrap;font-family:var(--f-num);font-size:11px;font-weight:700;line-height:1;background:var(--sunken);border:1px solid color-mix(in srgb,var(--c) 70%,var(--line));border-radius:6px;padding:0 4px}
+.evx-gain i{font-style:normal;color:color-mix(in srgb,var(--c) 85%,var(--ink))}
+.evx-gain.two{height:24px;flex-direction:column;justify-content:center;align-items:center;line-height:10px;row-gap:1px;padding:0 3px}
+.evx-gain .r{display:flex;column-gap:3px}
+#party .ilab{display:flex;flex-direction:column;justify-content:center;-webkit-line-clamp:unset}
+#party .ilab .in{display:block;white-space:nowrap;overflow:hidden}
+#party .ilab .is{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9.5px;font-weight:700;line-height:1.15;color:color-mix(in srgb,var(--c,var(--muted)) 85%,var(--ink))}
 #party .mopts{height:28px;flex:none}
 #party .isel,#party .rus{height:28px}
 .evx-sb{flex:none;display:flex;height:8px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}
@@ -2586,6 +2592,18 @@ function renderPick(){
   const mb=document.getElementById('moveBtn');if(mb)mb.setAttribute('aria-pressed','true');
 }
 const SHORT_ITEM={none:'もちものなし',brace:'きょうせいギプス',p_hp:'パワーウエイト',p_atk:'パワーリスト',p_def:'パワーベルト',p_spa:'パワーレンズ',p_spd:'パワーバンド',p_spe:'パワーアンクル'};
+// 持ち物がどの能力に効くか（表示だけ。保存する値は id のまま）
+const ITEM_STAT_N={hp:'HP',atk:'こうげき',def:'ぼうぎょ',spa:'とくこう',spd:'とくぼう',spe:'すばやさ'};
+function itemHint(id){
+  const it=ITEMS.find(x=>x.id===id);if(!it)return '';
+  if(id==='brace')return 'すべて2倍';
+  return it.s?`${ITEM_STAT_N[it.s]}+${gen().pw}`:'';
+}
+const itemOptText=id=>{const h=itemHint(id);return SHORT_ITEM[id]+(h?`（${h}）`:'')};
+function itemLab(id){
+  const h=itemHint(id),it=ITEMS.find(x=>x.id===id),st=it&&it.s&&STATS.find(s=>s.k===it.s);
+  return `<span class="in">${SHORT_ITEM[id]}</span>`+(h?`<span class="is"${st?` style="--c:${st.c}"`:''}>${h}</span>`:'');
+}
 const RUS_ICON='<svg viewBox="0 0 20 20" aria-hidden="true"><g fill="currentColor"><circle cx="10" cy="10" r="6"/><circle cx="4.6" cy="4.6" r="2.1"/><circle cx="15.4" cy="4.6" r="2.1"/><circle cx="4.6" cy="15.4" r="2.1"/><circle cx="15.4" cy="15.4" r="2.1"/></g><g fill="var(--rusbg)"><circle cx="7.7" cy="8.9" r="1.15"/><circle cx="12.3" cy="8.9" r="1.15"/></g><path d="M7.6 12.6h4.8" stroke="var(--rusbg)" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>';
 function renderParty(){
   partyEl.classList.toggle('picking',pick!==null);
@@ -2602,7 +2620,7 @@ function renderParty(){
     }).join('');
     const warn=canGain(m)&&S.targets.some(tg=>overs(m,tg).length);
     const badges=[G.lv100&&m.lv100?'<span class="mb">Lv100</span>':'',hasGoal(m)&&goalDone(m)?'<span class="mb ok">目標達成</span>':'',warn?'<span class="mb bad">次で超過</span>':''].join('');
-    const gn=evGainN(m,ct),seg=STATS.filter(s=>m.ev[s.k]>0).map(s=>`<span style="width:${m.ev[s.k]/510*100}%;background:${s.c}"></span>`).join('');
+    const gv=evGainV(m,ct),gn=gv?sum(gv):0,seg=STATS.filter(s=>m.ev[s.k]>0).map(s=>`<span style="width:${m.ev[s.k]/510*100}%;background:${s.c}"></span>`).join('');
     const ab=k=>LABELS.abc[STATS.findIndex(s=>s.k===k)];
     const cur=STATS.filter(s=>m.ev[s.k]>0).map(s=>`<i style="--c:${s.c}">${ab(s.k)}${m.ev[s.k]}</i>`).join('')||'<span class="z">まだ0</span>';
     const gls=hasGoal(m)?STATS.filter(s=>goalOf(m,s.k)>0).map(s=>`<i style="--c:${s.c}">${ab(s.k)}${goalOf(m,s.k)}</i>`).join('')||'すべて0':'';
@@ -2610,10 +2628,10 @@ function renderParty(){
       <div class="mhead">
         <button class="toggle sm" type="button" data-act="on" aria-pressed="${m.on}" aria-label="${esc(m.name)}を参加させる"></button>
         <button class="mname" type="button" data-act="edit" aria-label="${esc(m.name)}の名前・努力値・目標を編集">${esc(m.name)}</button>
-        ${gn>0?`<span class="evx-gain" style="--c:${bc(ct.i)}" title="${esc(ct.t.name||'未選択')}を1体倒すと増える努力値">+${gn}</span>`:''}
+        ${gn>0?`<span class="evx-gain" style="--c:${bc(ct.i)}" title="${esc(ct.t.name||'未選択')}を1体倒すと増える努力値" aria-label="${esc(ct.t.name||'未選択')}を1体倒すと ${STATS.filter(s=>gv[s.k]>0).map(s=>`${ITEM_STAT_N[s.k]}+${gv[s.k]}`).join('、')}">${STATS.filter(s=>gv[s.k]>0).map(s=>`<i style="--c:${s.c}">${ab(s.k)}+${gv[s.k]}</i>`).join('')}</span>`:''}
       </div>
       <div class="mopts">
-        <span class="isel"><span class="ilab">${SHORT_ITEM[ITEMS.some(it=>it.id===m.item&&(!it.s||G.pw))?m.item:'none']}</span><select id="item_${i}" data-act="item" aria-label="${esc(m.name)}の持ち物">${ITEMS.filter(it=>!it.s||G.pw).map(it=>`<option value="${it.id}"${it.id===m.item?' selected':''}>${SHORT_ITEM[it.id]}</option>`).join('')}</select></span>
+        <span class="isel"><span class="ilab">${itemLab(ITEMS.some(it=>it.id===m.item&&(!it.s||G.pw))?m.item:'none')}</span><select id="item_${i}" data-act="item" aria-label="${esc(m.name)}の持ち物">${ITEMS.filter(it=>!it.s||G.pw).map(it=>`<option value="${it.id}"${it.id===m.item?' selected':''}>${itemOptText(it.id)}</option>`).join('')}</select></span>
         <button class="rus${G.rus?'':' na'}" type="button" data-act="rus" aria-pressed="${G.rus?m.rus:false}" aria-label="ポケルス${G.rus?'':'（この作品にはありません）'}">${RUS_ICON}</button>
       </div>
       <div class="evx-sb" role="img" aria-label="努力値の合計${t}／510">${seg}</div>
@@ -2658,11 +2676,12 @@ function evCurT(){
   for(let k=S.history.length-1;k>=0;k--){const h=S.history[k];if(h.kind==='defeat'){const i=S.targets.findIndex(t=>t.id===h.tid);if(i>=0)return {t:S.targets[i],i};break}}
   return S.targets.length?{t:S.targets[0],i:0}:null;
 }
-// その相手を1体倒すと増える努力値の合計（上限・510を考える）
-function evGainN(m,ct){
-  if(!ct||!canGain(m))return 0;
-  const x={ev:{...m.ev}};applyGain(x,gainOf(m,ct.t.y));return sum(x.ev)-sum(m.ev);
+// その相手を1体倒すと増える努力値（能力ごと・上限と510を考える）
+function evGainV(m,ct){
+  if(!ct||!canGain(m))return null;
+  const x={ev:{...m.ev}},d={};applyGain(x,gainOf(m,ct.t.y));for(const s of STATS)d[s.k]=x.ev[s.k]-m.ev[s.k];return d;
 }
+function evGainN(m,ct){const d=evGainV(m,ct);return d?sum(d):0}
 // その相手だけを倒し続けたとき、増える能力のうち目標を決めたものが目標に届くまでの数
 function evNeed(m,t){
   const g=gainOf(m,t.y),ks=STATS.filter(s=>g[s.k]>0&&goalOf(m,s.k)!=null&&m.ev[s.k]<aimOf(m,s.k));if(!ks.length)return null; // 目標を決めた能力だけを見る
@@ -2835,11 +2854,25 @@ function renderTaps(){
 }
 // 撃破対象の名前が1行に収まるように、はみ出すときだけ文字を小さくする
 function fitNames(){
-  document.querySelectorAll('.tap .tn,.pbtn .pnm,#party .mon .mname').forEach(el=>{
-    el.style.fontSize='';if(!el.clientWidth)return;
+  // 増える努力値のバッジ：3つ以上か1行に収まらないときは2行にする（高さは固定）
+  const two=el=>{const is=[...el.children],h=Math.ceil(is.length/2),r1=document.createElement('span'),r2=document.createElement('span');r1.className=r2.className='r';r1.append(...is.slice(0,h));r2.append(...is.slice(h));el.append(r1,r2);el.classList.add('two');let f=9.5;el.style.fontSize=f+'px';while(gOver(el)&&f>7.5){f-=.5;el.style.fontSize=f+'px'}};
+  const gOver=el=>el.scrollWidth>el.clientWidth+.5||el.scrollHeight>el.clientHeight+.5;
+  document.querySelectorAll('#party .evx-gain').forEach(el=>{
+    el.querySelectorAll('.r').forEach(r=>r.replaceWith(...r.childNodes));el.classList.remove('two');el.style.fontSize='';if(!el.clientWidth)return;
+    let f=11;
+    while(el.children.length<3&&gOver(el)&&f>10){f-=.5;el.style.fontSize=f+'px'}
+    if(gOver(el)||el.children.length>=3)two(el);
+  });
+  const fit=el=>{
+    el.style.fontSize='';if(!el.clientWidth)return false;
     let f=parseFloat(getComputedStyle(el).fontSize);
     const ow=()=>{let w=el.scrollWidth;if(el.tagName==='BUTTON'){const r=document.createRange();r.selectNodeContents(el);const cs=getComputedStyle(el);w=Math.max(w,r.getBoundingClientRect().width+parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+1)}return w};
     while(ow()>el.clientWidth+.5&&f>8){f-=.5;el.style.fontSize=f+'px'}
+    return ow()>el.clientWidth+.5;
+  };
+  document.querySelectorAll('.tap .tn,.pbtn .pnm,#party .mon .mname,#party .ilab .in').forEach(el=>{
+    // 名前が入りきらないときは、バッジを2行にして名前の場所を広げる
+    if(fit(el)&&el.classList.contains('mname')){const g=el.parentNode.querySelector('.evx-gain:not(.two)');if(g&&g.children.length>1){two(g);fit(el)}}
   });
 }
 addEventListener('resize',()=>fitNames());
