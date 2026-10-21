@@ -824,6 +824,16 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mondr{display:grid;grid-template-columns:6em 1fr;gap:8px;font-size:13px}
 .mondr span{color:var(--muted);font-size:12px}
 .mondr b{font-weight:500}
+.mondrw{grid-template-columns:1fr;gap:4px}
+.miv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;max-width:420px}
+.mivc{height:30px;display:flex;align-items:center;justify-content:space-between;gap:2px;padding:0 6px;border-radius:8px;background:var(--sunken);line-height:1;overflow:hidden}
+.mondr .mivc b.rg{font-size:12px}
+.mondr .mivc small{font-size:11px;color:inherit;opacity:.85;font-weight:700;white-space:nowrap}
+.mondr .mivc b{font-size:12.5px;font-weight:800;white-space:nowrap}
+.mivc.j5{background:var(--iv);color:var(--iv-ink)}
+.mivc.j4{background:color-mix(in srgb,var(--iv) 16%,var(--surface));color:var(--iv);box-shadow:inset 0 0 0 1.5px var(--iv)}
+.mivc.j0{color:var(--weak)}
+.mondr .mivt{display:block;margin-top:4px;font-size:12px;color:var(--muted);font-weight:700}
 .shgot{align-self:stretch;min-height:48px;font-size:15px;border-radius:12px;border:1.5px solid var(--sh);color:var(--sh);background:color-mix(in srgb,var(--sh) 10%,var(--surface))}
 .monlinkbtn{flex:none;white-space:nowrap}
 .monlinkbtn.on{border-color:var(--mon);color:var(--mon)}
@@ -3520,7 +3530,7 @@ function renderMon(){
       <span class="mrn">${esc(monLabel(m))}</span><span class="mrg ${m.gender==='♂'?'m':m.gender==='♀'?'f':''}">${m.gender&&m.gender!=='不明'?m.gender:'－'}</span><span class="mrl">${m.lv?esc(m.lv):'－'}</span>
       <span class="mrp">${p?`<span>${esc(p.name)}</span><small>${esc(p.tid)}</small>`:'－'}</span><span class="mra">${m.ability?esc(m.ability):'－'}</span></button>
       ${open?`<div class="mondet">
-        ${m.nick&&m.sp?row('ポケモン',esc(monSp(m))):''}${row('何の個体か',esc(m.purpose||''))}${row('場所',esc(monWhere(m)))}${row('ボール',esc(m.ball||''))}${row('持ち物',esc(m.item||''))}${row('性格',esc(m.nature||''))}${m.iv&&m.iv.r?row('個体値',esc(ivTxt(m.iv.r))):''}${m.ev&&EVK.some(k=>m.ev[k]>0)?row('努力値',esc(evTxt(m.ev))+(m.goal?`<small class="monevg">目標 ${esc(evTxt(m.goal))}</small>`:'')):''}
+        ${m.nick&&m.sp?row('ポケモン',esc(monSp(m))):''}${row('何の個体か',esc(m.purpose||''))}${row('場所',esc(monWhere(m)))}${row('ボール',esc(m.ball||''))}${row('持ち物',esc(m.item||''))}${row('性格',esc(m.nature||''))}${m.iv&&m.iv.r?`<div class="mondr mondrw"><span>個体値</span><b>${ivGrid(m.iv.r)}</b></div>`:''}${m.ev&&EVK.some(k=>m.ev[k]>0)?row('努力値',esc(evTxt(m.ev))+(m.goal?`<small class="monevg">目標 ${esc(evTxt(m.goal))}</small>`:'')):''}
         ${p?row('親',`${esc(p.name)}（ID ${esc(p.tid)}）${p.soft?'・'+esc(p.soft):''}`):''}
         ${t?row('リボン',`<span class="monrbline">🎀 ${t.got}/${t.total}${t.mtotal?`・あかし ${t.mgot}/${t.mtotal}`:''}</span>`):''}
         ${(m.tags||[]).length?`<div class="montags">${m.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
@@ -4276,6 +4286,12 @@ function ivLinkMon(x){
   v.ev=Object.assign(zero(),x.ev||{});v.link=x.id;ivAddRecent(v.mon);
   return true;
 }
+function ivRecTo(x,R){x.iv={mon:S.iv.mon,lv:S.iv.lv,nat:S.iv.nat,real:Object.assign({},S.iv.real),r:R.rows.map(r=>r.st==='ok'?[r.lo,r.hi]:null)}}
+// 個体管理に表示する個体値（能力ごとのマス）
+function ivGrid(r){const L=LABELS[S.lm==='abc'?'abc':'kanji'];let lo=0,hi=0,all=true;
+  const c=EVK.map((k,i)=>{const v=r[i];if(!v){all=false;return `<span class="mivc"><small>${esc(L[i])}</small><b>－</b></span>`}lo+=v[0];hi+=v[1];const a=ivLev(v[0]),b=ivLev(v[1]);
+    return `<span class="mivc j${Math.min(a,b)}" title="${esc(STATS[i].n)}：${esc(a===b?ivWord(v[0]):ivWord(v[0])+'〜'+ivWord(v[1]))}"><small>${esc(L[i])}</small><b${v[0]===v[1]?'':' class="rg"'}>${v[0]===v[1]?v[0]:v[0]+'〜'+v[1]}</b></span>`}).join('');
+  return `<span class="miv">${c}</span><small class="mivt">合計 ${all?(lo===hi?lo:lo+'〜'+hi):'－'}</small>`}
 function ivFromMon(x){if(!ivLinkMon(x))return;save();setView('iv');toast(monLabel(x)+' を個体値ジャッジで開きました')}
 const ivTxt=r=>EVK.map((k,i)=>EVL[i]+(r[i]?(r[i][0]===r[i][1]?r[i][0]:r[i][0]+'〜'+r[i][1]):'－')).join(' ');
 ivEl.addEventListener('input',e=>{
@@ -4291,7 +4307,11 @@ ivEl.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='ivNat'){S.iv.nat=t.value;save();renderIv();return}
   if(t.id==='ivLoad'&&t.value!==''){
-    const x=S.mon.list.find(y=>y.id===+t.value);if(!x||!ivLinkMon(x))return;
+    const x=S.mon.list.find(y=>y.id===+t.value);if(!x)return;
+    const e=ivCur(),R=ivSolve();
+    if(e&&e.d===x.sp&&R.rows.some(r=>r.st==='ok')){
+      ivRecTo(x,R);S.iv.link=x.id;save();renderIv();toast(monLabel(x)+' の個体値を、いまの結果で上書きしました');return}
+    if(!ivLinkMon(x))return;
     save();renderIv();toast(monLabel(x)+' を読み込みました');
   }
 });
@@ -4308,7 +4328,7 @@ ivEl.addEventListener('click',e=>{
     if(!x){const e=ivCur();if(!e){toast('ポケモンを選んでください');return}
       x={id:monNewId(),sp:e.d,nick:'',lv:String(S.iv.lv||''),gender:'',nature:ivNat(S.iv.nat)?S.iv.nat:'',ability:'',item:'',purpose:'',soft:'',place:'box',box:'',pos:'',placeNote:'',parent:'',tags:[],memo:'',rb:'',ball:'',ev:Object.assign(zero(),S.iv.ev)};
       S.mon.list.push(x);S.iv.link=x.id;made=true}
-    x.iv={mon:S.iv.mon,lv:S.iv.lv,nat:S.iv.nat,real:Object.assign({},S.iv.real),r:R.rows.map(r=>r.st==='ok'?[r.lo,r.hi]:null)};
+    ivRecTo(x,R);
     save();renderIvLink();ivCalc();toast(made?'個体管理に新しく登録して、個体値を記録しました':monLabel(x)+' に個体値を記録しました');return}
 });
 {const q=document.getElementById('ivQ');
