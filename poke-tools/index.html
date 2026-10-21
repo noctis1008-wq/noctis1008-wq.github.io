@@ -1770,6 +1770,12 @@ body:not(.app) .obsapp{display:none!important}
 #vIv .ivx-hero .num b{font-size:34px;line-height:42px}
 #vIv .ivx-hero .num b.rg{font-size:31px}
 #vIv .ivx-hero .num>span{font-size:14px}
+/* すき間を少し詰める（表のタイトル行・枠の上下・カードの間） */
+#vIv.wrap{gap:10px}
+#vIv .ivx-top{padding:10px 12px}
+#vIv .ivx-top .ivmon{margin-top:4px}
+#vIv .ivx-tbl{padding:8px 14px 10px}
+#vIv .ivx-tbl .ivhead{height:16px;line-height:16px;padding-bottom:2px;box-sizing:content-box}
 .ivx-foot{display:flex;align-items:flex-start;gap:8px;height:36px;flex:none}
 .ivx-foot .ivmsg{flex:1;min-width:0;margin:0}
 .ivx-foot #ivClr{flex:none;height:32px;margin:2px 0 0;padding:0 12px;font-size:12.5px;font-weight:700;border-radius:999px;display:flex;align-items:center;gap:4px}
@@ -2166,7 +2172,7 @@ body:not(.app) .obsapp{display:none!important}
   </section>
   </div>
   <div class="ivx-hero" id="ivHero"><div class="lab"><span class="gl"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>個体値の合計</span><span class="ivx-sub" id="ivHeroSub"></span></div><div class="num"><b id="ivTot">－</b><span>/ 186</span></div><div class="ivx-hbar"><span id="ivTotBar" style="width:0%"></span></div></div>
-  <div class="shbox">
+  <div class="shbox ivx-tbl">
   <section>
     <div class="ivhead" aria-hidden="true"><span>能力</span><span>実数値</span><span>努力値</span><span>個体値</span><span>ジャッジ</span></div>
     <div id="ivRows"></div>
