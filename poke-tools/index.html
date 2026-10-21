@@ -917,6 +917,26 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mf-t{display:flex;gap:4px}
 .mf-lv{text-align:right;font-family:var(--f-num);font-weight:800;font-size:13px}
 .mf-none{text-align:center;padding:16px 0}
+.mc-info{gap:8px}
+.mc-pur{font-size:14px;font-weight:700;line-height:1.45;padding:8px 12px;border-radius:10px;background:color-mix(in srgb,var(--mon) 10%,var(--surface));border-left:4px solid var(--mon)}
+.mc-its{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.mc-it{min-width:0;min-height:62px;box-sizing:border-box;padding:8px 10px;border-radius:12px;background:var(--sunken);display:flex;flex-direction:column;gap:4px}
+.mc-it.w{grid-column:1/-1;min-height:0}
+.mc-il{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--muted)}
+.mc-il svg{flex:none;color:var(--mon)}
+.mc-iv2{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;min-width:0}
+.mc-iv2 b{font-size:14px;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.mc-iv2 b.sm{font-size:12.5px;white-space:normal}
+.mc-iv2 b small{font-size:11px;color:var(--muted);font-weight:700;margin-left:3px}
+.mc-iv2>small{font-size:11px;color:var(--muted);font-weight:700;font-family:var(--f-num);white-space:nowrap}
+.mc-iv2 b.none{color:var(--muted);font-weight:500;font-size:13px}
+.mc-soft{flex:none;font-size:10.5px;font-weight:800;letter-spacing:.02em;padding:1px 6px;border-radius:6px;background:var(--mon);color:#fff;font-family:var(--f-num);line-height:1.5}
+.mc-pb{flex-basis:100%;height:5px;border-radius:99px;background:color-mix(in srgb,var(--muted) 22%,transparent);overflow:hidden}
+.mc-pb i{display:block;height:100%;width:var(--w);background:#e0679a;border-radius:99px}
+.mc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.mc-tags span{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid color-mix(in srgb,var(--mon) 40%,var(--line));color:var(--mon);background:color-mix(in srgb,var(--mon) 8%,var(--surface));max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mc-memo{padding:8px 10px;border-radius:12px;background:var(--sunken)}
+.mc-memo p{margin:4px 0 0;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
 .mc-sub{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;height:18px;line-height:18px}
 .mc-leg{display:flex;justify-content:center;gap:14px;font-size:11px;color:var(--muted);margin-top:2px;height:16px}
 .mc-leg i{display:inline-block;width:16px;height:0;border-top:2px solid var(--iv);vertical-align:middle;margin-right:4px}
@@ -943,7 +963,7 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mc-tot b.bad{color:var(--warn)}
 .mc-info{display:flex;flex-direction:column;gap:6px}
 .mc-info .mondr{grid-template-columns:5.5em 1fr}
-#monCard .sh-head{gap:6px}#monCard .sh-head>.btn{white-space:nowrap;flex:none;padding:0 12px;height:38px}#monCard .sh-head .mc-pos+.mc-editb{margin-left:0}
+#monCard .sh-head{gap:6px;z-index:6}#monCard .sh-head>.btn{white-space:nowrap;flex:none;padding:0 12px;height:38px}#monCard .sh-head .mc-pos+.mc-editb{margin-left:0}
 .mc-editb{margin-left:auto;background:var(--mon);border-color:var(--mon);color:#fff;white-space:nowrap}
 #monCard .sh-head h3{white-space:nowrap}
 .mc-acts{display:flex;gap:8px;position:sticky;bottom:calc(-20px - env(safe-area-inset-bottom,0px));background:var(--bg);margin:0 -16px calc(-20px - env(safe-area-inset-bottom,0px));padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
@@ -3627,9 +3647,15 @@ const monSheet=document.getElementById('monSheet');
 const monNewId=()=>{const mx=S.mon.list.reduce((a,x)=>Math.max(a,+x.id||0),0);S.mon.uid=Math.max(S.mon.uid||0,mx)+1;return S.mon.uid};
 const monSp=m=>m.sp?SPDB[m.sp-1][0]:'';
 const monLabel=m=>m.nick||monSp(m)||'名前なし';
+// ソフト名の略称（HGSS など）
+const MON_SOFT_AB={'ポケモンHOME':'HOME','ポケモンチャンピオンズ':'チャンピオンズ','ポケモンGO':'GO','赤・緑・青・ピカチュウ':'赤緑青ピ','金・銀・クリスタル':'金銀ク','ルビー・サファイア・エメラルド':'RSE','ファイアレッド・リーフグリーン':'FRLG','ダイヤモンド・パール':'DP','プラチナ':'Pt','ハートゴールド・ソウルシルバー':'HGSS','ブラック・ホワイト':'BW','ブラック2・ホワイト2':'BW2','X・Y':'XY','オメガルビー・アルファサファイア':'ORAS','サン・ムーン':'SM','ウルトラサン・ウルトラムーン':'USUM',"Let's Go! ピカチュウ・イーブイ":'ピカブイ','ソード・シールド':'剣盾','ブリリアントダイヤモンド・シャイニングパール':'BDSP','LEGENDS アルセウス':'アルセウス','スカーレット・バイオレット':'SV','LEGENDS Z-A':'Z-A'};
+const monSoftAb=s=>s?(MON_SOFT_AB[s]||s):'';
+function monPlaceTxt(m){const pl=MON_PLACES.find(p=>p[0]===m.place);if(!pl)return '';
+  let t=m.place==='box'?(m.box?'ボックス'+m.box+(m.pos?`の${m.pos}番`:''):(m.soft?'ボックス':'')):pl[1];
+  if(m.place==='other'&&m.placeNote)t+=`（${m.placeNote}）`;return t}
 function monWhere(m){
   if(m.place==='box'&&!m.box&&!m.soft)return '場所未登録';
-  const pl=MON_PLACES.find(p=>p[0]===m.place);let s=m.soft||'';
+  const pl=MON_PLACES.find(p=>p[0]===m.place);let s=monSoftAb(m.soft);
   if(pl){if(m.place==='box'){s+=(s?'・':'')+'ボックス'+(m.box?m.box:'?')+(m.pos?`の${m.pos}番`:'')}else s+=(s?'・':'')+pl[1]}
   if(m.place==='other'&&m.placeNote)s+=`（${m.placeNote}）`;
   return s||'場所未登録';
@@ -4581,9 +4607,18 @@ function renderMonCard(){
     const jl=v?Math.min(ivLev(v[0]),ivLev(v[1])):-1;
     return `<div class="mc-sr" style="--c:${s.c}"><span class="mc-sn">${esc(L[i])}${mk}</span><span class="mc-bar"><em>${b??'－'}</em><span><i style="--w:${b?Math.min(100,b/2.55).toFixed(1):0}%"></i></span></span><span class="mc-iv${v?(v[0]!==v[1]?' rg':'')+(jl===5?' j5':jl===0?' j0':''):' none'}">${v?(v[0]===v[1]?v[0]:v[0]+'〜'+v[1]):'－'}</span><span class="mc-ev${evv?'':' none'}">${evv||'0'}</span><span class="mc-real${rc}">${real}</span></div>`}).join('');
   const p=monParent(m),t=monRb(m)&&monRbTally(monRb(m));
-  const row=(k,v)=>v?`<div class="mondr"><span>${k}</span><b>${v}</b></div>`:'';
-  const info=row('何の個体か',esc(m.purpose||''))+row('場所',esc(monWhere(m)))+(p?row('親',`${esc(p.name)}（ID ${esc(p.tid)}）${p.soft?'・'+esc(p.soft):''}`):'')+(t?row('リボン',`🎀 ${t.got}/${t.total}${t.mtotal?`・あかし ${t.mgot}/${t.mtotal}`:''}`):'')+(m.goal?row('努力値の目標',esc(evTxt(m.goal))):'')
-    +((m.tags||[]).length?`<div class="montags">${m.tags.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'')+(m.memo?`<p class="monmemo">${esc(m.memo)}</p>`:'');
+  const IC={pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',user:'<circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>',rb:'<circle cx="12" cy="9" r="5"/><path d="M9 13.5 7.5 21l4.5-2.5 4.5 2.5-1.5-7.5"/>',goal:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/>',memo:'<path d="M5 4h14v16H5z"/><path d="M8.5 9h7M8.5 13h7M8.5 17h4"/>'};
+  const ic=k=>`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]}</svg>`;
+  const chip=v=>v?`<span class="mc-soft">${esc(monSoftAb(v))}</span>`:'';
+  const tile=(k,lab,body,wide)=>`<div class="mc-it${wide?' w':''}"><span class="mc-il">${ic(k)}${lab}</span><div class="mc-iv2">${body}</div></div>`;
+  const plT=monPlaceTxt(m),noPl=m.place==='box'&&!m.box&&!m.soft;
+  const tiles=tile('pin','場所',noPl?'<b class="none">未登録</b>':`${chip(m.soft)}<b>${esc(plT)}</b>`)
+    +tile('user','親',p?`${chip(p.soft)}<b>${esc(p.name)}</b><small>ID ${esc(p.tid)}</small>`:'<b class="none">未登録</b>')
+    +(t?tile('rb','リボン',`<b>${t.got}<small>/ ${t.total}</small></b>${t.mtotal?`<small>あかし ${t.mgot}/${t.mtotal}</small>`:''}<span class="mc-pb"><i style="--w:${t.total?Math.round(t.got/t.total*100):0}%"></i></span>`):'')
+    +(m.goal?tile('goal','努力値の目標',`<b class="sm">${esc(evTxt(m.goal))}</b>`,!t):'');
+  const info=`${m.purpose?`<div class="mc-pur">${esc(m.purpose)}</div>`:''}<div class="mc-its">${tiles}</div>`
+    +((m.tags||[]).length?`<div class="mc-tags">${m.tags.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'')
+    +(m.memo?`<div class="mc-memo"><span class="mc-il">${ic('memo')}メモ</span><p>${esc(m.memo)}</p></div>`:'');
   const SL=mcSeq(),si=SL.findIndex(x=>x.id===m.id);
   monCard.innerHTML=`<div class="sheet-in"><div class="sh-head"><h3>ステータス</h3>${SL.length>1?`<span class="mc-pos"><button type="button" data-mcnav="-1" aria-label="前のポケモン">‹</button><span>${si+1} / ${SL.length}</span><button type="button" data-mcnav="1" aria-label="次のポケモン">›</button></span>`:''}<button class="btn mc-editb" type="button" data-mcedit="1">編集する</button><button class="btn" type="button" data-mcclose="1">閉じる</button></div>
   <div class="mc-hero" style="--a1:${a1};--a2:${a2}"><div class="mc-top"><div class="mc-name"><b>${esc(monLabel(m))}</b>${(()=>{const sub=m.nick&&m.sp?(e?tyShortName(e.n):monSp(m)):e&&e.n!==monSp(m)?e.n:'';return sub?`<small>（${esc(sub)}）</small>`:''})()}</div><div class="mc-lv"><small>Lv.</small><b>${lvOk?lv:'－'}</b>${g}</div></div>
@@ -4604,7 +4639,7 @@ function renderMonCard(){
       <div class="mc-st"><span class="h">能力</span><span class="h">種族値</span><span class="h">個体値</span><span class="h">努力値</span><span class="h">実数値</span>${rows}</div>
       <div class="mc-tot"><span>種族値の合計<b>${e?e.b.reduce((s,v)=>s+v,0):'－'}</b></span><span>努力値の合計<b class="${evT>510?'bad':''}">${evT}</b> / 510</span></div></div></div></div>`})()}
   ${(()=>{const mv=monMoves(m);if(!mv.some(Boolean))return '';return `<div class="mc-card"><div class="mc-ch"><h4>覚えている技</h4></div><div class="mc-mv">${mv.map(v=>{const x=MV_MAP.get(v);return v?`<div class="mc-mvi"${x?` style="--tc:${TY_C[x[1]]}"`:''}><b>${esc(v)}</b>${x?`<small>${TY_N[x[1]]}・${MV_CLS[x[2]]}</small>`:''}</div>`:'<div class="mc-mvi none"><b>－</b></div>'}).join('')}</div></div>`})()}
-  ${info?`<div class="mc-card mc-info">${info}</div>`:''}
+  <div class="mc-card mc-info"><div class="mc-ch"><h4>この個体について</h4></div>${info}</div>
   </div>`;
 }
 function mcSeq(){const L=monShown();return L.some(x=>x.id===monCardId)?L:S.mon.list}
