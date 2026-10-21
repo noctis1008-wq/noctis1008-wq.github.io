@@ -1492,9 +1492,11 @@ body:not(.app) .obsapp{display:none!important}
 /* 厳選の条件シート：方法を切り替えても位置が動かないよう、シートの高さを固定し、下の設定部分だけを中でスクロールする */
 #shSetSheet .sheet-in{height:92%}
 /* 厳選方法は横1列（はみ出す分は横にスクロール）にして、どの作品でも高さを同じにする */
-#shSetSheet .shx-meth{position:relative;display:flex;flex-wrap:nowrap;gap:6px;height:44px;align-items:center;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;margin-inline:-2px;padding-inline:2px}
+#shSetSheet .shx-meth{position:relative;display:flex;flex-wrap:nowrap;gap:0;height:44px;align-items:stretch;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;border:1px solid var(--line);border-radius:10px;background:var(--sunken)}
 #shSetSheet .shx-meth::-webkit-scrollbar{display:none}
-#shSetSheet .shx-meth button{flex:none;height:40px;min-height:0;padding:0 14px;border-radius:999px;white-space:nowrap;line-height:1}
+#shSetSheet .shx-meth button{flex:1 0 0;min-width:max-content;height:auto;min-height:0;padding:0 14px;border:none;border-radius:0;background:var(--sunken);color:var(--muted);font-weight:500;font-size:13px;white-space:nowrap;line-height:1}
+#shSetSheet .shx-meth button+button{border-left:1px solid var(--line)}
+#shSetSheet .shx-meth button[aria-pressed=true]{background:var(--ink);color:var(--bg);font-weight:700}
 #shSetSheet .shx-optscroll{flex:1 1 0;min-height:110px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px}
 .shx-optscroll>*{flex-shrink:0}
 #shSetSheet .shx-opt{height:50px;min-height:0;padding:0}
