@@ -1711,6 +1711,60 @@ body:not(.app) .obsapp{display:none!important}
 .ivmsg{height:36px;overflow:hidden;font-size:12px;line-height:18px;margin:2px 0 0;color:var(--muted)}
 .ivmsg.w{color:var(--weak);font-weight:700}
 .ivmsg.ok{color:var(--iv);font-weight:700}
+/* 個体値ジャッジ：新しいデザイン（能力の枠の中は前のまま） */
+:root{--ivx-hero:linear-gradient(135deg,#58ad41 0%,#3d8f2a 55%,#2a6a1b 100%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ivx-hero:linear-gradient(135deg,#4f9e38 0%,#367d25 55%,#1f4f15 100%)}}
+:root[data-theme="dark"]{--ivx-hero:linear-gradient(135deg,#4f9e38 0%,#367d25 55%,#1f4f15 100%)}
+#vIv.wrap{gap:12px}
+.ivx-top>section{display:flex;flex-direction:column;gap:0}
+.ivx-top{padding:12px}
+.ivx-sbox{position:relative}
+.ivx-search{display:flex;align-items:center;gap:8px;height:42px;padding:0 5px 0 12px;border-radius:12px;border:1px solid var(--line);background:var(--sunken);color:var(--muted);box-sizing:border-box}
+.ivx-search:focus-within{border-color:color-mix(in srgb,var(--iv) 55%,var(--line))}
+.ivx-search>svg{width:17px;height:17px;flex:none}
+#vIv .ivx-search input{flex:1;min-width:0;width:auto;height:100%;border:none;border-radius:0;background:none;padding:0;margin:0;font:inherit;font-size:16px;font-weight:700;color:var(--ink);outline:none;box-shadow:none;-webkit-appearance:none;appearance:none}
+#vIv .ivx-search input::placeholder{color:var(--muted);font-weight:500}
+.ivx-qx{flex:none;width:30px;height:30px;border:none;border-radius:50%;background:var(--line);color:var(--muted);display:grid;place-items:center;padding:0}
+.ivx-qx[hidden]{display:none}
+.ivx-qx svg{width:13px;height:13px}
+.ivx-top .ivmon{margin-top:6px}
+.ivx-top .ivlvrow{grid-template-columns:auto auto minmax(0,1fr);margin-top:4px}
+.ivx-step{display:flex;align-items:center;height:38px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);box-sizing:border-box}
+.ivx-step button{width:30px;height:100%;border:none;border-radius:0;background:var(--sunken);color:var(--ink);font-size:18px;font-weight:700;padding:0;display:grid;place-items:center}
+.ivx-step button:active{background:var(--line)}
+.ivx-step button:disabled{color:var(--muted);opacity:.5}
+#vIv .ivx-step #ivLv{width:40px;height:100%;border:none;border-radius:0;background:none;box-shadow:none;padding:0;margin:0;font-family:var(--f-num);font-weight:700;font-size:16px;text-align:center;color:var(--ink);-moz-appearance:textfield;appearance:textfield}
+#vIv .ivx-step #ivLv::-webkit-inner-spin-button,#vIv .ivx-step #ivLv::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.ivx-top .tysel2.ivnat{height:38px;box-sizing:border-box}
+.ivx-hero{position:relative;overflow:hidden;border-radius:16px;padding:12px 16px 14px;color:#fff;height:116px;box-sizing:border-box;flex:none;background:var(--ivx-hero);box-shadow:0 6px 18px -8px rgb(42 106 27 / .6);display:flex;flex-direction:column}
+.ivx-hero::after{content:"";position:absolute;right:-34px;top:-50px;width:130px;height:130px;border-radius:50%;border:20px solid rgb(255 255 255 / .13);pointer-events:none}
+.ivx-hero>*{position:relative;z-index:1}
+.ivx-hero .lab{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;line-height:18px;height:18px;white-space:nowrap}
+.ivx-hero .lab .gl{display:inline-flex;align-items:center;gap:4px;flex:none}
+.ivx-hero .lab svg{width:14px;height:14px}
+.ivx-hero .lab .ivx-sub{color:#fff;opacity:.95;margin:0;font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ivx-hero .num{display:flex;align-items:baseline;gap:6px;height:52px;white-space:nowrap;overflow:hidden}
+.ivx-hero .num b{font-family:var(--f-display);font-weight:400;font-size:40px;line-height:52px;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgb(0 0 0 / .15)}
+.ivx-hero .num b.rg{font-size:36px}
+.ivx-hero .num>span{font-size:15px;font-weight:700}
+.ivx-hbar{height:8px;flex:none;margin-top:auto;border-radius:999px;background:rgb(0 0 0 / .2);overflow:hidden}
+.ivx-hbar span{display:block;height:100%;background:#fff;border-radius:999px;transition:width .2s}
+.ivx-acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;height:44px;flex:none}
+.ivx-acts.lk{grid-template-columns:minmax(0,1fr) auto auto}
+.ivx-acts .btn{height:44px;margin:0;padding:0 10px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;white-space:nowrap;min-width:0;overflow:hidden}
+.ivx-acts .btn svg{width:16px;height:16px;flex:none}
+.ivx-acts .ivlkbtn,.ivx-acts .ivlkt{color:var(--mon);border-color:color-mix(in srgb,var(--mon) 55%,var(--line));background:color-mix(in srgb,var(--mon) 8%,var(--surface))}
+.ivx-acts .ivlkt span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ivx-acts .ivlkt small{font-size:11px;font-weight:700;opacity:.8;flex:none}
+.ivx-acts #ivRec{color:var(--iv);border-color:color-mix(in srgb,var(--iv) 50%,var(--line));background:color-mix(in srgb,var(--iv) 9%,var(--surface))}
+.ivx-acts.lk #ivRec{padding:0 12px}
+.ivx-acts #ivUnl{padding:0 12px;color:var(--muted)}
+.ivx-foot{display:flex;align-items:flex-start;gap:8px;height:36px;flex:none}
+.ivx-foot .ivmsg{flex:1;min-width:0;margin:0}
+.ivx-foot #ivClr{flex:none;height:32px;margin:2px 0 0;padding:0 12px;font-size:12.5px;font-weight:700;border-radius:999px;display:flex;align-items:center;gap:4px}
+.ivx-foot #ivClr svg{width:13px;height:13px}
+#vIv>.note{margin-top:4px}
+@media (max-width:370px){.ivx-step button{width:26px}#vIv .ivx-step #ivLv{width:36px}.ivx-top .ivlvrow{gap:6px}.ivx-top .tysel2.ivnat{padding-left:8px}}
 
 /* 努力値カウンター：新デザイン */
 #vEv{gap:10px}
@@ -2092,22 +2146,22 @@ body:not(.app) .obsapp{display:none!important}
 </div>
 
 <div class="wrap view" id="vIv" hidden>
-  <div class="shbox">
+  <div class="shbox ivx-top">
   <section>
-    <div class="tyqrow"><div class="tyqbox"><input id="ivQ" type="text" class="pbsearch" placeholder="ポケモン名で探す" autocomplete="off" enterkeyhint="search" aria-label="ポケモンの名前で探す"><button type="button" id="ivQx" class="tyqx" aria-label="入力を消す" hidden>✕</button><div id="ivRes" class="sres ivres"></div></div><button type="button" class="btn tyclr" id="ivClr">クリア</button></div>
+    <div class="ivx-sbox"><div class="ivx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="ivQ" type="text" placeholder="ポケモン名で探す" autocomplete="off" enterkeyhint="search" aria-label="ポケモンの名前で探す"><button type="button" id="ivQx" class="ivx-qx" aria-label="入力を消す" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div id="ivRes" class="sres ivres"></div></div>
     <div class="ivmon" id="ivMon"></div>
-    <div class="ivlvrow"><span class="ivlvl">レベル</span><input id="ivLv" type="number" inputmode="numeric" min="1" max="100" aria-label="レベル"><label class="tysel2 ivnat" id="ivNatBox"><span id="ivNatLab">せいかくを選ぶ</span><select id="ivNat" aria-label="せいかく"></select></label></div>
-    <div class="ivlink" id="ivLink"></div>
+    <div class="ivlvrow"><span class="ivlvl">レベル</span><div class="ivx-step"><button type="button" data-ivlvs="-1" aria-label="レベルを1下げる">−</button><input id="ivLv" type="number" inputmode="numeric" min="1" max="100" aria-label="レベル"><button type="button" data-ivlvs="1" aria-label="レベルを1上げる">＋</button></div><label class="tysel2 ivnat" id="ivNatBox"><span id="ivNatLab">せいかくを選ぶ</span><select id="ivNat" aria-label="せいかく"></select></label></div>
   </section>
   </div>
+  <div class="ivx-hero" id="ivHero"><div class="lab"><span class="gl"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>個体値の合計</span><span class="ivx-sub" id="ivHeroSub"></span></div><div class="num"><b id="ivTot">－</b><span>/ 186</span></div><div class="ivx-hbar"><span id="ivTotBar" style="width:0%"></span></div></div>
   <div class="shbox">
   <section>
     <div class="ivhead" aria-hidden="true"><span>能力</span><span>実数値</span><span>努力値</span><span>個体値</span><span>ジャッジ</span></div>
     <div id="ivRows"></div>
-    <div class="ivsum" id="ivSum"></div>
-    <p class="ivmsg" id="ivMsg" aria-live="polite"></p>
   </section>
   </div>
+  <div class="ivx-acts" id="ivLink"></div>
+  <div class="ivx-foot"><p class="ivmsg" id="ivMsg" aria-live="polite"></p><button type="button" class="btn" id="ivClr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>クリア</button></div>
   <p class="note">ステータス画面の数字（実数値）と、レベル・せいかく・努力値から、個体値を計算します。第3世代以降の計算のしかたで、種族値は最新の作品のものです。レベルが高いほど細かく分かります（レベル100なら、ほとんど1つに決まります）。ジャッジの言葉は、剣盾・SVのボックスで見られる「ジャッジ」と同じです。めざめるパワーは第7世代までの技です。</p>
 </div>
 
@@ -5439,28 +5493,33 @@ function ivCalc(){
     else{v.className='ivv none';v.textContent=r.st==='shed'?'？':'－';j.className='ivj';j.textContent=''}
   });
   const all=rows.every(r=>r.st==='ok');
-  let tot='－',hp='－';
+  let tot='－',hp='－',hpT='';
   if(all){
     const lo=rows.reduce((a,r)=>a+r.lo,0),hi=rows.reduce((a,r)=>a+r.hi,0);tot=lo===hi?String(lo):`${lo}〜${hi}`;
     // めざめるパワーは個体値の偶数・奇数だけで決まる
     const par=rows.map(r=>r.lo===r.hi?[r.lo&1]:[0,1]),W=[1,2,4,16,32,8],ts=new Set();
     const go=(i,s)=>{if(i===6){ts.add(IV_HPT[Math.floor(s*15/63)]);return}par[i].forEach(p=>go(i+1,s+p*W[i]))};go(0,0);
-    hp=ts.size===1?tyChip([...ts][0]):'<span>決まりません</span>';
+    hp=ts.size===1?tyChip([...ts][0]):'<span>決まりません</span>';hpT=ts.size===1?TY_N[[...ts][0]]:'';
   }
-  document.getElementById('ivSum').innerHTML=`<span>個体値の合計<b>${tot}</b></span><span class="ivhp">めざめるパワー${hp==='－'?'<b>－</b>':hp}</span>`;
+  {const okR=rows.filter(r=>r.st==='ok'),best=okR.filter(r=>r.lo>=31).length,tb=document.getElementById('ivTot');
+    tb.textContent=tot;tb.className=tot.includes('〜')?'rg':'';
+    document.getElementById('ivTotBar').style.width=all?(rows.reduce((a,r)=>a+r.hi,0)/186*100).toFixed(1)+'%':'0%';
+    document.getElementById('ivHeroSub').textContent=e?`さいこう ${best}つ・めざパ ${hp==='－'?'－':hpT||'未確定'}`:'ポケモンを選んでください';}
   const m=document.getElementById('ivMsg');m.textContent=R.msg;m.className='ivmsg'+(R.cls?' '+R.cls:'');
   document.getElementById('ivMon').innerHTML=e?`<span class="ivno">No.${pad3(e.d)}</span>${e.t.map(t=>tyChip(t)).join('')}<span class="ivbst">種族値の合計 ${e.b.reduce((a,b)=>a+b,0)}</span>`:'<span>ポケモンを選ぶと、種族値が入ります</span>';
   const q=document.getElementById('ivQ');
   document.getElementById('ivClr').disabled=!S.iv.mon&&!q.value&&!S.iv.nat&&!S.iv.link&&!EVK.some(k=>S.iv.real[k]!==''||+S.iv.ev[k]>0);
   const rec=document.getElementById('ivRec');if(rec)rec.disabled=false;
+  {const n=ivNum(S.iv.lv);ivEl.querySelector('[data-ivlvs="-1"]').disabled=n!=null&&n<=1;ivEl.querySelector('[data-ivlvs="1"]').disabled=n!=null&&n>=100}
   return R;
 }
 function ivLinked(){const x=S.iv.link?S.mon.list.find(y=>y.id===S.iv.link):null;if(!x&&S.iv.link)S.iv.link=0;return x||null}
 function renderIvLink(){
   const x=ivLinked(),box=document.getElementById('ivLink');
+  box.classList.toggle('lk',!!x);
   box.innerHTML=x
-    ?`<div class="ivlk"><span class="ivlkt">個体管理：<b>${esc(monLabel(x))}</b>${x.iv&&x.iv.r?'（記録あり）':''}</span><button class="btn" id="ivRec" type="button">結果を記録</button><button class="btn" id="ivUnl" type="button" aria-label="個体管理との連動を外す">外す</button></div>`
-    :`<div class="ivlk"><button class="btn ivlkbtn" id="ivPick" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>個体管理とつなぐ</button><button class="btn" id="ivRec" type="button">結果を記録</button></div>`;
+    ?`<button class="btn ivlkt" type="button" aria-haspopup="dialog" aria-label="個体管理：${esc(monLabel(x))}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>${esc(monLabel(x))}</span>${x.iv&&x.iv.r?'<small>記録あり</small>':''}</button><button class="btn" id="ivRec" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3"/><rect x="8" y="13" width="8" height="5" rx="1"/></svg>記録</button><button class="btn" id="ivUnl" type="button" aria-label="個体管理との連動を外す">外す</button>`
+    :`<button class="btn ivlkbtn" id="ivPick" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>個体管理とつなぐ</button><button class="btn" id="ivRec" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3"/><rect x="8" y="13" width="8" height="5" rx="1"/></svg>結果を記録</button>`;
 }
 function renderIv(){
   ivNorm();
@@ -5581,6 +5640,7 @@ ivEl.addEventListener('change',e=>{
 ivEl.addEventListener('click',e=>{
   const t=e.target;
   const mb=t.closest('[data-ivmon]');if(mb){ivPick(mb.dataset.ivmon);return}
+  {const ls=t.closest('[data-ivlvs]');if(ls){const n=ivNum(S.iv.lv),v=Math.max(1,Math.min(100,(n==null||n<1||n>100?(n==null?50:Math.max(1,Math.min(100,n))):n+ +ls.dataset.ivlvs)));S.iv.lv=v;document.getElementById('ivLv').value=v;save();ivCalc();return}}
   if(t.closest('#ivQx')){ivQSet('');document.getElementById('ivQ').focus();renderIvRecent();return}
   if(t.closest('#ivClr')){const v=S.iv;v.mon='';v.nat='';v.link=0;v.real={};v.ev={};ivNorm();ivQSet('');document.getElementById('ivRes').innerHTML='';save();renderIv();return}
   if(t.closest('#ivPick')||t.closest('.ivlkt')){ivMonPicker();return}
