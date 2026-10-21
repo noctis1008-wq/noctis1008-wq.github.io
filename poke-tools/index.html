@@ -6334,7 +6334,7 @@ function renderNav(){
 }
 function renderTabs(){
   const pv=document.getElementById('stxPrev');if(pv)pv.innerHTML=S.tabs.map(k=>`<span class="stx-t">${toolNi(k)}<small>${TOOL_META[k].s}</small></span>`).join('');
-  document.getElementById('tabBarIn').innerHTML=S.tabs.map(k=>`<button class="tab" type="button" data-tab="${k}" aria-label="${VIEWS[k].t}">${toolNi(k)}<span class="tl">${TOOL_META[k].s}</span></button>`).join('');
+  document.getElementById('tabBarIn').innerHTML=S.tabs.map(k=>`<button class="tab" type="button" data-tab="${k}" style="--c:var(${TOOL_META[k].c})" aria-label="${VIEWS[k].t}">${toolNi(k)}<span class="tl">${TOOL_META[k].s}</span></button>`).join('');
   markTabs();
 }
 function markTabs(){const v=document.body.dataset.view;document.querySelectorAll('#tabBarIn [data-tab]').forEach(b=>{if(b.dataset.tab===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
