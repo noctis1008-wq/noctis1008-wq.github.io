@@ -1987,6 +1987,77 @@ body:not(.app) .obsapp{display:none!important}
 #shSetSheet .shx-optscroll{flex:1 1 0;min-height:110px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px}
 .shx-optscroll>*{flex-shrink:0}
 #shSetSheet .shx-opt{height:50px;min-height:0;padding:0}
+/* ===== タイプ相性：テイスト統一案（CSSのみ・DOM/並び/挙動は変更なし） ===== */
+/* 1) 枠：半透明・1.5px → 他ツールと同じ白(ダークは紺)カード・1px・角14 */
+#vType .shbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 12px}
+#vType .tycard,#vType .tychg{border-radius:14px}
+/* 2) 上のタブ：オレンジ塗り → 結合トグル（選択は濃紺） */
+#vType .tytabs{border-radius:12px;background:var(--sunken);height:44px}
+#vType .tytabs button{background:transparent;height:100%;font-size:13.5px;font-weight:700;color:var(--muted)}
+#vType .tytabs button[aria-pressed=true]{background:var(--ink);color:var(--bg);font-weight:800}
+#vType .tytabs button[aria-pressed=true] .tybadge{box-shadow:0 0 0 2px var(--ink)}
+/* 3) 検索欄：虫めがね＋丸い✕（個体値ジャッジ・ポロックと同じ） */
+#vType .tyqbox input.pbsearch{height:42px;box-sizing:border-box;border-radius:12px;padding-left:38px;font-weight:500;
+  background:var(--sunken) no-repeat 12px 50%/17px 17px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a93ad' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-4-4'/%3E%3C/svg%3E")}
+#vType .tyqbox input.pbsearch::placeholder{color:var(--muted);opacity:.85}
+#vType .tyqx{width:30px;height:30px;right:6px;background:var(--line);font-size:12px;font-weight:800}
+#vType .tysel2.tymonsel{border-radius:12px;font-size:14px;font-weight:800;color:var(--ty);border-color:color-mix(in srgb,var(--ty) 60%,var(--line));background:color-mix(in srgb,var(--ty) 9%,var(--surface))}
+#vType .tysel2.tymonsel::after{color:var(--ty)}
+#vType .tyqrow .tyclr{height:42px;box-sizing:border-box;border-radius:12px;padding:0 14px;font-size:13px;background:var(--surface)}
+/* 4) 受けるとき／攻撃するとき：別々のボタン → 結合トグル 44px */
+#vType .tyside{gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--sunken);height:44px;box-sizing:border-box}
+#vType .tyside button{border:none;border-radius:0;background:transparent;height:100%;padding:0 4px;font-size:14px}
+#vType .tyside button+button{border-left:1px solid var(--line)}
+#vType .tyside button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+/* 5) 特性・持ち物・バトル中の効果：くぼんだ角12の選択欄 */
+#vType .tysel2{border-radius:12px;background:var(--sunken);font-size:12.5px;color:var(--ink)}
+#vType .tysel2::after{width:6px;height:6px;border-width:0 2px 2px 0;color:var(--muted);right:12px}
+#vType .tysel2.on{background:color-mix(in srgb,var(--ty) 10%,var(--surface));border-color:color-mix(in srgb,var(--ty) 55%,var(--line))}
+#vType .tysel2.on::after{color:var(--ty)}
+#vType .tyhint2{font-size:11.5px}
+/* 6) タイプのマス：角12・うすい立体感。選んだマスは外側リング＋白ふちのチェック */
+#vType .tygrid{gap:6px}
+#vType .tyb{border-radius:12px;border:none;background-image:linear-gradient(180deg,rgb(255 255 255 / .16),rgb(255 255 255 / 0) 55%,rgb(0 0 0 / .06));box-shadow:inset 0 -2px 0 rgb(0 0 0 / .12);letter-spacing:-.01em}
+#vType .tyb[aria-pressed=true]{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--ink),inset 0 -2px 0 rgb(0 0 0 / .12)}
+#vType .tyb[aria-pressed=true]::after{top:-8px;right:-6px;width:19px;height:19px;line-height:15px;font-size:10px;font-weight:900;box-sizing:border-box;border:2px solid var(--surface);text-shadow:none}
+#vType .tyb .tyx{box-shadow:0 1px 2px rgb(0 0 0 / .18)}
+#vType .tyb.mw .tyx{box-shadow:0 0 0 2px #c81e1e}
+#vType .tyb.mr .tyx{box-shadow:0 0 0 2px #1d63c4}
+#vType .tyb.mw4 .tyx{box-shadow:0 0 0 2px #fff}
+/* 7) 弱点・いまひとつ・効果なし：色つきのチップ（ポロックのチップと同じ形） */
+#vType .tysum span{height:24px;line-height:22px;box-sizing:border-box;padding:0 10px;font-size:12px;border:1px solid}
+#vType .tysum .w{background:color-mix(in srgb,var(--weak) 10%,var(--surface));border-color:color-mix(in srgb,var(--weak) 40%,var(--line))}
+#vType .tysum .r{background:color-mix(in srgb,var(--res) 10%,var(--surface));border-color:color-mix(in srgb,var(--res) 40%,var(--line))}
+#vType .tysum .z{background:var(--sunken);border-color:var(--line)}
+/* 8) 相性のルール：大きな文字の選択欄 → 他ツールの「くぼんだ選択欄」（矢印つき） */
+#vType .tygen{gap:8px;font-size:12.5px;color:var(--muted)}
+#vType .tygen span{display:flex;align-items:center;gap:6px;color:var(--ink)}
+#vType .tygen span::before{content:"";width:26px;height:26px;border-radius:8px;background:color-mix(in srgb,var(--ty) 18%,transparent) no-repeat 50% 50%/15px 15px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4561c' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h16M4 12h10M4 18h6'/%3E%3C/svg%3E")}
+#vType .tygen select{-webkit-appearance:none;appearance:none;height:42px;box-sizing:border-box;border-radius:12px;padding:0 34px 0 12px;font-weight:700;/* 文字は iOS の拡大防止で16pxのまま */text-overflow:ellipsis;
+  background:var(--surface) no-repeat right 12px center/14px 14px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a93ad' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+/* 9) 早見表：小さい灰色の見出し → アイコン＋太字の見出し、表は角丸の枠に */
+#vType #tyTbl h2{display:flex;align-items:center;gap:8px;height:26px;margin:0 0 4px;font-size:14px;letter-spacing:0;color:var(--ink);font-weight:700}
+#vType #tyTbl h2::before{content:"";flex:none;width:26px;height:26px;border-radius:8px;background:color-mix(in srgb,var(--ty) 18%,transparent) no-repeat 50% 50%/15px 15px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4561c' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='3'/%3E%3Cpath d='M3 9h18M9 3v18'/%3E%3C/svg%3E")}
+#vType .tysub{font-size:11.5px;line-height:1.55}
+#vType .tytblwrap{margin:0 -4px;border-radius:10px;border:1px solid var(--line);padding:0;overflow-x:auto}
+#vType .tytbl th,#vType .tytbl td{border-color:color-mix(in srgb,var(--line) 70%,transparent)}
+#vType .tytbl tr:first-child th,#vType .tytbl thead th{border-top:none}
+#vType .tytbl tr>*:first-child{border-left:none}#vType .tytbl tr>*:last-child{border-right:none}
+#vType .tytbl tr:last-child>*{border-bottom:none}
+#vType .tylegend{gap:6px 10px;font-size:11.5px}
+#vType .tylegend span{border-radius:6px}
+/* 10) タイプ変更タブ：カード・チップを他ツールの形に */
+#vType .tycats button{height:30px;padding:0 12px;font-size:12.5px;background:var(--surface)}
+#vType .tycats button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+#vType .tyminig button{border-radius:8px}
+#vType .tychgbar .btn{border-radius:999px;background:var(--sunken)}
+/* ダーク：アイコンの線の色 */
+:root[data-theme="dark"] #vType .tygen span::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f08a50' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h16M4 12h10M4 18h6'/%3E%3C/svg%3E")}
+:root[data-theme="dark"] #vType #tyTbl h2::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f08a50' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='3'/%3E%3Cpath d='M3 9h18M9 3v18'/%3E%3C/svg%3E")}
 </style>
 
 <header class="appbar"><div class="appbar-in">
