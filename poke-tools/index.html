@@ -839,6 +839,8 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .monlinkbtn.on{border-color:var(--mon);color:var(--mon)}
 .monev{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
 .monev input{text-align:center;padding:8px 2px;font-family:var(--f-num)}
+.monev input[data-monivin]{text-align:center;padding:8px 2px}
+.monev input[data-monivin]::placeholder{font-size:11px;letter-spacing:-.03em}
 .monevv{font-family:var(--f-num);font-size:17px;text-align:center;color:var(--ink);background:var(--sunken);border-radius:8px;padding:6px 0}
 .monevlk{font-size:11px;font-weight:700;color:var(--mon)}
 .monevg{display:block;color:var(--muted);font-size:12px}
@@ -3569,6 +3571,10 @@ function renderMonSheet(){
     return `<div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">努力値</span>${lk>=0?`<span class="monevlk">努力値カウンターの手持ち${lk+1}と連動中</span>`:''}</div>
     <div class="monev">${EVK.map((k,i)=>`<label class="monf"><span>${EVL[i]}</span><input type="number" inputmode="numeric" min="0" max="252" data-monev="${k}" value="${ev[k]||''}" placeholder="0"></label>`).join('')}</div>
     ${e.goal?`<p class="note" style="margin:0">目標：${esc(evTxt(e.goal))}</p>`:''}${lk>=0?'<p class="note" style="margin:0">努力値カウンターで数えると、ここにも反映されます。ここで直して保存すると、努力値カウンターの手持ちも同じ値になります。</p>':''}</div>`})()}
+  ${(()=>{const r=(e.iv&&e.iv.r)||[];
+    return `<div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">個体値</span><button class="btn" type="button" data-monivall="1">すべて31にする</button></div>
+    <div class="monev">${EVK.map((k,i)=>{const v=r[i],rg=v&&v[0]!==v[1];return `<label class="monf"><span>${EVL[i]}</span><input type="number" inputmode="numeric" min="0" max="31" data-monivin="${k}"${rg?` data-ivrg="${v[0]},${v[1]}"`:''} value="${v&&!rg?v[0]:''}" placeholder="${rg?v[0]+'〜'+v[1]:'－'}"></label>`}).join('')}</div>
+    <p class="note" style="margin:0">0〜31で入れます。王冠（すごいとっくん）で上げた能力は31にしてください。「〜」で薄く出ている欄は、空のままなら今の記録が残ります。</p></div>`})()}
   <div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">居場所</span></div>
     <label class="monf"><span>ソフト</span><select data-monf="soft">${opt('','－',e.soft)}${MON_SOFTS.map(s=>opt(s,s,e.soft)).join('')}</select></label>
     <div class="dxchips">${MON_PLACES.map(([k,t])=>`<button type="button" data-monplace="${k}" aria-pressed="${e.place===k}">${t}</button>`).join('')}</div>
@@ -3609,6 +3615,7 @@ monSheet.addEventListener('click',e=>{
     armed(b,'削除',used?`${used}匹で使用中・削除`:'本当に削除',()=>{M.parents=M.parents.filter(x=>x!==p);M.list.forEach(x=>{if(x.parent===p.id)x.parent=''});if(monEdit&&monEdit.parent===p.id)monEdit.parent='';save();renderMonParents();renderMon()});return}
   if(!m)return;
   if(d.monsp){monCollect();m.sp=+d.monsp;{const fx=monGFix(m.sp);if(fx)m.gender=fx;else if(m.gender==='不明')m.gender=''}const L=ABL[m.sp-1]||[];if(m.ability&&!L.some(a=>a[0]===m.ability))m.ability='';if(!m.ability){const n=L.filter(a=>a[1]===0);if(n.length===1)m.ability=n[0][0]}renderMonSheet();return}
+  if(d.monivall){monCollect();m.iv=Object.assign({},m.iv||{},{r:EVK.map(()=>[31,31])});renderMonSheet();toast('個体値をすべて31にしました。保存すると記録されます');return}
   if(d.monitem){monCollect();m.item=d.monitem;renderMonSheet();return}
   if(d.monplace){monCollect();m.place=d.monplace;renderMonSheet();return}
   if(d.montag){monCollect();const i=m.tags.indexOf(d.montag);if(i<0)m.tags.push(d.montag);else m.tags.splice(i,1);b.setAttribute('aria-pressed',String(i<0));return}
@@ -3622,7 +3629,8 @@ monSheet.addEventListener('click',e=>{
   if(d.mondel){armed(b,'削除','本当に削除',()=>{M.list=M.list.filter(x=>x.id!==m.id);save();monClose();renderMon();toast('削除しました')});return}
 });
 // 入力欄の内容を編集中の個体に移す
-function monCollect(){if(!monEdit)return;const evIn=monSheet.querySelectorAll('[data-monev]');if(evIn.length){monEdit.ev=monEdit.ev||{};evIn.forEach(el=>monEdit.ev[el.dataset.monev]=Math.max(0,Math.min(252,Math.round(+el.value||0))))}monSheet.querySelectorAll('[data-monf]').forEach(el=>{monEdit[el.dataset.monf]=el.value.trim?el.value.trim():el.value})}
+function monCollect(){if(!monEdit)return;{const ivIn=[...monSheet.querySelectorAll('[data-monivin]')];if(ivIn.length){const r=ivIn.map(el=>{const t=el.value.trim();if(t===''){const g=el.dataset.ivrg;return g?g.split(',').map(Number):null}const n=Math.max(0,Math.min(31,Math.round(+t)));return Number.isFinite(n)?[n,n]:null});
+  if(r.some(Boolean))monEdit.iv=Object.assign({},monEdit.iv||{},{r});else if(monEdit.iv)monEdit.iv=Object.assign({},monEdit.iv,{r:null})}}const evIn=monSheet.querySelectorAll('[data-monev]');if(evIn.length){monEdit.ev=monEdit.ev||{};evIn.forEach(el=>monEdit.ev[el.dataset.monev]=Math.max(0,Math.min(252,Math.round(+el.value||0))))}monSheet.querySelectorAll('[data-monf]').forEach(el=>{monEdit[el.dataset.monf]=el.value.trim?el.value.trim():el.value})}
 monSheet.addEventListener('input',e=>{
   if(e.target.id==='monItem'){const q=kata(e.target.value.trim()),box=document.getElementById('monItemRes');
     if(!q){box.innerHTML='';return}
