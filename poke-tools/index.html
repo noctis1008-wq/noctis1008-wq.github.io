@@ -1066,7 +1066,7 @@ body:not(.app) .obsapp{display:none!important}
 .ivnat .ivnt{font-size:11px;font-weight:700;margin-left:6px;opacity:.85}
 .tysel2.ivnat.on,.tysel2.ivload.on{border-color:var(--iv);color:var(--iv);background:color-mix(in srgb,var(--iv) 8%,var(--surface))}
 .ivlink{margin-top:8px;height:40px;display:flex;align-items:center}
-.ivlink .ivload{width:100%;height:40px}
+.ivlink .ivload{flex:1;min-width:0;width:auto;height:40px}
 .ivlk{display:flex;align-items:center;gap:6px;width:100%;height:40px}
 .ivlkt{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:700}
 .ivlkt b{color:var(--mon)}
@@ -4231,7 +4231,7 @@ function renderIvLink(){
     ?`<div class="ivlk"><span class="ivlkt">個体管理：<b>${esc(monLabel(x))}</b>${x.iv&&x.iv.r?'（記録あり）':''}</span><button class="btn" id="ivRec" type="button">結果を記録</button><button class="btn" id="ivUnl" type="button" aria-label="個体管理との連動を外す">外す</button></div>`
     :(()=>{const L=S.mon.list.filter(y=>y.sp&&ivList().some(e=>e.d===y.sp)).sort((p,q)=>q.id-p.id);
       const note=L.length?'個体管理から読み込む':S.mon.list.length?'ポケモンを選んだ個体がありません':'個体管理に登録すると、ここから読み込めます';
-      return `<label class="tysel2 ivload${L.length?'':' off'}"><span>${note}</span><select id="ivLoad" aria-label="個体管理から読み込む"${L.length?'':' disabled'}><option value="">読み込む個体を選ぶ</option>${L.map(y=>`<option value="${y.id}">${esc(monLabel(y))}${y.nick?'（'+esc(monSp(y))+'）':''}${y.lv?' Lv.'+esc(y.lv):''}${y.iv&&y.iv.r?'・記録あり':''}</option>`).join('')}</select></label>`})();
+      return `<div class="ivlk"><label class="tysel2 ivload${L.length?'':' off'}"><span>${note}</span><select id="ivLoad" aria-label="個体管理から読み込む"${L.length?'':' disabled'}><option value="">読み込む個体を選ぶ</option>${L.map(y=>`<option value="${y.id}">${esc(monLabel(y))}${y.nick?'（'+esc(monSp(y))+'）':''}${y.lv?' Lv.'+esc(y.lv):''}${y.iv&&y.iv.r?'・記録あり':''}</option>`).join('')}</select></label><button class="btn" id="ivRec" type="button" aria-label="結果を個体管理に記録（新しく登録）">結果を記録</button></div>`})();
 }
 function renderIv(){
   ivNorm();
@@ -4302,10 +4302,14 @@ ivEl.addEventListener('click',e=>{
   if(t.closest('#ivClr')){const v=S.iv;v.mon='';v.nat='';v.link=0;v.real={};v.ev={};ivNorm();ivQSet('');document.getElementById('ivRes').innerHTML='';save();renderIv();return}
   if(t.closest('#ivUnl')){S.iv.link=0;save();renderIvLink();ivCalc();toast('個体管理との連動を外しました');return}
   if(t.closest('#ivRec')){
-    const x=ivLinked();if(!x)return;const R=ivSolve();
+    let x=ivLinked();const R=ivSolve();
     if(!R.rows.some(r=>r.st==='ok')){toast('記録できる結果がありません');return}
+    let made=false;
+    if(!x){const e=ivCur();if(!e){toast('ポケモンを選んでください');return}
+      x={id:monNewId(),sp:e.d,nick:'',lv:String(S.iv.lv||''),gender:'',nature:ivNat(S.iv.nat)?S.iv.nat:'',ability:'',item:'',purpose:'',soft:'',place:'box',box:'',pos:'',placeNote:'',parent:'',tags:[],memo:'',rb:'',ball:'',ev:Object.assign(zero(),S.iv.ev)};
+      S.mon.list.push(x);S.iv.link=x.id;made=true}
     x.iv={mon:S.iv.mon,lv:S.iv.lv,nat:S.iv.nat,real:Object.assign({},S.iv.real),r:R.rows.map(r=>r.st==='ok'?[r.lo,r.hi]:null)};
-    save();renderIvLink();ivCalc();toast(monLabel(x)+' に個体値を記録しました');return}
+    save();renderIvLink();ivCalc();toast(made?'個体管理に新しく登録して、個体値を記録しました':monLabel(x)+' に個体値を記録しました');return}
 });
 {const q=document.getElementById('ivQ');
   q.addEventListener('focus',()=>{const e=ivCur();if(e&&q.value===tyShortName(e.n)){q.select();renderIvRecent()}else renderIvRes()});
