@@ -359,7 +359,7 @@ body:has(#monCard:not([hidden])) .tabbar{z-index:31}
 .tscur{flex:1;min-width:0;display:flex;align-items:baseline;justify-content:center;gap:6px;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden}
 .tscur small{font-size:11px;color:var(--muted);font-family:var(--f-num)}
 .tscap{margin:2px 0 -4px;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em}
-.tspick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tspick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
 .tsopt{height:56px;border:1px solid var(--line);background:var(--sunken);border-radius:10px}
 .tsopt .ni{width:26px;height:22px;border-radius:7px;font-size:10px}
 .tsopt i{position:absolute;top:3px;right:5px;font-style:normal;font-family:var(--f-num);font-size:10px;font-weight:700;color:var(--muted)}
@@ -2042,6 +2042,91 @@ body:not(.app) .obsapp{display:none!important}
 #shSetSheet .shx-optscroll{flex:1 1 0;min-height:110px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px}
 .shx-optscroll>*{flex-shrink:0}
 #shSetSheet .shx-opt{height:50px;min-height:0;padding:0}
+/* ---------- すばやさ比べ ---------- */
+:root{--spx:#0b84cf;--spx-ink:#fff;--spx-hero:linear-gradient(135deg,#3aa8ec 0%,#0b84cf 55%,#09599a 100%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--spx:#5bb8f2;--spx-ink:#062238;--spx-hero:linear-gradient(135deg,#2f97d8 0%,#0b74b8 55%,#08477a 100%)}}
+:root[data-theme="dark"]{--spx:#5bb8f2;--spx-ink:#062238;--spx-hero:linear-gradient(135deg,#2f97d8 0%,#0b74b8 55%,#08477a 100%)}
+#vSpd.wrap{gap:10px}
+.spx-hero{position:relative;overflow:hidden;border-radius:16px;padding:12px 16px;color:#fff;height:146px;box-sizing:border-box;flex:none;background:var(--spx-hero);box-shadow:0 6px 18px -8px rgb(9 89 154 / .6);display:flex;flex-direction:column}
+.spx-hero::after{content:"";position:absolute;right:-34px;top:-50px;width:130px;height:130px;border-radius:50%;border:20px solid rgb(255 255 255 / .13);pointer-events:none}
+.spx-hero>*{position:relative;z-index:1}
+.spx-hero .lab{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:700;line-height:18px;height:18px;white-space:nowrap}
+.spx-hero .gl{display:inline-flex;align-items:center;gap:4px;flex:none}
+.spx-hero .lab svg{width:14px;height:14px}
+.spx-sub{min-width:0;overflow:hidden;text-overflow:ellipsis;border-radius:999px;padding:0 8px}
+.spx-sub.on{background:rgb(255 255 255 / .24)}
+.spx-vs{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);align-items:center;height:58px;margin-top:2px}
+.spx-n{display:flex;flex-direction:column;align-items:flex-start;min-width:0;white-space:nowrap;overflow:hidden}
+.spx-n.op{align-items:flex-end}
+.spx-n small{font-size:11px;font-weight:700;opacity:.92;line-height:14px;height:14px}
+.spx-n b{font-family:var(--f-display);font-weight:400;font-size:36px;line-height:44px;height:44px;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgb(0 0 0 / .15)}
+.spx-n.lose b{opacity:.62}
+.spx-n b.k4{font-size:29px}
+#spCmp{justify-self:center;width:30px;height:30px;border-radius:50%;background:rgb(255 255 255 / .24);display:grid;place-items:center;font-style:normal;font-family:var(--f-num);font-size:17px;font-weight:800;line-height:1}
+#spCmp.vs{font-size:10px;letter-spacing:.02em}
+.spx-vd{margin:2px 0 0;height:24px;line-height:24px;font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spx-hp{margin:auto 0 0;height:18px;line-height:18px;font-size:12px;font-weight:700;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spx-sw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);height:46px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--sunken);flex:none;box-sizing:border-box}
+.spx-sw button{border:none;border-radius:0;background:none;padding:0 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:var(--muted);min-width:0;font-weight:700;-webkit-tap-highlight-color:transparent}
+.spx-sw button+button{border-left:1px solid var(--line)}
+.spx-sw button span{font-size:14px;line-height:18px}
+.spx-sw button small{font-size:11px;line-height:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.spx-sw button[aria-pressed=true]{background:var(--spx);color:var(--spx-ink)}
+.spx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;flex:none}
+.spx-sbox{position:relative}
+#vSpd .ivx-search:focus-within{border-color:color-mix(in srgb,var(--spx) 55%,var(--line))}
+#vSpd .ivx-search input{flex:1;min-width:0;width:auto;height:100%;border:none;border-radius:0;background:none;padding:0;margin:0;font:inherit;font-size:16px;font-weight:700;color:var(--ink);outline:none;box-shadow:none;-webkit-appearance:none;appearance:none}
+#vSpd .ivx-search input::placeholder{color:var(--muted);font-weight:500}
+.spx-mon{height:22px;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;margin-top:-2px}
+.spx-mon .no{font-family:var(--f-num);font-weight:700}
+.spx-mon .bs{margin-left:auto;font-weight:700;color:var(--ink)}
+.spx-mon .bs b{font-family:var(--f-num);font-size:14px;color:color-mix(in srgb,var(--spx) 75%,var(--ink))}
+.spx-g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.spx-f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.spx-f>small{font-size:11px;font-weight:700;color:var(--muted);line-height:14px;height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spx-step{display:flex;align-items:center;height:36px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);box-sizing:border-box;min-width:0}
+.spx-step button{flex:none;width:34px;height:100%;border:none;border-radius:0;background:var(--sunken);color:var(--ink);font-size:18px;font-weight:700;padding:0;display:grid;place-items:center}
+.spx-step button:active{background:var(--line)}
+.spx-step button:disabled{color:var(--muted);opacity:.5}
+#vSpd .spx-step input{flex:1;min-width:0;width:100%;height:100%;border:none;border-radius:0;background:none;box-shadow:none;padding:0;margin:0;font-family:var(--f-num);font-weight:700;font-size:16px;text-align:center;color:var(--ink);-moz-appearance:textfield;appearance:textfield}
+#vSpd .spx-step input::-webkit-inner-spin-button,#vSpd .spx-step input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.spx-step .rv{flex:1;min-width:0;display:flex;align-items:baseline;justify-content:center;gap:6px;white-space:nowrap}
+.spx-step .rv b{font-family:var(--f-num);font-size:16px}
+.spx-step .rv small{font-size:11.5px;font-weight:700;color:var(--muted)}
+.spx-step .rv.on b{color:color-mix(in srgb,var(--spx) 75%,var(--ink))}
+.spx-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));height:36px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--sunken);box-sizing:border-box}
+.spx-seg button{border:none;border-radius:0;background:none;padding:0 2px;font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;min-width:0;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.spx-seg button+button{border-left:1px solid var(--line)}
+.spx-seg button[aria-pressed=true]{background:var(--spx);color:var(--spx-ink)}
+.spx-r5{height:38px;display:flex}
+.spx-r5>*{flex:1;min-width:0}
+.spx-r5 .spx-seg{height:38px;grid-template-columns:repeat(5,minmax(0,1fr))}
+.spx-from{height:38px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 10px;white-space:nowrap;overflow:hidden;color:var(--ink)}
+.spx-from svg{width:16px;height:16px;flex:none;color:var(--mon)}
+.spx-from span{overflow:hidden;text-overflow:ellipsis}
+.spx-from small{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;min-width:0}
+.spx-rk{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center}
+.spx-rk>span{font-size:12px;font-weight:700;color:var(--muted);width:44px}
+.spx-mods{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.spx-mods button{height:44px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px;color:var(--ink);min-width:0;-webkit-tap-highlight-color:transparent}
+.spx-mods button span{font-size:12px;font-weight:700;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;line-height:16px}
+.spx-mods button small{font-family:var(--f-num);font-size:11px;font-weight:700;color:var(--muted);line-height:14px}
+.spx-mods button[aria-pressed=true]{border-color:var(--spx);background:color-mix(in srgb,var(--spx) 15%,var(--surface));color:color-mix(in srgb,var(--spx) 72%,var(--ink))}
+.spx-mods button[aria-pressed=true] small{color:inherit}
+.spx-tr{flex-direction:row;align-items:center;gap:10px;height:58px;padding:0 12px;box-sizing:border-box}
+.spx-tr .toggle{margin-left:0}
+#vSpd>.note{margin:0 2px}
+#spPick .sheet-in{height:70%}
+.tspick .tsopt{font-size:10px;letter-spacing:-.03em;padding:0 1px}
+.spx-pl{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);flex:none}
+.spx-pl button{display:flex;align-items:center;gap:10px;height:56px;padding:0 12px;border:none;border-radius:0;background:none;text-align:left;color:var(--ink);width:100%;flex:none}
+.spx-pl button+button{border-top:1px solid var(--line)}
+.spx-pl button:active{background:var(--sunken)}
+.spx-pl .tx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.spx-pl .tx b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spx-pl .tx small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spx-pl .sv{flex:none;font-family:var(--f-num);font-weight:700;font-size:13px;color:color-mix(in srgb,var(--spx) 75%,var(--ink))}
+.spx-pl .empty{padding:16px 12px;color:var(--muted);font-size:13px}
 /* ===== タイプ相性：テイスト統一案（CSSのみ・DOM/並び/挙動は変更なし） ===== */
 /* 1) 枠：半透明・1.5px → 他ツールと同じ白(ダークは紺)カード・1px・角14 */
 #vType .shbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 12px}
@@ -2306,6 +2391,37 @@ body:not(.app) .obsapp{display:none!important}
   </div>
   <div class="ivx-foot"><p class="ivmsg" id="ivMsg" aria-live="polite"></p><button type="button" class="btn" id="ivClr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>クリア</button></div>
   <p class="note">ステータス画面の数字（実数値）と、レベル・せいかく・努力値から、個体値を計算します。第3世代以降の計算のしかたで、種族値は最新の作品のものです。レベルが高いほど細かく分かります（レベル100なら、ほとんど1つに決まります）。ジャッジの言葉は、剣盾・SVのボックスで見られる「ジャッジ」と同じです。めざめるパワーは第7世代までの技です。</p>
+</div>
+
+<div class="wrap view" id="vSpd" hidden>
+  <div class="spx-hero" id="spHero">
+    <div class="lab"><span class="gl"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>どちらが先に動く？</span><span class="spx-sub" id="spSub"></span></div>
+    <div class="spx-vs"><div class="spx-n me" id="spNA"><small>じぶん</small><b id="spA">－</b></div><i id="spCmp" class="vs" aria-hidden="true">VS</i><div class="spx-n op" id="spNB"><small>あいて</small><b id="spB">－</b></div></div>
+    <p class="spx-vd" id="spVd" aria-live="polite"></p>
+    <p class="spx-hp" id="spHelp"></p>
+  </div>
+  <div class="spx-sw" role="group" aria-label="設定するほう"><button type="button" data-spside="me" aria-pressed="true"><span>じぶん</span><small id="spSwA">－</small></button><button type="button" data-spside="op" aria-pressed="false"><span>あいて</span><small id="spSwB">－</small></button></div>
+  <div class="spx-card" id="spPanel">
+    <div class="spx-sbox"><div class="ivx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="spQ" type="text" placeholder="ポケモン名で探す" autocomplete="off" enterkeyhint="search" aria-label="ポケモンの名前で探す"><button type="button" id="spQx" class="ivx-qx" aria-label="入力を消す" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div id="spRes" class="sres ivres"></div></div>
+    <div class="spx-mon" id="spMon"></div>
+    <div class="spx-g2">
+      <div class="spx-f"><small>レベル</small><div class="spx-step"><button type="button" data-spst="lv" data-d="-1" aria-label="レベルを1下げる">−</button><input id="spLv" data-spin="lv" type="number" inputmode="numeric" min="1" max="100" aria-label="レベル"><button type="button" data-spst="lv" data-d="1" aria-label="レベルを1上げる">＋</button></div></div>
+      <div class="spx-f"><small>せいかく（すばやさ）</small><div class="spx-seg" role="group" aria-label="せいかく（すばやさ）"><button type="button" data-spnat="up">↑上がる</button><button type="button" data-spnat="neu">ふつう</button><button type="button" data-spnat="dn">↓下がる</button></div></div>
+    </div>
+    <div class="spx-g2">
+      <div class="spx-f"><small>個体値（0〜31）</small><div class="spx-step"><button type="button" data-spst="iv" data-d="-1" aria-label="個体値を1下げる">−</button><input id="spIv" data-spin="iv" type="number" inputmode="numeric" min="0" max="31" aria-label="すばやさの個体値"><button type="button" data-spst="iv" data-d="1" aria-label="個体値を1上げる">＋</button></div></div>
+      <div class="spx-f"><small>努力値（0〜252）</small><div class="spx-step"><button type="button" data-spst="ev" data-d="-1" aria-label="努力値を4下げる">−</button><input id="spEv" data-spin="ev" type="number" inputmode="numeric" min="0" max="252" aria-label="すばやさの努力値"><button type="button" data-spst="ev" data-d="1" aria-label="努力値を4上げる">＋</button></div></div>
+    </div>
+    <div class="spx-r5" id="spR5"></div>
+    <div class="spx-rk"><span>ランク</span><div class="spx-step"><button type="button" data-spst="rank" data-d="-1" aria-label="ランクを1下げる">−</button><span class="rv" id="spRk"></span><button type="button" data-spst="rank" data-d="1" aria-label="ランクを1上げる">＋</button></div></div>
+    <div class="spx-mods" id="spMods" role="group" aria-label="持ち物・場・とくせい"></div>
+  </div>
+  <div class="spx-card spx-tr"><span class="stx-ic" style="--c:var(--pb)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg></span><span class="stx-tx"><span>トリックルーム</span><small>遅いほうが先に動きます</small></span><button type="button" class="toggle" id="spTr" aria-pressed="false" aria-label="トリックルーム"></button></div>
+  <p class="note">第3世代以降の計算のしかたで、種族値は最新の作品のものです。ランク → 持ち物・おいかぜ・とくせい → まひ の順に、そのつど小数を切り捨てます。まひは第7世代以降の×1/2です（第6世代までは×1/4）。「すいすい等」は、すいすい（雨）・ようりょくそ（晴れ）・すなかき（砂あらし）・ゆきかき（雪）で、天気が合うときの×2です。同じ速さのときは、どちらが先かは毎回ランダムです。</p>
+  <div id="spPick" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-label="個体管理から選ぶ"><div class="sheet-in"><div class="sh-head"><h3>個体管理から選ぶ</h3><button class="btn" type="button" data-spclose="1">閉じる</button></div>
+    <p class="note">レベル・せいかく・すばやさの努力値を「じぶん」に読み込みます。個体値ジャッジで調べた個体値があれば、それも使います（幅があるときは高いほう）。</p>
+    <div class="spx-pl" id="spPickList"></div>
+  </div></div>
 </div>
 
 <div class="wrap view" id="vType" hidden>
@@ -3271,7 +3387,7 @@ function decode(s){
   return JSON.parse(decodeURIComponent(escape(atob(s.replace(/\s/g,'')))));
 }
 function bkExportTo(text,act,box){
-  const data={v:5,gen:S.gen,lm:S.lm,sound:S.sound,count:S.count,targets:S.targets,members:S.members,presets:S.presets,sh:S.sh,rb:S.rb,dx:S.dx,pb:S.pb,mon:S.mon,ty:S.ty,iv:S.iv};
+  const data={v:5,gen:S.gen,lm:S.lm,sound:S.sound,count:S.count,targets:S.targets,members:S.members,presets:S.presets,sh:S.sh,rb:S.rb,dx:S.dx,pb:S.pb,mon:S.mon,ty:S.ty,iv:S.iv,spd:S.spd};
   text.value=encode(data);text.readOnly=true;box.hidden=false;text.oncopy=()=>bkMark();
   act.innerHTML='<button class="btn primary" type="button" data-bkcopy="1">コピー</button>';
   act.querySelector('[data-bkcopy]').addEventListener('click',()=>{
@@ -3288,7 +3404,7 @@ function bkImportTo(text,act,box,done,focus=true){
     try{d=decode(text.value);if(!Array.isArray(d.members)||d.members.length!==6||!Array.isArray(d.targets))throw 0}
     catch(err){toast('読み込めませんでした。書き出した文字列を最後まで貼り付けてください');return}
     armed(e.currentTarget,'この内容で復元','今のデータを置き換える？',()=>{
-      S.members=d.members;S.targets=d.targets.slice(0,MAX_T);S.presets=d.presets||[];S.gen=d.gen||9;S.lm=d.lm||'kana';S.sound=d.sound;S.count=d.count||0;S.history=[];if(d.sh)S.sh=Object.assign(S.sh,d.sh);if(d.rb)S.rb=Object.assign(S.rb,d.rb);if(d.dx)S.dx=Object.assign(S.dx,d.dx);if(d.pb)S.pb=Object.assign(S.pb,d.pb);if(d.mon)S.mon=Object.assign(S.mon,d.mon);if(d.ty)S.ty=Object.assign(S.ty,d.ty);if(d.iv){S.iv=Object.assign(S.iv,d.iv);ivNorm()}
+      S.members=d.members;S.targets=d.targets.slice(0,MAX_T);S.presets=d.presets||[];S.gen=d.gen||9;S.lm=d.lm||'kana';S.sound=d.sound;S.count=d.count||0;S.history=[];if(d.sh)S.sh=Object.assign(S.sh,d.sh);if(d.rb)S.rb=Object.assign(S.rb,d.rb);if(d.dx)S.dx=Object.assign(S.dx,d.dx);if(d.pb)S.pb=Object.assign(S.pb,d.pb);if(d.mon)S.mon=Object.assign(S.mon,d.mon);if(d.ty)S.ty=Object.assign(S.ty,d.ty);if(d.iv){S.iv=Object.assign(S.iv,d.iv);ivNorm()}if(d.spd&&typeof d.spd==='object'){S.spd=Object.assign(S.spd,d.spd);spdNorm();if(S.view==='spd')renderSpd()}
       normalize();applyLabels();editId=null;pick=null;save();renderAll();renderLabelSeg();renderSound();
       done();toast('バックアップから復元しました');
     });
@@ -5989,11 +6105,160 @@ monCard.addEventListener('click',ev=>{
   if(d.mcty){monCardClose();tyFromMon(x);return}
 });
 monCard.addEventListener('keydown',ev=>{if(ev.key==='Escape')monCardClose()});
-const VIEWS={ev:{t:'努力値カウンター',el:'vEv'},shiny:{t:'色違い厳選カウンター',el:'vShiny'},ribbon:{t:'リボン管理',el:'vRibbon'},dex:{t:'図鑑埋め支援',el:'vDex'},pb:{t:'ポロック・ポフィン',el:'vPb'},mon:{t:'個体管理',el:'vMon'},iv:{t:'個体値ジャッジ',el:'vIv'},type:{t:'タイプ相性',el:'vType'},settings:{t:'設定',el:'vSettings'}};
+/* ---------- すばやさ比べ ---------- */
+// 計算のしかた（第3世代以降。順番と丸めはSVと同じ）
+// 1) 実数値 = floor((floor((2×種族値+個体値+floor(努力値/4))×レベル/100)+5)×せいかく)。せいかくの×1.1/×0.9も切り捨て（個体値ジャッジの ivStat をそのまま使う）
+// 2) ランク：+n は floor(実数値×(2+n)/2)、−n は floor(実数値×2/(2+n))
+// 3) こだわりスカーフ×1.5・おいかぜ×2・すいすい等×2：ゲームでは4096分の1単位の補正をかけ合わせてから「0.5ちょうどは切り捨て」で丸める。
+//    この3つの組み合わせ（×1.5/×2/×3/×4/×6）では端数は0か0.5だけなので、結果は切り捨てと同じになる
+// 4) まひ（第7世代以降）：最後に×1/2して切り捨て（第6世代までは×1/4）
+// トリックルームは数字は変えず、遅いほうが先に動く。同じ速さのときはどちらが先かランダム
+const SPD_PRE=[['max','最速',31,252,'up'],['semi','準速',31,252,'neu'],['none','無振り',31,0,'neu'],['min','最遅',0,0,'dn']];
+const SPD_MODS=[['scarf','スカーフ','×1.5'],['tw','おいかぜ','×2'],['par','まひ','×1/2'],['abl','すいすい等','×2']];
+const SPD_NATM={up:11,neu:10,dn:9};
+const spdDef=()=>({mon:'',lv:50,iv:31,ev:252,nat:'up',rank:0,scarf:false,tw:false,par:false,abl:false,from:''});
+function spdClamp(x,lo,hi,d){const n=Math.floor(+x);return x!==''&&x!=null&&Number.isFinite(n)?Math.max(lo,Math.min(hi,n)):d}
+S.spd=Object.assign({side:'me',tr:false,recent:[],me:null,op:null},S.spd||{});
+function spdNorm(){const v=S.spd;
+  ['me','op'].forEach(k=>{const o=Object.assign(spdDef(),v[k]||{});o.lv=spdClamp(o.lv,1,100,50);o.iv=spdClamp(o.iv,0,31,31);o.ev=spdClamp(o.ev,0,252,0);o.rank=spdClamp(o.rank,-6,6,0);
+    if(!SPD_NATM[o.nat])o.nat='neu';SPD_MODS.forEach(([f])=>o[f]=!!o[f]);if(typeof o.mon!=='string')o.mon='';if(typeof o.from!=='string')o.from='';v[k]=o});
+  if(v.side!=='op')v.side='me';v.tr=!!v.tr;if(!Array.isArray(v.recent))v.recent=[]}
+spdNorm();
+const spdEl=document.getElementById('vSpd');
+const spdSide=()=>S.spd[S.spd.side];
+function spdMon(o){return o&&o.mon?ivList().find(e=>e.n===o.mon)||null:null}
+// すばやさの実数値（ランク・持ち物などの前）
+function spdRaw(o){const e=spdMon(o);return e?ivStat(5,e.b[5],o.iv,o.ev,o.lv,SPD_NATM[o.nat]):null}
+const spdRankFr=r=>r>=0?[2+r,2]:[2,2-r];
+// 最後の速さ（ランク → スカーフ・おいかぜ・とくせい → まひ）
+function spdFin(o){const raw=spdRaw(o);if(raw==null)return null;
+  const [a,b]=spdRankFr(o.rank);let s=Math.floor(raw*a/b),m=1;
+  if(o.scarf)m*=1.5;if(o.tw)m*=2;if(o.abl)m*=2;s=Math.floor(s*m);
+  if(o.par)s=Math.floor(s/2);
+  return s}
+const spdRankTxt=r=>{if(!r)return '×1';const [a,b]=spdRankFr(r);if(r>0)return '×'+a/b;const g=a%2===0&&b%2===0?2:1;return '×'+a/g+'/'+b/g};
+function spdPreOf(o){const p=SPD_PRE.find(([,,iv,ev,n])=>o.iv===iv&&o.ev===ev&&o.nat===n);return p?p[0]:'custom'}
+// 結果：first 1=じぶんが先 / -1=あいてが先 / 0=同速
+function spdResult(){
+  const me=S.spd.me,op=S.spd.op,tr=S.spd.tr,a=spdFin(me),b=spdFin(op);
+  if(a==null||b==null)return {a,b,first:null,help:a==null&&b==null?'じぶんとあいてのポケモンを選んでください':a==null?'「じぶん」のポケモンを選んでください':'「あいて」のポケモンを選んでください'};
+  const first=a===b?0:((a>b)!==tr?1:-1),win=f=>tr?f<b:f>b,at=e=>spdFin(Object.assign({},me,{ev:e}));
+  let help='';
+  if(first===1){
+    if(!tr){let m=null;for(let e=0;e<=me.ev;e++)if(win(at(e))){m=e;break}
+      help=`あいてより ${a-b} 速い`+(m!=null&&m<me.ev?`（努力値 ${m} で足ります）`:'')}
+    else help=`あいてより ${b-a} 遅いので先に動けます`;
+  }else{
+    const need=tr?a-b+1:b-a+1;let e2=null;
+    if(tr){for(let e=me.ev;e>=0;e--)if(win(at(e))){e2=Math.floor(e/4)*4;break}}
+    else{for(let e=me.ev;e<=252;e++)if(win(at(e))){e2=e;break}}
+    help=(tr?`あと ${need} 遅ければ先に動けます`:`あと ${need} で抜けます`)+(e2!=null?`（努力値 ${e2}${tr?' まで下げる':' から'}）`:'（努力値では届きません）');
+  }
+  return {a,b,first,help};
+}
+function spdCalc(){
+  const R=spdResult(),v=S.spd;
+  [['spA',R.a],['spB',R.b]].forEach(([id,x])=>{const el=document.getElementById(id);el.textContent=x==null?'－':x;el.className=x!=null&&x>=1000?'k4':''});
+  const c=document.getElementById('spCmp');
+  c.className=R.first==null?'vs':'';c.textContent=R.first==null?'VS':R.a>R.b?'>':R.a<R.b?'<':'=';
+  document.getElementById('spNA').classList.toggle('lose',R.first===-1);
+  document.getElementById('spNB').classList.toggle('lose',R.first===1);
+  document.getElementById('spVd').textContent=R.first==null?'ポケモンを選ぶと比べられます':R.first===1?'じぶんが先に動けます':R.first===-1?'あいてが先に動きます':'同速（どちらが先かは運）';
+  document.getElementById('spHelp').textContent=R.help;
+  const sb=document.getElementById('spSub');sb.textContent=v.tr?'トリックルーム中':'';sb.classList.toggle('on',v.tr);
+  ['me','op'].forEach((k,i)=>{const o=v[k],e=spdMon(o),f=spdFin(o);document.getElementById(i?'spSwB':'spSwA').textContent=e?`${tyShortName(e.n)}・${f}`:'ポケモン未選択'});
+  return R;
+}
+function spdR5(){
+  const v=S.spd,o=spdSide(),box=document.getElementById('spR5');
+  if(v.side==='me'){box.innerHTML=`<button type="button" class="btn spx-from" id="spFrom" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>個体管理から選ぶ</span>${o.from?`<small>いま：${esc(o.from)}</small>`:''}</button>`;return}
+  const p=spdPreOf(o);
+  box.innerHTML=`<div class="spx-seg" role="group" aria-label="あいての育て方">${SPD_PRE.map(([k,n])=>`<button type="button" data-sppre="${k}" aria-pressed="${p===k}">${n}</button>`).join('')}<button type="button" data-sppre="custom" aria-pressed="${p==='custom'}">カスタム</button></div>`;
+}
+function renderSpd(){
+  spdNorm();
+  const v=S.spd,o=spdSide(),e=spdMon(o);
+  spdEl.querySelectorAll('[data-spside]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.spside===v.side)));
+  const q=document.getElementById('spQ');if(document.activeElement!==q)spdQSet(e?tyShortName(e.n):'');
+  q.placeholder=v.side==='me'?'じぶんのポケモンを探す':'あいてのポケモンを探す';
+  document.getElementById('spMon').innerHTML=e?`<span class="no">No.${pad3(e.d)}</span>${e.t.map(t=>tyChip(t)).join('')}<span class="bs">すばやさ種族値 <b>${e.b[5]}</b></span>`:'<span>ポケモンを選ぶと、すばやさの種族値が入ります</span>';
+  [['spLv','lv'],['spIv','iv'],['spEv','ev']].forEach(([id,k])=>{const x=document.getElementById(id);if(document.activeElement!==x)x.value=o[k]});
+  spdEl.querySelectorAll('[data-spnat]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.spnat===o.nat)));
+  const rk=document.getElementById('spRk');rk.className='rv'+(o.rank?' on':'');rk.innerHTML=`<b>${o.rank>0?'+':o.rank<0?'−':'±'}${Math.abs(o.rank)}</b><small>${spdRankTxt(o.rank)}</small>`;
+  document.getElementById('spMods').innerHTML=SPD_MODS.map(([k,n,m])=>`<button type="button" data-spmod="${k}" aria-pressed="${o[k]}"><span>${n}</span><small>${m}</small></button>`).join('');
+  spdR5();
+  document.getElementById('spTr').setAttribute('aria-pressed',String(v.tr));
+  spdSteps();spdCalc();
+}
+function spdSteps(){const o=spdSide(),L={lv:[1,100],iv:[0,31],ev:[0,252],rank:[-6,6]};
+  spdEl.querySelectorAll('[data-spst]').forEach(b=>{const k=b.dataset.spst,d=+b.dataset.d;b.disabled=d<0?o[k]<=L[k][0]:o[k]>=L[k][1]})}
+function spdQSet(t){document.getElementById('spQ').value=t;document.getElementById('spQx').hidden=!t}
+function spdAddRecent(n){if(!n)return;S.spd.recent=[n,...S.spd.recent.filter(x=>x!==n)].slice(0,5)}
+const spdResBtn=e=>`<button type="button" data-spmon="${esc(e.n)}"><span class="sn">${esc(tyShortName(e.n))}</span><span class="sy">${e.t.map(t=>tyChip(t)).join('')}</span></button>`;
+function spdRecent(){const L=ivList(),list=S.spd.recent.map(n=>L.find(e=>e.n===n)).filter(Boolean);document.getElementById('spRes').innerHTML=list.length?`<div class="tyrech">最近選んだポケモン</div>`+list.map(spdResBtn).join(''):''}
+function renderSpdRes(){
+  const box=document.getElementById('spRes'),q=kata(document.getElementById('spQ').value.trim()),L=ivList();
+  if(!q){spdRecent();return}
+  const list=L.filter(e=>kata(e.n).includes(q)).sort((a,b)=>(kata(a.n).startsWith(q)?0:1)-(kata(b.n).startsWith(q)?0:1)||a.d-b.d).slice(0,40);
+  box.innerHTML=list.length?list.map(spdResBtn).join(''):'<div class="none">見つかりません</div>';
+}
+function spdPick(n){const e=ivList().find(y=>y.n===n);if(!e)return;const o=spdSide();o.mon=n;if(S.spd.side==='me')o.from='';spdAddRecent(n);
+  const q=document.getElementById('spQ');spdQSet(tyShortName(n));q.blur();document.getElementById('spRes').innerHTML='';save();renderSpd()}
+// 個体管理の個体を「じぶん」に読み込む
+function spdLoadMon(x){
+  const L=ivList(),e0=L.find(y=>y.d===x.sp);if(!e0){toast('このポケモンの種族値が見つかりません');return false}
+  const o=S.spd.me,r=x.iv||{};
+  o.mon=r.mon&&L.some(y=>y.n===r.mon&&y.d===x.sp)?r.mon:e0.n;
+  o.lv=spdClamp(parseInt(x.lv,10),1,100,o.lv);
+  const n=ivNat(x.nature);if(n)o.nat=n.up===5?'up':n.dn===5?'dn':'neu';
+  o.ev=spdClamp(x.ev&&x.ev.spe,0,252,0);
+  const iv=Array.isArray(r.r)&&r.r[5];if(Array.isArray(iv))o.iv=spdClamp(iv[1],0,31,o.iv);
+  o.from=monLabel(x);spdAddRecent(o.mon);return true;
+}
+function spdPickOpen(){
+  const sh=document.getElementById('spPick'),L=ivList();
+  const list=S.mon.list.filter(x=>L.some(y=>y.d===x.sp));
+  document.getElementById('spPickList').innerHTML=list.length?list.map(x=>{const n=ivNat(x.nature),ev=spdClamp(x.ev&&x.ev.spe,0,252,0);
+    return `<button type="button" data-sppick="${x.id}"><span class="tx"><b>${esc(monLabel(x))}</b><small>${esc([x.lv?'Lv.'+x.lv:'',x.nature?x.nature+(n?(n.up===5?'（すばやさ↑）':n.dn===5?'（すばやさ↓）':''):''):'せいかく未入力'].filter(Boolean).join('・'))}</small></span><span class="sv">努力値 ${ev}</span></button>`}).join(''):'<div class="empty">個体管理に登録した個体がありません。</div>';
+  sh.hidden=false;document.body.classList.add('modal');sh.querySelector('.sheet-in').scrollTop=0;sh.querySelector('[data-spclose]').focus({preventScroll:true});
+}
+function spdPickClose(){const sh=document.getElementById('spPick');if(sh.hidden)return;sh.hidden=true;document.body.classList.remove('modal');document.getElementById('spFrom')?.focus({preventScroll:true})}
+spdEl.addEventListener('click',e=>{
+  const t=e.target;
+  if(t.id==='spPick'||t.closest('[data-spclose]')){spdPickClose();return}
+  {const b=t.closest('[data-sppick]');if(b){const x=S.mon.list.find(y=>y.id===+b.dataset.sppick);if(x&&spdLoadMon(x)){save();spdPickClose();renderSpd();toast(`「${monLabel(x)}」を読み込みました`)}return}}
+  {const b=t.closest('[data-spmon]');if(b){spdPick(b.dataset.spmon);return}}
+  if(t.closest('#spQx')){spdQSet('');document.getElementById('spQ').focus();renderSpdRes();return}
+  {const b=t.closest('[data-spside]');if(b){S.spd.side=b.dataset.spside==='op'?'op':'me';document.getElementById('spRes').innerHTML='';save();renderSpd();return}}
+  const o=spdSide();
+  {const b=t.closest('[data-spst]');if(b&&!b.disabled){const k=b.dataset.spst,d=+b.dataset.d;
+    if(k==='ev')o.ev=Math.max(0,Math.min(252,d>0?Math.floor(o.ev/4)*4+4:Math.ceil(o.ev/4)*4-4));
+    else{const L={lv:[1,100],iv:[0,31],rank:[-6,6]}[k];o[k]=Math.max(L[0],Math.min(L[1],o[k]+d))}
+    save();renderSpd();return}}
+  {const b=t.closest('[data-spnat]');if(b){o.nat=b.dataset.spnat;save();renderSpd();return}}
+  {const b=t.closest('[data-sppre]');if(b){const p=SPD_PRE.find(x=>x[0]===b.dataset.sppre);if(p){o.iv=p[2];o.ev=p[3];o.nat=p[4];save();renderSpd()}return}}
+  {const b=t.closest('[data-spmod]');if(b){const k=b.dataset.spmod;o[k]=!o[k];save();renderSpd();return}}
+  if(t.closest('#spTr')){S.spd.tr=!S.spd.tr;save();renderSpd();return}
+  if(t.closest('#spFrom')){spdPickOpen();return}
+});
+spdEl.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='spQ'){document.getElementById('spQx').hidden=!t.value;renderSpdRes();return}
+  const k=t.dataset.spin;if(!k)return;const L={lv:[1,100],iv:[0,31],ev:[0,252]}[k],n=spdClamp(t.value,-1e9,1e9,null);
+  if(n!=null&&n>=L[0]&&n<=L[1]){spdSide()[k]=n;save();spdSteps();spdCalc();if(S.spd.side==='op')spdR5()}
+});
+spdEl.addEventListener('change',e=>{const t=e.target,k=t.dataset.spin;if(!k)return;const L={lv:[1,100],iv:[0,31],ev:[0,252]}[k],o=spdSide();
+  o[k]=spdClamp(t.value,L[0],L[1],o[k]);t.value=o[k];save();renderSpd()});
+{const q=document.getElementById('spQ');
+  q.addEventListener('focus',()=>{const e=spdMon(spdSide());if(e&&q.value===tyShortName(e.n)){q.select();spdRecent()}else renderSpdRes()});
+  q.addEventListener('blur',()=>setTimeout(()=>{if(document.activeElement!==q)document.getElementById('spRes').innerHTML=''},250));
+  q.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=document.querySelector('#spRes [data-spmon]');if(b){e.preventDefault();spdPick(b.dataset.spmon)}}});}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')spdPickClose()});
+const VIEWS={ev:{t:'努力値カウンター',el:'vEv'},shiny:{t:'色違い厳選カウンター',el:'vShiny'},ribbon:{t:'リボン管理',el:'vRibbon'},dex:{t:'図鑑埋め支援',el:'vDex'},pb:{t:'ポロック・ポフィン',el:'vPb'},mon:{t:'個体管理',el:'vMon'},iv:{t:'個体値ジャッジ',el:'vIv'},type:{t:'タイプ相性',el:'vType'},spd:{t:'すばやさ比べ',el:'vSpd'},settings:{t:'設定',el:'vSettings'}};
 const drawer=document.getElementById('drawer'),menuBtn=document.getElementById('menuBtn');
 /* ---------- 下のタブバー・メニューの並び ---------- */
-const TOOL_KEYS=['ev','shiny','ribbon','dex','pb','mon','iv','type'];
-const TOOL_META={ev:{ab:'EV',c:'--b1',s:'努力値'},shiny:{ab:'色',c:'--sh',s:'色違い'},ribbon:{ab:'リ',c:'--rib',s:'リボン'},dex:{ab:'図',c:'--dx',s:'図鑑'},pb:{ab:'ポ',c:'--pb',s:'ポロック'},mon:{ab:'個',c:'--mon',s:'個体管理'},iv:{ab:'IV',c:'--iv',s:'個体値'},type:{ab:'相',c:'--ty',s:'タイプ相性'}};
+const TOOL_KEYS=['ev','shiny','ribbon','dex','pb','mon','iv','type','spd'];
+const TOOL_META={ev:{ab:'EV',c:'--b1',s:'努力値'},shiny:{ab:'色',c:'--sh',s:'色違い'},ribbon:{ab:'リ',c:'--rib',s:'リボン'},dex:{ab:'図',c:'--dx',s:'図鑑'},pb:{ab:'ポ',c:'--pb',s:'ポロック'},mon:{ab:'個',c:'--mon',s:'個体管理'},iv:{ab:'IV',c:'--iv',s:'個体値'},type:{ab:'相',c:'--ty',s:'タイプ相性'},spd:{ab:'速',c:'--spx',s:'すばやさ'}};
 const TAB_DEF=['ev','shiny','mon','iv','type'];
 
 function uiFix(a,def,n){const r=[];(Array.isArray(a)?a:[]).forEach(k=>{if(TOOL_KEYS.includes(k)&&!r.includes(k))r.push(k)});[...def,...TOOL_KEYS].forEach(k=>{if(r.length<n&&!r.includes(k))r.push(k)});return r.slice(0,n)}
@@ -6152,6 +6417,7 @@ function setView(v){
   if(v==='mon')renderMon();
   if(v==='type')renderTy();
   if(v==='iv')renderIv();
+  if(v==='spd')renderSpd();else spdPickClose();
   if(v==='ribbon')renderRb();else document.getElementById('rbInfo').hidden=true;
   if(v==='settings')renderUiSet();else stClose();
   markTabs();
