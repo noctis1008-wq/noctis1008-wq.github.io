@@ -1094,6 +1094,65 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 :root{--mon:#0f8a7e}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--mon:#3cc4b4}}
 :root[data-theme="dark"]{--mon:#3cc4b4}
+/* 個体管理の一覧（再デザイン） */
+#vMon{gap:10px}
+.mnx-top{display:grid;grid-template-columns:minmax(0,1fr) 60px 60px;gap:8px;height:52px}
+.mnx-add{height:48px;border:none;border-radius:14px;background:var(--mon);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 0 color-mix(in srgb,var(--mon) 62%,#000);white-space:nowrap;min-width:0}
+.mnx-add:active{transform:translateY(2px);box-shadow:0 2px 0 color-mix(in srgb,var(--mon) 62%,#000)}
+.mnx-add svg{width:18px;height:18px}
+:root[data-theme="dark"] .mnx-add{background:color-mix(in srgb,var(--mon) 62%,#000);box-shadow:0 4px 0 color-mix(in srgb,var(--mon) 32%,#000)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mnx-add{background:color-mix(in srgb,var(--mon) 62%,#000);box-shadow:0 4px 0 color-mix(in srgb,var(--mon) 32%,#000)}}
+.mnx-ib{height:48px;min-width:0;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0}
+.mnx-ib:active{background:var(--sunken)}
+.mnx-ib svg{width:18px;height:18px}
+.mnx-ib small{font-size:9.5px;font-weight:700;color:var(--muted);white-space:nowrap;line-height:1.1}
+.mnx-srow{display:flex;gap:8px;align-items:center}
+.mnx-q>svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted);pointer-events:none}
+#vMon .mnx-q input{height:42px;margin:0;padding:0 40px 0 38px;border-radius:12px}
+#vMon .monadvbtn{height:42px;border-radius:12px;padding:0 12px}
+.mnx-chips{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;height:34px;flex:none;scrollbar-width:none;overscroll-behavior-x:contain}
+.mnx-chips::-webkit-scrollbar{display:none}
+.mnx-chips button{flex:none;height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:12.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.mnx-chips button small{font-family:var(--f-num);color:var(--muted);font-size:11.5px}
+.mnx-chips button[aria-pressed=true]{background:var(--mon);border-color:var(--mon);color:#fff}
+.mnx-chips button[aria-pressed=true] small{color:inherit;opacity:.85}
+:root[data-theme="dark"] .mnx-chips button[aria-pressed=true]{color:#06211e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mnx-chips button[aria-pressed=true]{color:#06211e}}
+.mnx-chips .st{display:flex;color:#f2b500}.mnx-chips .st svg{width:13px;height:13px}
+.mnx-chips button[aria-pressed=true] .st{color:inherit}
+.mnx-lh{display:flex;align-items:center;gap:8px;height:32px}
+.mnx-cnt{margin:0;min-width:0;font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mnx-sortw{margin-left:auto;position:relative;flex:none}
+.mnx-srt{display:flex;align-items:center;gap:4px;height:30px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:12px;font-weight:700;white-space:nowrap}
+.mnx-srt svg{width:14px;height:14px}
+.mnx-srt[aria-expanded=true]{background:var(--sunken)}
+.mnx-sortm{position:absolute;right:0;top:36px;z-index:8;width:max-content;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px -10px rgb(0 0 0 / .4);padding:10px;display:flex;flex-direction:column;gap:8px}
+.mnx-sortm[hidden]{display:none}
+.mnx-sortm p{margin:0;font-size:12px;font-weight:700;color:var(--muted)}
+.mnx-sortm .seg{margin-left:0}
+.mnx-sortm .seg button{flex:1;padding:9px 12px;min-width:4.6em;white-space:nowrap}
+.mnx-ls{display:flex;flex-direction:column;gap:6px}
+.mnx-it{position:relative}
+.mnx-r{width:100%;height:78px;box-sizing:border-box;padding:9px 40px 9px 10px;display:flex;align-items:center;gap:10px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.mnx-r:active{background:var(--sunken)}
+.mnx-av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:17px;text-shadow:0 1px 2px rgb(0 0 0 / .4);box-shadow:inset 0 0 0 2px rgb(255 255 255 / .35)}
+.mnx-av.none{background:var(--sunken);color:var(--muted);text-shadow:none;box-shadow:inset 0 0 0 1px var(--line)}
+.mnx-r .mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mnx-r .l1{display:flex;align-items:baseline;gap:6px;white-space:nowrap;height:20px;min-width:0}
+.mnx-r .l1 b{font-size:14.5px;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.mnx-r .l1 b small{font-size:11.5px;color:var(--muted);font-weight:500}
+.mnx-r .l1 .g{flex:none;font-weight:700}.mnx-r .l1 .g.m{color:#3a7fe4}.mnx-r .l1 .g.f{color:#df4f8c}
+.mnx-r .l1 .lv{flex:none;margin-left:auto;font-family:var(--f-num);font-weight:700;font-size:13px}
+.mnx-r .l2{display:flex;gap:0;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;height:17px;line-height:17px;min-width:0}
+.mnx-r .l2 .pl{flex:none;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.mnx-r .l2 .it{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.mnx-r .l2 .it::before{content:"・"}
+.mnx-r .l3{display:flex;gap:4px;height:20px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
+.mnx-r .l3 span{flex:none;font-size:11px;font-weight:700;line-height:18px;height:20px;box-sizing:border-box;padding:0 7px;border-radius:999px;color:color-mix(in srgb,var(--mon) 85%,var(--ink));border:1px solid color-mix(in srgb,var(--mon) 45%,var(--line));background:color-mix(in srgb,var(--mon) 12%,var(--surface))}
+.mnx-fv{position:absolute;right:2px;top:50%;transform:translateY(-50%);width:40px;height:52px;border:none;background:none;padding:0;color:color-mix(in srgb,var(--muted) 45%,transparent);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.mnx-fv svg{width:21px;height:21px}
+.mnx-fv[aria-pressed=true]{color:#f2b500}
+
 .monbar{display:flex;gap:8px}
 .monbar .btn{min-height:48px;font-size:15px;border-radius:12px}
 .monbar .btn.primary{flex:1;background:var(--mon);border-color:var(--mon);color:#fff}
@@ -1984,24 +2043,13 @@ body:not(.app) .obsapp{display:none!important}
 </div>
 
 <div class="wrap view" id="vMon" hidden>
-  <div class="monbar"><button id="monAdd" class="btn primary" type="button">＋ 個体を登録</button><button id="monParents" class="btn" type="button">親を管理</button></div>
-  <button id="monRbImp" class="btn monrbimp" type="button">他のツールから読み込む</button>
-  <div class="shbox">
-  <section class="dxtools">
-    <div class="tyqrow"><div class="tyqbox"><input id="monQ" type="text" class="pbsearch" style="margin:0" placeholder="名前で探す" autocomplete="off" enterkeyhint="search" aria-label="名前・ニックネームで探す"><button type="button" class="tyqx" data-qx="monQ" aria-label="入力を消す" hidden>✕</button></div><button id="monAdv" class="btn monadvbtn" type="button" aria-haspopup="dialog">詳細検索</button></div>
-  </section>
-  <section>
-    <div class="dxlisthead">
-      <p id="monCount" class="dxcount"></p>
-      <div class="dxsorts">
-        <div class="seg" role="group" aria-label="並び順"><button type="button" data-monsort="add">登録順</button><button type="button" data-monsort="name">名前</button><button type="button" data-monsort="lv">レベル</button></div>
-        <div class="seg" role="group" aria-label="昇順・降順"><button type="button" data-mondir="asc">昇順</button><button type="button" data-mondir="desc">降順</button></div>
-      </div>
-    </div>
-    <div id="monList" class="monlist"></div>
-  </section>
-  </div>
-  <p class="note">個体をタップすると、内容を見たり直したりできます。データはこのブラウザの中に保存されます。設定の「バックアップ」で書き出しておくと安心です。</p>
+  <div class="mnx-top"><button id="monAdd" class="mnx-add" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>個体を登録</button><button id="monParents" class="mnx-ib" type="button" aria-label="親を管理"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><small>親を管理</small></button><button id="monRbImp" class="mnx-ib" type="button" aria-label="他のツールから読み込む"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg><small>読み込む</small></button></div>
+  <div class="mnx-srow"><div class="tyqbox mnx-q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="monQ" type="text" class="pbsearch" placeholder="名前で探す" autocomplete="off" enterkeyhint="search" aria-label="名前・ニックネームで探す"><button type="button" class="tyqx" data-qx="monQ" aria-label="入力を消す" hidden>✕</button></div><button id="monAdv" class="btn monadvbtn" type="button" aria-haspopup="dialog">詳細検索</button></div>
+  <div class="mnx-chips" id="monQc" role="group" aria-label="すばやく絞り込む"></div>
+  <div class="mnx-lh"><p id="monCount" class="mnx-cnt"></p><div class="mnx-sortw"><button id="monSortBtn" class="mnx-srt" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="monSortM"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/></svg><span id="monSortLab">登録順・新しい順</span></button>
+    <div class="mnx-sortm" id="monSortM" hidden><p>並び順</p><div class="seg" role="group" aria-label="並び順"><button type="button" data-monsort="add">登録順</button><button type="button" data-monsort="name">名前</button><button type="button" data-monsort="lv">レベル</button></div><div class="seg" role="group" aria-label="昇順・降順"><button type="button" data-mondir="asc">昇順</button><button type="button" data-mondir="desc">降順</button></div></div></div></div>
+  <div id="monList" class="mnx-ls"></div>
+  <p class="note">個体をタップすると、内容を見たり直したりできます（左右にスワイプで次の個体へ）。右の☆でお気に入り。左の丸はタイプの色です。データはこのブラウザの中に保存されます。設定の「バックアップ」で書き出しておくと安心です。</p>
 </div>
 
 <div class="wrap view" id="vIv" hidden>
@@ -4485,6 +4533,7 @@ function monShown(){
     if(qi&&!kata(m.item||'').includes(qi))return false;
     if(ft.length&&!ft.some(t=>(m.tags||[]).includes(t)))return false;
     if(!monFOk(m))return false;
+    if(!monQcOk(m))return false;
     return true;
   });
   const d=S.mon.dir==='asc'?1:-1,k=S.mon.sort;
@@ -4500,22 +4549,30 @@ function renderMon(){
   {const el=document.getElementById('monQ');if(el.value!==(M.q||''))el.value=M.q||'';el.nextElementSibling.hidden=!el.value}
   {const n=monFCount(),ab=document.getElementById('monAdv');ab.innerHTML=`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>詳細検索${n?`<span class="dxbadge">${n}</span>`:''}`;ab.classList.toggle('on',n>0)}
   document.querySelectorAll('[data-monsort]').forEach(b=>b.setAttribute('aria-pressed',String(M.sort===b.dataset.monsort)));
-  document.querySelectorAll('[data-mondir]').forEach(b=>b.setAttribute('aria-pressed',String(M.dir===b.dataset.mondir)));
+  const dl=MNX_DIR[M.sort]||MNX_DIR.add;
+  document.querySelectorAll('[data-mondir]').forEach(b=>{b.setAttribute('aria-pressed',String(M.dir===b.dataset.mondir));b.textContent=dl[b.dataset.mondir]});
+  document.getElementById('monSortLab').textContent=({add:'登録順',name:'名前順',lv:'レベル順'}[M.sort]||'登録順')+'・'+(dl[M.dir]||'');
+  // すばやく絞り込む（ほかの絞り込みと組み合わせる）
+  const tg=[];M.list.forEach(m=>(m.tags||[]).forEach(t=>{if(!tg.includes(t))tg.push(t)}));
+  if(M.qc&&M.qc.startsWith('t:')&&!tg.includes(M.qc.slice(2)))M.qc='';
+  const qc0=M.qc||'';M.qc='';const B=monShown();M.qc=qc0;
+  const ord=t=>{const i=M.tags.indexOf(t);return i<0?999:i};tg.sort((a,b)=>ord(a)-ord(b));
+  const chip=(v,lab,n)=>`<button type="button" data-monqc="${esc(v)}" aria-pressed="${qc0===v}">${lab}<small>${n}</small></button>`;
+  document.getElementById('monQc').innerHTML=M.list.length?chip('','すべて',B.length)+chip('fav',`<span class="st">${MNX_STAR}</span>お気に入り`,B.filter(m=>m.fav).length)+tg.map(t=>chip('t:'+t,esc(t),B.filter(m=>(m.tags||[]).includes(t)).length)).join(''):'';
   const L=monShown();
   document.getElementById('monCount').textContent=M.list.length?`${L.length}匹を表示（全${M.list.length}匹）`:'';
-  const row=(k,v)=>v?`<div class="mondr"><span>${k}</span><b>${v}</b></div>`:'';
-  document.getElementById('monList').innerHTML=L.length?`<div class="monrow monhead" aria-hidden="true"><span>ポケモン</span><span style="text-align:center">性</span><span style="text-align:right">Lv</span><span>親・ID</span><span>とくせい</span></div>`+L.map(m=>{const p=monParent(m),open=false;
-    const x=monRb(m),t=x&&monRbTally(x);
-    return `<div class="monitem${open?' open':''}"><button type="button" class="monrow" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(monLabel(m))}のステータスを開く">
-      <span class="mrn">${m.fav?'<i class="mrfav" aria-label="お気に入り">★</i>':''}${esc(monLabel(m))}</span><span class="mrg ${m.gender==='♂'?'m':m.gender==='♀'?'f':''}">${m.gender&&m.gender!=='不明'?m.gender:'－'}</span><span class="mrl">${m.lv?esc(m.lv):'－'}</span>
-      <span class="mrp">${p?`<span>${esc(p.name)}</span><small>${esc(p.tid)}</small>`:'－'}</span><span class="mra">${m.ability?esc(m.ability):'－'}</span></button>
-      ${open?`<div class="mondet">
-        ${m.nick&&m.sp?row('ポケモン',esc(monSp(m))):''}${row('何の個体か',esc(m.purpose||''))}${row('場所',esc(monWhere(m)))}${row('ボール',esc(m.ball||''))}${row('持ち物',esc(m.item||''))}${row('性格',esc(m.nature||''))}${m.iv&&m.iv.r?`<div class="mondr mondrw"><span>個体値</span><b>${ivGrid(m.iv.r)}</b></div>`:''}${m.ev&&EVK.some(k=>m.ev[k]>0)?row('努力値',esc(evTxt(m.ev))+(m.goal?`<small class="monevg">目標 ${esc(evTxt(m.goal))}</small>`:'')):''}
-        ${p?row('親',`${esc(p.name)}（ID ${esc(p.tid)}）${p.soft?'・'+esc(p.soft):''}`):''}
-        ${t?row('リボン',`<span class="monrbline">🎀 ${t.got}/${t.total}${t.mtotal?`・あかし ${t.mgot}/${t.mtotal}`:''}</span>`):''}
-        ${(m.tags||[]).length?`<div class="montags">${m.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`:''}
-        ${m.memo?`<p class="monmemo">${esc(m.memo)}</p>`:''}
-        <div class="monrowacts"><button type="button" class="btn" data-monopen="${m.id}">編集する</button>${m.sp?`<button type="button" class="btn" data-montype="${m.id}">タイプ相性</button>`:''}${m.sp?`<button type="button" class="btn" data-moniv="${m.id}">個体値ジャッジ</button>`:''}</div></div>`:''}</div>`}).join(''):`<p class="rbempty">${M.list.length?'当てはまる個体はいません。':'「＋ 個体を登録」から、育てたポケモンや厳選した個体を記録できます。'}</p>`;
+  document.getElementById('monList').innerHTML=L.length?L.map(mnxRow).join(''):`<p class="rbempty">${M.list.length?'当てはまる個体はいません。':'「＋ 個体を登録」から、育てたポケモンや厳選した個体を記録できます。'}</p>`;
+}
+const MNX_STAR='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8z"/></svg>';
+const MNX_DIR={add:{asc:'古い順',desc:'新しい順'},name:{asc:'あ→ん',desc:'ん→あ'},lv:{asc:'低い順',desc:'高い順'}};
+function monQcOk(m){const q=S.mon.qc||'';if(!q)return true;if(q==='fav')return !!m.fav;if(q.startsWith('t:'))return (m.tags||[]).includes(q.slice(2));return true}
+// 一覧の1行：タイプの色の丸＋名前の1文字（公式の絵は使わない）
+function mnxRow(m){
+  const e=m.sp?monBase(m):null,t=e?e.t:[],c1=t.length?TY_C[t[0]]:'',c2=t.length>1?TY_C[t[1]]:c1;
+  const lab=monLabel(m),ch=m.sp||m.nick?Array.from(lab)[0]:'?';
+  const nm=m.nick&&m.sp?`${esc(m.nick)}<small>（${esc(monSp(m))}）</small>`:esc(lab);
+  const g=m.gender==='♂'?'<span class="g m" aria-label="オス">♂</span>':m.gender==='♀'?'<span class="g f" aria-label="メス">♀</span>':'';
+  return `<div class="mnx-it"><button type="button" class="mnx-r" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(lab)}のステータスを開く"><span class="mnx-av${c1?'':' none'}"${c1?` style="background:linear-gradient(135deg,${c1} 50%,${c2} 50%)"`:''} aria-hidden="true">${esc(ch)}</span><span class="mid"><span class="l1"><b>${nm}</b>${g}<span class="lv">${m.lv?'Lv.'+esc(m.lv):''}</span></span><span class="l2"><span class="pl">${esc(monWhere(m))}</span>${m.item?`<span class="it">${esc(m.item)}</span>`:''}</span><span class="l3">${(m.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</span></span></button><button type="button" class="mnx-fv" data-monfav="${m.id}" aria-pressed="${!!m.fav}" aria-label="${esc(lab)}をお気に入り">${MNX_STAR}</button></div>`;
 }
 
 /* 個体の登録・編集シート */
@@ -4659,6 +4716,18 @@ document.getElementById('vMon').addEventListener('click',e=>{
 });
 document.getElementById('monQ').addEventListener('input',e=>{S.mon.q=e.target.value;renderMon()});
 document.querySelectorAll('[data-qx]').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById(b.dataset.qx);el.value='';S.mon.q='';save();renderMon();el.focus()}));
+
+/* 個体管理の一覧：すばやく絞り込む・お気に入り・並び順 */
+function monSortOpen(on){document.getElementById('monSortM').hidden=!on;document.getElementById('monSortBtn').setAttribute('aria-expanded',String(on))}
+document.getElementById('vMon').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const d=b.dataset,M=S.mon;
+  if(d.monqc!=null){M.qc=d.monqc;save();renderMon();return}
+  if(d.monfav){const x=M.list.find(y=>y.id===+d.monfav);if(x){x.fav=!x.fav;save();renderMon();toast(x.fav?'お気に入りにしました':'お気に入りを外しました')}return}
+  if(b.id==='monSortBtn'){monSortOpen(document.getElementById('monSortM').hidden);return}
+  if(d.mondir){monSortOpen(false);return}
+});
+document.addEventListener('click',e=>{const m=document.getElementById('monSortM');if(!m.hidden&&!e.target.closest('.mnx-sortw'))monSortOpen(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('monSortM').hidden)monSortOpen(false)});
 
 /* 個体管理 ⇔ リボン管理の連動（リボンの獲得状況は、いつもリボン管理のデータをそのまま読む） */
 const monRb=m=>m&&m.rb?S.rb.list.find(x=>x.id===m.rb)||null:null;
