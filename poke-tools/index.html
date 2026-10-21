@@ -413,48 +413,17 @@ body:not([data-view="ev"]) .bar:not(.shbar),body:not([data-view="ev"]) .pad{disp
 :root{--rib:#c2185b}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rib:#ff6fa5}}
 :root[data-theme="dark"]{--rib:#ff6fa5}
-.rblist{display:flex;gap:8px;flex-wrap:wrap}
-.rbchip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700;color:var(--ink);max-width:100%}
-.rbchip .rcn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rbchip .rcs{font-family:var(--f-num);font-size:12px;color:var(--muted);font-weight:600}
-.rbchip[aria-pressed="true"]{border-color:var(--rib);box-shadow:0 0 0 2px color-mix(in srgb,var(--rib) 25%,transparent)}
-.rbchip.add{border-style:dashed;color:var(--rib)}
 .rbadd{margin-top:10px}
 .rbempty{color:var(--muted);font-size:14px;text-align:center;padding:24px 8px;border:1.5px dashed var(--line);border-radius:14px}
-.rhead{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
-.rtitle{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.rtitle b{font-family:var(--f-display);font-weight:400;font-size:22px}
-.rtitle span{font-size:13px;color:var(--muted)}
-.rprog{display:flex;flex-direction:column;gap:2px;font-family:var(--f-num);font-size:13px;color:var(--muted)}
-.rprog .meter span{background:var(--rib)}
-.rtools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.rtools .seg{margin-left:0}
-.rtools .opt{gap:8px;font-size:13px}
-.rsec{margin-bottom:14px;border:1px solid color-mix(in srgb,var(--gc) 40%,var(--line));border-radius:16px;padding:12px 10px 10px;background:color-mix(in srgb,var(--gc) 8%,var(--surface))}
-.rsec h3{color:color-mix(in srgb,var(--gc) 70%,var(--ink))}
-.rst{display:inline-flex;align-items:center;gap:6px}
 .trophy{width:22px;height:22px;flex:none;animation:pop .35s ease}
 @keyframes pop{0%{transform:scale(.3)}70%{transform:scale(1.2)}}
-.rsec.done{border-color:#e0a800;box-shadow:0 0 0 1px #e0a80055}
-.rsec h3{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 8px;font-size:15px}
-.rsec h3 span{font-family:var(--f-num);font-size:13px;color:var(--muted);font-weight:600}
-.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:10px 6px}
-.rcell{position:relative;min-width:0}
-.rtap{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;border:none;background:transparent;padding:6px 2px 4px;color:var(--ink);min-width:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent;border-radius:10px}
-.rtap:active{background:color-mix(in srgb,var(--gc,var(--rib)) 14%,transparent)}
-.ri{position:absolute;top:0;left:calc(50% + 14px);width:20px;height:20px;border-radius:50%;border:1.5px solid var(--muted);background:var(--surface);color:var(--muted);font:italic 700 12px/1 Georgia,'Times New Roman',serif;display:grid;place-items:center;padding:0}
-.ri::before{content:"";position:absolute;inset:-8px}
 .ric{position:relative;width:46px;height:46px;flex:none;display:block}
 .ric svg{width:100%;height:100%;display:block}
-.rcell:not(.got) .ric svg{filter:grayscale(1);opacity:.32}
-.rcell.got .ric svg{filter:drop-shadow(0 2px 3px rgb(0 0 0 / .25))}
 .rok{position:absolute;right:-3px;bottom:-1px;width:18px;height:18px;border-radius:50%;background:var(--rib);border:2px solid var(--bg)}
 .rok::after{content:"";position:absolute;left:4px;top:4px;width:7px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
 .rflag{position:absolute;left:-3px;top:-3px;width:16px;height:16px;border-radius:50%;font-size:11px;font-weight:700;line-height:16px;text-align:center;color:#fff}
 .rflag.warn{background:var(--def)}
 .rflag.bad{background:var(--warn)}
-.rlb{font-size:10px;line-height:1.3;text-align:center;color:var(--muted);word-break:break-all;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:100%}
-.rcell.got .rlb{color:var(--ink);font-weight:700}
 .rinfo{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:center;
   padding-left:max(12px,var(--sa-left,env(safe-area-inset-left,0px)));padding-right:max(12px,var(--sa-right,env(safe-area-inset-right,0px)));padding-bottom:calc(12px + var(--sa-bottom,env(safe-area-inset-bottom,0px)))}
 .rinfo-in{width:100%;max-width:640px;background:var(--surface);border:1.5px solid var(--rib);border-radius:16px;padding:12px 14px;box-shadow:0 -6px 24px rgb(0 0 0 / .2);font-size:13px;line-height:1.6;display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow-y:auto;animation:tin .2s ease}
@@ -468,29 +437,104 @@ body:not([data-view="ev"]) .bar:not(.shbar),body:not([data-view="ev"]) .pad{disp
 .rnote{color:var(--muted);font-size:12px}
 .rnote.bad{color:var(--warn);font-weight:700}
 .rfoot{margin-top:8px}
-.rbulk{display:flex;gap:8px;width:100%}
-.rrow{display:flex;align-items:center;gap:8px;width:100%;flex-wrap:nowrap}
-.rrow .seg{flex:none}
-.rrow .seg button{padding:7px 9px;font-size:12px}
-.rmk{margin:0 0 0 auto!important;gap:6px!important;font-size:12px!important;white-space:nowrap;flex:none}
-.rbulk .btn{flex:1}
-.rpin{position:sticky;top:calc(var(--sa-top,env(safe-area-inset-top,0px)) + var(--apph,58px));z-index:4;background:var(--surface);border:1px solid var(--line);border-bottom-color:transparent;border-radius:14px 14px 0 0;padding:12px 14px 8px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .15s,border-radius .15s}
-.rpin.stuck{border-radius:0 0 14px 14px;border-bottom-color:var(--line);box-shadow:0 6px 14px -6px rgb(0 0 0 / .25)}
-.rpin .rtitle{flex-wrap:nowrap;min-width:0}
-.rpin .rtitle b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-size:20px;line-height:1.25}
-.rpin .rtitle span{white-space:nowrap;flex:none}
-.rpin .rtitle span+span{overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0}
-.rpin .meter{margin-block:2px}
-.rpin+.rhead{border-top:none;border-radius:0 0 14px 14px;padding-top:4px}
-.rblink{display:flex;align-items:center;gap:8px;height:38px;padding:0 4px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--sunken)}
-.rblink .ni{width:24px;height:24px;border-radius:7px;font-size:11px}
-.rblink select{flex:1;min-width:0;height:30px;padding:2px 8px;font-weight:700;color:var(--mon);background:var(--surface)}
-.rblopen{flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:6px;border:none;background:none;padding:0;color:var(--ink);text-align:left}
-.rblopen b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:var(--mon)}
-.rblopen .rbmongo{margin-left:auto;flex:none;font-size:11px;align-self:center}
-.rblbtn{flex:none;height:30px;padding:0 10px;font-size:12px;white-space:nowrap}
-.rsec>h3{position:sticky;top:calc(var(--sa-top,env(safe-area-inset-top,0px)) + var(--apph,58px) + var(--rpinh,0px));z-index:3;margin:-12px -10px 8px;padding:10px 10px 8px;border-radius:15px 15px 0 0;background:color-mix(in srgb,var(--gc) 8%,var(--surface));border-bottom:1px solid transparent}
-.rsec>h3.stuck{border-radius:0;border-bottom-color:color-mix(in srgb,var(--gc) 40%,var(--line));box-shadow:0 6px 10px -8px rgb(0 0 0 / .3)}
+/* リボン管理：案A */
+:root{--rbx-hero:linear-gradient(135deg,#de4a86 0%,#c2185b 52%,#86103f 100%);--rbx-sh:rgb(194 24 91 / .5)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--rbx-hero:linear-gradient(135deg,#c93a76 0%,#9a164d 52%,#5d0a2d 100%);--rbx-sh:rgb(0 0 0 / .5)}}
+:root[data-theme="dark"]{--rbx-hero:linear-gradient(135deg,#c93a76 0%,#9a164d 52%,#5d0a2d 100%);--rbx-sh:rgb(0 0 0 / .5)}
+#vRibbon{gap:10px}
+.rbx-sw{display:flex;gap:8px;overflow-x:auto;height:52px;flex:none;overscroll-behavior-x:contain}
+.rbx-sw button{flex:none;display:flex;align-items:center;gap:8px;height:52px;max-width:170px;padding:0 12px 0 8px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);-webkit-tap-highlight-color:transparent}
+.rbx-sw button[aria-pressed=true]{border-color:var(--rib);box-shadow:inset 0 0 0 1px var(--rib)}
+.rbx-sw .rbx-rg{width:34px;height:34px;flex:none}
+.rbx-rg .bg{stroke:var(--line)}
+.rbx-rg .fg{stroke:var(--rib)}
+.rbx-sw .tx{display:flex;flex-direction:column;min-width:0;text-align:left;line-height:1.25}
+.rbx-sw .tx b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rbx-sw .tx small{font-size:11px;color:var(--muted);font-family:var(--f-num);font-weight:600}
+.rbx-sw .add{color:var(--rib);font-weight:700;font-size:13px;border-style:dashed;padding:0 14px;gap:4px}
+.rbx-sw .add svg{width:16px;height:16px}
+.rbx-hero{position:sticky;top:calc(var(--sa-top,env(safe-area-inset-top,0px)) + var(--apph,58px));z-index:5;height:96px;padding:10px 16px 0;color:#fff;border-radius:16px 16px 0 0;overflow:hidden;background:var(--rbx-hero);background-size:100% 142px;background-position:0 0;transition:border-radius .15s,box-shadow .15s}
+.rbx-hero.stuck{border-radius:0 0 16px 16px;box-shadow:0 8px 16px -8px var(--rbx-sh)}
+.rbx-hero::after{content:"";position:absolute;right:-34px;top:-50px;width:130px;height:130px;border-radius:50%;border:20px solid rgb(255 255 255 / .13);pointer-events:none}
+.rbx-hero>*{position:relative;z-index:1}
+.rbx-nm{display:flex;align-items:baseline;gap:8px;height:26px;white-space:nowrap;min-width:0}
+.rbx-nm b{font-family:var(--f-display);font-weight:400;font-size:20px;line-height:26px;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto}
+.rbx-nm span{font-size:12px;font-weight:700;opacity:.92;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 100 auto}
+.rbx-cnt{display:flex;align-items:baseline;gap:5px;height:40px;white-space:nowrap}
+.rbx-cnt b{font-family:var(--f-display);font-weight:400;font-size:32px;line-height:40px;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgb(0 0 0 / .15)}
+.rbx-cnt>span{font-size:13px;font-weight:700}
+.rbx-cnt .rbx-mk{margin-left:auto;align-self:center;font-size:12px;line-height:18px;padding:2px 9px;border-radius:999px;background:rgb(0 0 0 / .2);font-family:var(--f-num)}
+.rbx-bar{height:6px;border-radius:999px;background:rgb(255 255 255 / .28);overflow:hidden;margin-top:4px}
+.rbx-bar span{display:block;height:100%;background:#fff;border-radius:999px;transition:width .2s}
+.rbx-hlink{height:46px;padding:4px 12px 0;border-radius:0 0 16px 16px;background:var(--rbx-hero);background-size:100% 142px;background-position:0 -96px;box-shadow:0 6px 18px -8px var(--rbx-sh)}
+.rbx-link{display:flex;align-items:center;gap:6px;height:34px;padding:0 4px 0 10px;border-radius:10px;background:rgb(0 0 0 / .2);color:#fff;font-size:12px;font-weight:700;white-space:nowrap}
+.rbx-link>svg{width:15px;height:15px;flex:none}
+.rbx-lopen{flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:6px;border:none;background:none;padding:0;color:#fff;text-align:left;-webkit-tap-highlight-color:transparent}
+.rbx-lopen .t{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.rbx-lopen .t span{opacity:.85;font-weight:600}
+.rbx-lopen .pill{margin-left:auto;flex:none;font-size:11px;line-height:18px;padding:1px 8px;border-radius:999px;background:rgb(255 255 255 / .92);color:#8a0e3f}
+#vRibbon .rbx-lbtn{flex:none;height:26px;min-width:46px;padding:0 9px;border-radius:8px;border:1px solid rgb(255 255 255 / .5);background:rgb(255 255 255 / .14);color:#fff;font-size:11.5px;font-weight:700;white-space:nowrap}
+#vRibbon .rbx-lbtn.warn{background:#fff;border-color:#fff;color:#a3123f}
+.rbx-pick{position:relative;flex:1;min-width:0;height:26px;display:flex;align-items:center;gap:4px;padding:0 6px 0 9px;border-radius:8px;border:1px solid rgb(255 255 255 / .45);background:rgb(255 255 255 / .14)}
+.rbx-pick .lb{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:12.5px;opacity:.95}
+.rbx-pick svg{width:14px;height:14px;flex:none}
+#vRibbon .rbx-pick select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+#vRibbon .rbx-pick select option{color:var(--ink);background:var(--surface)}
+#rbInfo.rinfo{padding-bottom:calc(10px + var(--tabh,0px))}
+.rbx-gen{position:sticky;top:calc(var(--sa-top,env(safe-area-inset-top,0px)) + var(--apph,58px) + var(--rpinh,96px));z-index:4;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;height:58px;padding:8px 0 6px;background:var(--bg)}
+.rbx-gen button{min-width:0;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0 2px;-webkit-tap-highlight-color:transparent}
+.rbx-gen b{font-size:11px;line-height:13px;white-space:nowrap}
+.rbx-gen small{font-family:var(--f-num);font-size:10px;line-height:12px;color:var(--muted);white-space:nowrap}
+.rbx-gen i{display:block;width:76%;height:3px;border-radius:2px;background:var(--sunken);overflow:hidden}
+.rbx-gen i span{display:block;height:100%;background:var(--gc,var(--rib))}
+.rbx-gen button.done i span{background:#e0a800}
+.rbx-gen button[aria-current=true]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.rbx-gen button[aria-current=true] small{color:var(--bg);opacity:.8}
+.rbx-gen button[aria-current=true] i{background:color-mix(in srgb,var(--bg) 25%,transparent)}
+.rbx-gen button.off{opacity:.45}
+.rbx-ctl{display:flex;gap:8px;height:38px;margin:2px 0 10px}
+.rbx-seg{flex:1;display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--sunken);min-width:0}
+.rbx-seg button{flex:1;border:none;background:none;font-size:12.5px;font-weight:700;color:var(--muted);padding:0 4px;white-space:nowrap;min-width:0;-webkit-tap-highlight-color:transparent}
+.rbx-seg button+button{border-left:1px solid var(--line)}
+.rbx-seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.rbx-seg small{font-family:var(--f-num);font-size:11px;opacity:.8;margin-left:3px}
+.rbx-mw{position:relative;flex:none}
+.rbx-more{width:44px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;padding:0}
+.rbx-more svg{width:18px;height:18px}
+.rbx-more[aria-expanded=true]{background:var(--sunken);border-color:var(--ink)}
+.rbx-menu{position:absolute;right:0;top:44px;z-index:9;width:236px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 32px -10px rgb(0 0 0 / .4);padding:6px;display:flex;flex-direction:column;gap:2px;animation:tin .15s ease}
+.rbx-mi{display:flex;align-items:center;gap:10px;height:44px;width:100%;padding:0 10px;border:none;border-radius:10px;background:none;color:var(--ink);font-size:14px;font-weight:700;text-align:left;white-space:nowrap}
+.rbx-mi:active{background:var(--sunken)}
+.rbx-mi svg{width:18px;height:18px;flex:none;color:var(--rib)}
+.rbx-mi .toggle{margin-left:auto;pointer-events:none}
+.rbx-mi.warn{background:var(--warn);color:#fff;justify-content:center}
+.rbx-msep{height:1px;background:var(--line);margin:4px 6px}
+.rbx-sec{position:relative;margin-bottom:12px;border:1px solid var(--line);border-radius:16px;padding:0 10px 10px;background:var(--surface)}
+.rbx-sec.done{border-color:#e0a800;box-shadow:0 0 0 1px #e0a80055}
+.rbx-sec>h3{position:sticky;top:calc(var(--sa-top,env(safe-area-inset-top,0px)) + var(--apph,58px) + var(--rpinh,96px) + var(--rgenh,58px));z-index:3;display:flex;align-items:center;gap:8px;height:46px;margin:0 -10px;padding:0 10px;border-radius:15px 15px 0 0;background:var(--surface);font-size:14px;font-weight:700;border-bottom:1px solid transparent;white-space:nowrap}
+.rbx-sec>h3.stuck{border-radius:0;border-bottom-color:var(--line);box-shadow:0 6px 10px -8px rgb(0 0 0 / .3)}
+.rbx-sic{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--gc) 16%,transparent);color:color-mix(in srgb,var(--gc) 80%,var(--ink))}
+.rbx-sic svg{width:15px;height:15px}
+.rbx-st{flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:4px;overflow:hidden}
+.rbx-st .trophy{width:20px;height:20px}
+.rbx-hc{margin-left:auto;flex:none;font-family:var(--f-num);font-size:13px;color:var(--muted);font-weight:700}
+.rbx-pill{flex:0 100 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:700;line-height:18px;padding:0 7px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);color:var(--muted)}
+.rbx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:6px}
+.rbx-c{position:relative;min-width:0;height:88px;border-radius:12px;border:1px solid var(--line);background:var(--sunken)}
+.rbx-c.got{background:color-mix(in srgb,var(--rib) 9%,var(--surface));border-color:color-mix(in srgb,var(--rib) 38%,var(--line))}
+.rbx-tap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 3px 0;border:none;background:none;border-radius:11px;color:var(--muted);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.rbx-tap:active{background:color-mix(in srgb,var(--rib) 14%,transparent)}
+.rbx-c.got .rbx-tap{color:var(--ink)}
+.rbx-c .ric{width:38px;height:38px}
+.rbx-c:not(.got) .ric svg{filter:grayscale(1);opacity:.35}
+.rbx-c.got .ric svg{filter:drop-shadow(0 2px 3px rgb(0 0 0 / .25))}
+.rbx-c .rok{right:-6px;bottom:-3px;border-color:var(--surface)}
+.rbx-n{font-size:10px;font-weight:700;line-height:12px;height:24px;text-align:center;word-break:break-all;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%}
+.rbx-i{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:italic 700 11px/1 Georgia,'Times New Roman',serif;display:grid;place-items:center;padding:0}
+.rbx-i::before{content:"";position:absolute;inset:-8px}
+.rbx-foot{display:flex;gap:8px;margin-top:2px}
+.rbx-foot input{flex:1;min-width:0}
+.rbx-foot .btn{flex:none;white-space:nowrap}
 /* ---- compact party cards ---- */
 .party{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .party.picking{display:grid}
@@ -1699,8 +1743,7 @@ body:not(.app) .obsapp{display:none!important}
 
 <div class="wrap view" id="vRibbon" hidden>
   <section>
-    <h2>管理しているポケモン</h2>
-    <div id="rbList" class="rblist"></div>
+    <div id="rbList" class="rbx-sw" role="group" aria-label="管理しているポケモン"></div>
     <div id="rbAdd" class="rbadd stack" hidden>
       <input id="rbSearch" type="search" placeholder="ポケモン名で検索（ひらがなでもOK）" autocomplete="off" aria-label="追加するポケモンを検索">
       <div class="sres" id="rbRes"></div>
@@ -1709,7 +1752,7 @@ body:not(.app) .obsapp{display:none!important}
   <section>
     <div id="rbBody"></div>
     <div id="rbInfo" class="rinfo" hidden></div>
-    <p class="note">リボンをタップすると獲得済みになり、もう一度タップで戻ります。アイコン右上の i で、説明と入手できる作品を表示します。伝説・幻のポケモンなど、参加できない施設のリボンは表示しません。作品に連れて行けるかは、その作品に登録されているポケモン（HOMEから連れて行けるポケモンを含む）で判定しています。配布限定のリボンは載せていません。</p>
+    <p class="note">リボンをタップすると獲得済みになり、もう一度タップで戻ります。右上の i で、説明と入手できる作品を表示します。「第3」などの世代を押すと、その世代へ移動します。「…」から、あかしの表示と「すべて獲得・すべて未獲得」ができます。伝説・幻のポケモンなど、参加できない施設のリボンは表示しません。作品に連れて行けるかは、その作品に登録されているポケモン（HOMEから連れて行けるポケモンを含む）で判定しています。配布限定のリボンは載せていません。</p>
   </section>
 </div>
 
@@ -3174,55 +3217,85 @@ function slotTally(list,e){
   return {got,total:items.length};
 }
 function renderRbList(){
+  const C=2*Math.PI*14;
   rbListEl.innerHTML=S.rb.list.map(e=>{
     const sp=spOf(e);if(!sp)return'';
-    const t=slotTally(rbItems(sp),e);
-    return `<button type="button" class="rbchip" data-rbsel="${e.id}" aria-pressed="${S.rb.cur===e.id}"><span class="rcn">${esc(e.nick||sp[0])}</span><span class="rcs">${t.got}/${t.total}</span></button>`;
-  }).join('')+`<button type="button" class="rbchip add" data-rbadd="1">＋ ポケモンを追加</button>`;
+    const t=slotTally(rbItems(sp),e),p=t.total?t.got/t.total:0;
+    return `<button type="button" data-rbsel="${e.id}" aria-pressed="${S.rb.cur===e.id}" aria-label="${esc(e.nick||sp[0])} ${t.got}/${t.total}"><svg class="rbx-rg" viewBox="0 0 34 34" aria-hidden="true"><circle class="bg" cx="17" cy="17" r="14" fill="none" stroke-width="4"/>${t.got?`<circle class="fg" cx="17" cy="17" r="14" fill="none" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(C*p).toFixed(1)} 99" transform="rotate(-90 17 17)"/>`:''}</svg><span class="tx"><b>${esc(e.nick||sp[0])}</b><small>${t.got}/${t.total}</small></span></button>`;
+  }).join('')+`<button type="button" class="add" data-rbadd="1" aria-expanded="${!!rbAdding}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>追加</button>`;
+  const cur=rbListEl.querySelector('[aria-pressed="true"]');
+  if(cur){const l=cur.offsetLeft-rbListEl.offsetLeft,r=l+cur.offsetWidth;if(l<rbListEl.scrollLeft||r>rbListEl.scrollLeft+rbListEl.clientWidth)rbListEl.scrollLeft=Math.max(0,l-16)}
 }
-let rbAdding=false,rbInfo=null;
+let rbAdding=false,rbInfo=null,rbMenu=false;
+const RB_GC={3:'#e5483b',4:'#3b7fe5',6:'#a855f7',7:'#f08c1a',8:'#22a5b5',9:'#e0459b',mark:'#c9a227'};
+const RB_GP={3:'RSE・FRLG・XD',4:'DPt・HGSS',6:'XY・ORAS',7:'SM・USUM',8:'剣盾・BDSP・LA',9:'SV',mark:'SV・あとから付く'};
+const RB_SIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.8L7 21l5-2.5 5 2.5-1.5-7.2"/></svg>';
+const RB_MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg>';
 function renderRb(){
   renderRbList();
   document.getElementById('rbAdd').hidden=!rbAdding;
   const e=S.rb.list.find(x=>x.id===S.rb.cur);
-  if(!e){rbEl.innerHTML=`<p class="rbempty">${S.rb.list.length?'上からポケモンを選んでください。':'「＋ ポケモンを追加」から、リボンを集めたいポケモンを登録してください。'}</p>`;renderRbInfo();return}
+  if(!e){rbMenu=false;rbEl.innerHTML=`<p class="rbempty">${S.rb.list.length?'上からポケモンを選んでください。':'「＋ 追加」から、リボンを集めたいポケモンを登録してください。'}</p>`;renderRbInfo();return}
   const sp=spOf(e),items=rbItems(sp).filter(x=>S.rb.marks||x.sec!=='mark');
   const rib=items.filter(x=>x.sec!=='mark'),mar=items.filter(x=>x.sec==='mark');
   const cnt=a=>{const t=slotTally(a,e);return `${t.got}/${t.total}`};
   const show=x=>S.rb.filter==='all'||(S.rb.filter==='got')===!!e.got[x.id];
   const cell=x=>{
     const got=!!e.got[x.id],flag=x.gone?'bad':x.unsure?'warn':'';
-    return `<div class="rcell${got?' got':''}">
-      <button type="button" class="rtap" data-rb="${x.id}" aria-pressed="${got}" aria-label="${x.n}${got?'（獲得済み）':''}">
+    return `<div class="rbx-c${got?' got':''}">
+      <button type="button" class="rbx-tap" data-rb="${x.id}" aria-pressed="${got}" aria-label="${x.n}${got?'（獲得済み）':''}">
         <span class="ric">${iconSVG(x)}${got?'<span class="rok" aria-hidden="true"></span>':''}${flag?`<span class="rflag ${flag}" aria-hidden="true">!</span>`:''}</span>
-        <span class="rlb">${x.n}</span></button>
-      <button type="button" class="ri" data-rbi="${x.id}" aria-label="${x.n}の説明">i</button></div>`;
+        <span class="rbx-n">${x.n.replace('（シンオウ）','')}</span></button>
+      <button type="button" class="rbx-i" data-rbi="${x.id}" aria-label="${x.n}の説明">i</button></div>`;
   };
-  const block=(title,arr,color)=>{
-    const v=arr.filter(show);if(!v.length)return'';
+  const secs=[];
+  [3,4,6,7,8,9].forEach(g=>{const a=rib.filter(x=>x.sec===g);if(a.length)secs.push({k:String(g),t:`第${g}世代のリボン`,s:`第${g}`,a})});
+  if(S.rb.marks&&mar.length)secs.push({k:'mark',t:'あかし',s:'あかし',a:mar,mk:1});
+  let body='';const shown={};
+  secs.forEach(o=>{
+    const v=o.a.filter(show);if(!v.length)return;shown[o.k]=1;
     // トロフィーは、でっかい／ちっちゃいと、いまは入手できないものを除いて判定する
-    const req=arr.filter(x=>!x.gone&&x.id!=='jumbo'&&x.id!=='mini'),all=req.length>0&&req.every(x=>e.got[x.id]);
-    return `<section class="rsec${all?' done':''}" style="--gc:${color}"><h3><span class="rst">${title}${all?TROPHY:''}</span><span>${cnt(arr)}</span></h3><div class="rgrid">${v.map(cell).join('')}</div></section>`;
-  };
-  let body='';
-  const GC={3:'#e5483b',4:'#3b7fe5',6:'#a855f7',7:'#f08c1a',8:'#22a5b5',9:'#e0459b'};
-  [3,4,6,7,8,9].forEach(g=>{body+=block(`第${g}世代のリボン`,rib.filter(x=>x.sec===g),GC[g])});
-  if(S.rb.marks)body+=block('あかし（捕まえたあとで付くもの・SV）',mar,'#c9a227');
+    const req=o.a.filter(x=>!x.gone&&x.id!=='jumbo'&&x.id!=='mini'),all=req.length>0&&req.every(x=>e.got[x.id]);
+    body+=`<section class="rbx-sec${all?' done':''}" data-rbsec="${o.k}" style="--gc:${RB_GC[o.k]}"><h3><span class="rbx-sic">${o.mk?RB_MIC:RB_SIC}</span><span class="rbx-st">${o.t}${all?TROPHY:''}</span><span class="rbx-hc">${cnt(o.a).replace('/',' / ')}</span><span class="rbx-pill">${RB_GP[o.k]}</span></h3><div class="rbx-grid">${v.map(cell).join('')}</div></section>`;
+  });
+  const gen=secs.map(o=>{const t=slotTally(o.a,e),done=t.total&&t.got===t.total;
+    return `<button type="button" data-rbgo="${o.k}" class="${shown[o.k]?'':'off'}${done?' done':''}" style="--gc:${RB_GC[o.k]}" aria-label="${o.t}へ移動（${t.got}/${t.total}）"><b>${o.s}</b><small>${t.got}/${t.total}</small><i><span style="width:${t.total?t.got/t.total*100:0}%"></span></i></button>`}).join('');
   const total=rib.length,gotR=rib.filter(x=>e.got[x.id]).length;
-  rbEl.innerHTML=`<div class="rpin" id="rbPin">
-      <div class="rtitle"><b>${esc(e.nick||sp[0])}</b>${e.nick?`<span>${esc(sp[0])}</span>`:''}<span>No.${sp[1]}・第${sp[2]}世代</span></div>
-      <div class="rprog"><div class="meter"><span style="width:${total?gotR/total*100:0}%"></span></div><span>リボン ${gotR}/${total}${S.rb.marks?`・あかし ${cnt(mar)}`:''}</span></div>
-    </div><div class="rhead">
-      <div id="rbMon" class="rblink"></div>
-      <div class="rtools">
-        <div class="rrow"><div class="seg" role="group" aria-label="表示するリボン">${[['all','すべて'],['todo','未獲得'],['got','獲得済み']].map(([k,t])=>`<button type="button" data-rbf="${k}" aria-pressed="${S.rb.filter===k}">${t}</button>`).join('')}</div>
-        <div class="opt rmk"><span>あかしも表示</span><button class="toggle" type="button" data-rbmarks="1" aria-pressed="${S.rb.marks}" aria-label="あかしも表示"></button></div></div>
-        <div class="rbulk"><button type="button" class="btn" data-rball="1">すべて獲得</button><button type="button" class="btn" data-rbnone="1">すべて未獲得</button></div>
-      </div>
-    </div>${body||'<p class="rbempty">この条件に当てはまるリボンはありません。</p>'}
-    <div class="row2 rfoot"><input id="rbNick" type="text" value="${esc(e.nick||'')}" placeholder="ニックネーム（なくてもOK）" aria-label="ニックネーム"><button type="button" class="btn" data-rbdel="1">このポケモンを削除</button></div>`;
+  const nAll=items.length,nGot=items.filter(x=>e.got[x.id]).length;
+  const MORE='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
+  rbEl.innerHTML=`<div class="rbx-hero" id="rbPin">
+      <div class="rbx-nm"><b>${esc(e.nick||sp[0])}</b><span>${e.nick?esc(sp[0])+'・':''}No.${sp[1]}・第${sp[2]}世代</span></div>
+      <div class="rbx-cnt"><b>${gotR}</b><span>/ ${total} リボン</span>${S.rb.marks?`<span class="rbx-mk">あかし ${cnt(mar).replace('/',' / ')}</span>`:''}</div>
+      <div class="rbx-bar"><span style="width:${total?gotR/total*100:0}%"></span></div>
+    </div>
+    <div class="rbx-hlink"><div id="rbMon" class="rbx-link"></div></div>
+    ${gen?`<div class="rbx-gen" id="rbGen" role="group" aria-label="世代へ移動">${gen}</div>`:''}
+    <div class="rbx-ctl"><div class="rbx-seg" role="group" aria-label="表示するリボン">${[['all','すべて',''],['todo','未獲得',nAll-nGot],['got','獲得済み',nGot]].map(([k,t,n])=>`<button type="button" data-rbf="${k}" aria-pressed="${S.rb.filter===k}">${t}${n!==''?`<small>${n}</small>`:''}</button>`).join('')}</div>
+      <div class="rbx-mw"><button type="button" class="rbx-more" data-rbmenu="1" aria-haspopup="menu" aria-expanded="${rbMenu}" aria-label="その他の操作">${MORE}</button>
+      <div class="rbx-menu" role="menu"${rbMenu?'':' hidden'}>
+        <button type="button" class="rbx-mi" role="menuitemcheckbox" data-rbmarks="1" aria-checked="${S.rb.marks}">${RB_MIC}<span>あかしも表示</span><span class="toggle sm" aria-pressed="${S.rb.marks}"></span></button>
+        <div class="rbx-msep"></div>
+        <button type="button" class="rbx-mi" role="menuitem" data-rball="1">すべて獲得</button>
+        <button type="button" class="rbx-mi" role="menuitem" data-rbnone="1">すべて未獲得</button>
+      </div></div></div>
+    ${body||'<p class="rbempty">この条件に当てはまるリボンはありません。</p>'}
+    <div class="rbx-foot rfoot"><input id="rbNick" type="text" value="${esc(e.nick||'')}" placeholder="ニックネーム（なくてもOK）" aria-label="ニックネーム"><button type="button" class="btn" data-rbdel="1">このポケモンを削除</button></div>`;
   renderRbInfo();
 }
+// 世代のタイルを押すと、その世代の見出しが上の固定部分のすぐ下に来るように移動
+function rbGo(k){
+  const sec=rbEl.querySelector(`.rbx-sec[data-rbsec="${k}"]`);if(!sec)return;
+  const ab=document.querySelector('.appbar').getBoundingClientRect().bottom,pin=document.getElementById('rbPin'),gen=document.getElementById('rbGen');
+  const y=scrollY+sec.getBoundingClientRect().top-(ab+(pin?pin.offsetHeight:0)+(gen?gen.offsetHeight:0));
+  const de=document.scrollingElement||document.documentElement,sc=ROT.on&&ROT.sc?ROT.sc:de,max=sc.scrollHeight-(ROT.on&&ROT.sc?ROT.sc.clientHeight:innerHeight);
+  rbGoK=k;rbGoR=0;rbGoT=Date.now();rbGoY=Math.max(0,Math.min(Math.round(y),Math.floor(max)));
+  scrollTo({top:Math.max(0,Math.round(y)),behavior:'smooth'});
+}
+let rbGoK=null,rbGoY=0,rbGoR=0,rbGoT=0;
+document.addEventListener('click',ev=>{
+  if(!rbMenu||ev.target.closest('.rbx-mw'))return;
+  rbMenu=false;const m=document.querySelector('#vRibbon .rbx-menu'),b=document.querySelector('#vRibbon .rbx-more');if(m)m.hidden=true;if(b)b.setAttribute('aria-expanded','false');
+},true);
 // 説明パネル（画面下に出る）
 function renderRbInfo(){
   const box=document.getElementById('rbInfo');
@@ -3246,6 +3319,9 @@ const rbView=document.getElementById('vRibbon');
 rbView.addEventListener('click',ev=>{
   const b=ev.target.closest('button');if(!b)return;
   const e=S.rb.list.find(x=>x.id===S.rb.cur);
+  if(b.dataset.rbmenu){rbMenu=!rbMenu;const m=b.parentElement.querySelector('.rbx-menu');if(m)m.hidden=!rbMenu;b.setAttribute('aria-expanded',String(rbMenu));return}
+  if(b.dataset.rbgo){if(!b.classList.contains('off'))rbGo(b.dataset.rbgo);return}
+  if(b.dataset.rbsel||b.dataset.rbadd||b.dataset.rbdel)rbMenu=false;
   if(b.dataset.rbsel){S.rb.cur=+b.dataset.rbsel;rbAdding=false;rbInfo=null;save();renderRb();return}
   if(b.dataset.rbadd){rbAdding=!rbAdding;renderRb();if(rbAdding)document.getElementById('rbSearch').focus();return}
   if(b.dataset.rbpick){
@@ -3266,7 +3342,7 @@ rbView.addEventListener('click',ev=>{
     const on=!!b.dataset.rball,list=rbItems(spOf(e)).filter(x=>S.rb.marks||x.sec!=='mark');
     armed(b,on?'すべて獲得':'すべて未獲得',on?'全部獲得にする？':'全部取り消す？',()=>{
       list.forEach(x=>{if(on){if(x.id==='mini'&&!e.got.mini)return;if(x.id==='jumbo'&&e.got.mini)return;e.got[x.id]=1}else delete e.got[x.id]});
-      save();renderRb();toast(on?`${list.length}個すべてを獲得済みにしました`:'すべて未獲得に戻しました');
+      rbMenu=false;save();renderRb();toast(on?`${list.length}個すべてを獲得済みにしました`:'すべて未獲得に戻しました');
     });
     return;
   }
@@ -4336,28 +4412,34 @@ monSheet.addEventListener('click',e=>{
 // ニックネームは、直した側からもう片方へ写す（リボン管理→個体管理はリボン管理の名前欄、逆は個体の保存時）
 function monSyncFromRb(){}
 
-/* リボン管理の画面から、個体管理とつなぐ */
+/* リボン管理の画面から、個体管理とつなぐ（上の大きなカードの中に1行で） */
 function renderRbMon(){
   const el=document.getElementById('rbMon');if(!el)return;
   const e=S.rb.list.find(x=>x.id===S.rb.cur);
   if(!e){el.innerHTML='';return}
-  const m=S.mon.list.find(x=>x.rb===e.id),ic='<span class="ni" style="--c:var(--mon)" aria-hidden="true">個</span>';
+  const m=S.mon.list.find(x=>x.rb===e.id),ic='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>';
   el.classList.toggle('on',!!m);
   if(m){
-    el.innerHTML=`${ic}<button type="button" class="rblopen" data-rbmopen="${m.id}" aria-label="個体管理で${esc(monLabel(m))}を開く"><b>${esc(monLabel(m))}</b>${m.lv?`<span class="rbmlv">Lv.${esc(m.lv)}</span>`:''}<span class="rbmongo">個体管理で開く ›</span></button><button type="button" class="btn rblbtn" data-rbmunlink="1">外す</button>`;
+    const w=monWhere(m),sub=[m.lv?'Lv.'+esc(m.lv):'',w&&w!=='場所未登録'?esc(w):''].filter(Boolean).join('・');
+    el.innerHTML=`${ic}<button type="button" class="rbx-lopen" data-rbmopen="${m.id}" aria-label="個体管理で${esc(monLabel(m))}を開く"><span class="t">個体管理：<b>${esc(monLabel(m))}</b>${sub?` <span>${sub}</span>`:''}</span><span class="pill">開く ›</span></button><button type="button" class="rbx-lbtn" data-rbmunlink="1">外す</button>`;
     return;
   }
   // つながっていない個体（同じポケモンを先に）
   const free=S.mon.list.filter(x=>!monRb(x)).sort((a,b)=>(b.sp===e.sp)-(a.sp===e.sp)||b.id-a.id);
-  el.innerHTML=`${ic}<select id="rbMonSel" aria-label="個体管理とつなぐ"><option value="">個体管理とつなぐ…</option><option value="new">＋ 新しく登録してつなぐ</option>${free.map(x=>`<option value="${x.id}">${esc(monLabel(x))}${x.nick&&x.sp?'（'+esc(monSp(x))+'）':''}${x.lv?' Lv.'+esc(x.lv):''}${x.sp===e.sp?'':'・別のポケモン'}</option>`).join('')}</select><button type="button" class="btn rblbtn" data-rbmlink="1">つなぐ</button>`;
+  el.innerHTML=`${ic}<span class="rbx-pick"><span class="lb">個体管理とつなぐ…</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="rbMonSel" aria-label="個体管理とつなぐ"><option value="">個体管理とつなぐ…</option><option value="new">＋ 新しく登録してつなぐ</option>${free.map(x=>`<option value="${x.id}">${esc(monLabel(x))}${x.nick&&x.sp?'（'+esc(monSp(x))+'）':''}${x.lv?' Lv.'+esc(x.lv):''}${x.sp===e.sp?'':'・別のポケモン'}</option>`).join('')}</select></span><button type="button" class="rbx-lbtn" data-rbmlink="1">つなぐ</button>`;
 }
+document.getElementById('vRibbon').addEventListener('change',ev=>{
+  if(ev.target.id!=='rbMonSel')return;const o=ev.target.selectedOptions[0],lb=ev.target.parentElement.querySelector('.lb');
+  if(lb){lb.textContent=o&&o.value?o.textContent:'個体管理とつなぐ…';lb.classList.toggle('on',!!(o&&o.value))}
+});
 {const _r=renderRb;renderRb=function(){_r();renderRbMon();rbStick()}}
 /* リボン管理：ポケモン情報（りぼん・あかしまで）と各世代の見出しを上に固定 */
 function rbStick(){
   const v=document.getElementById('vRibbon');if(v.hidden)return;
-  const ab=document.querySelector('.appbar'),pin=document.getElementById('rbPin');
+  const ab=document.querySelector('.appbar'),pin=document.getElementById('rbPin'),gen=document.getElementById('rbGen');
   v.style.setProperty('--apph',(ab?ab.offsetHeight:0)+'px');
   v.style.setProperty('--rpinh',(pin?pin.offsetHeight:0)+'px');
+  v.style.setProperty('--rgenh',(gen?gen.offsetHeight:0)+'px');
   rbStuck();
 }
 function rbStuck(){
@@ -4365,7 +4447,17 @@ function rbStuck(){
   const pin=document.getElementById('rbPin');if(!pin)return;
   const ab=document.querySelector('.appbar').getBoundingClientRect().bottom,pt=pin.getBoundingClientRect();
   pin.classList.toggle('stuck',pt.top<=ab+.5&&scrollY>0);
-  v.querySelectorAll('.rsec>h3').forEach(h=>{const r=h.getBoundingClientRect(),sec=h.parentElement.getBoundingClientRect();h.classList.toggle('stuck',r.top>sec.top+2)});
+  const secs=v.querySelectorAll('.rbx-sec');
+  secs.forEach(sec=>{const h=sec.firstElementChild,r=h.getBoundingClientRect(),sr=sec.getBoundingClientRect();h.classList.toggle('stuck',r.top>sr.top+2)});
+  // 今見ている世代のタイルに色を付ける
+  const gen=document.getElementById('rbGen');if(!gen)return;
+  const lim=ab+pin.offsetHeight+gen.offsetHeight+8;let cur=secs[0]?secs[0].dataset.rbsec:null;
+  secs.forEach(sec=>{if(sec.getBoundingClientRect().top<=lim)cur=sec.dataset.rbsec});
+  // 一番下まで来て見出しが上まで上がらないときは、押した世代をそのまま選んでおく
+  if(rbGoK!==null){const d=Math.abs(scrollY-rbGoY);
+    if(d<=4){rbGoR=1;if(v.querySelector(`.rbx-sec[data-rbsec="${rbGoK}"]`))cur=rbGoK}
+    else if(rbGoR?d>40:Date.now()-rbGoT>2500)rbGoK=null}
+  gen.querySelectorAll('[data-rbgo]').forEach(b=>{const on=b.dataset.rbgo===cur;if((b.getAttribute('aria-current')==='true')!==on)b.setAttribute('aria-current',String(on))});
 }
 addEventListener('scroll',rbStuck,{passive:true});addEventListener('resize',rbStick);
 rbView.addEventListener('click',ev=>{
