@@ -769,6 +769,97 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxmain{padding-left:10px}
 .dxapply{position:sticky;bottom:calc(-20px - var(--sa-bottom,env(safe-area-inset-bottom,0px)));background:var(--bg);margin:0 -16px calc(-20px - var(--sa-bottom,env(safe-area-inset-bottom,0px)));padding:10px 16px calc(14px + var(--sa-bottom,env(safe-area-inset-bottom,0px)));border-top:1px solid var(--line);z-index:1}
 .dxapply .btn{width:100%;padding:12px;font-size:15px}
+/* 図鑑埋め支援：再デザイン（作品と図鑑はまとめの行＋シート、登録数の大きなカード、同じ高さの一覧） */
+:root{--dxx-hero:linear-gradient(135deg,#e8664e 0%,#d2402e 55%,#a92c1c 100%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--dxx-hero:linear-gradient(135deg,#d65640 0%,#ae3422 55%,#7a1f12 100%)}}
+:root[data-theme="dark"]{--dxx-hero:linear-gradient(135deg,#d65640 0%,#ae3422 55%,#7a1f12 100%)}
+#vDex{gap:10px}
+.dxx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-sizing:border-box}
+.dxx-ic{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:color-mix(in srgb,var(--dx) 80%,var(--ink));background:color-mix(in srgb,var(--dx) 18%,transparent)}
+.dxx-ic svg{width:15px;height:15px}
+.dxx-cond{display:flex;align-items:center;gap:10px;padding:10px 12px;height:66px;flex:none;width:100%;text-align:left;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.dxx-cond:active{background:var(--sunken)}
+.dxx-cond .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.dxx-cond .t1{font-size:13px;font-weight:700;line-height:18px;height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dxx-chips{display:flex;gap:4px;overflow:hidden;white-space:nowrap;height:20px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.dxx-chip{flex:none;font-size:11px;font-weight:700;line-height:18px;height:20px;box-sizing:border-box;padding:0 7px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);color:var(--muted)}
+.dxx-chip.on{color:color-mix(in srgb,var(--dx) 85%,var(--ink));border-color:color-mix(in srgb,var(--dx) 45%,var(--line));background:color-mix(in srgb,var(--dx) 12%,var(--surface))}
+.dxx-edit{flex:none;font-size:12px;font-weight:700;padding:6px 8px 6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--sunken);display:flex;align-items:center;gap:1px}
+.dxx-edit svg{width:15px;height:15px}
+.dxx-hero{position:relative;overflow:hidden;border-radius:16px;padding:12px 16px 14px;color:#fff;height:118px;box-sizing:border-box;flex:none;background:var(--dxx-hero);box-shadow:0 6px 18px -8px rgb(169 44 28 / .6);display:flex;flex-direction:column}
+.dxx-hero::after{content:"";position:absolute;right:-34px;top:-50px;width:130px;height:130px;border-radius:50%;border:20px solid rgb(255 255 255 / .13);pointer-events:none}
+.dxx-hero>*{position:relative;z-index:1}
+.dxx-hero .lab{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;line-height:18px;height:18px;white-space:nowrap}
+.dxx-hero .lab .gl{display:inline-flex;align-items:center;gap:4px}
+.dxx-hero .lab svg{width:14px;height:14px}
+.dxx-hero .lab .left b{font-family:var(--f-num);font-size:13px;margin:0 1px}
+.dxx-hero .num{display:flex;align-items:baseline;gap:6px;height:56px;white-space:nowrap;overflow:hidden}
+.dxx-hero .num b{font-family:var(--f-display);font-weight:400;font-size:44px;line-height:56px;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgb(0 0 0 / .15)}
+.dxx-hero .num>span{font-size:15px;font-weight:700}
+.dxx-hero .num .rt{margin-left:auto;font-family:var(--f-num);font-size:22px}
+.dxx-hbar{height:8px;flex:none;margin-top:auto;border-radius:999px;background:rgb(0 0 0 / .2);overflow:hidden}
+.dxx-hbar span{display:block;height:100%;background:#fff;border-radius:999px;transition:width .2s}
+.dxx-tb{display:flex;gap:8px;align-items:center;height:42px;flex:none}
+.dxx-search{display:flex;align-items:center;gap:8px;height:42px;flex:1;min-width:0;padding:0 4px 0 12px;border-radius:12px;border:1px solid var(--line);background:var(--sunken);color:var(--muted);box-sizing:border-box}
+.dxx-search:focus-within{border-color:color-mix(in srgb,var(--dx) 55%,var(--line))}
+.dxx-search>svg{width:17px;height:17px;flex:none}
+#vDex .dxx-search input{flex:1;min-width:0;width:auto;height:100%;border:none;border-radius:0;background:none;padding:0;margin:0;font:inherit;font-size:16px;font-weight:700;color:var(--ink);outline:none;box-shadow:none;-webkit-appearance:none;appearance:none}
+#vDex .dxx-search input::placeholder{color:var(--muted);font-weight:500;font-size:14px}
+#vDex .dxx-search input::-webkit-search-cancel-button{display:none;-webkit-appearance:none}
+.dxx-qx{flex:none;width:32px;height:32px;border:none;border-radius:50%;background:none;color:var(--muted);display:grid;place-items:center;padding:0}
+.dxx-qx:active{background:var(--line)}
+.dxx-qx svg{width:14px;height:14px}
+.dxx-ibtn{flex:none;height:42px;padding:0 10px 0 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px;white-space:nowrap;box-sizing:border-box}
+.dxx-ibtn svg{width:17px;height:17px}
+.dxx-ibtn .bd{min-width:18px;height:18px;border-radius:9px;background:var(--dx);color:var(--dx-ink);font-size:10.5px;font-family:var(--f-num);display:grid;place-items:center;padding:0 4px;box-sizing:border-box}
+.dxx-ibtn .bd.z{visibility:hidden}
+.dxx-ibtn.on{border-color:color-mix(in srgb,var(--dx) 55%,var(--line));color:color-mix(in srgb,var(--dx) 85%,var(--ink));background:color-mix(in srgb,var(--dx) 8%,var(--surface))}
+.dxx-seg{display:flex;flex:none;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:38px;box-sizing:border-box;background:var(--sunken)}
+.dxx-seg button{flex:1 1 0;min-width:0;border:none;border-radius:0;background:none;font-size:12.5px;font-weight:700;color:var(--muted);padding:0 4px;white-space:nowrap}
+.dxx-seg button+button{border-left:1px solid var(--line)}
+.dxx-seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.dxx-seg small{font-family:var(--f-num);font-size:11px;opacity:.8;margin-left:4px}
+.dxx-acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;flex:none}
+.dxx-sbtn{height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;white-space:nowrap;padding:0 6px;box-sizing:border-box;overflow:hidden}
+.dxx-sbtn svg{width:16px;height:16px;flex:none}
+.dxx-sbtn.acc{color:color-mix(in srgb,var(--dx) 85%,var(--ink));border-color:color-mix(in srgb,var(--dx) 50%,var(--line));background:color-mix(in srgb,var(--dx) 10%,var(--surface))}
+.dxx-sbtn:active,.dxx-ibtn:active,.dxx-srt:active{filter:brightness(.95)}
+.dxx-lsec{display:flex;flex-direction:column}
+.dxx-lh{display:flex;align-items:center;gap:6px;height:36px;padding:0 2px;flex:none}
+#vDex .dxx-lh .dxcount{margin:0;font-size:12px;white-space:nowrap}
+.dxx-srt{margin-left:auto;display:flex;align-items:center;gap:4px;height:30px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:12px;font-weight:700;white-space:nowrap;box-sizing:border-box}
+.dxx-srt svg{width:14px;height:14px}
+.dxx-lsec>.note{margin:8px 2px 0}
+#vDex .dxx-list{border-radius:14px}
+#vDex .dxrow{height:48px;contain-intrinsic-size:auto 48px}
+#vDex .dxrow.on{background:none}
+#vDex .dxckb{width:50px;border-right:none}
+#vDex .dxck{width:26px;height:26px;box-sizing:border-box}
+#vDex .dxrow.on .dxck::after{left:7.5px;top:3.5px}
+#vDex .dxmain{min-height:0;height:100%;padding:0 4px 0 0}
+#vDex .dxno{font-size:12px;width:2.7em}
+#vDex .dxname{font-size:14.5px}
+#vDex .dxrow.on .dxname{color:var(--muted)}
+#vDex .dxlv{font-size:11px;line-height:16px;padding:1px 7px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);color:var(--muted)}
+#vDex .dxi{width:44px;border-left:none;display:grid;place-items:center;font-family:inherit;padding:0}
+#vDex .dxi svg{width:20px;height:20px}
+#vDex .rbempty{margin:0;padding:18px 12px;text-align:center}
+.dxx-sheet .sheet-in{gap:14px}
+.dxx-sheet section{display:flex;flex-direction:column}
+#dxSetSheet .sheet-in{height:min(600px,92%)}
+#dxTagSheet .sheet-in{min-height:min(420px,80%)}
+#dxShotSheet .sheet-in,#dxBulkSheet .sheet-in,#dxSortSheet .sheet-in{min-height:min(330px,80%)}
+#dxSetSheet .dxchips button[aria-pressed=true]{background:var(--dx);border-color:var(--dx);color:var(--dx-ink)}
+#dxTagSheet .dxtagpanel{background:none;border:none;padding:0;gap:12px}
+.dxx-ok{margin-top:auto;height:48px;flex:none;border:none;border-radius:14px;background:var(--ink);color:var(--bg);font-size:15px;font-weight:700}
+.dxx-snote{font-size:11.5px;color:var(--muted);margin:0;line-height:1.55}
+.dxx-none{margin:0;font-size:13px;line-height:1.6;border-left:3px solid var(--dx);background:color-mix(in srgb,var(--dx) 8%,var(--surface));border-radius:0 10px 10px 0;padding:10px 12px}
+.dxx-bsum{display:flex;align-items:baseline;gap:6px;height:40px;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden}
+.dxx-bsum b{font-family:var(--f-display);font-weight:400;font-size:28px;line-height:40px;color:var(--dx)}
+.dxx-bulk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.dxx-bulk .btn{height:50px;font-size:14px;white-space:nowrap;padding:0 6px;min-width:0;border-radius:12px}
+.dxx-wseg{display:flex;margin-left:0;height:42px;box-sizing:border-box}
+.dxx-wseg button{flex:1 1 0;font-size:13.5px;font-weight:700}
 
 /* ポロック・ポフィン */
 :root{--pb:#8a4fd1}
@@ -1623,55 +1714,20 @@ body:not(.app) .obsapp{display:none!important}
 </div>
 
 <div class="wrap view" id="vDex" hidden>
-  <div class="shbox foldbox" data-foldbox="dx">
-  <button type="button" class="foldhd" aria-expanded="true"><span class="foldt">設定</span><span class="foldsum" id="dxFoldSum"></span><svg class="foldchev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
-  <div class="foldbody">
-  <section>
-    <h2>世代</h2>
-    <div class="dxchips gens" id="dxGen" role="group" aria-label="世代"></div>
-  </section>
-  <section id="dxGameRow">
-    <h2>作品</h2>
-    <div class="dxchips" id="dxGame" role="group" aria-label="作品"></div>
-  </section>
-  <section id="dxDexRow">
-    <h2>図鑑</h2>
-    <div class="dxchips" id="dxDex" role="group" aria-label="図鑑"></div>
-  </section>
+  <button id="dxCond" class="dxx-card dxx-cond" type="button" aria-haspopup="dialog" aria-label="作品と図鑑を変更"><span class="dxx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg></span><span class="tx"><span class="t1" id="dxCondT"></span><span class="dxx-chips" id="dxChips"></span></span><span class="dxx-edit">変更<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <div id="dxProg" class="dxx-hero"></div>
+  <div class="dxx-tb">
+    <div class="dxx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="dxSearch" type="search" placeholder="名前で探す（ひらがなOK）" autocomplete="off" enterkeyhint="search" aria-label="名前で探す"><button type="button" class="dxx-qx" data-dxqx="1" aria-label="入力を消す" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <button id="dxTagBtn" class="dxx-ibtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="dxTagSheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>タグ<span class="bd z">0</span></button>
   </div>
-  <div id="dxProg" class="dxprog"></div>
-  </div>
-  <div class="shbox">
-  <section class="dxtools">
-    <input id="dxSearch" type="search" placeholder="名前で探す（ひらがなでもOK）" autocomplete="off" aria-label="名前で探す">
-    <div class="dxtrow">
-      <div class="seg" role="group" aria-label="表示するポケモン"><button type="button" data-dxf="all">すべて</button><button type="button" data-dxf="todo">未登録</button><button type="button" data-dxf="got">登録済み</button></div>
-      <button id="dxTagBtn" class="btn dxtagbtn" type="button" aria-expanded="false" aria-controls="dxTagPanel">タグで絞り込む</button>
-    </div>
-    <div id="dxTagPanel" class="dxtagpanel" hidden></div>
-    <div class="dxbulk"><button id="dxAllOn" class="btn" type="button">表示中を全登録</button><button id="dxAllOff" class="btn" type="button">表示中を全解除</button></div>
-    <div id="dxShotBox" class="dxshot">
-      <p class="dxshoth">スクショから登録を読み込む</p>
-      <div class="dxshotbtns"><button id="dxShotLocal" class="btn primary" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>スマホ内で読み取る</button><button id="dxShotAi" class="btn" type="button">AIで読み取る</button></div>
-      <p id="dxShotHint" class="note" style="margin:0"></p>
-      <input id="dxShotFile" type="file" accept="image/*" multiple hidden>
-      <p class="note" style="margin:0">スクショ内で登録されていないことを確認したポケモンは、登録を解除します。</p>
-      <p id="dxShotStatus" class="note" style="margin:0" role="status"></p>
-    </div>
+  <div class="dxx-seg" role="group" aria-label="表示するポケモン"><button type="button" data-dxf="all">すべて<small id="dxNAll"></small></button><button type="button" data-dxf="todo">未登録<small id="dxNTodo"></small></button><button type="button" data-dxf="got">登録済み<small id="dxNGot"></small></button></div>
+  <div class="dxx-acts"><button id="dxShotBtn" class="dxx-sbtn acc" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>スクショから登録</button><button id="dxBulkBtn" class="dxx-sbtn" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>まとめて登録・解除</button></div>
+  <div id="dxNotes" class="dxnotes" hidden></div>
+  <section class="dxx-lsec">
+    <div class="dxx-lh"><span id="dxCount" class="dxcount"></span><button id="dxSortBtn" class="dxx-srt" type="button" aria-haspopup="dialog" aria-label="並び順を変更"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/></svg><span id="dxSortT"></span></button></div>
+    <div id="dxList" class="dxlist dxx-list"></div>
+    <p class="note">左の丸をタップすると登録・解除できます。名前か右の i をタップすると、進化の方法とタグを見られます。登録は作品ごとに分けて保存します。</p>
   </section>
-  <section>
-    <div id="dxNotes" class="dxnotes" hidden></div>
-    <div class="dxlisthead">
-      <p id="dxCount" class="dxcount"></p>
-      <div class="dxsorts">
-        <div class="seg" role="group" aria-label="並び順"><button type="button" data-dxsort="no">番号順</button><button type="button" data-dxsort="lv">進化Lv順</button></div>
-        <div class="seg" role="group" aria-label="昇順・降順"><button type="button" data-dxdir="asc">昇順</button><button type="button" data-dxdir="desc">降順</button></div>
-      </div>
-    </div>
-    <div id="dxList" class="dxlist"></div>
-    <p class="note">左の丸をタップすると登録・解除できます。名前か右の i をタップすると、進化の方法とタグを見られます。登録は作品ごとに分けて保存します。進化Lv順は、そのポケモンに進化するレベルの順です（レベルで進化しないポケモンは最後）。</p>
-  </section>
-  </div>
   <div id="dxBody" hidden></div>
 </div>
 
@@ -1888,6 +1944,43 @@ body:not(.app) .obsapp{display:none!important}
 </div></div>
 <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
 <div id="dxSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="ポケモンの詳細"></div>
+<div id="dxSetSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxSetT"><div class="sheet-in">
+  <div class="sh-head"><h3 id="dxSetT">作品と図鑑</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
+  <section><h2>世代</h2><div class="dxchips gens" id="dxGen" role="group" aria-label="世代"></div></section>
+  <section id="dxGameRow"><h2>作品</h2><div class="dxchips" id="dxGame" role="group" aria-label="作品"></div></section>
+  <section id="dxDexRow"><h2>図鑑</h2><div class="dxchips" id="dxDex" role="group" aria-label="図鑑"></div></section>
+  <p class="dxx-snote">登録は作品ごとに分けて保存します。作品を切り替えても、ほかの作品の登録は消えません。</p>
+  <button class="dxx-ok" type="button" data-dxxclose="1">この図鑑で埋める</button>
+</div></div>
+<div id="dxTagSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxTagT"><div class="sheet-in">
+  <div class="sh-head"><h3 id="dxTagT">タグで絞り込む</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
+  <div id="dxTagPanel" class="dxtagpanel"></div>
+  <button class="dxx-ok" type="button" data-dxxclose="1" id="dxTagOk">表示する</button>
+</div></div>
+<div id="dxShotSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxShotT"><div class="sheet-in">
+  <div class="sh-head"><h3 id="dxShotT">スクショから登録</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
+  <div id="dxShotBox" class="dxshot">
+    <div class="dxshotbtns"><button id="dxShotLocal" class="btn primary" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>スマホ内で読み取る</button><button id="dxShotAi" class="btn" type="button">AIで読み取る</button></div>
+    <p id="dxShotNone" class="dxx-none" hidden>スクショからの登録は、今はサン・ムーンとウルトラサン・ウルトラムーンの図鑑画面だけに対応しています。作品と図鑑は、上の「変更」から切り替えられます。</p>
+    <p id="dxShotHint" class="note" style="margin:0"></p>
+    <input id="dxShotFile" type="file" accept="image/*" multiple hidden>
+    <p class="note" style="margin:0">スクショ内で登録されていないことを確認したポケモンは、登録を解除します。</p>
+    <p id="dxShotStatus" class="note" style="margin:0" role="status"></p>
+  </div>
+</div></div>
+<div id="dxBulkSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxBulkT"><div class="sheet-in">
+  <div class="sh-head"><h3 id="dxBulkT">まとめて登録・解除</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
+  <div id="dxBulkSum" class="dxx-bsum"></div>
+  <div class="dxx-bulk"><button id="dxAllOn" class="btn primary" type="button">表示中を全登録</button><button id="dxAllOff" class="btn" type="button">表示中を全解除</button></div>
+  <p class="dxx-snote">「すべて・未登録・登録済み」の切り替え、名前、タグで絞り込んだ、いま一覧に出ているポケモンだけが対象です。</p>
+</div></div>
+<div id="dxSortSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxSortH"><div class="sheet-in">
+  <div class="sh-head"><h3 id="dxSortH">並び順</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
+  <section><h2>並べ方</h2><div class="seg dxx-wseg" role="group" aria-label="並び順"><button type="button" data-dxsort="no">番号順</button><button type="button" data-dxsort="lv">進化Lv順</button></div></section>
+  <section><h2>向き</h2><div class="seg dxx-wseg" role="group" aria-label="昇順・降順"><button type="button" data-dxdir="asc">小さい順</button><button type="button" data-dxdir="desc">大きい順</button></div></section>
+  <p class="dxx-snote">進化Lv順は、そのポケモンに進化するレベルの順です（レベルで進化しないポケモンは最後）。</p>
+  <button class="dxx-ok" type="button" data-dxxclose="1">この順で表示</button>
+</div></div>
 <div id="extDlg" class="extdlg" hidden><div class="extin" role="dialog" aria-modal="true" aria-labelledby="extT"><p id="extT" class="extt">ブラウザで開きます</p><p class="extd"><span id="extN">開発者ポータルサイト</span>を、ブラウザで開きます。</p><p class="extu" id="extU"></p><div class="extbtns"><button type="button" class="extno" data-extno="1">キャンセル</button><a id="extGo" class="extgo" href="#" target="_blank" rel="noopener">開く</a></div></div></div>
 <div id="ppSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="プライバシーポリシー"><div class="sheet-in"><div class="sh-head"><h3>プライバシーポリシー</h3><button class="btn" type="button" data-ppclose="1">閉じる</button></div><div class="pptext"><p class="ppdate">制定日：2026年10月18日／改定日：2026年10月19日</p>
 <p>NER poke tools（以下「本アプリ」）の運営者（以下「運営者」）は、本アプリを利用する方（以下「利用者」）の情報を、次のとおり取り扱います。</p>
@@ -3344,28 +3437,41 @@ function dxShown(){
 }
 const dxEl=document.getElementById('dxBody'),dxListEl=document.getElementById('dxList');
 const pad3=n=>String(n).padStart(3,'0');
+const dxAb=n=>{try{return MON_SOFT_AB[n]||n}catch(e){return n}};
+const DXX_IC={check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>',filter:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>'};
 function renderDxSetup(){
   const g=dxGame(),k=dxDexKey(g);
   document.getElementById('dxGen').innerHTML=DX_GENS.map(x=>`<button type="button" data-dxgen="${x}"${x==='home'?' class="home"':''} aria-pressed="${g.g===x}">${x==='home'?'HOME':x}</button>`).join('');
   const games=DX_GAMES.filter(x=>x.g===g.g);
-  const gr=document.getElementById('dxGameRow');gr.hidden=games.length<2;
   document.getElementById('dxGame').innerHTML=games.map(x=>`<button type="button" data-dxgame="${x.id}" aria-pressed="${x.id===g.id}">${x.n}</button>`).join('');
-  const opts=g.dex.map(d=>[String(d[0]),d[1]]);if(g.nat)opts.push(['nat',g.nat==='swsh'||g.nat==='sv'?'全国（連れて行けるポケモン）':'全国図鑑']);
-  const dr=document.getElementById('dxDexRow');dr.hidden=opts.length<2;
+  const sv=g.nat==='swsh'||g.nat==='sv',opts=g.dex.map(d=>[String(d[0]),d[1]]);if(g.nat)opts.push(['nat',sv?'全国（連れて行けるポケモン）':'全国図鑑']);
   document.getElementById('dxDex').innerHTML=opts.map(([v,t])=>`<button type="button" data-dxdex="${v}" aria-pressed="${v===k}">${t}</button>`).join('');
-  const all=dxEntries(),reg=dxReg(),got=all.filter(([n,s])=>reg[s]).length;
-  document.getElementById('dxProg').innerHTML=`<div class="dxpn"><b>${got}</b><span>/ ${all.length}</span><small>${all.length?Math.floor(got/all.length*100):0}%</small></div><div class="meter"><span style="width:${all.length?got/all.length*100:0}%"></span></div>`;
-  const dn=opts.find(o=>o[0]===k);
-  document.getElementById('dxFoldSum').textContent=`${g.n}${dn&&opts.length>1?'・'+dn[1]:''}　${got}/${all.length}`;
-  renderFold('dx');
+  const all=dxEntries(),reg=dxReg(),got=all.filter(([n,s])=>reg[s]).length,tot=all.length,left=tot-got;
+  document.getElementById('dxProg').innerHTML=`<div class="lab"><span class="gl">${DXX_IC.check}登録済み</span><span class="left">${tot&&!left?'コンプリート！':`あと <b>${left}</b>匹`}</span></div><div class="num"><b>${got}</b><span>/ ${tot}匹</span><span class="rt">${tot?Math.floor(got/tot*100):0}%</span></div><div class="dxx-hbar" role="progressbar" aria-label="登録済みの割合" aria-valuemin="0" aria-valuemax="${tot}" aria-valuenow="${got}"><span style="width:${tot?got/tot*100:0}%"></span></div>`;
+  const dn=(opts.find(o=>o[0]===k)||['',''])[1];
+  document.getElementById('dxCondT').textContent=k==='nat'&&sv?`${dxAb(g.n)}・全国（連れて行ける${tot}匹）`:`${dxAb(g.n)}・${dn}（${tot}匹）`;
+  document.getElementById('dxChips').innerHTML=`<span class="dxx-chip on">${g.g==='home'?'HOME':`第${g.g}世代`}</span><span class="dxx-chip">${esc(g.n)}</span><span class="dxx-chip">作品ごとに保存</span>`;
+  dxSegCounts();
+}
+// すべて・未登録・登録済みの数（名前とタグの絞り込みを反映）
+function dxSegCounts(){
+  const reg=dxReg(),q=kata(S.dx.q||'');let a=0,r=0;
+  dxEntries().forEach(([n,s])=>{if(q&&!SPK[s-1].includes(q))return;if(!dxMatch(s))return;a++;if(reg[s])r++});
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  set('dxNAll',a);set('dxNTodo',a-r);set('dxNGot',r);
 }
 function renderDxTools(){
   document.querySelectorAll('[data-dxf]').forEach(b=>b.setAttribute('aria-pressed',String(S.dx.filt===b.dataset.dxf)));
   document.querySelectorAll('[data-dxsort]').forEach(b=>b.setAttribute('aria-pressed',String(S.dx.sort===b.dataset.dxsort)));
   document.querySelectorAll('[data-dxdir]').forEach(b=>b.setAttribute('aria-pressed',String((S.dx.dir||'asc')===b.dataset.dxdir)));
+  document.getElementById('dxSortT').textContent=`${S.dx.sort==='lv'?'進化Lv順':'番号順'}・${S.dx.dir==='desc'?'大きい順':'小さい順'}`;
   const tb=document.getElementById('dxTagBtn');tb.setAttribute('aria-expanded',String(dxTagOpen));
-  const ntg=S.dx.tags.filter(t=>t[0]!=='b'||dxTagList().some(x=>'b'+x[0]===t)).length;tb.innerHTML=`タグで絞り込む${ntg?`<span class="dxbadge">${ntg}</span>`:''}`;
-  const p=document.getElementById('dxTagPanel');p.hidden=!dxTagOpen;
+  const ntg=S.dx.tags.filter(t=>t[0]!=='b'||dxTagList().some(x=>'b'+x[0]===t)).length;
+  tb.innerHTML=`${DXX_IC.filter}タグ<span class="bd${ntg?'':' z'}">${ntg}</span>`;tb.classList.toggle('on',!!ntg);
+  tb.setAttribute('aria-label',ntg?`タグで絞り込む（${ntg}個を選択中）`:'タグで絞り込む');
+  const si=document.getElementById('dxSearch');if(document.activeElement!==si&&si.value!==(S.dx.q||''))si.value=S.dx.q||'';
+  document.querySelector('[data-dxqx]').hidden=!si.value;
+  const p=document.getElementById('dxTagPanel');
   if(dxTagOpen){
     const on=t=>S.dx.tags.includes(t);
     p.innerHTML=`<div class="dxtags">${dxTagList().map(([b,n])=>`<button type="button" class="dxtag" data-dxft="b${b}" aria-pressed="${on('b'+b)}">${n}</button>`).join('')}
@@ -3376,10 +3482,10 @@ function renderDxTools(){
   }
 }
 function renderDxList(){
-  const reg=dxReg(),L=dxShown(),lv=S.dx.sort==='lv';
+  const reg=dxReg(),L=dxShown();
   document.getElementById('dxCount').textContent=`${L.length}匹を表示`;
   dxListEl.innerHTML=L.length?L.map(([n,s])=>{const r=!!reg[s],l=EVO[s-1][1];
-    return `<div class="dxrow${r?' on':''}"><button type="button" class="dxckb" data-dxt="${s}" aria-pressed="${r}" aria-label="${SPDB[s-1][0]}を登録"><span class="dxck" aria-hidden="true"></span></button><button type="button" class="dxmain" data-dxi="${s}"><span class="dxno">${pad3(n)}</span><span class="dxname">${SPDB[s-1][0]}</span>${lv&&l?`<span class="dxlv">Lv.${l}</span>`:''}</button><button type="button" class="dxi" data-dxi="${s}" aria-label="${SPDB[s-1][0]}の詳細とタグ">i</button></div>`}).join('')
+    return `<div class="dxrow${r?' on':''}"><button type="button" class="dxckb" data-dxt="${s}" aria-pressed="${r}" aria-label="${SPDB[s-1][0]}を登録"><span class="dxck" aria-hidden="true"></span></button><button type="button" class="dxmain" data-dxi="${s}"><span class="dxno">${pad3(n)}</span><span class="dxname">${SPDB[s-1][0]}</span>${l?`<span class="dxlv">Lv.${l}</span>`:''}</button><button type="button" class="dxi" data-dxi="${s}" aria-label="${SPDB[s-1][0]}の詳細とタグ">${DXX_IC.info}</button></div>`}).join('')
     :`<p class="rbempty">当てはまるポケモンはいません。</p>`;
 }
 function renderDex(){renderDxSetup();renderDxTools();renderDxList();if(!dxSheetEl.hidden)renderDxSheet()}
@@ -3426,15 +3532,20 @@ dxSheetEl.addEventListener('click',e=>{
 });
 dxSheetEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='dxNewTag')dxSheetEl.querySelector('[data-dxadd]').click();if(e.key==='Escape')dxClose()});
 
-document.getElementById('vDex').addEventListener('click',e=>{
+const dxClick=e=>{
   const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(b.id==='dxCond'){renderDxSetup();dxSh(dxSetSheet,true);return}
+  if(b.id==='dxShotBtn'){dxShotUI();document.getElementById('dxShotStatus').textContent='';dxSh(dxShotSheet,true);return}
+  if(b.id==='dxBulkBtn'){dxBulkInfo();dxSh(dxBulkSheet,true);return}
+  if(b.id==='dxSortBtn'){dxSh(dxSortSheet,true);return}
+  if(d.dxqx){const i=document.getElementById('dxSearch');i.value='';S.dx.q='';save();b.hidden=true;renderDxList();i.focus();return}
   if(d.dxgen){const gv=d.dxgen==='home'?'home':+d.dxgen,cur=dxGame();if(cur.g!==gv){S.dx.game=(S.dx.last||{})[gv]||DX_GAMES.find(x=>x.g===gv).id}renderDex();save();return}
   if(d.dxgame){S.dx.game=d.dxgame;(S.dx.last||(S.dx.last={}))[dxGame().g]=d.dxgame;save();renderDex();return}
   if(d.dxdex){S.dx.dex[S.dx.game]=d.dxdex;save();renderDex();return}
   if(d.dxf){S.dx.filt=d.dxf;save();renderDxTools();renderDxList();return}
   if(d.dxsort){S.dx.sort=d.dxsort;save();renderDxTools();renderDxList();return}
   if(d.dxdir){S.dx.dir=d.dxdir;save();renderDxTools();renderDxList();return}
-  if(b.id==='dxTagBtn'){dxTagOpen=!dxTagOpen;dxTagEdit=false;renderDxTools();return}
+  if(b.id==='dxTagBtn'){dxTagOpen=true;dxTagEdit=false;renderDxTools();dxBulkInfo();dxSh(dxTagSheet,true);return}
   if(d.dxft){const i=S.dx.tags.indexOf(d.dxft);if(i<0)S.dx.tags.push(d.dxft);else S.dx.tags.splice(i,1);save();renderDxTools();renderDxList();return}
   if(d.dxtclr){S.dx.tags=[];save();renderDxTools();renderDxList();return}
   if(d.dxtedit){dxTagEdit=!dxTagEdit;renderDxTools();return}
@@ -3447,8 +3558,36 @@ document.getElementById('vDex').addEventListener('click',e=>{
   if(d.dxi){dxOpen(+d.dxi);return}
   if(b.id==='dxAllOn'){const L=dxShown(),r=dxReg();if(!L.length)return;L.forEach(([n,s])=>r[s]=1);dxSave();toast(`表示中の${L.length}匹を登録しました`);return}
   if(b.id==='dxAllOff'){const L=dxShown();if(!L.length)return;armed(b,'表示中を全解除','本当に全解除',()=>{const r=dxReg();L.forEach(([n,s])=>delete r[s]);dxSave();toast(`表示中の${L.length}匹を解除しました`)});return}
-});
-document.getElementById('dxSearch').addEventListener('input',e=>{S.dx.q=e.target.value;renderDxList()});
+};
+document.getElementById('vDex').addEventListener('click',dxClick);
+document.getElementById('dxSearch').addEventListener('input',e=>{S.dx.q=e.target.value;document.querySelector('[data-dxqx]').hidden=!e.target.value;renderDxList()});
+document.getElementById('dxSearch').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
+
+/* 図鑑：シート（作品と図鑑・タグ・スクショ・まとめて登録・並び順） */
+const dxSetSheet=document.getElementById('dxSetSheet'),dxTagSheet=document.getElementById('dxTagSheet'),dxShotSheet=document.getElementById('dxShotSheet'),dxBulkSheet=document.getElementById('dxBulkSheet'),dxSortSheet=document.getElementById('dxSortSheet');
+const DXX_SHEETS=[dxSetSheet,dxTagSheet,dxShotSheet,dxBulkSheet,dxSortSheet],DXX_BACK={dxSetSheet:'dxCond',dxTagSheet:'dxTagBtn',dxShotSheet:'dxShotBtn',dxBulkSheet:'dxBulkBtn',dxSortSheet:'dxSortBtn'};
+function dxSh(el,on){
+  el.hidden=!on;
+  if(on){document.body.classList.add('modal');el.querySelector('.sheet-in').scrollTop=0;return}
+  if(el===dxTagSheet&&dxTagOpen){dxTagOpen=false;dxTagEdit=false;renderDxTools()}
+  if(!document.querySelector('.sheet:not([hidden]),#monCard:not([hidden]),#monFind:not([hidden])')&&drawer.hidden&&shPad.hidden)document.body.classList.remove('modal');
+  document.getElementById(DXX_BACK[el.id])?.focus({preventScroll:true});
+}
+function dxBulkInfo(){
+  const L=dxShown(),reg=dxReg(),r=L.filter(x=>reg[x[1]]).length;
+  document.getElementById('dxBulkSum').innerHTML=`<b>${L.length}</b>匹を表示中<span>（登録済み ${r}・未登録 ${L.length-r}）</span>`;
+  document.getElementById('dxTagOk').textContent=`${L.length}匹を表示する`;
+}
+{const _r=renderDxList;renderDxList=function(){_r();dxSegCounts();dxBulkInfo()}}
+DXX_SHEETS.forEach(el=>el.addEventListener('click',e=>{
+  if(e.target===el||e.target.closest('[data-dxxclose]')){dxSh(el,false);return}
+  const n0=Object.keys(dxReg()).length;dxClick(e);
+  if(el===dxBulkSheet&&Object.keys(dxReg()).length!==n0)dxSh(el,false);
+}));
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const el=DXX_SHEETS.find(x=>!x.hidden);if(el)dxSh(el,false)});
+{const _u=dxShotUI;dxShotUI=function(){_u();const L=document.getElementById('dxShotLocal'),A=document.getElementById('dxShotAi'),none=L.hidden&&A.hidden;
+  document.getElementById('dxShotNone').hidden=!none;document.getElementById('dxShotHint').hidden=none}}
+{const _s=renderDxScan;renderDxScan=function(){if(!dxShotSheet.hidden)dxShotSheet.hidden=true;_s()}}
 
 /* 設定部分のたたみ（色違い・図鑑） */
 function renderFold(k){
