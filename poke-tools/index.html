@@ -1242,6 +1242,10 @@ html.rot body.onbo #rotScroll{overflow:hidden}
 .mc-types .mc-tera{margin-left:6px;gap:4px;background:var(--tc);box-shadow:0 0 0 1.5px rgb(255 255 255 / .9),0 0 0 3px rgb(0 0 0 / .12)}
 .mc-types .mc-tera small{font-size:10px;font-weight:800;opacity:.9}
 .monsub{font-size:11.5px;color:var(--muted);font-weight:500}
+/* 一覧のカード：頭文字の丸はなし。テラスタイプはレベルの左（1文字あけて、カードどうしで同じ位置） */
+.mnx-r{padding-left:14px}
+.mnx-r .l1 .rt{flex:none;margin-left:auto;display:flex;align-items:center;gap:1em;height:20px}
+.mnx-r .l1 .rt .lv{margin-left:0;min-width:46px;text-align:right}
 .monbar{display:flex;gap:8px}
 .monbar .btn{min-height:48px;font-size:15px;border-radius:12px}
 .monbar .btn.primary{flex:1;background:var(--mon);border-color:var(--mon);color:#fff}
@@ -5004,7 +5008,7 @@ function mnxRow(m){
   const lab=monLabel(m),ch=m.sp||m.nick?Array.from(lab)[0]:'?';
   const nm=m.nick&&m.sp?`${esc(m.nick)}<small>（${esc(monSp(m))}）</small>`:esc(lab);
   const g=m.gender==='♂'?'<span class="g m" aria-label="オス">♂</span>':m.gender==='♀'?'<span class="g f" aria-label="メス">♀</span>':'';
-  return `<div class="mnx-it"><button type="button" class="mnx-r" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(lab)}のステータスを開く"><span class="mnx-av${c1?'':' none'}"${c1?` style="background:linear-gradient(135deg,${c1} 50%,${c2} 50%)"`:''} aria-hidden="true">${esc(ch)}</span><span class="mid"><span class="l1"><b>${nm}</b>${g}${monTeraTag(m)}<span class="lv">${m.lv?'Lv.'+esc(m.lv):''}</span></span><span class="l2"><span class="pl">${esc(monWhere(m))}</span>${m.item?`<span class="it">${esc(m.item)}</span>`:''}</span><span class="l3">${(m.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</span></span></button><button type="button" class="mnx-fv" data-monfav="${m.id}" aria-pressed="${!!m.fav}" aria-label="${esc(lab)}をお気に入り">${MNX_STAR}</button></div>`;
+  return `<div class="mnx-it"><button type="button" class="mnx-r" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(lab)}のステータスを開く"><span class="mid"><span class="l1"><b>${nm}</b>${g}<span class="rt">${monTeraTag(m)}<span class="lv">${m.lv?'Lv.'+esc(m.lv):''}</span></span></span><span class="l2"><span class="pl">${esc(monWhere(m))}</span>${m.item?`<span class="it">${esc(m.item)}</span>`:''}</span><span class="l3">${(m.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</span></span></button><button type="button" class="mnx-fv" data-monfav="${m.id}" aria-pressed="${!!m.fav}" aria-label="${esc(lab)}をお気に入り">${MNX_STAR}</button></div>`;
 }
 
 /* 個体の登録・編集シート */
