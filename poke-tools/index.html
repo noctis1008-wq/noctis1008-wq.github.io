@@ -1187,6 +1187,23 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mnx-fv svg{width:21px;height:21px}
 .mnx-fv[aria-pressed=true]{color:#f2b500}
 
+/* バックアップのお知らせ（下のバーの上に重ねて出す。中身は動かさない） */
+.bkn{position:fixed;left:max(10px,var(--sa-left,env(safe-area-inset-left,0px)));right:max(10px,var(--sa-right,env(safe-area-inset-right,0px)));bottom:calc(var(--tabh) + 10px);z-index:7;max-width:620px;margin:0 auto;box-sizing:border-box;height:100px;padding:10px 12px;border-radius:16px;background:var(--surface);border:1px solid color-mix(in srgb,var(--iv) 45%,var(--line));box-shadow:0 14px 32px -8px rgb(0 0 0 / .38);display:grid;grid-template-columns:32px minmax(0,1fr);grid-template-rows:38px 34px;column-gap:10px;row-gap:8px;align-items:center;animation:bknIn .25s ease}
+body[data-view=ev] .bkn,body[data-view=shiny] .bkn{bottom:calc(var(--tabh) + var(--barh,0px) + 10px)}
+body[data-view=pb] .bkn{bottom:calc(var(--tabh) + 78px)}
+body.modal .bkn,body.fs .bkn,body.obsmode .bkn,body.onbo .bkn{display:none}
+@keyframes bknIn{from{opacity:0;transform:translateY(12px)}}
+.bkn-ic{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:color-mix(in srgb,var(--iv) 80%,var(--ink));background:color-mix(in srgb,var(--iv) 18%,transparent)}
+.bkn-ic svg{width:19px;height:19px}
+.bkn-tx{min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.bkn-tx b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkn-tx small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkn-act{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;height:34px}
+.bkn-act button{height:34px;border-radius:10px;padding:0 14px;font-size:13.5px;font-weight:700;white-space:nowrap}
+.bkn-later{border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.bkn-go{border:none;background:var(--iv);color:#fff}
+:root[data-theme="dark"] .bkn-go{background:color-mix(in srgb,var(--iv) 70%,#000)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bkn-go{background:color-mix(in srgb,var(--iv) 70%,#000)}}
 .monbar{display:flex;gap:8px}
 .monbar .btn{min-height:48px;font-size:15px;border-radius:12px}
 .monbar .btn.primary{flex:1;background:var(--mon);border-color:var(--mon);color:#fff}
@@ -2325,7 +2342,7 @@ body:not(.app) .obsapp{display:none!important}
   <section>
     <h2 class="stx-gl">データ</h2>
     <div class="stx-list">
-      <button class="stx-row" type="button" data-stopen="bkx" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--iv)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></svg></span><span class="stx-tx"><span>バックアップを書き出す</span><small>全部のツールのデータを文字にして保存</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+      <button class="stx-row" type="button" data-stopen="bkx" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--iv)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></svg></span><span class="stx-tx"><span>バックアップを書き出す</span><small id="bkLastSub">最後のバックアップ: まだなし</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
       <button class="stx-row" type="button" data-stopen="bki" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--iv)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg></span><span class="stx-tx"><span>バックアップを読み込む</span><small>書き出した文字から元に戻す</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
     </div>
   </section>
@@ -2354,6 +2371,7 @@ body:not(.app) .obsapp{display:none!important}
 
 
 <nav id="tabBar" class="tabbar" aria-label="よく使うツール"><div class="tabbar-in" id="tabBarIn"></div></nav>
+<div id="bkNudge" class="bkn" hidden role="status"><span class="bkn-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></svg></span><span class="bkn-tx"><b>バックアップをしておきませんか</b><small id="bkNudgeSub"></small></span><div class="bkn-act"><button type="button" class="bkn-later" id="bkLater">あとで</button><button type="button" class="bkn-go" id="bkGo">バックアップする</button></div></div><!--/bkNudge-->
 <div id="obsView" class="obsview" hidden>
   <div class="obsmethod"></div>
   <div class="obsline"><span class="obscount">0</span></div>
@@ -3213,15 +3231,15 @@ function decode(s){
 }
 function bkExportTo(text,act,box){
   const data={v:5,gen:S.gen,lm:S.lm,sound:S.sound,count:S.count,targets:S.targets,members:S.members,presets:S.presets,sh:S.sh,rb:S.rb,dx:S.dx,pb:S.pb,mon:S.mon,ty:S.ty,iv:S.iv};
-  text.value=encode(data);text.readOnly=true;box.hidden=false;
+  text.value=encode(data);text.readOnly=true;box.hidden=false;text.oncopy=()=>bkMark();
   act.innerHTML='<button class="btn primary" type="button" data-bkcopy="1">コピー</button>';
   act.querySelector('[data-bkcopy]').addEventListener('click',()=>{
     const fallback=()=>{text.focus();text.select();toast('文字列を選択しました。長押しでコピーしてください')};
-    try{navigator.clipboard.writeText(text.value).then(()=>toast('コピーしました。メモアプリなどに貼って保管してください')).catch(fallback)}catch(e){fallback()}
+    try{navigator.clipboard.writeText(text.value).then(()=>{bkMark();toast('コピーしました。メモアプリなどに貼って保管してください')}).catch(fallback)}catch(e){fallback()}
   });
 }
 function bkImportTo(text,act,box,done,focus=true){
-  text.value='';text.readOnly=false;text.placeholder='書き出した文字列を貼り付けてください';box.hidden=false;
+  text.value='';text.readOnly=false;text.oncopy=null;text.placeholder='書き出した文字列を貼り付けてください';box.hidden=false;
   act.innerHTML='<button class="btn primary" type="button" data-bkload="1">この内容で復元</button>';
   if(focus)text.focus();
   act.querySelector('[data-bkload]').addEventListener('click',e=>{
@@ -5953,11 +5971,37 @@ function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.
   if(k==='tab'||k==='nav')renderUiSet();
   if(k==='bkx'||k==='bki'){const t=document.getElementById('setBkText'),a=document.getElementById('setBkAct'),ex=k==='bkx';
     document.getElementById('stBkTitle').textContent=ex?'バックアップを書き出す':'バックアップを読み込む';
-    document.getElementById('stBkNote').textContent=ex?'全部のツールのデータを文字にしました。「コピー」を押して、メモアプリなどに貼って保管してください。':'書き出した文字列を貼り付けて「この内容で復元」を押すと、今のデータと置き換わります。';
+    document.getElementById('stBkNote').textContent=ex?'全部のツールのデータを文字にしました。「コピー」を押して、メモアプリなどに貼って保管してください。'+(bkStandalone()?'':'ホーム画面に追加して使うと、データが消えにくくなります。'):'書き出した文字列を貼り付けて「この内容で復元」を押すと、今のデータと置き換わります。';
     if(ex)bkExportTo(t,a,{});else bkImportTo(t,a,{},stClose,false)}
   sh.hidden=false;stOpenEl=sh;document.body.classList.add('modal');sh.querySelector('.sheet-in').scrollTop=0;
   (k==='bki'?document.getElementById('setBkText'):sh.querySelector('[data-stclose]')).focus({preventScroll:true})}
 function stClose(){if(!stOpenEl)return;stOpenEl.hidden=true;stOpenEl=null;document.body.classList.remove('modal');if(stRet&&stRet.focus)stRet.focus({preventScroll:true});stRet=null}
+/* ---------- データの守り：バックアップのお知らせ ----------
+   iPhoneのSafariは、しばらく開かないサイトのデータを消すことがある。
+   データがあるのに、前回のバックアップから14日（まだ一度もないときは、データができてから3日）たったら、下のバーの上にお知らせを出す。
+   「あとで」は3日お休み。S.bk = {first:データを見つけた時刻, last:最後に書き出した時刻, snz:お休みが終わる時刻}（どれも無くても動く） */
+const BK_DAY=864e5,BK_GAP=14,BK_FIRST=3,BK_SNZ=3;
+function bkHasData(){return !!(S.mon.list.length||S.rb.list.length||S.sh.count||(S.sh.hist||[]).length||Object.values(S.dx.reg||{}).some(o=>o&&Object.keys(o).length)||S.count||(S.history||[]).length)}
+const bkFmt=t=>{const d=new Date(t);return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`};
+const bkStandalone=()=>{try{return !!(navigator.standalone||matchMedia('(display-mode: standalone)').matches||window.NER_APP)}catch(e){return false}};
+function bkRenderLast(){const el=document.getElementById('bkLastSub');if(el)el.textContent='最後のバックアップ: '+(S.bk&&S.bk.last?bkFmt(S.bk.last):'まだなし')}
+function bkMark(){S.bk=Object.assign({},S.bk||{},{last:Date.now()});delete S.bk.snz;save();bkRenderLast();document.getElementById('bkNudge').hidden=true}
+let bkPersist=false;
+function bkCheck(){
+  const el=document.getElementById('bkNudge');
+  if(location.hash.startsWith('#obs')||document.body.classList.contains('onbo'))return;
+  if(!bkHasData()){el.hidden=true;return}
+  if(!bkPersist){bkPersist=true;try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}}
+  const now=Date.now(),b=S.bk||{};
+  if(!b.first){S.bk=Object.assign({},b,{first:now});save();return}
+  if(b.snz&&now<b.snz)return;
+  if(now-(b.last||b.first)<(b.last?BK_GAP:BK_FIRST)*BK_DAY)return;
+  document.getElementById('bkNudgeSub').textContent=b.last?`前回のバックアップから${Math.floor((now-b.last)/BK_DAY)}日たちました`:'まだ一度もバックアップしていません';
+  el.hidden=false;
+}
+document.getElementById('bkLater').addEventListener('click',()=>{S.bk=Object.assign({},S.bk||{},{snz:Date.now()+BK_SNZ*BK_DAY});save();document.getElementById('bkNudge').hidden=true;toast(BK_SNZ+'日後に、もう一度お知らせします')});
+document.getElementById('bkGo').addEventListener('click',()=>{S.bk=Object.assign({},S.bk||{},{snz:Date.now()+BK_DAY});save();document.getElementById('bkNudge').hidden=true;closeMenu();if(S.view!=='settings')setView('settings');stOpen('bkx')});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')bkCheck()});
 document.getElementById('vSettings').addEventListener('click',e=>{
   const so=e.target.closest('[data-stopen]');if(so){stOpen(so.dataset.stopen);return}
   if(e.target.classList.contains('stx-sheet')||e.target.closest('[data-stclose]')){stClose();return}
@@ -6012,6 +6056,7 @@ if(OBS_APP)document.body.classList.add('appobs');
 renderLabelSeg();renderSound();renderTheme();renderAll();
 if(location.hash.startsWith('#obs'))obsView();
 else{setView(S.view||'ev');obsLast=JSON.stringify(obsPayload());renderObsCtl()}
+bkRenderLast();bkCheck();
 
 /* ---------- 横向きにしても縦画面のまま（アプリ全体を回して表示） ---------- */
 const ROT={on:0,a:90,W:0,H:0,sc:null,undo:[]};
