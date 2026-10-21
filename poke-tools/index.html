@@ -4229,7 +4229,9 @@ function renderIvLink(){
   const x=ivLinked(),box=document.getElementById('ivLink');
   box.innerHTML=x
     ?`<div class="ivlk"><span class="ivlkt">個体管理：<b>${esc(monLabel(x))}</b>${x.iv&&x.iv.r?'（記録あり）':''}</span><button class="btn" id="ivRec" type="button">結果を記録</button><button class="btn" id="ivUnl" type="button" aria-label="個体管理との連動を外す">外す</button></div>`
-    :`<label class="tysel2 ivload"><span>努力値カウンターの手持ちから読み込む</span><select id="ivLoad" aria-label="努力値カウンターの手持ちから読み込む"><option value="">読み込む手持ちを選ぶ</option>${S.members.map((m,i)=>`<option value="${i}">${i+1}. ${esc(m.name||'名前なし')}（${esc(evTxt(m.ev))}）</option>`).join('')}</select></label>`;
+    :(()=>{const L=S.mon.list.filter(y=>y.sp&&ivList().some(e=>e.d===y.sp)).sort((p,q)=>q.id-p.id);
+      const note=L.length?'個体管理から読み込む':S.mon.list.length?'ポケモンを選んだ個体がありません':'個体管理に登録すると、ここから読み込めます';
+      return `<label class="tysel2 ivload${L.length?'':' off'}"><span>${note}</span><select id="ivLoad" aria-label="個体管理から読み込む"${L.length?'':' disabled'}><option value="">読み込む個体を選ぶ</option>${L.map(y=>`<option value="${y.id}">${esc(monLabel(y))}${y.nick?'（'+esc(monSp(y))+'）':''}${y.lv?' Lv.'+esc(y.lv):''}${y.iv&&y.iv.r?'・記録あり':''}</option>`).join('')}</select></label>`})();
 }
 function renderIv(){
   ivNorm();
@@ -4264,16 +4266,17 @@ function ivPick(n){
   const q=document.getElementById('ivQ');ivQSet(tyShortName(n));q.blur();document.getElementById('ivRes').innerHTML='';
   save();renderIv();
 }
-// 個体管理の個体を個体値ジャッジで開く
-function ivFromMon(x){
-  const e=ivList().find(y=>y.d===x.sp);if(!e){toast('このポケモンの種族値が見つかりません');return}
+// 個体管理の個体を個体値ジャッジに読み込む（つなぐ）
+function ivLinkMon(x){
+  const e=ivList().find(y=>y.d===x.sp);if(!e){toast('このポケモンの種族値が見つかりません');return false}
   const v=S.iv,r=x.iv||{};
   v.mon=r.mon&&ivList().some(y=>y.n===r.mon&&y.d===x.sp)?r.mon:e.n;
   v.lv=r.lv||x.lv||v.lv||50;v.nat=ivNat(r.nat||x.nature)?(r.nat||x.nature):'';
   v.real=Object.assign({hp:'',atk:'',def:'',spa:'',spd:'',spe:''},r.real||{});
   v.ev=Object.assign(zero(),x.ev||{});v.link=x.id;ivAddRecent(v.mon);
-  save();setView('iv');toast(monLabel(x)+' を個体値ジャッジで開きました');
+  return true;
 }
+function ivFromMon(x){if(!ivLinkMon(x))return;save();setView('iv');toast(monLabel(x)+' を個体値ジャッジで開きました')}
 const ivTxt=r=>EVK.map((k,i)=>EVL[i]+(r[i]?(r[i][0]===r[i][1]?r[i][0]:r[i][0]+'〜'+r[i][1]):'－')).join(' ');
 ivEl.addEventListener('input',e=>{
   const t=e.target,d=t.dataset;
@@ -4288,12 +4291,8 @@ ivEl.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='ivNat'){S.iv.nat=t.value;save();renderIv();return}
   if(t.id==='ivLoad'&&t.value!==''){
-    const i=+t.value,m=S.members[i];if(!m)return;
-    EVK.forEach(k=>S.iv.ev[k]=+m.ev[k]||0);
-    const x=evMonOf(m),L=ivList(),sp=x&&x.sp?x.sp:evSpOf(m.name),hit=L.find(y=>y.n===m.name)||(sp?L.find(y=>y.d===sp):null);
-    if(hit&&(!ivCur()||ivCur().d!==hit.d)){S.iv.mon=hit.n;ivAddRecent(hit.n)}
-    if(x){S.iv.link=x.id;if(x.lv)S.iv.lv=x.lv;if(ivNat(x.nature))S.iv.nat=x.nature}
-    save();renderIv();toast(`手持ち${i+1}（${m.name||'名前なし'}）の努力値を読み込みました`);
+    const x=S.mon.list.find(y=>y.id===+t.value);if(!x||!ivLinkMon(x))return;
+    save();renderIv();toast(monLabel(x)+' を読み込みました');
   }
 });
 ivEl.addEventListener('click',e=>{
