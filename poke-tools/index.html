@@ -4555,44 +4555,176 @@ function dxNotes(){
    帯の上のタブにある番号は、数字の形のひな形と比べて読む */
 const DX_DIGITS={"0":[0,3,9,9,9,9,9,0,2,9,9,6,6,9,9,3,7,9,7,0,0,2,9,7,9,9,4,0,0,0,9,7,9,9,4,0,0,0,9,9,9,9,4,0,0,0,9,9,9,9,4,0,0,0,9,9,9,9,4,0,0,0,9,9,9,9,4,0,0,0,9,9,7,9,7,0,0,2,9,7,2,9,9,6,4,9,9,3,0,3,9,4,4,7,4,0],"2":[0,3,4,4,3,4,6,1,3,7,7,6,5,7,9,4,4,7,2,0,0,4,9,8,1,1,0,0,0,4,9,8,0,0,0,0,1,7,9,4,0,0,0,0,4,9,7,1,0,0,0,4,9,8,1,0,0,0,2,8,9,3,0,0,0,1,8,9,5,0,0,0,0,6,9,8,0,0,0,0,3,9,9,8,5,4,3,3,5,9,9,8,7,7,7,5],"3":[1,6,4,4,4,6,5,1,3,7,7,5,5,6,9,3,5,7,1,0,0,2,9,7,1,1,0,0,1,3,9,7,0,0,0,1,5,7,9,3,0,0,0,1,7,9,9,3,0,0,0,0,0,4,9,7,0,0,0,0,0,2,9,8,0,0,0,0,0,1,9,9,6,7,2,0,0,3,9,7,4,8,7,3,4,7,9,3,0,6,8,8,8,8,5,0],"4":[0,0,0,0,0,6,0,0,0,0,0,0,2,9,9,2,0,0,0,2,9,9,9,3,0,0,0,7,9,9,9,3,0,0,7,9,9,9,9,3,0,4,9,7,4,9,9,3,2,9,9,2,2,9,9,3,9,9,9,6,7,9,9,7,7,9,9,6,9,9,9,7,0,0,0,2,7,9,9,6,0,0,0,0,2,9,9,3,0,0,0,0,0,7,7,0],"5":[4,3,0,0,0,0,0,0,9,7,0,0,0,0,0,0,9,9,0,0,0,0,0,0,9,9,7,4,4,4,0,0,9,9,9,9,9,9,9,0,2,4,4,4,4,7,9,4,0,0,0,0,0,3,9,7,0,0,0,0,0,3,9,9,0,0,0,0,0,3,9,7,4,9,0,0,0,6,9,6,7,9,7,0,0,7,9,4,0,7,9,9,9,9,7,0],"6":[0,0,9,3,0,9,3,0,0,7,9,4,4,9,9,2,4,9,9,0,0,2,7,2,9,9,7,0,0,0,0,0,9,9,9,6,4,4,0,0,9,9,9,6,6,9,7,2,9,9,9,3,0,9,9,3,9,9,9,0,0,4,9,6,9,9,4,0,0,0,9,9,9,9,4,0,0,0,9,7,4,9,9,2,3,7,9,4,0,4,9,9,9,9,7,0],"7":[2,9,9,9,9,9,9,4,9,9,9,4,4,9,9,6,9,9,4,0,0,0,9,7,9,9,4,0,0,0,9,7,0,4,0,0,0,7,9,2,0,0,0,0,4,9,7,0,0,0,0,2,9,9,2,0,0,0,0,3,9,9,0,0,0,0,0,3,9,9,0,0,0,0,0,3,9,9,0,0,0,0,0,2,9,7,0,0,0,0,0,0,6,2,0,0],"8":[0,0,4,0,0,4,0,0,0,7,9,9,9,9,9,2,4,9,9,2,0,7,9,4,7,9,7,0,0,2,9,7,2,9,9,4,4,9,9,4,4,9,9,3,4,9,9,3,4,9,9,3,3,9,9,3,4,9,9,0,0,7,9,6,9,9,4,0,0,0,9,7,9,9,4,0,0,0,9,7,4,9,9,2,2,7,9,4,0,6,9,9,9,9,9,2],"9":[0,2,9,9,9,9,3,0,2,7,9,4,4,9,9,2,4,9,7,0,0,2,9,6,9,9,4,0,0,0,9,7,2,9,9,4,4,9,9,9,0,4,9,9,9,9,9,7,0,0,0,0,0,4,9,9,0,0,0,0,0,0,9,7,0,0,0,0,0,0,9,7,2,9,4,0,0,0,9,6,2,7,9,4,4,9,9,2,0,2,9,9,9,9,4,0]};
 const DX_LOCAL_GAMES=['sm','usum'];
-async function dxLocalRead(file){
-  const bmp=await createImageBitmap(file);
-  const sc=Math.min(1,1400/bmp.width),W=Math.round(bmp.width*sc),H=Math.round(bmp.height*sc);
-  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d');cx.drawImage(bmp,0,0,W,H);
-  const px=cx.getImageData(0,0,W,H).data;
+/* 1回分の読み取り。ad=false は今までと同じ決まった色の範囲。ad=true はカメラ写真用で、帯ごとに地の色を測り、
+   右はしのボール（地より白い）・灰色の丸（地より暗い）を、その帯の地の色と比べて見分ける */
+function dxLrPass(px,W,H,ad){
   const at=(x,y)=>{const i=(y*W+x)*4;return [px[i],px[i+1],px[i+2]]};
-  const isBr=(r,g,b)=>r>190&&g>60&&g<150&&b>45&&b<130&&r-g>80;
-  const isDk=(r,g,b)=>r>105&&r<180&&g<85&&b<75&&r-g>55;
+  const isBr=(r,g,b)=>r>190&&g>60&&g<150&&b>45&&b<130&&r-g>80,isDk=(r,g,b)=>r>105&&r<180&&g<85&&b<75&&r-g>55;
+  let isRed=(r,g,b)=>{const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(mx!==r||d<24||d<mx*.22)return false;const h=(g-b)/d;return h<.4&&h>-.45};
+  if(ad===2){const f=isRed;isRed=(r,g,b)=>f(r,g,b)||(r>b+18&&r>g+12)}
+  const isB=ad?isRed:(r,g,b)=>isBr(r,g,b)||isDk(r,g,b);
   const rowBr=new Int32Array(H),rowDk=new Int32Array(H);
-  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const [r,g,b]=at(x,y);if(isBr(r,g,b))rowBr[y]++;else if(isDk(r,g,b))rowDk[y]++}
+  for(let y=0,i=0;y<H;y++)for(let x=0;x<W;x++,i+=4){const r=px[i],g=px[i+1],b=px[i+2];if(ad){if(isRed(r,g,b))rowBr[y]++}else if(isBr(r,g,b))rowBr[y]++;else if(isDk(r,g,b))rowDk[y]++}
   let rmax=0;for(let y=0;y<H;y++)rmax=Math.max(rmax,rowBr[y]+rowDk[y]);
   const thr=Math.max(W*.2,rmax*.6),on=y=>rowBr[y]+rowDk[y]>thr;
   const bands=[];
   for(let y=0;y<H;y++){if(!on(y))continue;const s=y;while(y<H&&(on(y)||(y+3<H&&(on(y+1)||on(y+2)||on(y+3)))))y++;bands.push({s,e:y})}
-  if(!bands.length)return [];
+  if(!bands.length)return {rows:[],nb:null};
   const hs=bands.map(b=>b.e-b.s).sort((a,b)=>a-b),hm=hs[hs.length>>1];
-  const out=[];
+  const out=[],info=[],wl=[];let vHi=0;
   for(const b of bands){
     const h=b.e-b.s;if(h<hm*.6)continue;
-    let br=0,dk=0;for(let y=b.s;y<b.e;y++){br+=rowBr[y];dk+=rowDk[y]}
     const mid=(b.s+b.e)>>1;let l=W,r=-1;
-    for(let x=0;x<W;x++){const [R,G,B]=at(x,mid);if(isBr(R,G,B)||isDk(R,G,B)){if(x<l)l=x;r=x}}
+    for(let x=0;x<W;x++){const [R,G,B]=at(x,mid);if(isB(R,G,B)){if(x<l)l=x;r=x}}
     if(r<0)continue;
-    let status='none';
-    if(br>dk){
-      const x0=Math.max(0,Math.round(r-1.4*h)),y0=b.s+Math.round(.15*h),y1=b.e-Math.round(.15*h);let wh=0,gr=0,n=0;
-      for(let y=y0;y<y1;y++)for(let x=x0;x<=r;x++){const [R,G,B]=at(x,y),mx=Math.max(R,G,B),mn=Math.min(R,G,B);n++;if(mn>215)wh++;else if(mx<110&&mx>35&&mx-mn<25)gr++}
-      status=wh/n>.02&&wh>gr*.8?'caught':gr/n>.06?'seen':'unknown';
-    }
-    out.push({status,num:dxReadNum(at,W,H,b.s,l,r,hm)});
+    if(!ad){
+      let br=0,dk=0;for(let y=b.s;y<b.e;y++){br+=rowBr[y];dk+=rowDk[y]}
+      let status='none';
+      if(br>dk){
+        const x0=Math.max(0,Math.round(r-1.4*h)),y0=b.s+Math.round(.15*h),y1=b.e-Math.round(.15*h);let wh=0,gr=0,n=0;
+        for(let y=y0;y<y1;y++)for(let x=x0;x<=r;x++){const [R,G,B]=at(x,y),mx=Math.max(R,G,B),mn=Math.min(R,G,B);n++;if(mn>215)wh++;else if(mx<110&&mx>35&&mx-mn<25)gr++}
+        status=wh/n>.02&&wh>gr*.8?'caught':gr/n>.06?'seen':'unknown';
+      }
+      out.push({status,num:dxReadNum(at,W,H,b.s,l,r,hm,0)});continue}
+    // 帯の地の色（名前より右・ボールより左の、赤い画素の中央値）
+    const y0=b.s+Math.round(.2*h),y1=b.e-Math.round(.2*h),xa=Math.round(l+.45*(r-l)),xb=Math.round(r-1.7*h),RR=[],GG=[],BB=[];
+    for(let y=y0;y<y1;y+=2)for(let x=xa;x<xb;x+=2){const [R,G,B]=at(x,y);if(isRed(R,G,B)){RR.push(R);GG.push(G);BB.push(B)}}
+    if(RR.length<10)continue;
+    wl.push(r-l);
+    const md=a=>{a.sort((p,q)=>p-q);return a[a.length>>1]},rR=md(RR),rG=md(GG),rB=md(BB),refM=(rR+rG+rB)/3,refC=rR-Math.min(rG,rB);
+    const x0=Math.max(0,Math.round(r-1.4*h));let wh=0,gr=0,n=0;
+    for(let y=y0-Math.round(.05*h);y<y1+Math.round(.05*h);y++)for(let x=x0;x<=r;x++){const [R,G,B]=at(x,y),m=(R+G+B)/3,c=R-Math.min(G,B);n++;
+      if(c<refC*.5){if(m>refM+20)wh++;else if(m<refM-25)gr++}}
+    vHi=Math.max(vHi,rR);
+    info.push({wd:r-l,icon:wh/n>.03&&wh>gr*.5?'caught':gr/n>.06?'seen':'',refM,top:b.s,l,r});
   }
-  return out;
+  if(ad){
+    const ib=info.filter(x=>x.icon).map(x=>x.refM).sort((p,q)=>p-q),ref=ib.length?ib[ib.length>>1]:Math.max(...info.map(x=>x.refM));
+    const ws=wl.sort((p,q)=>p-q),wm=ws[ws.length>>1];
+    for(const x of info)if(Math.abs(x.wd-wm)<wm*.12)out.push({status:x.icon||(x.refM<ref-30?'none':'unknown'),num:dxReadNum(at,W,H,x.top,x.l,x.r,hm,vHi)});
+  }
+  return {rows:out,nb:dxLocalNumbers(out)};
 }
-function dxReadNum(at,W,H,top,l,r,h){
+/* カメラ写真：画面（青い背景）の四隅を見つけて台形を直し、さらに少しの傾きを直した画像を作る */
+function dxLrQuad(px,W,H){
+  const s=Math.max(1,Math.round(W/400)),w=Math.floor(W/s),h=Math.floor(H/s),m=new Uint8Array(w*h);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*s*W+x*s)*4,r=px[i],g=px[i+1],b=px[i+2];m[y*w+x]=b>r+25&&b>g+8?1:0}
+  // いちばん大きい青いかたまり＝画面
+  const lab=new Int32Array(w*h);let best=0,bn=0,id=0;
+  for(let i=0;i<m.length;i++){if(!m[i]||lab[i])continue;id++;let n=0;const st=[i];lab[i]=id;
+    while(st.length){const j=st.pop();n++;const x=j%w;for(const k of [x>0?j-1:-1,x<w-1?j+1:-1,j-w,j+w]){if(k<0||k>=m.length||lab[k]||!m[k])continue;lab[k]=id;st.push(k)}}
+    if(n>bn){bn=n;best=id}}
+  if(bn<w*h*.08)return null;
+  let c=[[0,0,1e9],[0,0,-1e9],[0,0,-1e9],[0,0,1e9]];// 左上(x+y最小)・右上(x-y最大)・右下(x+y最大)・左下(x-y最小)
+  for(let i=0;i<lab.length;i++){if(lab[i]!==best)continue;const x=i%w,y=(i/w)|0,a=x+y,d=x-y;
+    if(a<c[0][2])c[0]=[x,y,a];if(d>c[1][2])c[1]=[x,y,d];if(a>c[2][2])c[2]=[x,y,a];if(d<c[3][2])c[3]=[x,y,d]}
+  const Q=c.map(p=>[(p[0]+.5)*s,(p[1]+.5)*s]),dist=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1]);
+  const qw=(dist(Q[0],Q[1])+dist(Q[3],Q[2]))/2,qh=(dist(Q[0],Q[3])+dist(Q[1],Q[2]))/2;if(qw<80||qh<60)return null;
+  let ar=0;for(let k=0;k<4;k++){const p=Q[k],q=Q[(k+1)%4];ar+=p[0]*q[1]-q[0]*p[1]}
+  return {Q,qw,qh,cover:Math.abs(ar)/2/(W*H)};
+}
+function dxLrWarp(px,W,H,{Q,qw,qh}){
+  const sc=Math.min(1,1000/qw),OW=Math.round(qw*sc),OH=Math.round(qh*sc);
+  const Hm=dxHomog([[0,0],[OW,0],[OW,OH],[0,OH]],Q);// 出力→元の画像
+  const map=(u,v)=>{const d=Hm[6]*u+Hm[7]*v+1;return [(Hm[0]*u+Hm[1]*v+Hm[2])/d,(Hm[3]*u+Hm[4]*v+Hm[5])/d]};
+  // 傾き：赤い帯の行ごとの数のばらつきがいちばん大きくなる角度
+  const pts=[];for(let v=0;v<OH;v+=3)for(let u=0;u<OW;u+=3){const [x,y]=map(u,v),xi=x|0,yi=y|0;if(xi<0||yi<0||xi>=W||yi>=H)continue;const i=(yi*W+xi)*4,r=px[i],g=px[i+1],b=px[i+2];
+    if(r>g+40&&r>b+40)pts.push(u-OW/2,v-OH/2)}
+  let ang=0;
+  if(pts.length>200){let bs=-1;const hist=new Float64Array(OH+200);
+    const score=a=>{const sn=Math.sin(a),cs=Math.cos(a);hist.fill(0);for(let k=0;k<pts.length;k+=2){const yy=Math.round((-pts[k]*sn+pts[k+1]*cs+OH/2+100)/3);if(yy>=0&&yy<hist.length)hist[yy]++}
+      let s1=0,s2=0;for(let k=0;k<hist.length;k++){s1+=hist[k];s2+=hist[k]*hist[k]}return s2};
+    for(let d=-8;d<=8;d+=.5){const sv=score(d*Math.PI/180);if(sv>bs){bs=sv;ang=d}}
+    const a0=ang;for(let d=a0-.4;d<=a0+.41;d+=.1){const sv=score(d*Math.PI/180);if(sv>bs){bs=sv;ang=d}}}
+  const sn=Math.sin(ang*Math.PI/180),cs=Math.cos(ang*Math.PI/180);
+  const out=new Uint8ClampedArray(OW*OH*4);
+  for(let v=0;v<OH;v++)for(let u=0;u<OW;u++){
+    const du=u-OW/2,dv=v-OH/2,uu=du*cs-dv*sn+OW/2,vv=du*sn+dv*cs+OH/2;
+    const [x,y]=map(uu,vv),o=(v*OW+u)*4;
+    if(x<0||y<0||x>=W-1||y>=H-1){out[o]=38;out[o+1]=72;out[o+2]=96;out[o+3]=255;continue}
+    const x0=x|0,y0=y|0,fx=x-x0,fy=y-y0,i=(y0*W+x0)*4,j=i+W*4;
+    for(let ch=0;ch<3;ch++)out[o+ch]=(px[i+ch]*(1-fx)+px[i+4+ch]*fx)*(1-fy)+(px[j+ch]*(1-fx)+px[j+4+ch]*fx)*fy;
+    out[o+3]=255}
+  return {px:out,W:OW,H:OH,ang};
+}
+// 4点→4点の射影変換（3x3、最後は1）
+function dxHomog(src,dst){
+  const A=[],B=[];for(let i=0;i<4;i++){const [x,y]=src[i],[X,Y]=dst[i];A.push([x,y,1,0,0,0,-x*X,-y*X]);B.push(X);A.push([0,0,0,x,y,1,-x*Y,-y*Y]);B.push(Y)}
+  for(let c=0;c<8;c++){let p=c;for(let r=c+1;r<8;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[B[c],B[p]]=[B[p],B[c]];
+    for(let r=0;r<8;r++){if(r===c)continue;const f=A[r][c]/A[c][c];for(let k=c;k<8;k++)A[r][k]-=f*A[c][k];B[r]-=f*B[c]}}
+  return B.map((b,i)=>b/A[i][i]);
+}
+function dxLrScore(p){const nb=p.nb;if(!nb||!p.rows.length)return -1;const unk=p.rows.filter(r=>r.status==='unknown').length;
+  return (nb.agree>=Math.min(2,nb.read)?100:0)+nb.agree*10-(nb.read-nb.agree)*8-unk*3+Math.min(6,p.rows.length)*2}
+/* 写真の向き：iPhone などの写真は、画素は横向きのまま「向き」(EXIF) だけが書かれていることがある。
+   ブラウザーが自分で向きを直すかを小さな見本の画像で1回だけ調べ、直さないブラウザーのときだけ、ここで回す（二重に回さない） */
+const DX_ORI_TEST='/9j/4AAQSkZJRgABAQAAAQABAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAABAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDFoooryz7w/9k=';let dxOriAuto=null;
+async function dxOriApplied(){
+  if(dxOriAuto===null){try{const t=atob(DX_ORI_TEST),u=new Uint8Array(t.length);for(let i=0;i<t.length;i++)u[i]=t.charCodeAt(i);
+    const bm=await createImageBitmap(new Blob([u],{type:'image/jpeg'}));dxOriAuto=bm.height>bm.width}catch(e){dxOriAuto=true}}
+  return dxOriAuto}
+function dxExifOri(v){
+  if(v.byteLength<4||v.getUint16(0)!==0xFFD8)return 1;
+  for(let p=2;p+4<=v.byteLength;){const m=v.getUint16(p),n=v.getUint16(p+2);if((m&0xFF00)!==0xFF00||m===0xFFDA)break;
+    if(m===0xFFE1&&p+10<=v.byteLength&&v.getUint32(p+4)===0x45786966){const t=p+10,le=v.getUint16(t)===0x4949,g16=o=>v.getUint16(o,le),g32=o=>v.getUint32(o,le);
+      const ifd=t+g32(t+4),k=g16(ifd);for(let i=0;i<k;i++){const e=ifd+2+i*12;if(e+12>v.byteLength)break;if(g16(e)===0x0112){const o=g16(e+8);return o>=1&&o<=8?o:1}}return 1}
+    p+=2+n}
+  return 1}
+// 正しい向きでの幅・高さと、描くための情報
+async function dxDecode(file){
+  const bm=await createImageBitmap(file);let o=1;
+  try{if(!(await dxOriApplied()))o=dxExifOri(new DataView(await file.slice(0,262144).arrayBuffer()))}catch(e){o=1}
+  const sw=o>=5;return {bm,o,w:sw?bm.height:bm.width,h:sw?bm.width:bm.height}}
+function dxDrawUp(cx,d,x,y,W,H){
+  const M={1:[1,0,0,1,0,0],2:[-1,0,0,1,W,0],3:[-1,0,0,-1,W,H],4:[1,0,0,-1,0,H],5:[0,1,1,0,0,0],6:[0,1,-1,0,W,0],7:[0,-1,-1,0,W,H],8:[0,-1,1,0,0,H]}[d.o]||[1,0,0,1,0,0];
+  cx.save();cx.translate(x,y);cx.transform(...M);cx.drawImage(d.bm,0,0,d.o>=5?H:W,d.o>=5?W:H);cx.restore()}
+// 画素を90度回す（cw=true で時計回り）
+function dxRot90(px,W,H,cw){const o=new Uint8ClampedArray(px.length);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=(y*W+x)*4,nx=cw?H-1-y:y,ny=cw?x:W-1-x,j=(ny*H+nx)*4;o[j]=px[i];o[j+1]=px[i+1];o[j+2]=px[i+2];o[j+3]=255}
+  return o}
+async function dxLocalRead(file){
+  const d=await dxDecode(file);
+  const sc=Math.min(1,1400/d.w),W=Math.round(d.w*sc),H=Math.round(d.h*sc);
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d');dxDrawUp(cx,d,0,0,W,H);
+  const px=cx.getImageData(0,0,W,H).data;
+  // 画面が横倒しに写っていたら（縦に持って撮った写真など）、90度回して読み直す
+  let r=dxLrRun(px,W,H);
+  if(!(r.nb&&r.nb.agree>=2)){for(const cw of [true,false]){const t=dxLrRun(dxRot90(px,W,H,cw),H,W);if(dxLrScore(t)>dxLrScore(r))r=t}}
+  return r.rows;
+}
+function dxLrRun(px,W,H){
+  // まずは今までどおり（スクショはこれで読める）。番号がそろって読めたら、それで決まり
+  const q=dxLrQuad(px,W,H);
+  // 画面のまわりに机などが写っている写真：画面を切り出して台形と傾きを直した画像だけを読む
+  if(q&&q.cover<.8){const R=dxLrWarp(px,W,H,q);return dxLrBest([dxLrPass(R.px,R.W,R.H,true),dxLrPass(R.px,R.W,R.H,2),dxLrPass(R.px,R.W,R.H,false)])}
+  const A=dxLrPass(px,W,H,false);
+  const ok=p=>p.nb&&p.rows.length>=5&&p.nb.agree>=3&&p.nb.agree===p.nb.read&&!p.rows.some(r=>r.status==='unknown');
+  const B=dxLrPass(px,W,H,true);
+  // 2つの読み方で番号がそろったら、それで決まり。印の見分けが食い違う帯は、画像ごとに色を測った方（B）を使う
+  const same=(p,q)=>ok(p)&&ok(q)&&p.nb.base===q.nb.base&&p.rows.length===q.rows.length;
+  if(same(A,B)&&A.rows.every((r,i)=>r.status===B.rows[i].status))return A;
+  const R=q?dxLrWarp(px,W,H,q):null,C=R?dxLrPass(R.px,R.W,R.H,true):{rows:[],nb:null};
+  // 印の見分けが食い違ったら、画面を切り出して直した画像でも読み、多い方に決める（決まらなければ「不明」）
+  if(same(A,B)){const rows=A.rows.map((r,i)=>{const b=B.rows[i].status,c=same(A,C)?C.rows[i].status:null;
+    return {num:r.num,status:r.status===b?b:c===r.status||c===b?c:'unknown'}});return {rows,nb:dxLocalNumbers(rows)}}
+  const cand=[A,B,C];if(R)cand.push(dxLrPass(R.px,R.W,R.H,2),dxLrPass(R.px,R.W,R.H,false));
+  return dxLrBest(cand);
+}
+// 番号が2つ以上そろわないときは、読めなかったことにする（まちがった番号で登録しないため）
+function dxLrBest(cand){let b=cand[0];for(const c of cand)if(dxLrScore(c)>dxLrScore(b))b=c;return b.nb&&b.nb.agree>=2?b:{rows:[],nb:null}}
+function dxReadNum(at,W,H,top,l,r,h,vHi){
   const y0=Math.max(0,top-Math.round(.55*h)),y1=Math.min(H,top+2),x0=l,x1=Math.min(W,l+Math.round(.6*(r-l)));
   const w=x1-x0,hh=y1-y0;if(w<=0||hh<=0)return null;
   const m=new Uint8Array(w*hh);
-  for(let y=0;y<hh;y++)for(let x=0;x<w;x++){const [R,G,B]=at(x0+x,y0+y),mx=Math.max(R,G,B),mn=Math.min(R,G,B);m[y*w+x]=mn>125&&mx-mn<45?1:0}
+  let T=0;
+  if(vHi){// カメラ写真：タブの色と数字の白の境目を、その場で決める（大津の方法）
+    const hist=new Float64Array(256);let n=0;
+    for(let y=0;y<Math.max(1,hh-4);y++)for(let x=0;x<w;x++){const [R,G,B]=at(x0+x,y0+y);if(R>=B-5){hist[Math.min(R,G,B)]++;n++}}
+    if(n<20)return null;
+    let sum=0;for(let k=0;k<256;k++)sum+=k*hist[k];let sb=0,wb=0,bv=-1;
+    for(let k=0;k<255;k++){wb+=hist[k];if(!wb)continue;const wf=n-wb;if(!wf)break;sb+=k*hist[k];const mb=sb/wb,mf=(sum-sb)/wf,v=wb*wf*(mb-mf)*(mb-mf);if(v>bv){bv=v;T=k}}
+  }
+  for(let y=0;y<hh;y++)for(let x=0;x<w;x++){const [R,G,B]=at(x0+x,y0+y),mx=Math.max(R,G,B),mn=Math.min(R,G,B);m[y*w+x]=(vHi?mn>T&&mx-mn<mx*.3:mn>125&&mx-mn<45)?1:0}
   const seen=new Uint8Array(w*hh),comps=[];
   for(let i=0;i<m.length;i++){if(!m[i]||seen[i])continue;
     let minx=w,maxx=0,miny=hh,maxy=0;const st=[i];seen[i]=1;
@@ -4602,7 +4734,10 @@ function dxReadNum(at,W,H,top,l,r,h){
   if(!comps.length)return null;
   comps.sort((a,b)=>a.x-b.x);
   // いちばん大きい数字と同じ高さの並びだけを使う
-  const ch=Math.max(...comps.map(c=>c.h)),digs=comps.filter(c=>c.h>ch*.75);
+  const ch=Math.max(...comps.map(c=>c.h));let digs=comps.filter(c=>c.h>ch*.75);
+  // カメラ写真：ぼけてくっついた数字は、幅で分ける
+  if(vHi)digs=digs.flatMap(c=>{if(c.w<=c.h*.95)return [c];const k=Math.min(3,Math.max(2,Math.round(c.w/(c.h*.68)))),cw=c.w/k;
+    return Array.from({length:k},(_,i)=>({x:c.x+Math.round(i*cw),y:c.y,w:Math.max(1,Math.round(cw)),h:c.h}))});
   let s='';
   for(const c of digs){
     if(c.w/c.h<.5){s+='1';continue}
@@ -4613,7 +4748,8 @@ function dxReadNum(at,W,H,top,l,r,h){
     let best=null,bd=1e9;for(const [d,t] of Object.entries(DX_DIGITS)){let dd=0;for(let k=0;k<t.length;k++)dd+=Math.abs(t[k]-f[k]);if(dd<bd){bd=dd;best=d}}
     s+=best;
   }
-  return s.length>=2&&s.length<=4?+s:null;
+  // SM・USUM の図鑑番号は、いつも3けたで表示される（001〜807）
+  return (vHi?s.length===3&&+s>=1&&+s<=807:s.length>=2&&s.length<=4)?+s:null;
 }
 // 帯は番号順に並んでいるので、読めた番号から全体の番号を決める（読み間違いに強くする）
 function dxLocalNumbers(rows){
@@ -4699,9 +4835,9 @@ const GM_K='ner-gemini-key',GM_OKK='ner-gemini-ok',GM_MODEL='gemini-3.5-flash-li
 function gmKey(){try{return localStorage.getItem(GM_K)||''}catch(e){return ''}}
 function gmOkd(){try{return localStorage.getItem(GM_OKK)==='1'}catch(e){return false}}
 async function gmShrink(file){
-  const bmp=await createImageBitmap(file),sc=Math.min(1,GM_MAX/Math.max(bmp.width,bmp.height));
-  const cv=document.createElement('canvas');cv.width=Math.round(bmp.width*sc);cv.height=Math.round(bmp.height*sc);
-  cv.getContext('2d').drawImage(bmp,0,0,cv.width,cv.height);
+  const d=await dxDecode(file),sc=Math.min(1,GM_MAX/Math.max(d.w,d.h));
+  const cv=document.createElement('canvas');cv.width=Math.round(d.w*sc);cv.height=Math.round(d.h*sc);
+  dxDrawUp(cv.getContext('2d'),d,0,0,cv.width,cv.height);
   return cv.toDataURL('image/jpeg',.85).split(',')[1];
 }
 function gmErr(code,j){
@@ -4731,15 +4867,15 @@ function gmCacheGet(k){try{const c=JSON.parse(localStorage.getItem('ner-gemini-c
 function gmCachePut(k,v){try{const c=JSON.parse(localStorage.getItem('ner-gemini-cache')||'{}');c[k]={t:Date.now(),v};
   const ks=Object.keys(c).sort((a,b)=>c[b].t-c[a].t);ks.slice(60).forEach(x=>delete c[x]);localStorage.setItem('ner-gemini-cache',JSON.stringify(c))}catch(e){}}
 async function gmComposite(files){
-  const bm=[];for(const f of files)bm.push(await createImageBitmap(f));
+  const bm=[];for(const f of files)bm.push(await dxDecode(f));
   const n=bm.length,cols=n===1?1:2,rows=Math.ceil(n/cols),T=n===1?GM_MAX:GM_TILE,L=Math.round(T*.07);
-  const sz=bm.map(b=>{const sc=Math.min(1,T/Math.max(b.width,b.height));return [Math.round(b.width*sc),Math.round(b.height*sc)]});
+  const sz=bm.map(b=>{const sc=Math.min(1,T/Math.max(b.w,b.h));return [Math.round(b.w*sc),Math.round(b.h*sc)]});
   const cw=Math.max(...sz.map(x=>x[0])),ch=Math.max(...sz.map(x=>x[1])),pad=16;
   const cv=document.createElement('canvas');cv.width=cols*cw+(cols-1)*pad;cv.height=rows*(L+ch)+(rows-1)*pad;
   const cx=cv.getContext('2d');cx.fillStyle='#ffffff';cx.fillRect(0,0,cv.width,cv.height);
   bm.forEach((b,i)=>{const x=(i%cols)*(cw+pad),y=Math.floor(i/cols)*(L+ch+pad);
     cx.fillStyle='#111111';cx.fillRect(x,y,cw,L);cx.fillStyle='#ffffff';cx.font=`bold ${Math.round(L*.78)}px sans-serif`;cx.textBaseline='middle';
-    cx.fillText(`画像 ${i+1}`,x+Math.round(L*.3),y+L/2);cx.drawImage(b,x,y+L,sz[i][0],sz[i][1])});
+    cx.fillText(`画像 ${i+1}`,x+Math.round(L*.3),y+L/2);dxDrawUp(cx,b,x,y+L,sz[i][0],sz[i][1])});
   return {data:cv.toDataURL('image/jpeg',.85).split(',')[1],w:cv.width,h:cv.height};
 }
 function gm429(j){
