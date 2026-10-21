@@ -1483,6 +1483,13 @@ body:not(.app) .obsapp{display:none!important}
 .shx-sheet .obsrow{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:700}
 .shx-sheet .obsrow .shl{flex:1}
 .shx-sheet .obshow{margin:0}
+/* 厳選の条件シート：方法を切り替えても位置が動かないよう、シートの高さを固定し、下の設定部分だけを中でスクロールする */
+#shSetSheet .sheet-in{height:92%}
+#shSetSheet .shx-meth{grid-auto-rows:40px}
+#shSetSheet .shx-meth button{height:40px;min-height:0;overflow:hidden;padding:2px 6px;line-height:1.2}
+#shSetSheet .shx-optscroll{flex:1 1 0;min-height:110px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px}
+.shx-optscroll>*{flex-shrink:0}
+#shSetSheet .shx-opt{height:50px;min-height:0;padding:0}
 </style>
 
 <header class="appbar"><div class="appbar-in">
@@ -1849,8 +1856,8 @@ body:not(.app) .obsapp{display:none!important}
   <div class="sh-head"><h3 id="shSetT">厳選の条件</h3><button class="btn" type="button" data-shclose="1">閉じる</button></div>
   <section><h2>作品（世代）</h2><div class="shx-gens" id="shGenBtns" role="group" aria-label="作品（世代）"></div><select id="shGen" class="gensel" hidden aria-label="色違い厳選の作品（世代）"></select></section>
   <section><h2>厳選方法</h2><div class="shx-meth" id="shSitBtns" role="group" aria-label="厳選方法"></div><select id="shSit" class="gensel" hidden aria-label="厳選方法"></select></section>
-  <div id="shOpts" class="shx-opts"></div>
-  <p id="shNote" class="shx-note"></p>
+  <div class="shx-optscroll"><div id="shOpts" class="shx-opts"></div>
+  <p id="shNote" class="shx-note"></p></div>
   <button class="shx-ok" type="button" data-shclose="1">この条件で数える</button>
 </div></div>
 <div id="shObsSheet" class="sheet shx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shObsT"><div class="sheet-in">
