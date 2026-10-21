@@ -332,6 +332,25 @@ body:has(#monCard:not([hidden])) .tabbar{z-index:31}
 .tab[aria-current="page"] .ni{color:#fff;background:var(--c)}
 .tab[aria-current="page"]::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--c)}
 .tab:active .ni{transform:scale(.92)}
+/* ツールのアイコン（案B：うすい色のチップに線の絵。色違いだけ塗り） */
+:root{--nimix:82%}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--nimix:52%}}
+:root[data-theme="dark"]{--nimix:52%}
+.ni{--nibg:color-mix(in srgb,var(--c,var(--b1)) 16%,var(--surface));--hb:var(--nibg);color:color-mix(in srgb,var(--c,var(--b1)) var(--nimix),var(--ink));background:var(--nibg);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c,var(--b1)) 28%,transparent)}
+.ni svg{display:block;width:var(--gs,20px);height:var(--gs,20px);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.ni svg .f{fill:currentColor;fill-opacity:.2}
+.ni svg .ff{fill:currentColor}
+.ni svg .hole{fill:var(--hb)}
+.ni svg .ar{fill:currentColor;stroke-width:1.2}
+.ni svg .o{stroke-width:1.6}
+.ni svg .iw{stroke-width:1.4}
+.ni svg .sp{stroke-width:1;opacity:.5}
+.tab .ni{--gs:18px;color:color-mix(in srgb,var(--c) var(--nimix),var(--ink));background:var(--nibg)}
+.tab[aria-current="page"] .ni{--nibg:color-mix(in srgb,var(--c) 30%,var(--surface));color:color-mix(in srgb,var(--c) var(--nimix),var(--ink));background:var(--nibg);box-shadow:inset 0 0 0 1.5px var(--c)}
+.tab[aria-current="page"] .ni svg{stroke-width:2.3}
+.tab[aria-current="page"] .ni svg .f{fill-opacity:.4}
+.setrow .ni{--gs:17px}.tslot .ni{--gs:18px}.tsopt .ni{--gs:15px}.stx-t .ni{--gs:15px}
+.onb-art .ni{--gs:32px}.onb-art.all .ni{--gs:24px}.onb-bar .ni{--gs:16px}.onb-it .ni{--gs:20px}
 .navtools{display:contents}
 .setlist{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .setrow{display:flex;align-items:center;gap:10px;height:52px;padding:0 8px 0 10px}
@@ -1213,12 +1232,12 @@ html.rot body.onbo #rotScroll{overflow:hidden}
 .onb-tr{display:flex;height:100%;transition:transform .3s ease}
 .onb-s{flex:0 0 100%;box-sizing:border-box;height:100%;padding:18px 18px 0;display:flex;flex-direction:column;gap:12px;overflow:hidden}
 .onb-art{flex:none;height:128px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:14px;background:color-mix(in srgb,var(--c,var(--b1)) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--c,var(--b1)) 28%,var(--line))}
-.onb-art .ni{width:54px;height:54px;border-radius:16px;font-size:19px;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 60%,#000)}
+.onb-art .ni{width:54px;height:54px;border-radius:16px;font-size:19px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 28%,transparent),0 4px 0 color-mix(in srgb,var(--c) 30%,transparent)}
 .onb-art.all{display:grid;grid-template-columns:repeat(5,40px);gap:10px;align-content:center;justify-content:center}
-.onb-art.all .ni{width:40px;height:40px;border-radius:12px;font-size:14px;box-shadow:0 3px 0 color-mix(in srgb,var(--c) 60%,#000)}
+.onb-art.all .ni{width:40px;height:40px;border-radius:12px;font-size:14px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 28%,transparent),0 3px 0 color-mix(in srgb,var(--c) 30%,transparent)}
 .onb-bar{width:86%;height:56px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;justify-items:center;box-shadow:0 6px 16px -8px rgb(0 0 0 / .3)}
 .onb-bar span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:700;color:var(--muted);white-space:nowrap}
-.onb-bar .ni{width:28px;height:24px;border-radius:7px;font-size:10.5px;box-shadow:none}
+.onb-bar .ni{width:28px;height:24px;border-radius:7px;font-size:10.5px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 28%,transparent)}
 .onb-s h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.3}
 .onb-s p{margin:0;font-size:14px;line-height:1.65}
 .onb-li{display:flex;flex-direction:column;gap:6px}
@@ -2215,8 +2234,8 @@ body:not(.app) .obsapp{display:none!important}
     <p class="navlabel">ツール</p>
     <div class="navtools" id="navTools"></div>
     <div class="navbottom">
-      <a class="navitem navlink" href="https://noctis1008-wq.github.io/" target="_blank" rel="noopener"><span class="ni" style="--c:var(--muted);font-size:11px">Web</span><span class="nt">開発者ポータルサイト</span><span class="navext" aria-hidden="true">↗</span></a>
-      <button class="navitem" type="button" data-view="settings"><span class="ni" style="--c:var(--muted)">設</span><span class="nt">設定</span></button>
+      <a class="navitem navlink" href="https://noctis1008-wq.github.io/" target="_blank" rel="noopener"><span class="ni" style="--c:var(--muted)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.6 5.2 3.6 8.5s-1.1 6.1-3.6 8.5c-2.5-2.4-3.6-5.2-3.6-8.5S9.5 5.9 12 3.5z"/></svg></span><span class="nt">開発者ポータルサイト</span><span class="navext" aria-hidden="true">↗</span></a>
+      <button class="navitem" type="button" data-view="settings"><span class="ni" style="--c:var(--muted)" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="f" d="M10.3 3h3.4l.5 2.4 1.6.9 2.3-.8 1.7 2.9-1.8 1.6v1.9l1.8 1.6-1.7 2.9-2.3-.8-1.6.9-.5 2.4h-3.4l-.5-2.4-1.6-.9-2.3.8-1.7-2.9 1.8-1.6v-1.9L4.2 8.4l1.7-2.9 2.3.8 1.6-.9z"/><circle cx="12" cy="12" r="2.6" class="hole"/></svg></span><span class="nt">設定</span></button>
     </div>
   </nav>
 </div>
@@ -6267,11 +6286,13 @@ const TAB_DEF=['ev','shiny','mon','iv','type'];
 
 function uiFix(a,def,n){const r=[];(Array.isArray(a)?a:[]).forEach(k=>{if(TOOL_KEYS.includes(k)&&!r.includes(k))r.push(k)});[...def,...TOOL_KEYS].forEach(k=>{if(r.length<n&&!r.includes(k))r.push(k)});return r.slice(0,n)}
 function uiNorm(){S.tabs=uiFix(S.tabs,TAB_DEF,5);S.navOrder=uiFix(S.navOrder,TOOL_KEYS,TOOL_KEYS.length)}
-const toolNi=k=>`<span class="ni" style="--c:var(${TOOL_META[k].c})" aria-hidden="true">${TOOL_META[k].ab}</span>`;
+const TOOL_IC={ev:'<path class="f" d="M5 8.5h2.5v7H5z"/><path class="f" d="M16.5 8.5H19v7h-2.5z"/><path d="M2.5 10.5v3M21.5 10.5v3M7.5 12h9"/><rect x="5" y="7" width="2.5" height="10" rx="1"/><rect x="16.5" y="7" width="2.5" height="10" rx="1"/>',shiny:'<path class="ff" d="M10 3.5c.6 3.6 2 5 5.5 5.6-3.5.6-4.9 2-5.5 5.6-.6-3.6-2-5-5.5-5.6 3.5-.6 4.9-2 5.5-5.6z"/><path class="ff" d="M17.5 13.5c.3 1.9 1.1 2.7 3 3-1.9.3-2.7 1.1-3 3-.3-1.9-1.1-2.7-3-3 1.9-.3 2.7-1.1 3-3z"/><path d="M5 18.5v2M4 19.5h2"/>',ribbon:'<path class="f" d="M9.3 12.6 7.2 21l2.5-1.4 1.4 2.2 1-7.4z"/><path class="f" d="m14.7 12.6 2.1 8.4-2.5-1.4-1.4 2.2-1-7.4z"/><circle class="f" cx="12" cy="8.6" r="5.6"/><circle cx="12" cy="8.6" r="2.2" class="hole"/>',dex:'<path class="f" d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5z"/><path d="M12 6.5c2-1.5 5-2 8.5-1.5v13.5c-3.5-.5-6.5 0-8.5 1.5z"/><path d="m14.6 12.2 1.7 1.7 2.7-3.3" class="chk"/>',pb:'<path class="f" d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9" class="in"/>',mon:'<path d="M7 4.5h11.5A1.5 1.5 0 0 1 20 6v9.5"/><rect class="f" x="4" y="7.5" width="13" height="12.5" rx="2"/><circle cx="8.6" cy="12" r="1.7" class="in"/><path d="M12 11.3h2.5M7 16.5h7.5" class="in"/>',iv:'<path class="o" d="M12 3 19.8 7.5v9L12 21l-7.8-4.5v-9z"/><path class="f iw" d="M12.0 5.1 15.7 9.9 18.0 15.4 12.0 15.4 7.1 14.8 9.3 10.5z"/><path class="sp" d="M12 12V4.5M12 12l6.5-3.75M12 12l6.5 3.75M12 12v7.5M12 12l-6.5 3.75M12 12 5.5 8.25"/>',type:'<path d="M14.53 5.05A7.4 7.4 0 0 1 19.33 13.03M16.76 17.67A7.4 7.4 0 0 1 7.44 17.83M4.71 13.28A7.4 7.4 0 0 1 9.23 5.14"/><path class="ar" d="M18.34 15.81L22.15 14.13L18.04 11.66zM5.53 15.59L5.08 19.72L9.28 17.40zM12.13 4.60L8.77 2.14L8.69 6.94z"/>',spd:'<circle class="f" cx="13.5" cy="13.5" r="7"/><path d="M11.5 3.5h4M13.5 3.5v3"/><path d="M13.5 10v3.5l2.3 1.6" class="in"/><path d="M2 10.5h3M1.5 14h3M2.5 17.5h3"/>',settings:'<path class="f" d="M10.3 3h3.4l.5 2.4 1.6.9 2.3-.8 1.7 2.9-1.8 1.6v1.9l1.8 1.6-1.7 2.9-2.3-.8-1.6.9-.5 2.4h-3.4l-.5-2.4-1.6-.9-2.3.8-1.7-2.9 1.8-1.6v-1.9L4.2 8.4l1.7-2.9 2.3.8 1.6-.9z"/><circle cx="12" cy="12" r="2.6" class="hole"/>',web:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.6 5.2 3.6 8.5s-1.1 6.1-3.6 8.5c-2.5-2.4-3.6-5.2-3.6-8.5S9.5 5.9 12 3.5z"/>'};
+const niSvg=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${TOOL_IC[k]||''}</svg>`;
+const toolNi=k=>`<span class="ni" style="--c:var(${TOOL_META[k].c})" aria-hidden="true">${niSvg(k)}</span>`;
 const UP_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',DN_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 function renderNav(){
   const box=document.getElementById('navTools');
-  box.innerHTML=S.navOrder.map((k,i)=>`<button class="navitem${i===S.navOrder.length-1?' navlast':''}" type="button" data-view="${k}"><span class="ni" style="--c:var(${TOOL_META[k].c})">${TOOL_META[k].ab}</span><span class="nt">${VIEWS[k].t}</span></button>`).join('');
+  box.innerHTML=S.navOrder.map((k,i)=>`<button class="navitem${i===S.navOrder.length-1?' navlast':''}" type="button" data-view="${k}">${toolNi(k)}<span class="nt">${VIEWS[k].t}</span></button>`).join('');
 }
 function renderTabs(){
   const pv=document.getElementById('stxPrev');if(pv)pv.innerHTML=S.tabs.map(k=>`<span class="stx-t">${toolNi(k)}<small>${TOOL_META[k].s}</small></span>`).join('');
