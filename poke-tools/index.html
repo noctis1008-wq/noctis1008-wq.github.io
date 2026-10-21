@@ -849,6 +849,20 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxshot .btn{display:flex;align-items:center;justify-content:center;gap:6px;flex:1 1 auto;white-space:nowrap;padding:0 12px;min-height:54px;font-size:15px;border-radius:12px}
 .dxshot .btn:not(.primary){border-width:1.5px;border-color:var(--ink)}
 .dxshotbtns{display:flex;flex-wrap:wrap;gap:8px}
+#stGmSheet{z-index:31}
+.gm-lead{margin:0;font-size:13px;line-height:1.7}
+.gm-steps{margin:8px 0 0;padding-left:20px;font-size:13px;line-height:1.8}
+.gm-link{font:inherit;font-weight:700;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
+.gm-field{display:flex;gap:6px;margin-top:10px}
+.gm-field input{flex:1;min-width:0;height:44px;font:inherit;font-size:16px;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:0 12px}
+.gm-field .btn{flex:none;height:44px;padding:0 14px}
+.gm-state{margin:6px 0 0;min-height:1.5em}
+.gm-notes{margin:8px 0 0;padding-left:18px;font-size:12px;line-height:1.65;color:var(--muted)}
+.gm-age{margin:0 0 10px;font-size:13px;line-height:1.6;border-left:3px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface));border-radius:0 10px 10px 0;padding:9px 12px;color:var(--ink)}
+.gm-chk{display:flex;align-items:center;gap:10px;min-height:44px;margin-top:8px;padding:0 12px;font-size:14px;font-weight:700;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.gm-chk input{flex:none;width:20px;height:20px;margin:0;accent-color:var(--accent)}
+.gm-btns .btn:disabled{opacity:.45}
+.gm-btns{display:flex;gap:8px;margin-top:10px}.gm-btns .btn{flex:1;min-height:48px}
 #dxShotHint b{color:var(--ink)}
 .dxtip{margin:0;padding:8px 10px;border-radius:10px;background:var(--sunken);color:var(--ink)}
 .dxshoth{margin:4px 0 0;font-size:12px;letter-spacing:.12em;color:var(--muted);font-weight:700}
@@ -2544,6 +2558,12 @@ body:not(.app) .obsapp{display:none!important}
     </div>
   </section>
   <section>
+    <h2 class="stx-gl">AIで読み取る</h2>
+    <div class="stx-list">
+      <button id="gmRow" class="stx-row" type="button" data-stopen="gm" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--dx)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span><span class="stx-tx"><span>Gemini のキー</span><small id="gmSub">未設定</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+    </div>
+  </section>
+  <section>
     <h2 class="stx-gl">このアプリについて</h2>
     <div class="stx-list">
       <button id="onbBtn" class="stx-row" type="button" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--b1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h7a3 3 0 0 1 2 1 3 3 0 0 1 2-1h7v14h-7a3 3 0 0 0-2 1 3 3 0 0 0-2-1H3z"/><path d="M12 6v14"/></svg></span><span class="stx-tx"><span>使いかたの案内</span><small>ツールの紹介を、もう一度見る</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
@@ -2558,6 +2578,15 @@ body:not(.app) .obsapp{display:none!important}
   </div></div>
   <div id="stNavSheet" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-label="メニューの並び順"><div class="sheet-in"><div class="sh-head"><h3>メニューの並び順</h3><span class="stx-hb"><button id="navRst" class="btn rstbtn" type="button">元に戻す</button><button class="btn" type="button" data-stclose="1">閉じる</button></span></div>
     <div class="setlist" id="navSet"></div>
+  </div></div>
+  <div id="stGmSheet" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="stGmT"><div class="sheet-in"><div class="sh-head"><h3 id="stGmT">Gemini のキー</h3><button class="btn" type="button" data-stclose="1">閉じる</button></div>
+    <p class="gm-age"><b>Gemini API は18歳以上の方だけが使えます</b>（Google の利用規約）。</p>
+    <p class="gm-lead">自分の Google の Gemini API キーを入れると、図鑑の「スクショから登録」で、カメラで撮った写真も AI（Gemini）で読み取れます。</p>
+    <ol class="gm-steps"><li><button type="button" class="gm-link" id="gmStudio">Google AI Studio のキーのページ</button>を開き、Google アカウントでログインします。</li><li>キーを作って、コピーします。</li><li>「18歳以上です」にチェックを入れ、下に貼り付けて「保存」を押します。</li></ol>
+    <label class="gm-chk"><input type="checkbox" id="gmAge"><span>18歳以上です</span></label>
+    <div class="gm-field"><input id="gmKey" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="キーを貼り付け" aria-label="Gemini の API キー"><button id="gmSave" class="btn primary" type="button" disabled>保存</button><button id="gmDel" class="btn" type="button">削除</button></div>
+    <p class="note gm-state" id="gmState" role="status"></p>
+    <ul class="note gm-notes"><li>キーはこの端末の中だけに保存します。バックアップの文字列には入りません。運営者には送られません。</li><li>使った分は、あなたの Google アカウント（キーを作ったプロジェクト）の無料枠から使われます。無料枠の回数には上限があり、Google AI Studio で確かめられます。請求先を設定したプロジェクトのキーだと、料金がかかります。</li><li>無料枠で送った画像と答えは、Google の製品の改善に使われ、人が見ることがあります。</li></ul>
   </div></div>
   <div id="stBkSheet" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-label="バックアップ"><div class="sheet-in"><div class="sh-head"><h3 id="stBkTitle">バックアップ</h3><button class="btn" type="button" data-stclose="1">閉じる</button></div>
     <p class="note" id="stBkNote"></p>
@@ -2648,13 +2677,20 @@ body:not(.app) .obsapp{display:none!important}
 <div id="dxShotSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxShotT"><div class="sheet-in">
   <div class="sh-head"><h3 id="dxShotT">スクショから登録</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
   <div id="dxShotBox" class="dxshot">
-    <div class="dxshotbtns"><button id="dxShotLocal" class="btn primary" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>スマホ内で読み取る</button><button id="dxShotAi" class="btn" type="button">AIで読み取る</button></div>
+    <div class="dxshotbtns"><button id="dxShotLocal" class="btn primary" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>スマホ内で読み取る</button><button id="dxShotAi" class="btn" type="button">AIで読み取る</button><button id="dxShotGm" class="btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>AIで読み取る（Gemini）</button></div>
     <p id="dxShotNone" class="dxx-none" hidden>スクショからの登録は、今はサン・ムーンとウルトラサン・ウルトラムーン（3DS）の図鑑のリスト画面だけに対応しています。作品と図鑑は、上の「変更」から切り替えられます。</p>
     <p id="dxShotHint" class="note" style="margin:0"></p>
     <input id="dxShotFile" type="file" accept="image/*" multiple hidden>
     <p class="note" style="margin:0">スクショ内で登録されていないことを確認したポケモンは、登録を解除します。</p>
     <p id="dxShotStatus" class="note" style="margin:0" role="status"></p>
   </div>
+</div></div>
+<div id="dxGmOk" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxGmOkT"><div class="sheet-in"><div class="sh-head"><h3 id="dxGmOkT">画像を Google に送ります</h3></div>
+  <p class="gm-age"><b>Gemini API は18歳以上の方だけが使えます</b>（Google の利用規約）。</p>
+  <p class="gm-lead">「AIで読み取る（Gemini）」では、選んだ画像を小さくしてから、あなたのキーで Google の Gemini API に送り、図鑑の登録状況を読み取ってもらいます。</p>
+  <ul class="gm-notes"><li>運営者には送られません。</li><li>無料枠では、送った画像と答えが Google の製品の改善に使われ、人が見ることがあります。人の顔や名前など、個人の情報が写った画像は送らないでください。</li><li>まずスマホ内で読み取り、読めなかった画像だけを送ります。最大6枚を1枚にまとめて送るので、6枚までなら無料枠の回数は1回です。同じ画像は、もう一度は送りません。</li></ul>
+  <label class="gm-chk"><input type="checkbox" id="gmOkAge"><span>18歳以上です</span></label>
+  <div class="gm-btns"><button class="btn" type="button" data-gmok="0">やめる</button><button class="btn primary" type="button" data-gmok="1" disabled>同意して画像を選ぶ</button></div>
 </div></div>
 <div id="dxBulkSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxBulkT"><div class="sheet-in">
   <div class="sh-head"><h3 id="dxBulkT">まとめて登録・解除</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
@@ -2670,11 +2706,11 @@ body:not(.app) .obsapp{display:none!important}
   <button class="dxx-ok" type="button" data-dxxclose="1">この順で表示</button>
 </div></div>
 <div id="extDlg" class="extdlg" hidden><div class="extin" role="dialog" aria-modal="true" aria-labelledby="extT"><p id="extT" class="extt">ブラウザで開きます</p><p class="extd"><span id="extN">開発者ポータルサイト</span>を、ブラウザで開きます。</p><p class="extu" id="extU"></p><div class="extbtns"><button type="button" class="extno" data-extno="1">キャンセル</button><a id="extGo" class="extgo" href="#" target="_blank" rel="noopener">開く</a></div></div></div>
-<div id="ppSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="プライバシーポリシー"><div class="sheet-in"><div class="sh-head"><h3>プライバシーポリシー</h3><button class="btn" type="button" data-ppclose="1">閉じる</button></div><div class="pptext"><p class="ppdate">制定日：2026年10月18日／改定日：2026年10月19日</p>
+<div id="ppSheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="プライバシーポリシー"><div class="sheet-in"><div class="sh-head"><h3>プライバシーポリシー</h3><button class="btn" type="button" data-ppclose="1">閉じる</button></div><div class="pptext"><p class="ppdate">制定日：2026年10月18日／改定日：2026年10月21日</p>
 <p>NER poke tools（以下「本アプリ」）の運営者（以下「運営者」）は、本アプリを利用する方（以下「利用者」）の情報を、次のとおり取り扱います。</p>
 
 <h2>1. 運営者が受け取る情報</h2>
-<p>運営者は、本アプリを通じて利用者の個人情報を受け取りません。氏名、メールアドレス、電話番号、位置情報、端末の識別子などを、運営者のサーバーに送ることはありません。本アプリにはアカウント登録の仕組みもありません。ただし、利用者が「配信に送る」機能をオンにしたときに限り、次の「4. 外部サービスへの接続」に書いた情報を送ります。</p>
+<p>運営者は、本アプリを通じて利用者の個人情報を受け取りません。氏名、メールアドレス、電話番号、位置情報、端末の識別子などを、運営者のサーバーに送ることはありません。本アプリにはアカウント登録の仕組みもありません。ただし、利用者が「配信に送る」機能をオンにしたときに限り、次の「4. 外部サービスへの接続」に書いた情報を送ります。また、利用者が自分の Gemini API キーを設定して「AIで読み取る（Gemini）」を使ったときは、「7. AIで読み取る（Gemini）について」に書いた情報が Google に送られます（運営者には送られません）。</p>
 
 <h2>2. 本アプリに入力された情報</h2>
 <p>利用者が本アプリに入力した情報は、利用者の端末の中だけに保存されます。運営者に送られることはありません。対象となる主な情報は次のとおりです。</p>
@@ -2685,11 +2721,12 @@ body:not(.app) .obsapp{display:none!important}
 <li>ポロック・ポフィンの計算条件ときのみの所持数</li>
 <li>個体管理の内容（ニックネーム、居場所、メモ、タグなど）</li>
 <li>親として登録したトレーナー名とID（ゲーム内の名前と番号）</li>
+<li>Gemini の API キー（設定したときだけ。バックアップの文字列には含めません）</li>
 </ul>
 <p>これらの情報は、本アプリを削除すると端末から消えます。「バックアップ」機能で書き出した文字列は、利用者自身が管理するものとし、運営者は受け取りません。</p>
 
 <h2>3. 写真（スクリーンショット）の利用</h2>
-<p>図鑑の「スマホ内で読み取る」機能を使うときに限り、利用者が選んだ画像を読み込みます。画像は端末の中で解析し、外部に送信したり、本アプリ内に保存したりしません。利用者が画像を選ばない限り、写真にはアクセスしません。</p>
+<p>図鑑の「スマホ内で読み取る」機能を使うときに限り、利用者が選んだ画像を読み込みます。画像は端末の中で解析し、外部に送信したり、本アプリ内に保存したりしません。利用者が画像を選ばない限り、写真にはアクセスしません。「AIで読み取る（Gemini）」を使ったときは、選んだ画像が Google に送られます（「7. AIで読み取る（Gemini）について」）。</p>
 
 <h2>4. 外部サービスへの接続</h2>
 <p>本アプリは、文字を表示するためのフォントを Google Fonts（Google LLC が提供）から読み込みます。このとき、利用者の端末のIPアドレスなど、通信に必要な情報が Google に送られることがあります。この情報の取り扱いは Google のプライバシーポリシー（https://policies.google.com/privacy）に従います。</p>
@@ -2705,13 +2742,18 @@ body:not(.app) .obsapp{display:none!important}
 <li>「配信に送る（OBS）」：遭遇数などが、利用者本人だけが読める保存場所に送られます。</li>
 </ul>
 
-<h2>7. 非公式のツールであること</h2>
+<h2>7. AIで読み取る（Gemini）について</h2>
+<p>図鑑の「AIで読み取る（Gemini）」は、利用者が自分で Google の Gemini API キーを設定したときだけ使えます。キーは利用者の端末の中だけに保存し、バックアップの文字列には含めません。運営者に送ることもありません。同じ画像を何度も送らないように、AIの読み取り結果（図鑑番号と状態だけ。画像は含みません）を端末の中に覚えておきます。</p>
+<p>この機能を使うと、利用者が選んだ画像のうち、スマホ内で読み取れなかったもの（最大6枚を縮めて1枚にまとめた画像）と読み取りの指示文が、利用者のキーを使って、端末から Google の Gemini API に直接送られます。送られた情報の取り扱いには、Gemini API 追加利用規約（https://ai.google.dev/gemini-api/terms）と Google のプライバシーポリシー（https://policies.google.com/privacy）が適用されます。</p>
+<p>この規約では、無料枠で使う場合、Google は送られた内容と答えを製品や機械学習技術の提供・改善・開発に使い、人が読んで確認することがあるとされています。個人の情報が写った画像は送らないでください。また、この規約では、利用者は18歳以上であることが求められています。</p>
+
+<h2>8. 非公式のツールであること</h2>
 <p>本アプリは、ファンが作った非公式のツールです。任天堂株式会社、株式会社クリーチャーズ、株式会社ゲームフリーク、株式会社ポケモンとは関係ありません。</p>
 
-<h2>8. ポリシーの改定</h2>
+<h2>9. ポリシーの改定</h2>
 <p>このポリシーは、必要に応じて改定することがあります。改定したときは、本アプリ内またはこのページでお知らせします。</p>
 
-<h2>9. お問い合わせ</h2>
+<h2>10. お問い合わせ</h2>
 <p>このポリシーについてのお問い合わせは、次の連絡先までお願いします。</p>
 <p class="ppcontact">メール：<a href="mailto:noctis1008@yahoo.co.jp">noctis1008@yahoo.co.jp</a></p>
 </div></div></div>
@@ -4429,7 +4471,7 @@ DXX_SHEETS.forEach(el=>el.addEventListener('click',e=>{
   const n0=Object.keys(dxReg()).length;dxClick(e);
   if(el===dxBulkSheet&&Object.keys(dxReg()).length!==n0)dxSh(el,false);
 }));
-document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const el=DXX_SHEETS.find(x=>!x.hidden);if(el)dxSh(el,false)});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape'||(typeof stOpenEl!=='undefined'&&stOpenEl))return;const el=DXX_SHEETS.find(x=>!x.hidden);if(el)dxSh(el,false)});
 {const _u=dxShotUI;dxShotUI=function(){_u();const L=document.getElementById('dxShotLocal'),A=document.getElementById('dxShotAi'),none=L.hidden&&A.hidden;
   document.getElementById('dxShotNone').hidden=!none;document.getElementById('dxShotHint').hidden=none}}
 {const _s=renderDxScan;renderDxScan=function(){if(!dxShotSheet.hidden)dxShotSheet.hidden=true;_s()}}
@@ -4652,21 +4694,159 @@ JSON配列だけで答えてください。例：[{"no":25,"name":"ピカチュ�
   }
   return failed;
 }
+/* 図鑑：自分の Gemini API キーで読み取る（キーは localStorage の別の場所。S には入れないので、バックアップに入らない） */
+const GM_K='ner-gemini-key',GM_OKK='ner-gemini-ok',GM_MODEL='gemini-3.5-flash-lite',GM_MAX=1400;
+function gmKey(){try{return localStorage.getItem(GM_K)||''}catch(e){return ''}}
+function gmOkd(){try{return localStorage.getItem(GM_OKK)==='1'}catch(e){return false}}
+async function gmShrink(file){
+  const bmp=await createImageBitmap(file),sc=Math.min(1,GM_MAX/Math.max(bmp.width,bmp.height));
+  const cv=document.createElement('canvas');cv.width=Math.round(bmp.width*sc);cv.height=Math.round(bmp.height*sc);
+  cv.getContext('2d').drawImage(bmp,0,0,cv.width,cv.height);
+  return cv.toDataURL('image/jpeg',.85).split(',')[1];
+}
+function gmErr(code,j){
+  const e=(j&&j.error)||{},t=JSON.stringify(e);
+  if(code===400&&/API_KEY_INVALID|API key not valid/i.test(t))return 'キーが正しくないようです。設定の「Gemini のキー」に、コピーしたキーをそのまま貼り直してください。';
+  if(code===401||code===403)return 'このキーでは Gemini を使えないようです。Google AI Studio で、キーとプロジェクトの状態を確かめてください。';
+  if(code===429)return 'Gemini の無料枠の上限に達しました。少し待ってから試してください。1日の上限は、太平洋時間の0時（日本時間の16時か17時）に戻ります。';
+  if(code===404)return 'AIのモデルが見つかりませんでした。アプリを新しくしてから試してください。';
+  if(code>=500)return 'Gemini が混み合っているようです。少し時間をおいて試してください。';
+  return `Gemini で読み取れませんでした（エラー ${code}）。少し時間をおいて試してください。`;
+}
+function gmParse(j){
+  const c=j&&Array.isArray(j.candidates)&&j.candidates[0];if(!c||!c.content||!Array.isArray(c.content.parts))return null;
+  let t=c.content.parts.filter(p=>!p.thought&&typeof p.text==='string').map(p=>p.text).join('').trim();
+  t=t.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');
+  let v;try{v=JSON.parse(t)}catch(e){return null}
+  if(v&&!Array.isArray(v))v=Object.values(v).find(Array.isArray);
+  return Array.isArray(v)?v:null;
+}
+/* AIで読み取る：まずスマホ内で読み、読めなかった画像だけを最大6枚まとめて（番号つきの1枚の画像にして）Gemini に送る。
+   同じ画像の答えは端末に覚えておき、もう一度は送らない */
+const GM_TILES=6,GM_TILE=1200,GM_GAP=1;let dxGmSum='';
+function gmHash(buf){let h1=0x811c9dc5,h2=0x01000193;const a=new Uint8Array(buf);
+  for(let i=0;i<a.length;i++){h1=Math.imul(h1^a[i],16777619);h2=Math.imul(h2+a[i],2654435761)>>>0}
+  return (h1>>>0).toString(36)+'.'+h2.toString(36)+'.'+a.length.toString(36)}
+function gmCacheGet(k){try{const c=JSON.parse(localStorage.getItem('ner-gemini-cache')||'{}');return c[k]||null}catch(e){return null}}
+function gmCachePut(k,v){try{const c=JSON.parse(localStorage.getItem('ner-gemini-cache')||'{}');c[k]={t:Date.now(),v};
+  const ks=Object.keys(c).sort((a,b)=>c[b].t-c[a].t);ks.slice(60).forEach(x=>delete c[x]);localStorage.setItem('ner-gemini-cache',JSON.stringify(c))}catch(e){}}
+async function gmComposite(files){
+  const bm=[];for(const f of files)bm.push(await createImageBitmap(f));
+  const n=bm.length,cols=n===1?1:2,rows=Math.ceil(n/cols),T=n===1?GM_MAX:GM_TILE,L=Math.round(T*.07);
+  const sz=bm.map(b=>{const sc=Math.min(1,T/Math.max(b.width,b.height));return [Math.round(b.width*sc),Math.round(b.height*sc)]});
+  const cw=Math.max(...sz.map(x=>x[0])),ch=Math.max(...sz.map(x=>x[1])),pad=16;
+  const cv=document.createElement('canvas');cv.width=cols*cw+(cols-1)*pad;cv.height=rows*(L+ch)+(rows-1)*pad;
+  const cx=cv.getContext('2d');cx.fillStyle='#ffffff';cx.fillRect(0,0,cv.width,cv.height);
+  bm.forEach((b,i)=>{const x=(i%cols)*(cw+pad),y=Math.floor(i/cols)*(L+ch+pad);
+    cx.fillStyle='#111111';cx.fillRect(x,y,cw,L);cx.fillStyle='#ffffff';cx.font=`bold ${Math.round(L*.78)}px sans-serif`;cx.textBaseline='middle';
+    cx.fillText(`画像 ${i+1}`,x+Math.round(L*.3),y+L/2);cx.drawImage(b,x,y+L,sz[i][0],sz[i][1])});
+  return {data:cv.toDataURL('image/jpeg',.85).split(',')[1],w:cv.width,h:cv.height};
+}
+function gm429(j){
+  const d=((j&&j.error&&j.error.details)||[]),q=[];let wait=0;
+  d.forEach(x=>{const t=String(x['@type']||'');if(/QuotaFailure$/.test(t))(x.violations||[]).forEach(v=>q.push(v));
+    if(/RetryInfo$/.test(t)){const m=/^([\d.]+)s$/.exec(String(x.retryDelay||''));if(m)wait=Math.ceil(+m[1])}});
+  const ids=q.map(v=>String(v.quotaId||'')).join(' ');
+  return {day:/PerDay/i.test(ids),zero:q.some(v=>String(v.quotaValue)==='0'),wait};
+}
+const gmSleep=(ms,sig)=>new Promise((res,rej)=>{const t=setTimeout(res,ms);if(sig)sig.addEventListener('abort',()=>{clearTimeout(t);rej({code:'cancelled'})},{once:true})});
+let gmLast=0;
+async function gmAsk(key,body,st,label){
+  for(let tr=0;;tr++){
+    const gap=gmLast+6500-Date.now();if(gap>0){st.textContent=`${label}（続けて送りすぎないように少し待っています）`;await gmSleep(gap,dxScanCtl.signal)}
+    st.textContent=label;let r;gmLast=Date.now();
+    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GM_MODEL}:generateContent`,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},body:JSON.stringify(body),signal:dxScanCtl.signal})}
+    catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};throw {msg:'インターネットにつながらないため、AIで読み取れませんでした。つながる場所で、もう一度試してください。'}}
+    let j=null;try{j=await r.json()}catch(e){}
+    if(r.ok)return j;
+    if(r.status===429){const q=gm429(j);
+      if(q.zero)throw {msg:'このキーのプロジェクトでは、Gemini の無料枠が使えないようです（上限が0）。Google AI Studio で、キーのプロジェクトを確かめてください。'};
+      if(q.day)throw {msg:'Gemini の1日の無料枠を使い切りました。太平洋時間の0時（日本時間の16時か17時）に戻ります。'};
+      if(tr<2){const w=Math.min(60,Math.max(q.wait||20,5));for(let s=w;s>0;s--){st.textContent=`Gemini の1分あたりの上限です。あと${s}秒待ってから、続けて読み取ります…`;await gmSleep(1000,dxScanCtl.signal)}continue}
+      throw {msg:'Gemini の1分あたりの上限に達しました。1分ほど待ってから、もう一度試してください。'}}
+    throw {msg:gmErr(r.status,j)};
+  }
+}
+function gmOkLocal(rows,nb,inDex,byNo){
+  if(!nb||rows.length<3||nb.agree<2||nb.agree<nb.read*.6)return false;
+  let unk=0,miss=0;rows.forEach((r,j)=>{if(r.status==='unknown')unk++;const s=byNo.get(nb.base+j);if(!s||!inDex.has(s))miss++});
+  return unk<=1&&miss<=1;
+}
+async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
+  const key=gmKey(),nos=[...byNo.keys()],lo=Math.min(...nos),hi=Math.max(...nos),local=DX_LOCAL_GAMES.includes(g.id),dk=g.id+':'+dxDexKey(g);
+  const put=(s,stt)=>{const prev=found.get(s);if(!prev||stt==='caught'||prev==='unknown')found.set(s,stt)};
+  const useAi=(arr)=>{let n=0;(arr||[]).forEach(x=>{const no=Number(x&&x.no);if(!Number.isInteger(no)||no<lo||no>hi)return;const s=byNo.get(no);if(!s||!inDex.has(s))return;
+    n++;put(s,['caught','seen','none'].includes(x.status)?x.status:'unknown')});return n};
+  let nLocal=0,nCache=0,nSent=0,nReq=0,nDup=0,failed=0,note='';const todo=[],seenH=new Set();
+  for(let i=0;i<files.length;i++){
+    st.textContent=`スマホ内で読み取り中…（${i+1}/${files.length}枚）`;
+    let hk=null;try{hk=gmHash(await files[i].arrayBuffer())+'|'+dk}catch(e){}
+    if(hk){if(seenH.has(hk)){nDup++;continue}seenH.add(hk)}
+    if(local){try{const rows=await dxLocalRead(files[i]),nb=dxLocalNumbers(rows);
+      if(gmOkLocal(rows,nb,inDex,byNo)){rows.forEach((r,j)=>{const s=byNo.get(nb.base+j);if(s&&inDex.has(s))put(s,r.status)});nLocal++;continue}}catch(e){}}
+    const c=hk&&gmCacheGet(hk);if(c&&useAi(c.v)){nCache++;continue}
+    todo.push({f:files[i],hk});
+  }
+  const prompt=n=>`これはポケモンのゲーム「${g.n}」の図鑑画面（${dexName}、番号は${lo}〜${hi}）を写した画像です。${n>1?`${n}枚の画像を1枚にまとめていて、それぞれの上の黒い帯に「画像 1」「画像 2」…と番号を書いています。`:''}スマホのカメラで画面を撮った写真のこともあり、斜め・光の映りこみ・色のずれがあることがあります。
+画面に見えているポケモンの欄を、すべて読み取ってください。各欄について、${n>1?'どの画像か（tile、帯の番号）、':''}画面に書かれている図鑑番号（no）と状態（status）を答えます。status は次のどれかです。
+- "caught": 捕まえた印（モンスターボールのマーク）が付いている
+- "seen": 見ただけ（名前や姿はあるが、捕まえた印がない）
+- "none": 見てもいない（「？？？」や影だけの欄）
+- "unknown": 判断できない
+${local?'この作品のリスト画面では、明るい赤の帯は見たか捕まえたポケモン、暗い赤の帯（？？？）は見ていないポケモンです。帯の右はしに白と赤のボールがあれば捕まえた、灰色の丸なら見ただけです。番号は帯の上のタブに書かれています。\n':''}番号が読めない欄は入れないでください。画面にない番号を推測で足さないでください。`;
+  const nB=Math.ceil(todo.length/GM_TILES);
+  try{
+    for(let b=0;b<nB;b++){
+      const part=todo.slice(b*GM_TILES,(b+1)*GM_TILES),n=part.length;
+      st.textContent=`AIに送る画像を用意しています…（${b+1}/${nB}回目）`;
+      let img;try{img=await gmComposite(part.map(x=>x.f))}catch(e){failed+=n;continue}
+      const props={no:{type:'INTEGER'},status:{type:'STRING',enum:['caught','seen','none','unknown']}};if(n>1)props.tile={type:'INTEGER'};
+      const body={contents:[{role:'user',parts:[{text:prompt(n)},{inline_data:{mime_type:'image/jpeg',data:img.data}}]}],
+        generationConfig:{temperature:0,responseMimeType:'application/json',responseSchema:{type:'ARRAY',items:{type:'OBJECT',properties:props,required:n>1?['tile','no','status']:['no','status']}}}};
+      const j=await gmAsk(key,body,st,`AIで読み取り中…（${n}枚をまとめて${nB>1?`・${b+1}/${nB}回目`:''}）`);nReq++;nSent+=n;
+      const arr=gmParse(j);if(!arr){failed+=n;continue}
+      const per=part.map(()=>[]);arr.forEach(x=>{const t=n>1?Number(x&&x.tile):1;if(Number.isInteger(t)&&t>=1&&t<=n)per[t-1].push({no:x.no,status:x.status})});
+      part.forEach((p,i)=>{if(useAi(per[i])){if(p.hk)gmCachePut(p.hk,per[i])}else failed++});
+    }
+  }catch(err){if(err&&err.code==='cancelled')throw err;
+    if(!found.size)throw err;note=(err&&err.msg)||'';failed+=todo.length-nSent}
+  const sum=[];if(nLocal)sum.push(`スマホ内で読めた画像 ${nLocal}枚`);if(nCache)sum.push(`前にAIで読んだ画像 ${nCache}枚`);if(nDup)sum.push(`同じ画像 ${nDup}枚は省きました`);
+  sum.push(nSent?`AIに送った画像 ${nSent}枚（${nReq}回）`:note?'AIでは読み取れませんでした':'AIには送りませんでした');
+  dxGmSum=sum.join('・')+'。'+(note?note+' ':'');
+  return failed;
+}
+{const _u=dxShotUI;dxShotUI=function(){_u();const k=!!gmKey(),$=x=>document.getElementById(x),local=DX_LOCAL_GAMES.includes(dxGame().id);
+  $('dxShotGm').hidden=false;$('dxShotNone').hidden=true;$('dxShotHint').hidden=false;
+  if(!local)$('dxShotHint').textContent='この作品は、スマホ内での読み取りには対応していません。「AIで読み取る（Gemini）」で読み取れます。'+(k?'':'初めてのときは、Gemini のキーの設定から始まります。')}}
+let gmFromDex=false;
+document.body.appendChild(document.getElementById('stGmSheet'));
+document.getElementById('stGmSheet').addEventListener('click',e=>{if(e.target===e.currentTarget||e.target.closest('[data-stclose]'))stClose()});
+{const _c=stClose;stClose=function(){const g=stOpenEl&&stOpenEl.id==='stGmSheet';_c();if(g){gmFromDex=false;if(document.querySelector('.sheet:not([hidden])'))document.body.classList.add('modal')}}}
+function gmGo(){
+  if(!gmKey()){gmFromDex=true;stOpen('gm');stRet=document.getElementById('dxShotGm');return}
+  if(!gmOkd()){const c=document.getElementById('dxGmOk');c.querySelector('#gmOkAge').checked=false;c.querySelector('[data-gmok="1"]').disabled=true;c.hidden=false;document.body.classList.add('modal');c.querySelector('#gmOkAge').focus({preventScroll:true});return}
+  dxShotMode='gm';document.getElementById('dxShotFile').click()}
+document.getElementById('dxShotGm').addEventListener('click',gmGo);
+document.getElementById('gmOkAge').addEventListener('change',e=>{document.querySelector('#dxGmOk [data-gmok="1"]').disabled=!e.target.checked});
+document.getElementById('dxGmOk').addEventListener('click',e=>{const c=e.currentTarget,b=e.target.closest('[data-gmok]');
+  if(e.target!==c&&!b)return;if(b&&b.dataset.gmok==='1'&&!document.getElementById('gmOkAge').checked)return;c.hidden=true;
+  if(b&&b.dataset.gmok==='1'){try{localStorage.setItem(GM_OKK,'1')}catch(x){}dxShotMode='gm';document.getElementById('dxShotFile').click()}
+  document.getElementById('dxShotGm').focus({preventScroll:true})});
 document.getElementById('dxShotFile').addEventListener('change',async e=>{
   const files=[...e.target.files];e.target.value='';if(!files.length)return;
-  const mode=dxShotMode;if(mode==='ai'&&!dxSample)return;
+  const mode=dxShotMode;if(mode==='ai'&&!dxSample)return;if(mode==='gm'&&!gmKey())return;
   const g=dxGame(),k=dxDexKey(g),dexName=k==='nat'?'全国図鑑':(g.dex.find(d=>String(d[0])===k)||[0,''])[1];
   const entries=dxEntries(),byNo=new Map(entries.map(([n,s])=>[n,s])),inDex=new Set(entries.map(x=>x[1]));
-  const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxShotLocal,#dxShotAi')];
+  const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxShotLocal,#dxShotAi,#dxShotGm')];
   btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();
   const found=new Map();let failed=0;
-  try{failed=mode==='local'?await dxReadLocal(files,byNo,inDex,found,st):await dxReadAi(files,g,dexName,byNo,inDex,found,st)}
-  catch(err){st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||(mode==='local'?'読み取れませんでした。'+DX_SHOT_RETRY:'この画面ではAIでの読み取りを使えません');btns.forEach(b=>b.disabled=false);return}
+  try{failed=mode==='local'?await dxReadLocal(files,byNo,inDex,found,st):mode==='gm'?await dxReadGm(files,g,dexName,byNo,inDex,found,st):await dxReadAi(files,g,dexName,byNo,inDex,found,st)}
+  catch(err){st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||(mode==='local'?'読み取れませんでした。'+DX_SHOT_RETRY:mode==='gm'?'Gemini で読み取れませんでした。':'この画面ではAIでの読み取りを使えません');btns.forEach(b=>b.disabled=false);return}
   btns.forEach(b=>b.disabled=false);
-  st.textContent=failed?`${failed}枚は読み取れませんでした。${mode==='local'?DX_SHOT_RETRY:'もう一度試すか、別のスクショを選んでください。'}`:'';
+  st.textContent=failed?`${failed}枚は読み取れませんでした。${mode==='local'?DX_SHOT_RETRY:mode==='gm'?'撮り直すか、別の画像で試してください。':'もう一度試すか、別のスクショを選んでください。'}`:'';
   if(!found.size){st.textContent=mode==='local'?'この図鑑のポケモンが見つかりませんでした。'+(failed?DX_SHOT_RETRY:'作品と図鑑が合っているか、上の「変更」で確かめてください。'):(st.textContent?st.textContent+' ':'')+'この図鑑のポケモンが見つかりませんでした。';return}
-  const few=mode==='local'&&(failed||found.size<3*files.length);
-  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:few?(failed?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:''};
+  const few=(mode==='local'&&(failed||found.size<3*files.length))||(mode==='gm');
+  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:mode==='gm'?dxGmSum+(failed?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:''};
   renderDxScan();
 });
 function renderDxScan(){
@@ -6388,6 +6568,26 @@ function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.
   sh.hidden=false;stOpenEl=sh;document.body.classList.add('modal');sh.querySelector('.sheet-in').scrollTop=0;
   (k==='bki'?document.getElementById('setBkText'):sh.querySelector('[data-stclose]')).focus({preventScroll:true})}
 function stClose(){if(!stOpenEl)return;stOpenEl.hidden=true;stOpenEl=null;document.body.classList.remove('modal');if(stRet&&stRet.focus)stRet.focus({preventScroll:true});stRet=null}
+/* 設定：Gemini のキー */
+stSheets.gm='stGmSheet';
+function gmRender(){const k=gmKey(),$=x=>document.getElementById(x),tail=k?'末尾 '+k.slice(-4):'';
+  $('gmSub').textContent=k?`保存済み（${tail}）`:'未設定 ・ カメラ写真もAIで読み取れます';
+  $('gmKey').value='';$('gmAge').checked=false;$('gmSave').disabled=true;$('gmKey').placeholder=k?`保存済み（${tail}）`:'キーを貼り付け';$('gmDel').disabled=!k;
+  $('gmState').textContent=k?'キーは保存されています。変えるときは、新しいキーを貼り付けて「保存」を押します。':''}
+{const _o=stOpen;stOpen=function(k){if(k==='gm')gmRender();_o(k)}}
+document.getElementById('gmAge').addEventListener('change',e=>{document.getElementById('gmSave').disabled=!e.target.checked});
+document.getElementById('gmSave').addEventListener('click',()=>{if(!document.getElementById('gmAge').checked)return;const v=document.getElementById('gmKey').value.trim();
+  if(!v){document.getElementById('gmState').textContent='キーを貼り付けてから「保存」を押してください。';return}
+  if(!/^[A-Za-z0-9._-]{20,}$/.test(v)){document.getElementById('gmState').textContent='キーの形が正しくないようです。コピーしたキーを、そのまま貼り付けてください。';return}
+  try{localStorage.setItem(GM_K,v)}catch(e){toast('保存できませんでした');return}
+  gmRender();toast('Gemini のキーを保存しました');if(gmFromDex){stClose();gmGo()}});
+document.getElementById('gmDel').addEventListener('click',e=>armed(e.currentTarget,'削除','本当に削除',()=>{
+  try{localStorage.removeItem(GM_K);localStorage.removeItem(GM_OKK);localStorage.removeItem('ner-gemini-cache')}catch(x){}gmRender();toast('Gemini のキーを削除しました')}));
+document.getElementById('gmStudio').addEventListener('click',()=>{const dl=document.getElementById('extDlg'),go=document.getElementById('extGo');
+  go.href='https://aistudio.google.com/apikey';document.getElementById('extN').textContent='Google AI Studio のキーのページ';document.getElementById('extU').textContent=go.href;
+  dl.hidden=false;go.focus()});
+document.getElementById('extDlg').addEventListener('click',()=>{if(stOpenEl)document.body.classList.add('modal')});
+gmRender();
 /* ---------- データの守り：バックアップのお知らせ ----------
    iPhoneのSafariは、しばらく開かないサイトのデータを消すことがある。
    データがあるのに、前回のバックアップから14日（まだ一度もないときは、データができてから3日）たったら、下のバーの上にお知らせを出す。
