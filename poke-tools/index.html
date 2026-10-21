@@ -6,6 +6,7 @@
 <link rel="manifest" href="manifest.webmanifest"><script>(()=>{const p=e=>e.preventDefault();['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,p,{passive:false}));document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})})()</script></head><body>
 
 <meta name="claude:viewport-fit-sides" content="cover">
+<script>try{const t=(JSON.parse(localStorage.getItem("ev-counter-v2"))||{}).theme;if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;500;700&family=Roboto:wght@500;700&display=swap">
 <style>
@@ -364,6 +365,37 @@ body:has(#monCard:not([hidden])) .tabbar{z-index:31}
 .tsopt i{position:absolute;top:3px;right:5px;font-style:normal;font-family:var(--f-num);font-size:10px;font-weight:700;color:var(--muted)}
 .tsopt.cur{border:2px solid var(--accent);background:var(--accent-soft)}
 .tsopt.cur i{color:var(--accent)}
+/* 設定画面（グループのリスト） */
+#vSettings{gap:8px}
+.stx-gl{margin:8px 4px 0;font-size:12px;letter-spacing:.06em}
+.stx-list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.stx-row{display:flex;align-items:center;gap:10px;height:52px;width:100%;padding:0 12px;margin:0;font:inherit;color:var(--ink);text-align:left;background:none;border:0;border-radius:0;-webkit-tap-highlight-color:transparent}
+.stx-row+.stx-row,.stx-bar+.stx-row{border-top:1px solid var(--line)}
+button.stx-row:active,button.stx-bar:active{background:var(--sunken)}
+.stx-ic{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:color-mix(in srgb,var(--c) 80%,var(--ink));background:color-mix(in srgb,var(--c) 18%,transparent)}
+.stx-ic svg{width:16px;height:16px}
+.stx-tx{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.stx-tx>span{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stx-tx small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stx-chev{flex:none;color:var(--muted);display:flex}.stx-chev svg{width:16px;height:16px}
+.stx-seg{flex:none;margin-left:0;height:34px;background:var(--sunken)}
+.stx-seg button{height:100%;padding:0;font-size:12.5px;font-weight:700;white-space:nowrap;background:none}
+#labelSeg button:nth-child(1){width:62px}#labelSeg button:nth-child(2){width:48px}#labelSeg button:nth-child(3){width:38px}
+#themeSeg button{width:46px}#themeSeg button:nth-child(n+2){width:50px}
+.stx-row .toggle{margin-left:0}
+.stx-bar{display:flex;align-items:center;gap:10px;width:100%;height:64px;padding:0 12px;margin:0;font:inherit;color:var(--ink);background:none;border:0;border-radius:0;-webkit-tap-highlight-color:transparent}
+.stx-prev{flex:1;min-width:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px 4px;border-radius:10px;background:var(--sunken);border:1px solid var(--line)}
+.stx-t{min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.stx-t .ni{width:28px;height:22px;border-radius:7px;font-size:10.5px}
+.stx-t small{max-width:100%;font-size:9.5px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stx-pill{flex:none;font-family:var(--f-num);font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.stx-foot{margin:6px 4px 0;line-height:1.6;font-size:11px}
+.stx-hb{display:flex;gap:6px;flex:none}
+.stx-sheet .sheet-in{gap:10px}
+.stx-sheet .note{margin:0 2px}
+#setBkText{height:132px;min-height:0;resize:none;font-size:12px}
+#setBkAct{display:flex;gap:8px}#setBkAct .btn{flex:1;height:44px}
+
 
 .extdlg{position:fixed;inset:0;z-index:60;background:rgb(8 12 28 / .5);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein .15s ease}
 .extin{width:100%;max-width:320px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:20px 18px 16px;box-shadow:0 16px 40px rgb(0 0 0 / .3);text-align:center}
@@ -2123,37 +2155,57 @@ body:not(.app) .obsapp{display:none!important}
 
 <div class="wrap view" id="vSettings" hidden>
   <section>
-    <h2>表示</h2>
-    <div class="stat">
-      <div class="opt" style="margin-top:0"><span>能力の表示</span>
-        <div class="seg" id="labelSeg" role="group" aria-label="能力の表示">
+    <h2 class="stx-gl">表示</h2>
+    <div class="stx-list">
+      <div class="stx-row"><span class="stx-ic" style="--c:var(--b1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="stx-tx"><span>能力の表示</span><small>ステータスの名前</small></span><div class="seg stx-seg" id="labelSeg" role="group" aria-label="能力の表示">
           <button type="button" data-lm="kana">こうげき</button><button type="button" data-lm="kanji">攻撃</button><button type="button" data-lm="abc">A</button>
+        </div></div>
+      <div class="stx-row"><span class="stx-ic" style="--c:var(--b3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14A8 8 0 1 1 10 4a6.5 6.5 0 0 0 10 10z"/></svg></span><span class="stx-tx"><span>画面の色</span><small id="thSub"></small></span><div class="seg stx-seg" id="themeSeg" role="group" aria-label="画面の色">
+          <button type="button" data-th="auto">自動</button><button type="button" data-th="light">ライト</button><button type="button" data-th="dark">ダーク</button>
         </div></div>
     </div>
   </section>
   <section>
-    <h2>サウンド</h2>
-    <div class="stat">
-      <div class="opt" style="margin-top:0"><span>撃破音</span><button id="soundBtn" class="toggle" type="button" aria-pressed="true" aria-label="撃破音"></button></div>
+    <h2 class="stx-gl">サウンド</h2>
+    <div class="stx-list">
+      <div class="stx-row"><span class="stx-ic" style="--c:var(--accent)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg></span><span class="stx-tx"><span>撃破音</span><small>iPhoneはマナーモード中は鳴りません</small></span><button id="soundBtn" class="toggle" type="button" aria-pressed="true" aria-label="撃破音"></button></div>
     </div>
-    <p class="note">iPhoneはマナーモード（消音スイッチ）がオンだと音が鳴りません。</p>
   </section>
   <section>
-    <div class="h2row"><h2>下のバーに表示するツール</h2><button id="tabRst" class="btn rstbtn" type="button">元に戻す</button></div>
+    <h2 class="stx-gl">画面の並び</h2>
+    <div class="stx-list">
+      <button class="stx-bar" type="button" data-stopen="tab" aria-label="下のバーのツールを変える"><span class="stx-ic" style="--c:var(--mon)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="15" width="18" height="6" rx="2"/><path d="M7 18h.01M12 18h.01M17 18h.01" stroke-linecap="round" stroke-width="3"/></svg></span><span class="stx-prev" id="stxPrev"></span></button>
+      <button class="stx-row" type="button" data-stopen="tab" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--mon)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg></span><span class="stx-tx"><span>下のバーのツール</span><small>5つを選んで、左右の順番を変える</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+      <button class="stx-row" type="button" data-stopen="nav" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--b2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span class="stx-tx"><span>メニューの並び順</span><small>左のメニューの順番を変える</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+    </div>
+  </section>
+  <section>
+    <h2 class="stx-gl">データ</h2>
+    <div class="stx-list">
+      <button class="stx-row" type="button" data-stopen="bkx" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--iv)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></svg></span><span class="stx-tx"><span>バックアップを書き出す</span><small>全部のツールのデータを文字にして保存</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+      <button class="stx-row" type="button" data-stopen="bki" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--iv)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg></span><span class="stx-tx"><span>バックアップを読み込む</span><small>書き出した文字から元に戻す</small></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+    </div>
+  </section>
+  <section>
+    <h2 class="stx-gl">このアプリについて</h2>
+    <div class="stx-list">
+      <button id="ppBtn" class="stx-row" type="button" aria-haspopup="dialog"><span class="stx-ic" style="--c:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6" stroke-linecap="round"/></svg></span><span class="stx-tx"><span>プライバシーポリシー</span></span><span class="stx-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+      <div class="stx-row"><span class="stx-ic" style="--c:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg></span><span class="stx-tx"><span>バージョン</span></span><span class="stx-pill" id="appVer"></span></div>
+    </div>
+    <p class="note stx-foot">NER poke tools は、ファンが作った非公式のツールです。任天堂・クリーチャーズ・ゲームフリーク・ポケモンとは関係ありません。</p>
+  </section>
+  <div id="stTabSheet" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-label="下のバーのツール"><div class="sheet-in"><div class="sh-head"><h3>下のバーのツール</h3><span class="stx-hb"><button id="tabRst" class="btn rstbtn" type="button">元に戻す</button><button class="btn" type="button" data-stclose="1">閉じる</button></span></div>
     <div class="tabset" id="tabSet"></div>
     <p class="note">上の5つが、いちばん下のバーと同じ並びです。場所をタップして選び、◀ ▶ で移動。一覧からツールを選ぶと入れ替わります。</p>
-  </section>
-  <section>
-    <div class="h2row"><h2>メニューの並び順</h2><button id="navRst" class="btn rstbtn" type="button">元に戻す</button></div>
+  </div></div>
+  <div id="stNavSheet" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-label="メニューの並び順"><div class="sheet-in"><div class="sh-head"><h3>メニューの並び順</h3><span class="stx-hb"><button id="navRst" class="btn rstbtn" type="button">元に戻す</button><button class="btn" type="button" data-stclose="1">閉じる</button></span></div>
     <div class="setlist" id="navSet"></div>
-  </section>
-  <section>
-    <h2>このアプリについて</h2>
-    <div class="stat">
-      <button id="ppBtn" class="btn ppbtn" type="button">プライバシーポリシー<span aria-hidden="true">›</span></button>
-    </div>
-    <p class="note">NER poke tools は、ファンが作った非公式のツールです。任天堂・クリーチャーズ・ゲームフリーク・ポケモンとは関係ありません。</p>
-  </section>
+  </div></div>
+  <div id="stBkSheet" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-label="バックアップ"><div class="sheet-in"><div class="sh-head"><h3 id="stBkTitle">バックアップ</h3><button class="btn" type="button" data-stclose="1">閉じる</button></div>
+    <p class="note" id="stBkNote"></p>
+    <textarea id="setBkText" aria-label="バックアップの文字列"></textarea>
+    <div id="setBkAct"></div>
+  </div></div>
 </div>
 
 
@@ -3018,30 +3070,32 @@ function decode(s){
   s=s.trim();if(s.startsWith(PFX))s=s.slice(PFX.length);
   return JSON.parse(decodeURIComponent(escape(atob(s.replace(/\s/g,'')))));
 }
-document.getElementById('bkExport').addEventListener('click',()=>{
+function bkExportTo(text,act,box){
   const data={v:5,gen:S.gen,lm:S.lm,sound:S.sound,count:S.count,targets:S.targets,members:S.members,presets:S.presets,sh:S.sh,rb:S.rb,dx:S.dx,pb:S.pb,mon:S.mon,ty:S.ty,iv:S.iv};
-  bkText.value=encode(data);bkText.readOnly=true;bkBox.hidden=false;
-  bkAct.innerHTML='<button id="bkCopy" class="btn primary" type="button">コピー</button>';
-  document.getElementById('bkCopy').addEventListener('click',()=>{
-    const fallback=()=>{bkText.focus();bkText.select();toast('文字列を選択しました。長押しでコピーしてください')};
-    try{navigator.clipboard.writeText(bkText.value).then(()=>toast('コピーしました。メモアプリなどに貼って保管してください')).catch(fallback)}catch(e){fallback()}
+  text.value=encode(data);text.readOnly=true;box.hidden=false;
+  act.innerHTML='<button class="btn primary" type="button" data-bkcopy="1">コピー</button>';
+  act.querySelector('[data-bkcopy]').addEventListener('click',()=>{
+    const fallback=()=>{text.focus();text.select();toast('文字列を選択しました。長押しでコピーしてください')};
+    try{navigator.clipboard.writeText(text.value).then(()=>toast('コピーしました。メモアプリなどに貼って保管してください')).catch(fallback)}catch(e){fallback()}
   });
-});
-document.getElementById('bkImportMode').addEventListener('click',()=>{
-  bkText.value='';bkText.readOnly=false;bkText.placeholder='書き出した文字列を貼り付けてください';bkBox.hidden=false;
-  bkAct.innerHTML='<button id="bkLoad" class="btn primary" type="button">この内容で復元</button>';
-  bkText.focus();
-  document.getElementById('bkLoad').addEventListener('click',e=>{
+}
+function bkImportTo(text,act,box,done,focus=true){
+  text.value='';text.readOnly=false;text.placeholder='書き出した文字列を貼り付けてください';box.hidden=false;
+  act.innerHTML='<button class="btn primary" type="button" data-bkload="1">この内容で復元</button>';
+  if(focus)text.focus();
+  act.querySelector('[data-bkload]').addEventListener('click',e=>{
     let d;
-    try{d=decode(bkText.value);if(!Array.isArray(d.members)||d.members.length!==6||!Array.isArray(d.targets))throw 0}
+    try{d=decode(text.value);if(!Array.isArray(d.members)||d.members.length!==6||!Array.isArray(d.targets))throw 0}
     catch(err){toast('読み込めませんでした。書き出した文字列を最後まで貼り付けてください');return}
     armed(e.currentTarget,'この内容で復元','今のデータを置き換える？',()=>{
       S.members=d.members;S.targets=d.targets.slice(0,MAX_T);S.presets=d.presets||[];S.gen=d.gen||9;S.lm=d.lm||'kana';S.sound=d.sound;S.count=d.count||0;S.history=[];if(d.sh)S.sh=Object.assign(S.sh,d.sh);if(d.rb)S.rb=Object.assign(S.rb,d.rb);if(d.dx)S.dx=Object.assign(S.dx,d.dx);if(d.pb)S.pb=Object.assign(S.pb,d.pb);if(d.mon)S.mon=Object.assign(S.mon,d.mon);if(d.ty)S.ty=Object.assign(S.ty,d.ty);if(d.iv){S.iv=Object.assign(S.iv,d.iv);ivNorm()}
       normalize();applyLabels();editId=null;pick=null;save();renderAll();renderLabelSeg();renderSound();
-      bkBox.hidden=true;toast('バックアップから復元しました');
+      done();toast('バックアップから復元しました');
     });
   });
-});
+}
+document.getElementById('bkExport').addEventListener('click',()=>{bkExportTo(bkText,bkAct,bkBox);bkAct.firstChild.id='bkCopy'});
+document.getElementById('bkImportMode').addEventListener('click',()=>{bkImportTo(bkText,bkAct,bkBox,()=>{bkBox.hidden=true});bkAct.firstChild.id='bkLoad'});
 
 /* ---------- リセット ---------- */
 const clearCounts=()=>{S.count=0;S.history=[];S.targets.forEach(t=>t.n=0)};
@@ -3080,6 +3134,13 @@ function playGoal(){
     });
   }catch(e){}
 }
+/* 画面の色（自動・ライト・ダーク）。自動のときは data-theme を付けず、スマホの設定に合わせる */
+const themeSeg=document.getElementById('themeSeg');
+function applyTheme(user){const t=S.theme;if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;else if(user)document.documentElement.removeAttribute('data-theme')}
+function renderTheme(){const t=S.theme==='light'||S.theme==='dark'?S.theme:'auto';themeSeg.querySelectorAll('[data-th]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.th===t)));
+  document.getElementById('thSub').textContent=t==='auto'?'スマホに合わせる':t==='light'?'いつも明るい画面':'いつも暗い画面'}
+themeSeg.addEventListener('click',e=>{const b=e.target.closest('[data-th]');if(!b)return;if(b.dataset.th==='auto')delete S.theme;else S.theme=b.dataset.th;applyTheme(true);save();renderTheme()});
+applyTheme(false);
 const soundBtn=document.getElementById('soundBtn');
 const renderSound=()=>soundBtn.setAttribute('aria-pressed',String(S.sound!==false));
 soundBtn.addEventListener('click',()=>{S.sound=S.sound===false;save();renderSound();if(S.sound)playSE()});
@@ -5697,6 +5758,7 @@ function renderNav(){
   box.innerHTML=S.navOrder.map((k,i)=>`<button class="navitem${i===S.navOrder.length-1?' navlast':''}" type="button" data-view="${k}"><span class="ni" style="--c:var(${TOOL_META[k].c})">${TOOL_META[k].ab}</span><span class="nt">${VIEWS[k].t}</span></button>`).join('');
 }
 function renderTabs(){
+  const pv=document.getElementById('stxPrev');if(pv)pv.innerHTML=S.tabs.map(k=>`<span class="stx-t">${toolNi(k)}<small>${TOOL_META[k].s}</small></span>`).join('');
   document.getElementById('tabBarIn').innerHTML=S.tabs.map(k=>`<button class="tab" type="button" data-tab="${k}" aria-label="${VIEWS[k].t}">${toolNi(k)}<span class="tl">${TOOL_META[k].s}</span></button>`).join('');
   markTabs();
 }
@@ -5716,7 +5778,20 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
+const APP_VER='2026.10.21';document.getElementById('appVer').textContent=APP_VER;
+const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
+function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
+  if(k==='tab'||k==='nav')renderUiSet();
+  if(k==='bkx'||k==='bki'){const t=document.getElementById('setBkText'),a=document.getElementById('setBkAct'),ex=k==='bkx';
+    document.getElementById('stBkTitle').textContent=ex?'バックアップを書き出す':'バックアップを読み込む';
+    document.getElementById('stBkNote').textContent=ex?'全部のツールのデータを文字にしました。「コピー」を押して、メモアプリなどに貼って保管してください。':'書き出した文字列を貼り付けて「この内容で復元」を押すと、今のデータと置き換わります。';
+    if(ex)bkExportTo(t,a,{});else bkImportTo(t,a,{},stClose,false)}
+  sh.hidden=false;stOpenEl=sh;document.body.classList.add('modal');sh.querySelector('.sheet-in').scrollTop=0;
+  (k==='bki'?document.getElementById('setBkText'):sh.querySelector('[data-stclose]')).focus({preventScroll:true})}
+function stClose(){if(!stOpenEl)return;stOpenEl.hidden=true;stOpenEl=null;document.body.classList.remove('modal');if(stRet&&stRet.focus)stRet.focus({preventScroll:true});stRet=null}
 document.getElementById('vSettings').addEventListener('click',e=>{
+  const so=e.target.closest('[data-stopen]');if(so){stOpen(so.dataset.stopen);return}
+  if(e.target.classList.contains('stx-sheet')||e.target.closest('[data-stclose]')){stClose();return}
   const t=e.target.closest('[data-tslot],[data-tsmv],[data-tspick],[data-navmv],#tabRst,#navRst');if(!t||t.disabled)return;
   if(t.dataset.tslot){tabSelI=+t.dataset.tslot;renderUiSet();document.querySelector(`[data-tslot="${tabSelI}"]`)?.focus();return}
   if(t.dataset.tsmv){const i=tabSelI,d=+t.dataset.tsmv,j=i+d;if(j<0||j>=S.tabs.length)return;[S.tabs[i],S.tabs[j]]=[S.tabs[j],S.tabs[i]];tabSelI=j;uiApply(['t',j],`[data-tsmv="${d}"]`);if(document.activeElement===document.body)document.querySelector(`[data-tsmv="${-d}"]`)?.focus();return}
@@ -5751,7 +5826,7 @@ function setView(v){
   if(v==='type')renderTy();
   if(v==='iv')renderIv();
   if(v==='ribbon')renderRb();else document.getElementById('rbInfo').hidden=true;
-  if(v==='settings')renderUiSet();
+  if(v==='settings')renderUiSet();else stClose();
   markTabs();
   setBarH();window.scrollTo(0,0);
 }
@@ -5761,11 +5836,11 @@ drawer.addEventListener('click',e=>{
   const b=e.target.closest('[data-view]');if(!b)return;
   closeMenu();setView(b.dataset.view);
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(stOpenEl)stClose();closeMenu()}});
 
 if(window.NER_APP)document.body.classList.add('app');
 if(OBS_APP)document.body.classList.add('appobs');
-renderLabelSeg();renderSound();renderAll();
+renderLabelSeg();renderSound();renderTheme();renderAll();
 if(location.hash.startsWith('#obs'))obsView();
 else{setView(S.view||'ev');obsLast=JSON.stringify(obsPayload());renderObsCtl()}
 
