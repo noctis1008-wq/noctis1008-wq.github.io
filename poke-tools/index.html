@@ -849,6 +849,8 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxshot .btn{display:flex;align-items:center;justify-content:center;gap:6px;flex:1 1 auto;white-space:nowrap;padding:0 12px;min-height:54px;font-size:15px;border-radius:12px}
 .dxshot .btn:not(.primary){border-width:1.5px;border-color:var(--ink)}
 .dxshotbtns{display:flex;flex-wrap:wrap;gap:8px}
+#dxShotHint b{color:var(--ink)}
+.dxtip{margin:0;padding:8px 10px;border-radius:10px;background:var(--sunken);color:var(--ink)}
 .dxshoth{margin:4px 0 0;font-size:12px;letter-spacing:.12em;color:var(--muted);font-weight:700}
 .dxshot svg{width:20px;height:20px}
 .dxnotes{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;border-left:3px solid var(--dx);background:color-mix(in srgb,var(--dx) 8%,var(--surface));border-radius:0 10px 10px 0;padding:10px 12px}
@@ -2647,7 +2649,7 @@ body:not(.app) .obsapp{display:none!important}
   <div class="sh-head"><h3 id="dxShotT">スクショから登録</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
   <div id="dxShotBox" class="dxshot">
     <div class="dxshotbtns"><button id="dxShotLocal" class="btn primary" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>スマホ内で読み取る</button><button id="dxShotAi" class="btn" type="button">AIで読み取る</button></div>
-    <p id="dxShotNone" class="dxx-none" hidden>スクショからの登録は、今はサン・ムーンとウルトラサン・ウルトラムーンの図鑑画面だけに対応しています。作品と図鑑は、上の「変更」から切り替えられます。</p>
+    <p id="dxShotNone" class="dxx-none" hidden>スクショからの登録は、今はサン・ムーンとウルトラサン・ウルトラムーン（3DS）の図鑑のリスト画面だけに対応しています。作品と図鑑は、上の「変更」から切り替えられます。</p>
     <p id="dxShotHint" class="note" style="margin:0"></p>
     <input id="dxShotFile" type="file" accept="image/*" multiple hidden>
     <p class="note" style="margin:0">スクショ内で登録されていないことを確認したポケモンは、登録を解除します。</p>
@@ -2698,10 +2700,9 @@ body:not(.app) .obsapp{display:none!important}
 <p>運営者は、法令に基づく場合を除き、利用者の情報を第三者に提供しません。</p>
 
 <h2>6. ウェブ版（claude.ai 上で使う場合）について</h2>
-<p>本アプリと同じツールを claude.ai 上のページとして使う場合、次の2つの機能では、利用者のClaudeアカウントを通じて情報が送られます。これらの情報の取り扱いには、Anthropic のプライバシーポリシー（https://www.anthropic.com/legal/privacy）が適用されます。アプリ版の「配信に送る」は、上の「4. 外部サービスへの接続」のとおり Firebase を使う別の仕組みで、Claudeアカウントは使いません。アプリ版には「AIで読み取る」機能はありません。</p>
+<p>本アプリと同じツールを claude.ai 上のページとして使う場合、次のような機能では、利用者のClaudeアカウントを通じて情報が送られます。これらの情報の取り扱いには、Anthropic のプライバシーポリシー（https://www.anthropic.com/legal/privacy）が適用されます。アプリ版の「配信に送る」は、上の「4. 外部サービスへの接続」のとおり Firebase を使う別の仕組みで、Claudeアカウントは使いません。</p>
 <ul>
 <li>「配信に送る（OBS）」：遭遇数などが、利用者本人だけが読める保存場所に送られます。</li>
-<li>「AIで読み取る」：選んだ画像が Claude に送られ、読み取りに使われます。</li>
 </ul>
 
 <h2>7. 非公式のツールであること</h2>
@@ -4589,14 +4590,15 @@ let dxSample=null,dxImgMax=0,dxScan=null,dxScanCtl=null,dxShotMode='local';
     dxSample=sm;dxImgMax=lim.images.maxCount||1;dxShotUI();
   }catch(e){}
 })();
+const DX_SHOT_TIP='サン・ムーン／ウルトラサン・ウルトラムーン（3DS）の図鑑のリスト画面を読み取ります。<b>画面をそのまま取りこんだ画像</b>がいちばん確実です。3DSにはスクショの機能がないので、カメラで撮るときは正面からまっすぐ、光が映りこまないように撮ってください。',
+  DX_SHOT_RETRY='画面をそのまま取りこんだ画像だと読み取りやすくなります。カメラで撮るときは、正面からまっすぐ、光が映りこまないように撮ってください。';
 function dxShotUI(){
   const local=DX_LOCAL_GAMES.includes(dxGame().id);
   document.getElementById('dxShotLocal').hidden=!local;
   document.getElementById('dxShotAi').classList.toggle('primary',!local);
-  if(window.NER_APP){document.getElementById('dxShotAi').hidden=true;document.getElementById('dxShotHint').textContent=local?'「スマホ内で読み取る」は、図鑑のリスト画面のスクショに対応しています。':'スクショの読み取りは、今はサン・ムーンとウルトラサン・ウルトラムーンの図鑑画面だけに対応しています。';return}
-  document.getElementById('dxShotHint').textContent=local
-    ?'「スマホ内で読み取る」は無料で、ログインもいりません。図鑑のリスト画面のスクショに対応しています。「AIで読み取る」は、Claudeにログインして使います。'
-    :'スマホ内での読み取りは、今はサン・ムーンとウルトラサン・ウルトラムーンの図鑑画面だけに対応しています。'+'「AIで読み取る」は、Claudeにログインして使います。使う人のClaudeの使用量がかかります。';
+  const h=document.getElementById('dxShotHint');
+  h.innerHTML=local?DX_SHOT_TIP:'スマホ内での読み取りは、今はサン・ムーンとウルトラサン・ウルトラムーン（3DS）の図鑑のリスト画面だけに対応しています。';
+  if(window.NER_APP)document.getElementById('dxShotAi').hidden=true;
 }
 {const _r=renderDxSetup;renderDxSetup=function(){_r();dxShotUI()}}
 document.getElementById('dxShotLocal').addEventListener('click',()=>{dxShotMode='local';document.getElementById('dxShotFile').click()});
@@ -4659,11 +4661,12 @@ document.getElementById('dxShotFile').addEventListener('change',async e=>{
   btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();
   const found=new Map();let failed=0;
   try{failed=mode==='local'?await dxReadLocal(files,byNo,inDex,found,st):await dxReadAi(files,g,dexName,byNo,inDex,found,st)}
-  catch(err){st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||'この画面ではAIでの読み取りを使えません';btns.forEach(b=>b.disabled=false);return}
+  catch(err){st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||(mode==='local'?'読み取れませんでした。'+DX_SHOT_RETRY:'この画面ではAIでの読み取りを使えません');btns.forEach(b=>b.disabled=false);return}
   btns.forEach(b=>b.disabled=false);
-  st.textContent=failed?`${failed}枚は読み取れませんでした。${mode==='local'?'図鑑のリスト画面を、番号が見えるように撮ってください。':'もう一度試すか、別のスクショを選んでください。'}`:'';
-  if(!found.size){st.textContent=(st.textContent?st.textContent+' ':'')+'この図鑑のポケモンが見つかりませんでした。';return}
-  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0])))};
+  st.textContent=failed?`${failed}枚は読み取れませんでした。${mode==='local'?DX_SHOT_RETRY:'もう一度試すか、別のスクショを選んでください。'}`:'';
+  if(!found.size){st.textContent=mode==='local'?'この図鑑のポケモンが見つかりませんでした。'+(failed?DX_SHOT_RETRY:'作品と図鑑が合っているか、上の「変更」で確かめてください。'):(st.textContent?st.textContent+' ':'')+'この図鑑のポケモンが見つかりませんでした。';return}
+  const few=mode==='local'&&(failed||found.size<3*files.length);
+  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:few?(failed?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:''};
   renderDxScan();
 });
 function renderDxScan(){
@@ -4673,6 +4676,7 @@ function renderDxScan(){
   dxSheetEl.innerHTML=`<div class="sheet-in"><div class="sh-head"><h3>スクショの読み取り結果</h3><button class="btn" type="button" data-dxsclose="1">閉じる</button></div>
     <p class="dxwarn">スクショ内で登録されていないことを確認したポケモンは、登録を解除します。</p>
     <p class="note" style="margin:0">左の丸にチェックしたポケモンに、スクショの登録状況を反映します。「捕まえた」は登録、「見ただけ」「見ていない」は解除します。「不明」は変更しません。読み間違いがあるかもしれないので、確かめてから反映してください。</p>
+    ${dxScan.tip?`<p class="note dxtip">${dxScan.tip}</p>`:''}
     <div class="dxlist">${dxScan.items.map(([s,v])=>`<div class="dxrow${dxScan.sel.has(s)?' on':''}"><button type="button" class="dxckb" data-dxss="${s}" aria-pressed="${dxScan.sel.has(s)}" aria-label="${SPDB[s-1][0]}に反映する"><span class="dxck" aria-hidden="true"></span></button><div class="dxmain"><span class="dxno">${pad3(num.get(s)??s)}</span><span class="dxname">${SPDB[s-1][0]}</span><span class="dxst ${v}">${lab[v]}</span></div></div>`).join('')}</div>
     <div class="dxapply"><button class="btn primary" type="button" data-dxsapply="1"></button></div></div>`;
   dxScanCount();
