@@ -1265,6 +1265,12 @@ html.rot body.onbo #rotScroll{overflow:hidden}
 .mnx-r{padding-left:14px}
 .mnx-r .l1 .rt{flex:none;margin-left:auto;display:flex;align-items:center;gap:1em;height:20px}
 .mnx-r .l1 .rt .lv{margin-left:0;min-width:46px;text-align:right}
+/* テラスタルのしるし（クリスタル） */
+.tera-ic{flex:none;display:block;overflow:visible}
+.mnx-r .l1 .rt{align-self:center}
+.mnx-r .l1 .rt .tera-ic{filter:drop-shadow(0 1px 1px rgb(0 0 0 / .25))}
+.mc-types .mc-tera{margin-left:6px;display:inline-flex;align-items:center;gap:4px;height:24px;box-sizing:border-box;padding:0 8px 0 4px;border-radius:7px;background:rgb(255 255 255 / .92);color:#1b2340;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 1px 3px rgb(0 0 0 / .2)}
+.mc-types .mc-tera small{font-size:10px;font-weight:800;color:#5b6482;margin-right:3px}
 .monbar{display:flex;gap:8px}
 .monbar .btn{min-height:48px;font-size:15px;border-radius:12px}
 .monbar .btn.primary{flex:1;background:var(--mon);border-color:var(--mon);color:#fff}
@@ -2393,7 +2399,7 @@ body:not(.app) .obsapp{display:none!important}
   <div class="mnx-lh"><p id="monCount" class="mnx-cnt"></p><div class="mnx-sortw"><button id="monSortBtn" class="mnx-srt" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="monSortM"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/></svg><span id="monSortLab">登録順・新しい順</span></button>
     <div class="mnx-sortm" id="monSortM" hidden><p>並び順</p><div class="seg" role="group" aria-label="並び順"><button type="button" data-monsort="add">登録順</button><button type="button" data-monsort="name">名前</button><button type="button" data-monsort="lv">レベル</button></div><div class="seg" role="group" aria-label="昇順・降順"><button type="button" data-mondir="asc">昇順</button><button type="button" data-mondir="desc">降順</button></div></div></div></div>
   <div id="monList" class="mnx-ls"></div>
-  <p class="note">個体をタップすると、内容を見たり直したりできます（左右にスワイプで次の個体へ）。右の☆でお気に入り。左の丸はタイプの色です。データはこのブラウザの中に保存されます。設定の「バックアップ」で書き出しておくと安心です。</p>
+  <p class="note">個体をタップすると、内容を見たり直したりできます（左右にスワイプで次の個体へ）。右の☆でお気に入り。データはこのブラウザの中に保存されます。設定の「バックアップ」で書き出しておくと安心です。</p>
 </div>
 
 <div class="wrap view" id="vIv" hidden>
@@ -5140,10 +5146,42 @@ function monMoves(m){const a=Array.isArray(m.moves)?m.moves.slice(0,4):[];while(
 const monEggs=m=>{const a=Array.isArray(m.egg)?m.egg.slice(0,4):[];while(a.length<4)a.push('');return a};
 const monTeraList=()=>[...TY_N,'ステラ'];
 const monTeraI=t=>TY_N.indexOf(t);
-// 一覧のカード用の小さいしるし（例：テラ炎）
-function monTeraTag(m){if(!m.tera)return '';const i=monTeraI(m.tera);return `<span class="tera${i<0?' tera-st':''}"${i>=0?` style="--tc:${TY_C[i]}"`:''} title="テラスタイプ：${esc(m.tera)}">テラ${esc(i>=0?TY_S[i]:m.tera==='ステラ'?'ステラ':m.tera)}</span>`}
-// ステータス画面用（例：テラ ほのお）
-function monTeraChip(m){if(!m.tera)return '';const i=monTeraI(m.tera);return `<span class="tyc mc-tera${i<0?' tera-st':''}" style="--tc:${i>=0?TY_C[i]:'#888'};--tf:#fff"><small>テラ</small>${esc(m.tera)}</span>`}
+// テラスタルのしるし：六角形のクリスタルの中に、このアプリで描いたタイプのマーク（公式のアイコンは使わない）
+// 部品：f=白でぬる fe=白でぬる（穴あき） s=白い線 kf=濃い色でぬる ks=濃い線（どれも 24×24 の中で描く）
+const TERA_CIRC=(x,y,r)=>`M${x-r} ${y}a${r} ${r} 0 1 0 ${2*r} 0a${r} ${r} 0 1 0 ${-2*r} 0z`;
+const TERA_MK=[
+ [['s',TERA_CIRC(12,12,6)]],                                                                 // ノーマル：輪
+ [['f','M12 2.5c.8 4 6 6.2 6 11.8a6 6 0 0 1-12 0c0-2.8 1.6-4.8 3-6 0 2 .8 3.2 2 3.6-.3-3.2.2-6.4 1-9.4z']], // ほのお：ほのお
+ [['f','M12 2.5C9.3 7 6 10.4 6 14.2a6 6 0 0 0 12 0C18 10.4 14.7 7 12 2.5z']],               // みず：しずく
+ [['f','M14.5 2 5 13.6h6L9.5 22 19 10.4h-6.2z']],                                            // でんき：いなずま
+ [['f','M20 3.5C10 3.2 4.3 9 5.6 18.2L3.5 21l1.3 1 2.4-2.6C16.4 20.6 20.8 14 20 3.5z'],['ks','M7.5 18.5C10 14 13 10.5 16.5 8']], // くさ：葉っぱ
+ [['s','M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9']],                                          // こおり：雪の結晶
+ [['f','M5.5 10a2.5 2.5 0 0 1 2.5-2.5h8.5A2.5 2.5 0 0 1 19 10v4.5a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-6-6z'],['ks','M9.5 7.8v4M12.8 7.8v4M16 7.8v4']], // かくとう：こぶし
+ [['f',TERA_CIRC(10,15,5.2)+TERA_CIRC(16.6,7.6,3.1)+TERA_CIRC(7.2,5.6,1.9)]],                // どく：あわ
+ [['f','M1.8 19.5 8 10.5l4 5.2 3.2-4.2 7 8z']],                                              // じめん：やま
+ [['f','M2.5 16.5C5.5 8 12.5 4 21.5 4c-1 3-3.2 5-6.2 6 1.6.2 3 0 4.2-.6-1.2 3.2-4.2 5.2-8.2 5.6 1 .5 2.2.6 3.2.5-2.4 2.4-5.6 3.2-12 1z']], // ひこう：つばさ
+ [['f','M1.8 12c3-5 6.8-7.2 10.2-7.2S19.2 7 22.2 12c-3 5-6.8 7.2-10.2 7.2S4.8 17 1.8 12z'],['kf',TERA_CIRC(12,12,3.4)]], // エスパー：目
+ [['f','M12 9.5c3 0 4.6 2.8 4.6 6.2S14.6 21.5 12 21.5s-4.6-2.4-4.6-5.8S9 9.5 12 9.5z'],['s','M10.6 9.8 7.5 3.8M13.4 9.8l3.1-6']], // むし：しょっかく
+ [['f','M3.8 17 6.4 8.6 12 3.6l6.6 4.2 2 9-5.2 4H8.4z'],['ks','M12 3.6 11 11l9.4 6M11 11l-4.6-2.4M11 11l-2.6 10']], // いわ：いし
+ [['f','M5.8 21V11a6.2 6.2 0 0 1 12.4 0v10l-2.1-1.7-2 1.7-2.1-1.7-2.1 1.7-2-1.7z'],['kf',TERA_CIRC(9.8,11,1.5)+TERA_CIRC(14.2,11,1.5)]], // ゴースト：おばけ
+ [['f','M3.5 4C8.5 5.4 15.5 5.4 20.5 4c-1 6.8-4 12.4-8.5 17.5C7.5 16.4 4.5 10.8 3.5 4z']],     // ドラゴン：きば
+ [['f','M15 2.6A9.4 9.4 0 1 0 21.6 16 7.8 7.8 0 0 1 15 2.6z']],                               // あく：みかづき
+ [['fe','M12 2.6l8.2 4.7v9.4L12 21.4l-8.2-4.7V7.3z'+TERA_CIRC(12,12,3.4)]],                 // はがね：ナット
+ [['f','M12 1.8Q13.2 10.8 22.2 12 13.2 13.2 12 22.2 10.8 13.2 1.8 12 10.8 10.8 12 1.8z']],   // フェアリー：きらめき
+];
+const TERA_STAR=[['f','M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6-4.9-4.5 6.6-.8z']];
+function monTeraSvg(t,h=21){
+  const i=monTeraI(t),st=i<0,c=st?'url(#teraStG)':TY_C[i],dk=st?'#4a3a6a':'#'+[1,3,5].map(k=>Math.round(parseInt(TY_C[i].substr(k,2),16)*.55).toString(16).padStart(2,'0')).join(''),w=+(h*20/22).toFixed(1),lab='テラスタイプ：'+esc(t);
+  const P=(st?TERA_STAR:TERA_MK[i]).map(([m,d])=>m==='s'?`<path d="${d}" fill="none" stroke="rgb(0 0 0 / .4)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`
+    :m==='ks'?`<path d="${d}" fill="none" stroke="${dk}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`
+    :m==='kf'?`<path d="${d}" fill="${dk}"/>`
+    :`<path d="${d}" fill="#fff"${m==='fe'?' fill-rule="evenodd"':''} stroke="rgb(0 0 0 / .4)" stroke-width="2" stroke-linejoin="round" paint-order="stroke"/>`).join('');
+  return `<svg class="tera-ic" viewBox="0 0 20 22" width="${w}" height="${h}" role="img" aria-label="${lab}"><title>${lab}</title>${st?'<defs><linearGradient id="teraStG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e62829"/><stop offset=".3" stop-color="#fac000"/><stop offset=".55" stop-color="#3fa129"/><stop offset=".78" stop-color="#2980ef"/><stop offset="1" stop-color="#9141cb"/></linearGradient></defs>':''}<path d="M10 .8 19.2 6v10L10 21.2.8 16V6z" fill="${c}" stroke="rgb(0 0 0 / .45)" stroke-width="1" stroke-linejoin="round"/><path d="M10 .8.8 6l5.2 2.6L10 4.6z" fill="#fff" opacity=".42"/><path d="M10 .8 19.2 6 14 8.6 10 4.6z" fill="#fff" opacity=".2"/><path d="M.8 16 10 21.2 19.2 16 14 14.4l-4 2.8-4-2.8z" fill="#000" opacity=".16"/><path d="M6 8.6 10 4.6l4 4v5.8l-4 2.8-4-2.8z" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".7"/><g transform="translate(10 11) scale(.48) translate(-12 -12)">${P}</g></svg>`;
+}
+// 一覧のカード用（クリスタルのしるしだけ）
+function monTeraTag(m){if(!m.tera)return '';return monTeraSvg(m.tera,21)}
+// ステータス画面用（しるし＋タイプ名）
+function monTeraChip(m){if(!m.tera)return '';return `<span class="mc-tera" title="テラスタイプ：${esc(m.tera)}">${monTeraSvg(m.tera,20)}<span><small>テラ</small>${esc(m.tera)}</span></span>`}
 function monCollect(){if(!monEdit)return;{const eg=[...monSheet.querySelectorAll('[data-monegg]')];if(eg.length)monEdit.egg=eg.map(el=>el.value.trim())}{const mvIn=[...monSheet.querySelectorAll('[data-monmv]')];if(mvIn.length)monEdit.moves=mvIn.map(el=>el.value.trim())}{const ivIn=[...monSheet.querySelectorAll('[data-monivin]')];if(ivIn.length){const r=ivIn.map(el=>{const t=el.value.trim();if(t===''){const g=el.dataset.ivrg;return g?g.split(',').map(Number):null}const n=Math.max(0,Math.min(31,Math.round(+t)));return Number.isFinite(n)?[n,n]:null});
   if(r.some(Boolean))monEdit.iv=Object.assign({},monEdit.iv||{},{r});else if(monEdit.iv)monEdit.iv=Object.assign({},monEdit.iv,{r:null})}}const evIn=monSheet.querySelectorAll('[data-monev]');if(evIn.length){monEdit.ev=monEdit.ev||{};evIn.forEach(el=>monEdit.ev[el.dataset.monev]=Math.max(0,Math.min(252,Math.round(+el.value||0))))}monSheet.querySelectorAll('[data-monf]').forEach(el=>{monEdit[el.dataset.monf]=el.value.trim?el.value.trim():el.value})}
 monSheet.addEventListener('input',e=>{
