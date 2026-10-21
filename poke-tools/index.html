@@ -1759,6 +1759,17 @@ body:not(.app) .obsapp{display:none!important}
 .ivx-acts #ivRec{color:var(--iv);border-color:color-mix(in srgb,var(--iv) 50%,var(--line));background:color-mix(in srgb,var(--iv) 9%,var(--surface))}
 .ivx-acts.lk #ivRec{padding:0 12px}
 .ivx-acts #ivUnl{padding:0 12px;color:var(--muted)}
+/* 連携・記録・外すはポケモンの枠の中（低めの1行・高さ固定） */
+.ivx-top .ivx-acts{height:36px;margin-top:8px;gap:6px}
+.ivx-top .ivx-acts .btn{height:36px;border-radius:10px;font-size:12.5px}
+.ivx-top .ivx-acts.lk #ivRec,.ivx-top .ivx-acts #ivUnl{padding:0 10px}
+/* 緑のカードを低く（高さ固定 90px） */
+#vIv .ivx-hero{height:90px;padding:10px 16px 12px}
+#vIv .ivx-hero::after{top:-56px;width:116px;height:116px;border-width:18px}
+#vIv .ivx-hero .num{height:42px}
+#vIv .ivx-hero .num b{font-size:34px;line-height:42px}
+#vIv .ivx-hero .num b.rg{font-size:31px}
+#vIv .ivx-hero .num>span{font-size:14px}
 .ivx-foot{display:flex;align-items:flex-start;gap:8px;height:36px;flex:none}
 .ivx-foot .ivmsg{flex:1;min-width:0;margin:0}
 .ivx-foot #ivClr{flex:none;height:32px;margin:2px 0 0;padding:0 12px;font-size:12.5px;font-weight:700;border-radius:999px;display:flex;align-items:center;gap:4px}
@@ -2151,6 +2162,7 @@ body:not(.app) .obsapp{display:none!important}
     <div class="ivx-sbox"><div class="ivx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="ivQ" type="text" placeholder="ポケモン名で探す" autocomplete="off" enterkeyhint="search" aria-label="ポケモンの名前で探す"><button type="button" id="ivQx" class="ivx-qx" aria-label="入力を消す" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div id="ivRes" class="sres ivres"></div></div>
     <div class="ivmon" id="ivMon"></div>
     <div class="ivlvrow"><span class="ivlvl">レベル</span><div class="ivx-step"><button type="button" data-ivlvs="-1" aria-label="レベルを1下げる">−</button><input id="ivLv" type="number" inputmode="numeric" min="1" max="100" aria-label="レベル"><button type="button" data-ivlvs="1" aria-label="レベルを1上げる">＋</button></div><label class="tysel2 ivnat" id="ivNatBox"><span id="ivNatLab">せいかくを選ぶ</span><select id="ivNat" aria-label="せいかく"></select></label></div>
+    <div class="ivx-acts" id="ivLink"></div>
   </section>
   </div>
   <div class="ivx-hero" id="ivHero"><div class="lab"><span class="gl"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>個体値の合計</span><span class="ivx-sub" id="ivHeroSub"></span></div><div class="num"><b id="ivTot">－</b><span>/ 186</span></div><div class="ivx-hbar"><span id="ivTotBar" style="width:0%"></span></div></div>
@@ -2160,7 +2172,6 @@ body:not(.app) .obsapp{display:none!important}
     <div id="ivRows"></div>
   </section>
   </div>
-  <div class="ivx-acts" id="ivLink"></div>
   <div class="ivx-foot"><p class="ivmsg" id="ivMsg" aria-live="polite"></p><button type="button" class="btn" id="ivClr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>クリア</button></div>
   <p class="note">ステータス画面の数字（実数値）と、レベル・せいかく・努力値から、個体値を計算します。第3世代以降の計算のしかたで、種族値は最新の作品のものです。レベルが高いほど細かく分かります（レベル100なら、ほとんど1つに決まります）。ジャッジの言葉は、剣盾・SVのボックスで見られる「ジャッジ」と同じです。めざめるパワーは第7世代までの技です。</p>
 </div>
