@@ -909,6 +909,111 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 :root{--pb:#8a4fd1}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--pb:#b98bf0}}
 :root[data-theme="dark"]{--pb:#b98bf0}
+/* ポロック・ポフィン（再デザイン） */
+#vPb{gap:10px;padding-bottom:72px}
+.pbx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;min-width:0}
+.pbx-ic{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:color-mix(in srgb,var(--pb) 80%,var(--ink));background:color-mix(in srgb,var(--pb) 18%,transparent)}
+.pbx-ic svg{width:15px;height:15px}
+.pbx-sum{display:flex;align-items:center;gap:10px;padding:10px 12px;height:66px;width:100%;text-align:left;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.pbx-sum:active{background:var(--sunken)}
+.pbx-sum .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.pbx-sum .t1{font-size:13px;font-weight:700;line-height:18px;height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pbx-chips{display:flex;gap:4px;overflow:hidden;white-space:nowrap;height:20px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.pbx-chip{flex:none;font-size:11px;font-weight:700;line-height:18px;height:20px;padding:0 7px;border-radius:999px;color:color-mix(in srgb,var(--pb) 85%,var(--ink));border:1px solid color-mix(in srgb,var(--pb) 45%,var(--line));background:color-mix(in srgb,var(--pb) 12%,var(--surface))}
+.pbx-edit{flex:none;font-size:12px;font-weight:700;padding:6px 8px 6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--sunken);display:flex;align-items:center;gap:1px}
+.pbx-edit svg{width:15px;height:15px}
+.pbx-sh{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;height:26px;white-space:nowrap}
+.pbx-sh .rt{margin-left:auto;font-size:12px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:6px;min-width:0}
+.pbx-sh .rt span{overflow:hidden;text-overflow:ellipsis}
+.pbx-sh .toggle{width:38px;height:22px}.pbx-sh .toggle::after{width:16px;height:16px}.pbx-sh .toggle[aria-pressed=true]{background:var(--pb)}.pbx-sh .toggle[aria-pressed=true]::after{transform:translateX(16px)}
+.pbx-note{font-size:11.5px;color:var(--muted);margin:0;line-height:1.55}
+.pbx-mon{display:flex;flex-direction:column;gap:10px}
+.pbx-sel{position:relative;display:flex;align-items:center;gap:8px;height:42px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--sunken);color:var(--ink)}
+.pbx-sel:focus-within{border-color:var(--pb)}
+.pbx-sel .t{flex:1;min-width:0;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pbx-sel .t small{margin-left:6px;color:var(--muted);font-weight:500;font-size:12px}
+.pbx-sel>svg{width:16px;height:16px;color:var(--muted);flex:none}
+.pbx-sel select{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer}
+.pbx-sheen{display:flex;align-items:center;gap:10px;height:30px;padding:0 2px;border:none;background:none;width:100%;color:var(--ink);font-size:12.5px;font-weight:700;border-radius:8px;-webkit-tap-highlight-color:transparent}
+.pbx-sheen:active{background:var(--sunken)}
+.pbx-hbar{flex:1;height:10px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}
+.pbx-hbar span{display:block;height:100%;background:var(--pb);border-radius:999px}
+.pbx-sheen .v{font-family:var(--f-num);min-width:5.6em;text-align:right;white-space:nowrap}
+.pbx-cols{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.pbx-c{height:150px;min-width:0;border-radius:12px;background:var(--sunken);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:7px 2px 6px;gap:1px;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.pbx-c:active{border-color:var(--c)}
+.pbx-c b{font-size:11px;line-height:14px;white-space:nowrap;color:color-mix(in srgb,var(--c) 80%,var(--ink))}
+.pbx-c small{font-size:9.5px;color:var(--muted);line-height:1.1;white-space:nowrap}
+.pbx-c .vb{position:relative;width:16px;flex:1;margin:5px 0 3px;border-radius:5px;background:var(--surface);border:1px solid var(--line);overflow:hidden}
+.pbx-c .vb span{position:absolute;left:0;right:0;bottom:0}
+.pbx-c .vb .g{border-top:2px dashed var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.pbx-c .vb .n{background:var(--c)}
+.pbx-c .v{font-family:var(--f-num);font-weight:700;font-size:14px;line-height:17px}
+.pbx-c .tg{font-size:9.5px;color:var(--muted);white-space:nowrap;line-height:13px}
+.pbx-c.ok .tg{color:color-mix(in srgb,var(--ok) 85%,var(--ink));font-weight:700}
+.pbx-berry{display:flex;flex-direction:column;gap:8px;min-width:0}
+.pbx-row{display:flex;gap:8px;align-items:center}
+.pbx-search{flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:42px;padding:0 6px 0 12px;border-radius:12px;border:1px solid var(--line);background:var(--sunken);color:var(--muted)}
+.pbx-search:focus-within{border-color:var(--pb)}
+.pbx-search svg{width:17px;height:17px;flex:none}
+#vPb .pbx-search input{flex:1;min-width:0;height:100%;border:none;background:none;padding:0;margin:0;color:var(--ink);font:inherit;outline:none}
+.pbx-more{position:relative;flex:none}
+.pbx-ibtn{height:42px;width:42px;padding:0;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center}
+.pbx-ibtn svg{width:16px;height:16px}
+.pbx-ibtn[aria-expanded=true]{background:var(--sunken)}
+.pbx-menu{position:absolute;right:0;top:48px;z-index:8;width:max-content;min-width:220px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px -10px rgb(0 0 0 / .4);padding:6px;display:flex;flex-direction:column}
+.pbx-menu[hidden]{display:none}
+.pbx-menu button{height:44px;text-align:left;padding:0 12px;border:none;background:none;border-radius:8px;font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap}
+.pbx-menu button:active{background:var(--sunken)}
+.pbx-menu button.warn{background:var(--warn);color:#fff}
+.pbx-seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:36px;flex:none;background:var(--sunken)}
+.pbx-seg button{flex:1;min-width:0;border:none;background:none;font-size:12.5px;font-weight:700;color:var(--muted);padding:0 4px;white-space:nowrap}
+.pbx-seg button+button{border-left:1px solid var(--line)}
+.pbx-seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.pbx-seg small{font-family:var(--f-num);font-size:11px;opacity:.8;margin-left:4px}
+.pbx-bs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;height:350px;overflow-y:auto;align-content:start;overscroll-behavior:contain;scrollbar-width:none;border-radius:14px}
+.pbx-bs::-webkit-scrollbar{display:none}
+.pbx-b{height:92px;box-sizing:border-box;padding:9px 10px;display:flex;flex-direction:column;gap:3px;background:var(--surface);border:1px solid var(--line);border-radius:14px;min-width:0}
+.pbx-b.own{border-color:color-mix(in srgb,var(--pb) 55%,var(--line));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pb) 30%,transparent)}
+.pbx-b.ex .t,.pbx-b.ex small,.pbx-b.ex .pbx-st{opacity:.45}
+.pbx-b .t{display:flex;align-items:center;gap:6px;height:18px;min-width:0}
+.pbx-b .t b{font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pbx-b .fl{display:flex;gap:2px;flex:none}.pbx-b .fl i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.pbx-b small{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:14px}
+.pbx-b .r{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:4px}
+.pbx-st{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;height:32px;flex:none;background:var(--surface)}
+.pbx-st button{width:28px;height:100%;border:none;background:var(--sunken);color:var(--ink);font-size:17px;font-weight:700;padding:0}
+#vPb .pbx-st input{width:34px;height:100%;border:none;border-radius:0;padding:0;text-align:center;font-family:var(--f-num);font-weight:700;background:var(--surface);-moz-appearance:textfield;appearance:textfield}
+#vPb .pbx-st input::-webkit-outer-spin-button,#vPb .pbx-st input::-webkit-inner-spin-button,#vPb .pbx-step input::-webkit-outer-spin-button,#vPb .pbx-step input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.pbx-use{flex:none;min-width:48px;height:32px;padding:0 5px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap}
+.pbx-use[aria-pressed=true]{background:var(--warn);border-color:var(--warn);color:#fff}
+.pbx-empty{grid-column:1/-1;margin:0;color:var(--muted);font-size:14px;text-align:center;padding:24px 8px;border:1.5px dashed var(--line);border-radius:14px}
+.pbx-res{display:flex;flex-direction:column;gap:10px}
+.pbx-cta{position:fixed;left:0;right:0;bottom:var(--tabh);z-index:6;padding:12px max(16px,var(--sa-right,env(safe-area-inset-right,0px))) 10px max(16px,var(--sa-left,env(safe-area-inset-left,0px)));background:linear-gradient(transparent,var(--bg) 40%);pointer-events:none}
+.pbx-calc{pointer-events:auto;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:608px;margin:0 auto;height:50px;border:none;border-radius:14px;background:var(--pb);color:#fff;font-size:15px;font-weight:700;box-shadow:0 4px 0 color-mix(in srgb,var(--pb) 62%,#000)}
+.pbx-calc:active{transform:translateY(2px);box-shadow:0 2px 0 color-mix(in srgb,var(--pb) 62%,#000)}
+.pbx-calc svg{width:18px;height:18px}
+:root[data-theme="dark"] .pbx-calc{background:color-mix(in srgb,var(--pb) 70%,#000);box-shadow:0 4px 0 color-mix(in srgb,var(--pb) 38%,#000)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pbx-calc{background:color-mix(in srgb,var(--pb) 70%,#000);box-shadow:0 4px 0 color-mix(in srgb,var(--pb) 38%,#000)}}
+.pbx-sheet section{display:flex;flex-direction:column}
+#pbSetSheet .sheet-in{height:min(620px,92%)}
+#pbValSheet .sheet-in{height:calc(340px + var(--sa-bottom,env(safe-area-inset-bottom,0px)));max-height:92%}
+.pbx-ok{height:48px;flex:none;margin-top:auto;border:none;border-radius:14px;background:var(--ink);color:var(--bg);font-size:15px;font-weight:700}
+.pbx-sheet h3 small{font-family:var(--f-body);font-size:12px;color:var(--muted);margin-left:6px;font-weight:700}
+.pbx-vnav{display:flex;gap:4px;margin-left:auto}
+.pbx-vnav .btn{width:40px;padding:8px 0;font-size:16px;line-height:1}
+.pbx-vbody{display:flex;flex-direction:column;gap:8px}
+.pbx-vrow{display:flex;align-items:center;gap:12px;height:52px}
+.pbx-vrow .l{width:3em;flex:none;font-size:14px;font-weight:700;color:color-mix(in srgb,var(--c) 80%,var(--ink))}
+.pbx-step{flex:1;min-width:0;display:flex;align-items:center;border:1px solid var(--line);border-radius:12px;overflow:hidden;height:46px;background:var(--surface)}
+.pbx-step button{flex:1;min-width:0;height:100%;border:none;background:var(--sunken);color:var(--ink);font-size:15px;font-weight:700;padding:0;font-family:var(--f-num)}
+.pbx-step button+button{border-left:1px solid var(--line)}
+#vPb .pbx-step input{flex:none;width:76px;height:100%;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:0;padding:0;text-align:center;font-family:var(--f-num);font-weight:700;background:var(--surface);-moz-appearance:textfield;appearance:textfield}
+.pbx-pre{display:flex;align-items:center;gap:6px;height:40px}
+.pbx-pre span{width:3em;flex:none;font-size:12px;color:var(--muted);font-weight:700}
+.pbx-pre button{flex:1;min-width:0;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:700;font-family:var(--f-num)}
+.pbx-pre button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
 .pbgames{display:flex;flex-direction:column;gap:6px}
 .pbgames button{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;text-align:left;color:var(--ink)}
 .pbgames button b{font-size:12px;color:var(--muted)}
@@ -1851,45 +1956,31 @@ body:not(.app) .obsapp{display:none!important}
 </div>
 
 <div class="wrap view" id="vPb" hidden>
-  <div class="shbox foldbox" data-foldbox="pb">
-  <button type="button" class="foldhd" aria-expanded="true"><span class="foldt">設定</span><span class="foldsum" id="pbFoldSum"></span><svg class="foldchev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
-  <div class="foldbody">
-  <section>
-    <h2>作品</h2>
-    <div class="pbgames" id="pbGame" role="group" aria-label="作品"></div>
-  </section>
-  <section>
-    <h2>作り方</h2>
-    <div class="stack" id="pbMake"></div>
-  </section>
+  <button id="pbSetBtn" class="pbx-card pbx-sum" type="button" aria-haspopup="dialog" aria-label="作品と作り方を変更"><span class="pbx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></span><span class="tx"><span class="t1" id="pbSumT"></span><span class="pbx-chips" id="pbSumC"></span></span><span class="pbx-edit">変更<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <div class="pbx-card pbx-mon">
+    <div class="pbx-sh"><span class="pbx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span>ポケモンのコンディション<span class="rt">いま → 目標</span></div>
+    <label class="pbx-sel"><span class="t" id="pbNatLab"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="pbNat" aria-label="性格"></select></label>
+    <button type="button" class="pbx-sheen" data-pbbar="5" aria-label="毛づやを入力"><span class="l">けづや</span><span class="pbx-hbar"><span id="pbSheenBar"></span></span><span class="v" id="pbSheenV"></span></button>
+    <div class="pbx-cols" id="pbCond"></div>
+    <p class="pbx-note">棒をタップすると「いま」と「目標」を入力できます。点線が目標です。</p>
   </div>
+  <div class="pbx-berry">
+    <div class="pbx-sh"><span class="pbx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="14" r="7"/><path d="M12 7c0-2 1-4 4-4M12 7c-2-2-5-2-6-1"/></svg></span>きのみ<label class="rt"><button id="pbOnlyOwn" class="toggle" type="button" aria-pressed="false" aria-label="持っているきのみだけで作る"></button><span>持っているものだけで作る</span></label></div>
+    <div class="pbx-row"><label class="pbx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="pbBSearch" type="search" placeholder="きのみの名前で探す" autocomplete="off" aria-label="きのみの名前で探す"></label><div class="pbx-more"><button id="pbMore" class="pbx-ibtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="pbMenu" aria-label="きのみのその他の操作"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button><div class="pbx-menu" id="pbMenu" hidden><button id="pbAllOwn0" type="button">所持数を全部0にする</button><button id="pbExClr" type="button">「使わない」を全部やめる</button></div></div></div>
+    <div class="pbx-seg" role="group" aria-label="表示するきのみ"><button type="button" data-pbbf="all">すべて<small></small></button><button type="button" data-pbbf="own">持っている<small></small></button><button type="button" data-pbbf="ex">使わない<small></small></button></div>
+    <div class="pbx-bs" id="pbBList"></div>
+    <p class="pbx-note">所持数を入れておくと、足りないきのみが分かります。「使わない」にしたきのみは計算に使いません。</p>
   </div>
-  <div class="shbox">
-  <section>
-    <h2>ポケモン</h2>
-    <label class="pbrow"><span class="pbl">性格</span><select id="pbNat" class="gensel" aria-label="性格"></select></label>
-    <label class="pbrow"><span class="pbl">いまの毛づや</span><input id="pbSheen" type="number" inputmode="numeric" min="0" max="255"><span class="pbu">/ 255</span></label>
-    <div class="pbconds" id="pbCond"></div>
-  </section>
-  </div>
-  <div class="shbox">
-  <section>
-    <div class="h2row"><h2>きのみ</h2><span id="pbBSum" class="pbbsum"></span></div>
-    <div class="opt" style="margin-top:0"><span>持っているきのみだけで作る</span><button id="pbOnlyOwn" class="toggle" type="button" aria-pressed="false" aria-label="持っているきのみだけで作る"></button></div>
-    <input id="pbBSearch" type="search" class="pbsearch" placeholder="きのみの名前で探す" autocomplete="off" aria-label="きのみの名前で探す">
-    <div class="pbbtools"><button id="pbBOwnOnly" class="btn" type="button" aria-pressed="false">持っているものだけ表示</button><button id="pbAllOwn0" class="btn" type="button">所持数を全部0にする</button></div>
-    <div class="pbblist" id="pbBList"></div>
-    <p class="note">所持数を入れておくと、足りないきのみが分かります。「使わない」にしたきのみは計算に使いません。</p>
-  </section>
-  </div>
-  <button id="pbCalc" class="btn primary pbcalc" type="button">レシピを計算する</button>
-  <div class="shbox">
-  <section>
-    <h2>結果</h2>
-    <div id="pbResult"></div>
-  </section>
-  </div>
-  <p class="note">同じきのみは1回に1つずつしか使えません（同じものを入れると失敗します）。ポロックは、ほかの人とブレンドするときのように、すべてのきのみを自分で選べるものとして計算しています。ポフィンの「性格の補正」は、いちばん強い味が好きな味なら全体が1.1倍、嫌いな味なら0.9倍として計算しています。</p>
+  <div class="pbx-card pbx-res"><div class="pbx-sh"><span class="pbx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01" stroke-linecap="round"/></svg></span>結果</div><div id="pbResult"></div></div>
+  <p class="pbx-note">同じきのみは1回に1つずつしか使えません（同じものを入れると失敗します）。ポロックは、ほかの人とブレンドするときのように、すべてのきのみを自分で選べるものとして計算しています。ポフィンの「性格の補正」は、いちばん強い味が好きな味なら全体が1.1倍、嫌いな味なら0.9倍として計算しています。</p>
+  <div class="pbx-cta"><button id="pbCalc" class="pbx-calc" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01" stroke-linecap="round"/></svg>レシピを計算する</button></div>
+  <div id="pbSetSheet" class="sheet pbx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="pbSetT"><div class="sheet-in">
+    <div class="sh-head"><h3 id="pbSetT">作品と作り方</h3><button class="btn" type="button" data-pbclose="1">閉じる</button></div>
+    <section><h2>作品</h2><div class="pbgames" id="pbGame" role="group" aria-label="作品"></div></section>
+    <section><h2>作り方</h2><div class="stack" id="pbMake"></div></section>
+    <button class="pbx-ok" type="button" data-pbclose="1">この条件で作る</button>
+  </div></div>
+  <div id="pbValSheet" class="sheet pbx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="pbValT"><div class="sheet-in" id="pbValIn"></div></div>
 </div>
 
 <div class="wrap view" id="vMon" hidden>
@@ -4103,6 +4194,7 @@ const PB_GAMES=[
   {id:'bdsp',g:8,n:'ブリリアントダイヤモンド・シャイニングパール',item:'ポフィン',maxN:4,minN:1},
 ];
 S.pb=Object.assign({game:'rse',nat:0,sheen:0,cur:[0,0,0,0,0],tgt:[255,255,255,255,255],n:4,rpm:100,time:40,err:0,bonus:0,own:{},ex:{},onlyOwn:false,fold:false,bq:'',bOwnOnly:false},S.pb||{});
+if(S.pb.bf==null)S.pb.bf=S.pb.bOwnOnly?'own':'all';
 const pbGame=()=>PB_GAMES.find(x=>x.id===S.pb.game)||PB_GAMES[0];
 // 第3世代は味・なめらかさの数値が第4世代以降と違う
 const pbBF=b=>pbGame().g===3&&b[5]?[b[5],b[6]]:[b[2],b[3]];
@@ -4232,24 +4324,59 @@ function renderPb(){
   const nat=document.getElementById('pbNat');
   if(!nat.options.length)nat.innerHTML=PB_NAT.map(([n,l,d],i)=>`<option value="${i}">${n}${l<0?'（好き嫌いなし）':`（${PB_FL[l]}が好き・${PB_FL[d]}が嫌い）`}</option>`).join('');
   nat.value=String(P.nat);
-  document.getElementById('pbSheen').value=P.sheen;
-  document.getElementById('pbCond').innerHTML=PB_CD.map((c,i)=>`<div class="pbcd" style="--c:${PB_FC[i]}"><span class="pbcn">${c}<small>${PB_FL[i]}</small></span>
-    <label><small>いま</small><input type="number" inputmode="numeric" min="0" max="255" data-pbcur="${i}" value="${P.cur[i]}"></label>
-    <label><small>目標</small><input type="number" inputmode="numeric" min="0" max="255" data-pbtgt="${i}" value="${P.tgt[i]}"></label></div>`).join('');
-  document.getElementById('pbFoldSum').textContent=`${g.n}（${g.item}）`;
+  pbNatLab();pbBars();pbSumRender();
   renderPbFold();renderPbBerries();renderPbResult();
+  if(!document.getElementById('pbValSheet').hidden)pbValRender();
 }
-function renderPbFold(){const box=document.querySelector('[data-foldbox="pb"]');box.classList.toggle('folded',!!S.pb.fold);box.querySelector('.foldhd').setAttribute('aria-expanded',String(!S.pb.fold))}
+// 上のまとめ（作品・人数など）
+const PB_AB={rse:'RSE',dppt:'DPt',bdsp:'BDSP'};
+function pbSumRender(){
+  const g=pbGame(),P=S.pb,n=+P.n||g.maxN;
+  document.getElementById('pbSumT').textContent=`第${g.g}世代（${PB_AB[g.id]||g.n}）・${g.item}`;
+  const ch=[g.item,`${n}${g.g===8?'個':'人'}`].concat(g.g===3?[`最高 ${P.rpm}rpm`]:[`調理 ${P.time}秒`,`こぼし ${P.err}回`,`補正 ${P.bonus}`]);
+  document.getElementById('pbSumC').innerHTML=ch.map(t=>`<span class="pbx-chip">${esc(String(t))}</span>`).join('');
+}
+function pbNatLab(){const [n,l,d]=PB_NAT[S.pb.nat]||PB_NAT[0];
+  document.getElementById('pbNatLab').innerHTML=`性格：${n}<small>${l<0?'好き嫌いなし':`${PB_FL[l]}が好き・${PB_FL[d]}が嫌い`}</small>`}
+// コンディションの棒（色＝いま、点線＝目標）
+function pbBars(){
+  const P=S.pb,pc=v=>Math.max(0,Math.min(100,(+v||0)/255*100)).toFixed(1);
+  document.getElementById('pbCond').innerHTML=PB_CD.map((c,i)=>{const cu=+P.cur[i]||0,t=+P.tgt[i]||0;
+    return `<button type="button" class="pbx-c${cu>=t?' ok':''}" data-pbbar="${i}" style="--c:${PB_FC[i]}" aria-label="${c}（いま ${cu}・目標 ${t}）を入力"><b>${c}</b><small>${PB_FL[i]}</small><span class="vb" aria-hidden="true"><span class="g" style="height:${pc(t)}%"></span><span class="n" style="height:${pc(cu)}%"></span></span><span class="v">${cu}</span><span class="tg">目標 ${t}</span></button>`}).join('');
+  const sh=+P.sheen||0;document.getElementById('pbSheenBar').style.width=pc(sh)+'%';document.getElementById('pbSheenV').textContent=`${sh} / 255`;
+}
+// 値を入れるシート（0〜4：コンディション、5：毛づや）
+let pbVal=0;
+function pbValRender(){
+  const P=S.pb,i=pbVal,sh=i===5;
+  const step=(k,v,attr)=>`<div class="pbx-step"><button type="button" data-pbstep="${k}" data-pbd="-10" aria-label="10減らす">−10</button><button type="button" data-pbstep="${k}" data-pbd="-1" aria-label="1減らす">−1</button><input type="number" inputmode="numeric" min="0" max="255" ${attr} value="${v}"><button type="button" data-pbstep="${k}" data-pbd="1" aria-label="1増やす">＋1</button><button type="button" data-pbstep="${k}" data-pbd="10" aria-label="10増やす">＋10</button></div>`;
+  document.getElementById('pbValIn').innerHTML=`<div class="sh-head"><h3 id="pbValT">${sh?'毛づや':PB_CD[i]}${sh?'':`<small>${PB_FL[i]}</small>`}</h3><span class="pbx-vnav"><button type="button" class="btn" data-pbvnav="-1" aria-label="前の項目">‹</button><button type="button" class="btn" data-pbvnav="1" aria-label="次の項目">›</button></span><button class="btn" type="button" data-pbclose="1">閉じる</button></div>
+    <div class="pbx-vbody" style="--c:${sh?'var(--pb)':PB_FC[i]}">
+      <div class="pbx-vrow"><span class="l">いま</span>${step(sh?'sheen':'cur',sh?(+P.sheen||0):(+P.cur[i]||0),sh?'id="pbSheen" aria-label="いまの毛づや"':`data-pbcur="${i}" aria-label="${PB_CD[i]}のいまの値"`)}</div>
+      ${sh?`<p class="pbx-note">毛づやは食べるたびに増え、255になるとそれ以上は食べられません。</p>`
+        :`<div class="pbx-vrow"><span class="l">目標</span>${step('tgt',+P.tgt[i]||0,`data-pbtgt="${i}" aria-label="${PB_CD[i]}の目標"`)}</div>
+      <div class="pbx-pre" role="group" aria-label="目標をまとめて選ぶ"><span>目標</span>${[0,100,150,200,255].map(v=>`<button type="button" data-pbpre="${v}" aria-pressed="${(+P.tgt[i]||0)===v}">${v===255?'最大':v}</button>`).join('')}</div>`}
+    </div>
+    <button class="pbx-ok" type="button" data-pbclose="1">OK</button>`;
+}
+function pbSheet(el,on,back){
+  el.hidden=!on;
+  if(on){document.body.classList.add('modal');el.querySelector('.sheet-in').scrollTop=0;return}
+  if(!document.querySelector('.sheet:not([hidden]),#monCard:not([hidden]),#monFind:not([hidden])')&&drawer.hidden&&shPad.hidden)document.body.classList.remove('modal');
+  if(back)back.focus({preventScroll:true});
+}
+function renderPbFold(){}
+function pbBFCounts(){const P=S.pb,A=pbBerries(),c={all:A.length,own:A.filter(b=>(P.own[b[0]]||0)>0).length,ex:A.filter(b=>P.ex[b[0]]).length};
+  pbEl.querySelectorAll('[data-pbbf]').forEach(x=>{x.querySelector('small').textContent=c[x.dataset.pbbf]})}
 function renderPbBerries(){
-  const P=S.pb,q=kata(P.bq||''),L=pbBerries().filter(b=>(!q||kata(b[1]).includes(q))&&(!P.bOwnOnly||(P.own[b[0]]||0)>0));
-  const owned=pbBerries().filter(b=>(P.own[b[0]]||0)>0).length,exN=pbBerries().filter(b=>P.ex[b[0]]).length;
-  document.getElementById('pbBSum').textContent=`持っている ${owned}種類・使わない ${exN}種類`;
+  const P=S.pb,q=kata(P.bq||''),bf=P.bf||'all';
+  const L=pbBerries().filter(b=>(!q||kata(b[1]).includes(q))&&(bf!=='own'||(P.own[b[0]]||0)>0)&&(bf!=='ex'||P.ex[b[0]]));
   document.getElementById('pbOnlyOwn').setAttribute('aria-pressed',String(!!P.onlyOwn));
-  document.getElementById('pbBOwnOnly').setAttribute('aria-pressed',String(!!P.bOwnOnly));
-  document.getElementById('pbBList').innerHTML=L.map(b=>{const o=P.own[b[0]]||0,x=!!P.ex[b[0]];
-    return `<div class="pbb${x?' ex':''}"><div class="pbbn"><b>${b[1]}</b>${pbFlHTML(pbBF(b)[0])}<small>なめらかさ ${pbBF(b)[1]}</small></div>
-      <div class="pbbc"><button type="button" class="pbst" data-pbdec="${b[0]}" aria-label="${b[1]}を1つ減らす">−</button><input type="number" inputmode="numeric" min="0" max="999" data-pbown="${b[0]}" value="${o}" aria-label="${b[1]}の所持数"><button type="button" class="pbst" data-pbinc="${b[0]}" aria-label="${b[1]}を1つ増やす">＋</button></div>
-      <button type="button" class="pbex" data-pbex="${b[0]}" aria-pressed="${x}">${x?'使わない':'使う'}</button></div>`}).join('')||'<p class="rbempty">当てはまるきのみはありません。</p>';
+  pbEl.querySelectorAll('[data-pbbf]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.pbbf===bf)));
+  pbBFCounts();
+  document.getElementById('pbBList').innerHTML=L.map(b=>{const o=P.own[b[0]]||0,x=!!P.ex[b[0]],[fl,sm]=pbBF(b),fi=[0,1,2,3,4].filter(i=>fl[i]>0);
+    return `<div class="pbx-b${x?' ex':''}${o?' own':''}"><div class="t"><b>${b[1]}</b><span class="fl" aria-hidden="true">${fi.map(i=>`<i style="--c:${PB_FC[i]}"></i>`).join('')}</span></div><small>${fi.map(i=>PB_FL[i]+fl[i]).join('・')||'味なし'}　なめらか${sm}</small>
+      <div class="r"><div class="pbx-st"><button type="button" data-pbdec="${b[0]}" aria-label="${b[1]}を1つ減らす">−</button><input type="number" inputmode="numeric" min="0" max="999" data-pbown="${b[0]}" value="${o}" aria-label="${b[1]}の所持数"><button type="button" data-pbinc="${b[0]}" aria-label="${b[1]}を1つ増やす">＋</button></div><button type="button" class="pbx-use" data-pbex="${b[0]}" aria-pressed="${x}" aria-label="${b[1]}を${x?'使わない（タップで使う）':'使う（タップで使わない）'}">${x?'使わない':'使う'}</button></div></div>`}).join('')||'<p class="pbx-empty">当てはまるきのみはありません。</p>';
 }
 function renderPbResult(){
   const el=document.getElementById('pbResult'),R=pbResult;
@@ -4278,7 +4405,7 @@ pbEl.addEventListener('click',e=>{
   if(d.pbn){P.n=+d.pbn;pbResult=null;save();renderPb();return}
   if(d.pbex){P.ex[d.pbex]?delete P.ex[d.pbex]:P.ex[d.pbex]=1;save();renderPbBerries();return}
   if(d.pbinc||d.pbdec){const id=d.pbinc||d.pbdec,v=Math.max(0,(P.own[id]||0)+(d.pbinc?1:-1));if(v)P.own[id]=v;else delete P.own[id];save();
-    const inp=pbEl.querySelector(`[data-pbown="${id}"]`);if(inp)inp.value=v;document.getElementById('pbBSum').textContent=`持っている ${pbBerries().filter(x=>(P.own[x[0]]||0)>0).length}種類・使わない ${pbBerries().filter(x=>P.ex[x[0]]).length}種類`;return}
+    const inp=pbEl.querySelector(`[data-pbown="${id}"]`);if(inp)inp.value=v;pbBFCounts();if(inp)inp.closest('.pbx-b')?.classList.toggle('own',v>0);return}
   if(b.id==='pbOnlyOwn'){P.onlyOwn=!P.onlyOwn;save();renderPbBerries();return}
   if(b.id==='pbBOwnOnly'){P.bOwnOnly=!P.bOwnOnly;save();renderPbBerries();return}
   if(b.id==='pbAllOwn0'){armed(b,'所持数を全部0にする','本当に0にする',()=>{P.own={};save();renderPbBerries()});return}
@@ -4294,7 +4421,34 @@ pbEl.addEventListener('change',e=>{
   if(d.pbown){const v=num(t.value,0,999);if(v)P.own[d.pbown]=v;else delete P.own[d.pbown];t.value=v;save();renderPbBerries();return}
 });
 document.getElementById('pbBSearch').addEventListener('input',e=>{S.pb.bq=e.target.value;renderPbBerries()});
-pbEl.querySelector('[data-foldbox="pb"] .foldhd').addEventListener('click',()=>{S.pb.fold=!S.pb.fold;save();renderPbFold()});
+/* ポロック・ポフィン：シート・棒・絞り込み */
+const pbSetSheet=document.getElementById('pbSetSheet'),pbValSheet=document.getElementById('pbValSheet');
+function pbMenuOpen(on){const m=document.getElementById('pbMenu');m.hidden=!on;document.getElementById('pbMore').setAttribute('aria-expanded',String(on))}
+pbEl.addEventListener('click',e=>{
+  if(e.target===pbSetSheet||e.target===pbValSheet){pbSheet(e.target,false);return}
+  const b=e.target.closest('button');if(!b)return;const d=b.dataset,P=S.pb;
+  if(b.id==='pbSetBtn'){pbSheet(pbSetSheet,true);return}
+  if(d.pbclose){const sh=b.closest('.sheet');pbSheet(sh,false,sh===pbSetSheet?document.getElementById('pbSetBtn'):null);return}
+  if(d.pbbar!=null){pbVal=+d.pbbar;pbValRender();pbSheet(pbValSheet,true);return}
+  if(d.pbvnav){pbVal=(pbVal+ +d.pbvnav+6)%6;pbValRender();return}
+  if(d.pbstep){const k=d.pbstep,cl=v=>Math.min(255,Math.max(0,v)),dv=+d.pbd;
+    if(k==='sheen')P.sheen=cl((+P.sheen||0)+dv);else if(k==='cur')P.cur[pbVal]=cl((+P.cur[pbVal]||0)+dv);else P.tgt[pbVal]=cl((+P.tgt[pbVal]||0)+dv);
+    save();const inp=b.parentElement.querySelector('input');if(inp)inp.value=k==='sheen'?P.sheen:k==='cur'?P.cur[pbVal]:P.tgt[pbVal];
+    pbBars();pbValSync();return}
+  if(d.pbpre!=null){P.tgt[pbVal]=+d.pbpre;save();const inp=pbValSheet.querySelector('[data-pbtgt]');if(inp)inp.value=P.tgt[pbVal];pbBars();pbValSync();return}
+  if(d.pbbf){P.bf=d.pbbf;P.bOwnOnly=d.pbbf==='own';save();renderPbBerries();document.getElementById('pbBList').scrollTop=0;return}
+  if(b.id==='pbMore'){pbMenuOpen(document.getElementById('pbMenu').hidden);return}
+  if(b.id==='pbExClr'){P.ex={};save();renderPbBerries();pbMenuOpen(false);toast('「使わない」を全部やめました');return}
+});
+function pbValSync(){pbValSheet.querySelectorAll('[data-pbpre]').forEach(x=>x.setAttribute('aria-pressed',String((+S.pb.tgt[pbVal]||0)===+x.dataset.pbpre)))}
+pbEl.addEventListener('change',e=>{const t=e.target,d=t.dataset;
+  if(t.id==='pbNat'){pbNatLab();return}
+  if(t.id==='pbSheen'||d.pbcur!=null||d.pbtgt!=null){pbBars();pbValSync();return}
+  if(d.pbv){pbSumRender();return}
+});
+document.addEventListener('click',e=>{const m=document.getElementById('pbMenu');if(!m.hidden&&!e.target.closest('.pbx-more'))pbMenuOpen(false)});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;
+  if(!pbValSheet.hidden)pbSheet(pbValSheet,false);else if(!pbSetSheet.hidden)pbSheet(pbSetSheet,false,document.getElementById('pbSetBtn'));else if(!document.getElementById('pbMenu').hidden)pbMenuOpen(false)});
 
 /* ---------- 個体管理 ---------- */
 const MON_GFIX="............................fffmmm..............................................nn.................nn....mm.....f.f....nn..f...m...n....n......nnn...nn.................................................n...............................n..mmf..ffnnn...nnn........................................n....................mf......................nn....nn.............................nnnnnnfmnnnnn..........................fm.f...................nn..f.....................n...........nm..fnnnnnn.nnfnnnnnn...........................................mm........ff.................................................nnn.............n......nn...mmff.......nnnmmnnmnnnn...................fff...............................n............nnnnnn....................................f..fff........nnn......n...nnnnnnnnnnnnnnnnnnnnnnnnn............................................nnfffmmm......ffn.........nnnn....nnn..nnnnnn......f..........m.......nn...............................fff........................nnnnnnnnnnnn...nnnnnnnnnnnn.nnmmmf..nnnn.n"; // n=性別なし m=オスのみ f=メスのみ
