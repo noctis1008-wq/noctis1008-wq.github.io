@@ -468,6 +468,23 @@ body:not([data-view="ev"]) .bar:not(.shbar),body:not([data-view="ev"]) .pad{disp
 .rrow .seg button{padding:7px 9px;font-size:12px}
 .rmk{margin:0 0 0 auto!important;gap:6px!important;font-size:12px!important;white-space:nowrap;flex:none}
 .rbulk .btn{flex:1}
+.rpin{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--apph,58px));z-index:4;background:var(--surface);border:1px solid var(--line);border-bottom-color:transparent;border-radius:14px 14px 0 0;padding:12px 14px 8px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .15s,border-radius .15s}
+.rpin.stuck{border-radius:0 0 14px 14px;border-bottom-color:var(--line);box-shadow:0 6px 14px -6px rgb(0 0 0 / .25)}
+.rpin .rtitle{flex-wrap:nowrap;min-width:0}
+.rpin .rtitle b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-size:20px;line-height:1.25}
+.rpin .rtitle span{white-space:nowrap;flex:none}
+.rpin .rtitle span+span{overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0}
+.rpin .meter{margin-block:2px}
+.rpin+.rhead{border-top:none;border-radius:0 0 14px 14px;padding-top:4px}
+.rblink{display:flex;align-items:center;gap:8px;height:38px;padding:0 4px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--sunken)}
+.rblink .ni{width:24px;height:24px;border-radius:7px;font-size:11px}
+.rblink select{flex:1;min-width:0;height:30px;padding:2px 8px;font-weight:700;color:var(--mon);background:var(--surface)}
+.rblopen{flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:6px;border:none;background:none;padding:0;color:var(--ink);text-align:left}
+.rblopen b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;color:var(--mon)}
+.rblopen .rbmongo{margin-left:auto;flex:none;font-size:11px;align-self:center}
+.rblbtn{flex:none;height:30px;padding:0 10px;font-size:12px;white-space:nowrap}
+.rsec>h3{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--apph,58px) + var(--rpinh,0px));z-index:3;margin:-12px -10px 8px;padding:10px 10px 8px;border-radius:15px 15px 0 0;background:color-mix(in srgb,var(--gc) 8%,var(--surface));border-bottom:1px solid transparent}
+.rsec>h3.stuck{border-radius:0;border-bottom-color:color-mix(in srgb,var(--gc) 40%,var(--line));box-shadow:0 6px 10px -8px rgb(0 0 0 / .3)}
 /* ---- compact party cards ---- */
 .party{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .party.picking{display:grid}
@@ -599,7 +616,23 @@ button.ptile:active{background:var(--sunken)}
 .shfs{align-self:center}
 .shpop{position:absolute;transform:translate(-50%,-50%);font-family:var(--f-display);font-size:30px;color:var(--sh);text-shadow:0 2px 6px rgb(0 0 0 / .25);animation:shpop .9s ease-out forwards;pointer-events:none}
 @keyframes shpop{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}20%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-160%)}}
-.shpad{position:fixed;inset:0;z-index:45;background:color-mix(in srgb,var(--sh) 18%,var(--bg));touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.shpad{position:fixed;z-index:15;display:flex;flex-direction:column;
+  left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));
+  top:calc(env(safe-area-inset-top,0px) + 10px);bottom:calc(var(--tabh) + var(--shfsh,110px) + 8px);
+  touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.shpad .prow{flex:1}
+.shpad .pnm{text-overflow:ellipsis}
+.shpad .shpad5{position:absolute;top:10px;right:10px}
+.shfsbar{z-index:16}
+.shfsbar .countrow b{font-size:24px}
+.shfsbar .countrow{gap:8px}
+.shfsbar .countrow small,.shfsbar .countrow .unit,.shfsbar .fsbtn,.shfsbar .undo{white-space:nowrap;flex:none}
+.shfsbar .countrow b{min-width:0;overflow:hidden}
+.shfsbar .fsbtn,.shfsbar .undo{padding:7px 10px}
+@media (max-width:374px){.shfsbar .countrow small{display:none}.shfsbar .countrow b{font-size:22px}.shfsbar .countrow b.long{font-size:18px}}
+.shpbtn{background:color-mix(in srgb,var(--bc) 24%,transparent);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.shpbtn:active{background:color-mix(in srgb,var(--bc) 38%,transparent)}
+.gauge .gl{flex:none;font-size:11px;font-weight:700;color:var(--muted)}
 .shpad-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
   padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 .shpadnum{display:flex;align-items:baseline;gap:8px}
@@ -608,7 +641,7 @@ button.ptile:active{background:var(--sunken)}
 .shpadnum b.bump{animation:bump .18s ease}
 .shpadhint{margin:0;color:var(--muted);font-size:13px}
 .shpad5{position:absolute;top:calc(env(safe-area-inset-top,0px) + 16px);right:max(16px,env(safe-area-inset-right,0px));font-size:18px;padding:10px 18px}
-#shPadExit{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+
 .fx{z-index:60}
 .shbox{display:flex;flex-direction:column;gap:20px;border:1.5px solid var(--line);border-radius:16px;padding:16px 14px;background:color-mix(in srgb,var(--surface) 55%,transparent)}
 .shfs{align-self:flex-end!important}
@@ -896,7 +929,8 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mc-lv{flex:none;display:flex;align-items:baseline;gap:2px;font-family:var(--f-num);line-height:1}
 .mc-lv small{font-size:12px;font-weight:700;opacity:.85}
 .mc-lv b{font-size:24px;font-weight:800;letter-spacing:-.02em;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
-.mc-lv i{font-style:normal;margin-left:4px;font-size:16px;font-weight:800}
+.mc-lv i{font-style:normal;margin-left:2px;font-size:16px;font-weight:800;display:inline-block;width:20px;text-align:center}
+.mc-lv{margin-right:3px}
 .mc-types{display:flex;gap:6px;margin-top:6px;position:relative;z-index:1;align-items:center;min-height:24px}
 .mc-types .tyc{box-shadow:0 0 0 1.5px rgb(255 255 255 / .7)}
 .mc-types .mc-no{font-family:var(--f-num);font-size:12px;font-weight:800;opacity:.9;margin-right:2px}
@@ -940,8 +974,8 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mc-rw[data-m=base] .mc-radar{--iv:var(--mon)}
 .mc-rw[data-m=ev] .mc-radar{--iv:var(--accent)}
 .mc-ebtn{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.mc-ebtn .btn.primary{background:var(--mon);border-color:var(--mon);color:#fff}
-.mc-fav{position:absolute;right:8px;bottom:6px;z-index:2;width:38px;height:38px;border:none;border-radius:50%;background:rgb(255 255 255 / .16);color:#fff;font-size:22px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
-.mc-fav[aria-pressed=true]{color:#ffd84a;background:rgb(255 255 255 / .22)}
+.mc-fav{position:absolute;right:8px;bottom:6px;z-index:2;width:38px;height:38px;border:none;border-radius:50%;background:none;color:#fff;font-size:22px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
+.mc-fav[aria-pressed=true]{color:#ffd84a}
 .mc-fav:active{transform:scale(.9)}
 .mc-pos{display:flex;align-items:center;gap:0;margin-left:auto;font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--muted)}
 .mc-pos button{width:28px;height:32px;border:none;background:none;color:var(--ink);font-size:22px;line-height:1;padding:0;border-radius:50%}
@@ -1490,7 +1524,6 @@ body:not(.app) .obsapp{display:none!important}
     </div>
   </section>
   <section>
-    <div id="rbMon" class="rbmon" hidden></div>
     <div id="rbBody"></div>
     <div id="rbInfo" class="rinfo" hidden></div>
     <p class="note">リボンをタップすると獲得済みになり、もう一度タップで戻ります。アイコン右上の i で、説明と入手できる作品を表示します。伝説・幻のポケモンなど、参加できない施設のリボンは表示しません。作品に連れて行けるかは、その作品に登録されているポケモン（HOMEから連れて行けるポケモンを含む）で判定しています。配布限定のリボンは載せていません。</p>
@@ -1722,11 +1755,19 @@ body:not(.app) .obsapp{display:none!important}
   <div class="obsbrand">NER poke tools</div>
 </div>
 <div id="shPad" class="shpad" hidden>
-  <div class="shpad-in">
-    <div class="shpadnum"><small>遭遇数</small><b id="shPadCount">0</b><span>回</span></div>
-    <p class="shpadhint">どこをタップしてもカウントします</p>
-    <button class="sh5 shpad5" type="button" hidden aria-label="群れバトルで5体分カウント">群れ×5</button>
-    <button id="shPadExit" class="btn" type="button">全画面をやめる</button>
+  <div class="prow" style="--bc:var(--sh)">
+    <button class="pbtn shpbtn" id="shPadTap" type="button" aria-label="遭遇をカウント"><span class="pno">+1</span><span class="pnm">遭遇をカウント</span><span class="pys">どこをタップしてもOK</span></button>
+    <button class="sh5 shpad5 p5" type="button" hidden aria-label="群れバトルで5体分カウント">群れ×5</button>
+  </div>
+</div>
+<div id="shFsBar" class="bar shbar shfsbar" hidden>
+  <div class="bar-in">
+    <div class="gauge"><small class="gl">出ている確率</small><span class="gt"><span id="shFsMeter" style="--c:var(--sh);width:0%"></span></span><span class="gv" id="shFsPct" style="--c:var(--sh)">0%</span></div>
+    <div class="countrow">
+      <small>遭遇数</small><b id="shPadCount">0</b><span class="unit">回</span>
+      <button id="shPadExit" class="fsbtn" type="button" aria-pressed="true">全画面をやめる</button>
+      <button id="shPadUndo" class="undo" type="button">1つ戻す</button>
+    </div>
   </div>
 </div>
 <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
@@ -2633,7 +2674,11 @@ function renderShiny(bump){
     <p class="hint">出る色違いの数の期待値は${r.E.toFixed(2)}匹${T>n?`・いまから あと${(T-n).toLocaleString()}回`:''}</p>${extra}`;
 }
 function shChanged(){save();renderShSetup();renderShiny()}
-const _renderShiny=renderShiny;renderShiny=function(b){_renderShiny(b);obsQueue()};
+const _renderShiny=renderShiny;renderShiny=function(b){_renderShiny(b);obsQueue();
+  const P=shSoFar().P,pc=Math.min(100,P*100);document.getElementById('shFsMeter').style.width=pc+'%';document.getElementById('shFsPct').textContent=pctTxt(P);
+  document.getElementById('shPadUndo').disabled=document.getElementById('shMinus').disabled;
+  document.querySelector('#shPadTap .pno').textContent='+'+shScreens();
+  const pc2=document.getElementById('shPadCount');pc2.classList.toggle('long',pc2.textContent.length>=7)};
 shGenSel.addEventListener('change',()=>{S.sh.gen=+shGenSel.value;shSit();shChanged()});
 shSitSel.addEventListener('change',()=>{S.sh.sit=shSitSel.value;shChanged()});
 shOptsEl.addEventListener('click',e=>{
@@ -2696,13 +2741,17 @@ function shFx(x,y,n){
 // 全画面ボタンモード
 const shPad=document.getElementById('shPad');let shWake=null;
 function shSetFs(on){
-  shPad.hidden=!on;document.body.classList.toggle('modal',on);
+  shPad.hidden=!on;document.getElementById('shFsBar').hidden=!on;document.body.classList.toggle('shfs',on);
+  if(on)document.documentElement.style.setProperty('--shfsh',document.getElementById('shFsBar').offsetHeight+'px');document.body.classList.toggle('modal',on);
   if(on){updateShLabels();renderShiny();try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(w=>shWake=w).catch(()=>{})}catch(e){}}
   else{try{shWake&&shWake.release()}catch(e){}shWake=null}
 }
 document.getElementById('shFsBtn').addEventListener('click',()=>shSetFs(true));
-shPad.addEventListener('click',e=>{
+document.getElementById('shFsBar').addEventListener('click',e=>{
   if(e.target.closest('#shPadExit')){shSetFs(false);return}
+  if(e.target.closest('#shPadUndo')){document.getElementById('shMinus').click();return}
+});
+shPad.addEventListener('click',e=>{
   if(e.target.closest('.sh5')){const r=e.target.closest('.sh5').getBoundingClientRect();shPress(5,r.left+r.width/2,r.top+r.height/2);return}
   shPress(1,e.clientX,e.clientY);
 });
@@ -2928,9 +2977,11 @@ function renderRb(){
   [3,4,6,7,8,9].forEach(g=>{body+=block(`第${g}世代のリボン`,rib.filter(x=>x.sec===g),GC[g])});
   if(S.rb.marks)body+=block('あかし（捕まえたあとで付くもの・SV）',mar,'#c9a227');
   const total=rib.length,gotR=rib.filter(x=>e.got[x.id]).length;
-  rbEl.innerHTML=`<div class="rhead">
+  rbEl.innerHTML=`<div class="rpin" id="rbPin">
       <div class="rtitle"><b>${esc(e.nick||sp[0])}</b>${e.nick?`<span>${esc(sp[0])}</span>`:''}<span>No.${sp[1]}・第${sp[2]}世代</span></div>
       <div class="rprog"><div class="meter"><span style="width:${total?gotR/total*100:0}%"></span></div><span>リボン ${gotR}/${total}${S.rb.marks?`・あかし ${cnt(mar)}`:''}</span></div>
+    </div><div class="rhead">
+      <div id="rbMon" class="rblink"></div>
       <div class="rtools">
         <div class="rrow"><div class="seg" role="group" aria-label="表示するリボン">${[['all','すべて'],['todo','未獲得'],['got','獲得済み']].map(([k,t])=>`<button type="button" data-rbf="${k}" aria-pressed="${S.rb.filter===k}">${t}</button>`).join('')}</div>
         <div class="opt rmk"><span>あかしも表示</span><button class="toggle" type="button" data-rbmarks="1" aria-pressed="${S.rb.marks}" aria-label="あかしも表示"></button></div></div>
@@ -3978,28 +4029,43 @@ function monSyncFromRb(){}
 function renderRbMon(){
   const el=document.getElementById('rbMon');if(!el)return;
   const e=S.rb.list.find(x=>x.id===S.rb.cur);
-  if(!e){el.hidden=true;el.innerHTML='';return}
-  el.hidden=false;el.classList.remove('linked');
-  const m=S.mon.list.find(x=>x.rb===e.id);
+  if(!e){el.innerHTML='';return}
+  const m=S.mon.list.find(x=>x.rb===e.id),ic='<span class="ni" style="--c:var(--mon)" aria-hidden="true">個</span>';
+  el.classList.toggle('on',!!m);
   if(m){
-    el.classList.add('linked');
-    el.innerHTML=`<button type="button" class="rbmline" data-rbmopen="${m.id}"><span class="rbmont">個体管理</span><b>${esc(monLabel(m))}</b>${m.lv?`<span class="rbmlv">Lv.${esc(m.lv)}</span>`:''}<span class="rbmongo">開く ›</span></button><button type="button" class="btn rbmun" data-rbmunlink="1">外す</button>`;
+    el.innerHTML=`${ic}<button type="button" class="rblopen" data-rbmopen="${m.id}" aria-label="個体管理で${esc(monLabel(m))}を開く"><b>${esc(monLabel(m))}</b>${m.lv?`<span class="rbmlv">Lv.${esc(m.lv)}</span>`:''}<span class="rbmongo">個体管理で開く ›</span></button><button type="button" class="btn rblbtn" data-rbmunlink="1">外す</button>`;
     return;
   }
   // つながっていない個体（同じポケモンを先に）
   const free=S.mon.list.filter(x=>!monRb(x)).sort((a,b)=>(b.sp===e.sp)-(a.sp===e.sp)||b.id-a.id);
-  el.innerHTML=`<div class="rbmonh"><span class="rbmont">個体管理とつなぐ</span></div>
-    ${free.length?`<div class="row2"><select id="rbMonSel" aria-label="つなぐ個体"><option value="">個体管理の個体を選ぶ</option>${free.map(x=>`<option value="${x.id}">${esc(monLabel(x))}${x.nick&&x.sp?'（'+esc(monSp(x))+'）':''}${x.lv?' Lv.'+esc(x.lv):''}${x.sp===e.sp?'':'・別のポケモン'}</option>`).join('')}</select><button type="button" class="btn" data-rbmlink="1">つなぐ</button></div>`:''}
-    <button type="button" class="btn" data-rbmnew="1">個体管理に登録してつなぐ</button>`;
+  el.innerHTML=`${ic}<select id="rbMonSel" aria-label="個体管理とつなぐ"><option value="">個体管理とつなぐ…</option><option value="new">＋ 新しく登録してつなぐ</option>${free.map(x=>`<option value="${x.id}">${esc(monLabel(x))}${x.nick&&x.sp?'（'+esc(monSp(x))+'）':''}${x.lv?' Lv.'+esc(x.lv):''}${x.sp===e.sp?'':'・別のポケモン'}</option>`).join('')}</select><button type="button" class="btn rblbtn" data-rbmlink="1">つなぐ</button>`;
 }
-{const _r=renderRb;renderRb=function(){_r();renderRbMon()}}
-document.getElementById('rbMon').addEventListener('click',ev=>{
+{const _r=renderRb;renderRb=function(){_r();renderRbMon();rbStick()}}
+/* リボン管理：ポケモン情報（りぼん・あかしまで）と各世代の見出しを上に固定 */
+function rbStick(){
+  const v=document.getElementById('vRibbon');if(v.hidden)return;
+  const ab=document.querySelector('.appbar'),pin=document.getElementById('rbPin');
+  v.style.setProperty('--apph',(ab?ab.offsetHeight:0)+'px');
+  v.style.setProperty('--rpinh',(pin?pin.offsetHeight:0)+'px');
+  rbStuck();
+}
+function rbStuck(){
+  const v=document.getElementById('vRibbon');if(v.hidden)return;
+  const pin=document.getElementById('rbPin');if(!pin)return;
+  const ab=document.querySelector('.appbar').getBoundingClientRect().bottom,pt=pin.getBoundingClientRect();
+  pin.classList.toggle('stuck',pt.top<=ab+.5&&scrollY>0);
+  v.querySelectorAll('.rsec>h3').forEach(h=>{const r=h.getBoundingClientRect(),sec=h.parentElement.getBoundingClientRect();h.classList.toggle('stuck',r.top>sec.top+2)});
+}
+addEventListener('scroll',rbStuck,{passive:true});addEventListener('resize',rbStick);
+rbView.addEventListener('click',ev=>{
+  if(!ev.target.closest('#rbMon'))return;
   const b=ev.target.closest('button');if(!b)return;const d=b.dataset,e=S.rb.list.find(x=>x.id===S.rb.cur);if(!e)return;
   ev.stopPropagation();
-  if(d.rbmlink){const id=+document.getElementById('rbMonSel').value;const m=S.mon.list.find(x=>x.id===id);if(!m){toast('つなぐ個体を選んでください');return}
+  if(d.rbmlink&&document.getElementById('rbMonSel').value==='new')d.rbmnew=1;
+  if(d.rbmlink&&!d.rbmnew){const id=+document.getElementById('rbMonSel').value;const m=S.mon.list.find(x=>x.id===id);if(!m){toast('つなぐ個体を選んでください');return}
     if(m.sp&&m.sp!==e.sp){armed(b,'つなぐ','別のポケモン・つなぐ',()=>{m.rb=e.id;save();renderRbMon();toast('つなぎました')});return}
     m.rb=e.id;if(!m.sp)m.sp=e.sp;save();renderRbMon();toast('つなぎました');return}
-  if(d.rbmnew){const m={id:monNewId(),sp:e.sp,nick:e.nick||'',lv:'',gender:'',nature:'',ability:'',item:'',purpose:'',soft:'',place:'box',box:'',pos:'',placeNote:'',parent:'',tags:['リボン'],memo:'',rb:e.id};
+  if(d.rbmnew){delete d.rbmnew;const m={id:monNewId(),sp:e.sp,nick:e.nick||'',lv:'',gender:'',nature:'',ability:'',item:'',purpose:'',soft:'',place:'box',box:'',pos:'',placeNote:'',parent:'',tags:['リボン'],memo:'',rb:e.id};
     S.mon.list.push(m);save();renderRbMon();toast('個体管理に登録しました。場所などは個体管理で入れられます');return}
   if(d.rbmunlink){const m=S.mon.list.find(x=>x.rb===e.id);if(m){armed(b,'外す','本当に',()=>{m.rb='';save();renderRbMon()})}return}
   if(d.rbmopen){const id=+d.rbmopen;setView('mon');monOpen(id);return}
@@ -4848,7 +4914,7 @@ document.getElementById('vSettings').addEventListener('click',e=>{
   uiApply([isT?'t':'n',j],`[${at}="${j}"][data-dir="${d}"]`);
   if(document.activeElement===document.body||!document.activeElement)document.querySelector(`[${at}="${j}"][data-dir="${-d}"]`)?.focus();
 });
-document.getElementById('tabBar').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;if(!monCard.hidden){monCardClose();if(!monFind.hidden)monFindClose()}if(b.dataset.tab!==document.body.dataset.view)setView(b.dataset.tab)});
+document.getElementById('tabBar').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;if(!monCard.hidden){monCardClose();if(!monFind.hidden)monFindClose()}if(!shPad.hidden&&b.dataset.tab!=='shiny')shSetFs(false);if(b.dataset.tab!==document.body.dataset.view)setView(b.dataset.tab)});
 uiNorm();renderNav();renderTabs();
 try{if(!location.hash.startsWith('#obs')&&screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{})}catch(e){}
 
@@ -4862,6 +4928,7 @@ function setView(v){
   document.getElementById('appTitle').textContent=VIEWS[v].t;
   drawer.querySelectorAll('[data-view]').forEach(b=>{if(b.dataset.view===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
   if(v!=='ev'&&fsOn)setFs(false);
+  if(v!=='shiny'&&!shPad.hidden)shSetFs(false);
   if(v==='shiny'){renderShSetup();renderShiny()}
   if(v==='dex')renderDex();
   if(v==='pb')renderPb();
