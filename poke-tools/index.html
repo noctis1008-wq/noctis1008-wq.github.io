@@ -827,18 +827,18 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 /* 個体のステータス画面（ポップアップ） */
 @media (min-width:700px){#monCard{align-items:center}#monCard .sheet-in{border-radius:20px;max-height:88%}}
 #monCard .sheet-in{gap:10px;max-width:560px}
-.mc-hero{position:relative;border-radius:16px;padding:14px;color:#fff;overflow:hidden;
+.mc-hero{position:relative;border-radius:16px;padding:10px 14px;color:#fff;overflow:hidden;
   background:linear-gradient(135deg,var(--a1),color-mix(in srgb,var(--a2) 85%,#000 15%));box-shadow:0 6px 18px color-mix(in srgb,var(--a1) 30%,transparent)}
-.mc-hero::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;border:22px solid rgb(255 255 255 / .12)}
-.mc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:relative;z-index:1}
-.mc-name{min-width:0}
-.mc-name b{display:block;font-family:var(--f-display);font-weight:400;font-size:22px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
-.mc-name small{display:block;font-size:12px;font-weight:700;opacity:.9;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mc-lv{flex:none;text-align:right;font-family:var(--f-num);line-height:1}
+.mc-hero::after{content:"";position:absolute;right:-30px;top:-46px;width:120px;height:120px;border-radius:50%;border:18px solid rgb(255 255 255 / .12)}
+.mc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.mc-name{min-width:0;display:flex;align-items:baseline;gap:2px;white-space:nowrap;overflow:hidden}
+.mc-name b{display:block;min-width:0;flex:0 1 auto;font-family:var(--f-display);font-weight:400;font-size:21px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
+.mc-name small{flex:none;font-size:12.5px;font-weight:700;opacity:.92;white-space:nowrap}
+.mc-lv{flex:none;display:flex;align-items:baseline;gap:2px;font-family:var(--f-num);line-height:1}
 .mc-lv small{font-size:12px;font-weight:700;opacity:.85}
-.mc-lv b{font-size:30px;font-weight:800;letter-spacing:-.02em;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
-.mc-lv i{font-style:normal;display:block;margin-top:4px;font-size:16px;font-weight:800}
-.mc-types{display:flex;gap:6px;margin-top:10px;position:relative;z-index:1;align-items:center;min-height:24px}
+.mc-lv b{font-size:24px;font-weight:800;letter-spacing:-.02em;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
+.mc-lv i{font-style:normal;margin-left:4px;font-size:16px;font-weight:800}
+.mc-types{display:flex;gap:6px;margin-top:6px;position:relative;z-index:1;align-items:center;min-height:24px}
 .mc-types .tyc{box-shadow:0 0 0 1.5px rgb(255 255 255 / .7)}
 .mc-types .mc-no{font-family:var(--f-num);font-size:12px;font-weight:800;opacity:.9;margin-right:2px}
 .mc-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
@@ -866,6 +866,33 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .mc-radar .mcv.j5{fill:var(--iv)}.mc-radar .mcv.j0{fill:var(--weak)}
 .mc-radar .mcrl{font-size:9px;fill:var(--muted);font-family:var(--f-num)}
 .mc-empty{height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px;text-align:center}
+.mc-ab .mc-ch{align-items:center;margin-bottom:8px}
+.mc-tabs button,.mc-md button{padding:6px 12px;font-size:12.5px;white-space:nowrap}
+.mc-panes,.mc-rws{display:grid}
+.mc-pane,.mc-rw{grid-area:1/1;min-width:0}
+.mc-ab[data-tab=radar] .mc-pane[data-p=table],.mc-ab[data-tab=table] .mc-pane[data-p=radar]{visibility:hidden}
+.mc-ab:not([data-md=base]) [data-m=base],.mc-ab:not([data-md=iv]) [data-m=iv],.mc-ab:not([data-md=ev]) [data-m=ev]{visibility:hidden}
+.mc-rt{display:flex;flex-direction:column;gap:6px;margin-bottom:2px}
+.mc-md{margin-left:0;display:flex}.mc-md button{flex:1}.mc-tabs button{min-width:3.6em}
+.mc-sums{display:grid;height:20px;line-height:20px;text-align:right;font-size:12px;color:var(--muted);font-weight:700;font-family:var(--f-num);white-space:nowrap}
+.mc-sums>span{grid-area:1/1}
+.mc-sums b{font-size:15px;color:var(--ink);margin-left:3px}.mc-sums b.bad{color:var(--warn)}
+.mc-rw .mc-empty{height:auto;aspect-ratio:300/262;max-width:300px;margin:0 auto;width:100%}
+.mc-rw[data-m=base] .mc-radar{--iv:var(--mon)}
+.mc-rw[data-m=ev] .mc-radar{--iv:var(--accent)}
+.mc-ebtn{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.mc-ebtn .btn.primary{background:var(--mon);border-color:var(--mon);color:#fff}
+.mc-fav{position:absolute;right:8px;bottom:6px;z-index:2;width:38px;height:38px;border:none;border-radius:50%;background:rgb(255 255 255 / .16);color:#fff;font-size:22px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;text-shadow:0 1px 3px rgb(0 0 0 / .3)}
+.mc-fav[aria-pressed=true]{color:#ffd84a;background:rgb(255 255 255 / .22)}
+.mc-fav:active{transform:scale(.9)}
+.mc-pos{display:flex;align-items:center;gap:2px;margin-left:auto;margin-right:8px;font-family:var(--f-num);font-size:12px;font-weight:700;color:var(--muted)}
+.mc-pos button{width:32px;height:32px;border:none;background:none;color:var(--ink);font-size:22px;line-height:1;padding:0;border-radius:50%}
+.mc-pos button:active{background:var(--line)}
+.mc-pos span{min-width:3.6em;text-align:center}
+@keyframes mcInR{from{opacity:.4;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes mcInL{from{opacity:.4;transform:translateX(-24px)}to{opacity:1;transform:none}}
+.sheet-in.mc-in-r{animation:mcInR .18s ease-out}.sheet-in.mc-in-l{animation:mcInL .18s ease-out}
+.mrfav{font-style:normal;color:#e0a800;margin-right:3px}
+.mc-sub{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;height:18px;line-height:18px}
 .mc-leg{display:flex;justify-content:center;gap:14px;font-size:11px;color:var(--muted);margin-top:2px;height:16px}
 .mc-leg i{display:inline-block;width:16px;height:0;border-top:2px solid var(--iv);vertical-align:middle;margin-right:4px}
 .mc-leg i.d{border-top-style:dashed}
@@ -924,6 +951,15 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .monrbhd small{margin-left:auto;font-size:11px;color:var(--muted)}
 .monrbhd[aria-expanded=false] .foldchev{transform:rotate(180deg)}
 .monitemw{position:relative;display:block}
+.monmv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.monmvw input{width:100%;box-sizing:border-box;border-left:4px solid var(--tc,var(--line))!important}
+.monmvw .monitemres button .tyc{flex:none}
+.mc-mv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.mc-mvi{height:46px;box-sizing:border-box;border-radius:10px;padding:5px 10px;display:flex;flex-direction:column;justify-content:center;min-width:0;
+  background:color-mix(in srgb,var(--tc,var(--muted)) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--tc,var(--line)) 45%,var(--line));border-left:4px solid var(--tc,var(--line))}
+.mc-mvi b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-mvi small{font-size:10.5px;color:var(--muted);font-weight:700}
+.mc-mvi.none b{color:var(--muted);font-weight:500}
 .monitemres{position:absolute;left:0;right:0;top:100%;z-index:5;margin-top:2px;box-shadow:0 6px 18px rgb(0 0 0 / .18);background:var(--surface)}
 .monitemres button{font-size:13px;padding:8px 10px}
 .monf select:disabled{opacity:1;color:var(--muted);background:var(--bg)}
@@ -1456,8 +1492,8 @@ body:not(.app) .obsapp{display:none!important}
   <button id="monRbImp" class="btn monrbimp" type="button">他のツールから読み込む</button>
   <div class="shbox">
   <section class="dxtools">
-    <input id="monQ" type="search" class="pbsearch" style="margin:0" placeholder="名前・ニックネームで探す" autocomplete="off" aria-label="名前で探す">
-    <input id="monQi" type="search" class="pbsearch" style="margin:0" placeholder="持ち物で探す" autocomplete="off" aria-label="持ち物で探す">
+    <div class="tyqbox"><input id="monQ" type="text" class="pbsearch" style="margin:0" placeholder="名前・ニックネームで探す" autocomplete="off" enterkeyhint="search" aria-label="名前で探す"><button type="button" class="tyqx" data-qx="monQ" aria-label="入力を消す" hidden>✕</button></div>
+    <div class="tyqbox"><input id="monQi" type="text" class="pbsearch" style="margin:0" placeholder="持ち物で探す" autocomplete="off" enterkeyhint="search" aria-label="持ち物で探す"><button type="button" class="tyqx" data-qx="monQi" aria-label="入力を消す" hidden>✕</button></div>
     <button id="monTagBtn" class="btn dxtagbtn" type="button" aria-expanded="false" aria-controls="monTagPanel">タグで絞り込む</button>
     <div id="monTagPanel" class="dxtagpanel" hidden></div>
   </section>
@@ -3591,7 +3627,7 @@ function monShown(){
 }
 function renderMon(){
   monSyncFromRb();evSyncMon();const M=S.mon;
-  [['monQ','q'],['monQi','qi']].forEach(([id,k])=>{const el=document.getElementById(id);if(el.value!==(M[k]||''))el.value=M[k]||''});
+  [['monQ','q'],['monQi','qi']].forEach(([id,k])=>{const el=document.getElementById(id);if(el.value!==(M[k]||''))el.value=M[k]||'';el.nextElementSibling.hidden=!el.value});
   document.querySelectorAll('[data-monsort]').forEach(b=>b.setAttribute('aria-pressed',String(M.sort===b.dataset.monsort)));
   document.querySelectorAll('[data-mondir]').forEach(b=>b.setAttribute('aria-pressed',String(M.dir===b.dataset.mondir)));
   const tb=document.getElementById('monTagBtn');tb.setAttribute('aria-expanded',String(monTagOpen));
@@ -3605,7 +3641,7 @@ function renderMon(){
   document.getElementById('monList').innerHTML=L.length?`<div class="monrow monhead" aria-hidden="true"><span>ポケモン</span><span style="text-align:center">性</span><span style="text-align:right">Lv</span><span>親・ID</span><span>とくせい</span></div>`+L.map(m=>{const p=monParent(m),open=false;
     const x=monRb(m),t=x&&monRbTally(x);
     return `<div class="monitem${open?' open':''}"><button type="button" class="monrow" data-montoggle="${m.id}" aria-haspopup="dialog" aria-label="${esc(monLabel(m))}のステータスを開く">
-      <span class="mrn">${esc(monLabel(m))}</span><span class="mrg ${m.gender==='♂'?'m':m.gender==='♀'?'f':''}">${m.gender&&m.gender!=='不明'?m.gender:'－'}</span><span class="mrl">${m.lv?esc(m.lv):'－'}</span>
+      <span class="mrn">${m.fav?'<i class="mrfav" aria-label="お気に入り">★</i>':''}${esc(monLabel(m))}</span><span class="mrg ${m.gender==='♂'?'m':m.gender==='♀'?'f':''}">${m.gender&&m.gender!=='不明'?m.gender:'－'}</span><span class="mrl">${m.lv?esc(m.lv):'－'}</span>
       <span class="mrp">${p?`<span>${esc(p.name)}</span><small>${esc(p.tid)}</small>`:'－'}</span><span class="mra">${m.ability?esc(m.ability):'－'}</span></button>
       ${open?`<div class="mondet">
         ${m.nick&&m.sp?row('ポケモン',esc(monSp(m))):''}${row('何の個体か',esc(m.purpose||''))}${row('場所',esc(monWhere(m)))}${row('ボール',esc(m.ball||''))}${row('持ち物',esc(m.item||''))}${row('性格',esc(m.nature||''))}${m.iv&&m.iv.r?`<div class="mondr mondrw"><span>個体値</span><b>${ivGrid(m.iv.r)}</b></div>`:''}${m.ev&&EVK.some(k=>m.ev[k]>0)?row('努力値',esc(evTxt(m.ev))+(m.goal?`<small class="monevg">目標 ${esc(evTxt(m.goal))}</small>`:'')):''}
@@ -3643,6 +3679,8 @@ function renderMonSheet(){
       <label class="monf"><span>持ち物</span><span class="monitemw"><input id="monItem" type="search" data-monf="item" maxlength="20" autocomplete="off" value="${esc(e.item)}" placeholder="名前で探す"><span class="sres monitemres" id="monItemRes"></span></span></label></div>
     <label class="monf"><span>ボール</span><select data-monf="ball">${opt('','－',e.ball)}${MON_BALLS.map(x=>opt(x,x,e.ball)).join('')}${e.ball&&!MON_BALLS.includes(e.ball)?opt(e.ball,e.ball,e.ball):''}</select></label>
     <label class="monf"><span>何の個体か（用途）</span><input type="text" data-monf="purpose" maxlength="40" value="${esc(e.purpose)}" placeholder="例：ランクマ用のトリル要員、色違いの孵化余り"></label></div>
+  <div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">覚えている技</span></div>
+    <div class="monmv">${monMoves(e).map((v,i)=>{const mv=MV_MAP.get(v);return `<span class="monitemw monmvw"${mv?` style="--tc:${TY_C[mv[1]]}"`:''}><input type="text" data-monmv="${i}" maxlength="20" autocomplete="off" value="${esc(v)}" placeholder="技${i+1}" aria-label="技${i+1}"><span class="sres monitemres" data-monmvres="${i}"></span></span>`}).join('')}</div></div>
   ${(()=>{const lk=S.members.findIndex(x=>x.mon&&x.mon===e.id);const ev=e.ev||{};
     return `<div class="srow"><div class="srh"><span class="sl" style="--c:var(--ink)">努力値</span>${lk>=0?`<span class="monevlk">努力値カウンターの手持ち${lk+1}と連動中</span>`:''}</div>
     <div class="monev">${EVK.map((k,i)=>`<label class="monf"><span>${EVL[i]}</span><input type="number" inputmode="numeric" min="0" max="252" data-monev="${k}" value="${ev[k]||''}" placeholder="0"></label>`).join('')}</div>
@@ -3693,6 +3731,7 @@ monSheet.addEventListener('click',e=>{
   if(d.monsp){monCollect();m.sp=+d.monsp;{const fx=monGFix(m.sp);if(fx)m.gender=fx;else if(m.gender==='不明')m.gender=''}const L=ABL[m.sp-1]||[];if(m.ability&&!L.some(a=>a[0]===m.ability))m.ability='';if(!m.ability){const n=L.filter(a=>a[1]===0);if(n.length===1)m.ability=n[0][0]}renderMonSheet();return}
   if(d.monivall){monCollect();m.iv=Object.assign({},m.iv||{},{r:EVK.map(()=>[31,31])});renderMonSheet();toast('個体値をすべて31にしました。保存すると記録されます');return}
   if(d.monitem){monCollect();m.item=d.monitem;renderMonSheet();return}
+  if(d.monmvpick!=null){monCollect();const a=monMoves(m);a[+d.monmvpick]=d.mv;m.moves=a;renderMonSheet();return}
   if(d.monplace){monCollect();m.place=d.monplace;renderMonSheet();return}
   if(d.montag){monCollect();const i=m.tags.indexOf(d.montag);if(i<0)m.tags.push(d.montag);else m.tags.splice(i,1);b.setAttribute('aria-pressed',String(i<0));return}
   if(d.monaddtag){const inp=document.getElementById('monNewTag'),t=inp.value.trim();if(!t){inp.focus();return}
@@ -3705,9 +3744,18 @@ monSheet.addEventListener('click',e=>{
   if(d.mondel){armed(b,'削除','本当に削除',()=>{M.list=M.list.filter(x=>x.id!==m.id);save();monClose();renderMon();toast('削除しました')});return}
 });
 // 入力欄の内容を編集中の個体に移す
-function monCollect(){if(!monEdit)return;{const ivIn=[...monSheet.querySelectorAll('[data-monivin]')];if(ivIn.length){const r=ivIn.map(el=>{const t=el.value.trim();if(t===''){const g=el.dataset.ivrg;return g?g.split(',').map(Number):null}const n=Math.max(0,Math.min(31,Math.round(+t)));return Number.isFinite(n)?[n,n]:null});
+// 技の一覧（名前,タイプ番号,分類 0変化/1物理/2特殊）。出典：PokeAPI のデータ
+const MOVES='あおいほのお,1,2|あくうせつだん,14,2|あくのはどう,15,2|あくび,0,0|あくまのキッス,0,0|あくむ,13,0|あさのひざし,0,0|あてみなげ,6,1|あなをほる,8,1|あばれる,0,1|あまいかおり,0,0|あまえる,17,0|あまごい,2,0|あやしいかぜ,13,2|あやしいひかり,13,0|あられ,5,0|あわ,2,2|あんこくきょうだ,15,1|いあいぎり,0,1|いえき,7,0|いかり,0,1|いかりのこな,11,0|いかりのまえば,0,1|いきいきバブル,2,2|いじげんホール,10,2|いじげんラッシュ,15,1|いたみわけ,0,0|いちゃもん,15,0|いっちょうあがり,14,1|いてつくしせん,10,2|いとをはく,11,0|いにしえのうた,0,2|いのちがけ,6,2|いのちのしずく,2,0|いばる,0,0|いびき,0,2|いやしのすず,0,0|いやしのねがい,10,0|いやしのはどう,10,0|いやなおと,0,0|いわおとし,12,1|いわくだき,6,1|いわなだれ,12,1|うずしお,2,2|うそなき,15,0|うたう,0,0|うたかたのアリア,2,2|うちおとす,12,1|うっぷんばらし,15,1|うつしえ,0,0|うらみ,13,0|うらみつらみ,13,2|えだづき,4,1|えんまく,0,0|おいうち,15,1|おいかぜ,9,0|おいわい,0,0|おうふくビンタ,0,1|おかたづけ,0,0|おきみやげ,15,0|おさきにどうぞ,0,0|おしおき,15,1|おしゃべり,9,2|おたけび,0,0|おだてる,15,0|おちゃかい,0,0|おどろかす,13,1|おにび,1,0|おはかまいり,13,1|おまじない,0,0|おんがえし,0,1|おんねん,13,0|かいでんぱ,3,0|かいふくしれい,11,0|かいふくふうじ,10,0|かいりき,0,1|かえんぐるま,1,1|かえんだん,1,2|かえんのまもり,1,0|かえんほうしゃ,1,2|かえんボール,1,1|かかとおとし,6,1|かぎわける,0,0|かくばる,0,0|かげうち,13,1|かげぬい,13,1|かげぶんしん,0,0|かぜおこし,9,2|かたきうち,0,1|かたくなる,0,0|かなしばり,0,0|かふんだんご,11,2|かまいたち,0,2|かみくだく,15,1|かみつく,15,1|かみなり,3,2|かみなりあらし,3,2|かみなりのキバ,3,1|かみなりパンチ,3,1|からげんき,0,1|からてチョップ,6,1|からではさむ,2,1|からにこもる,2,0|からみつく,0,1|からをやぶる,0,0|かわらわり,6,1|がまん,0,1|がむしゃら,0,1|がんせきふうじ,12,1|がんせきほう,12,1|がんせきアックス,12,1|きあいだま,6,2|きあいだめ,0,0|きあいパンチ,6,1|きしかいせい,6,1|きつけ,0,1|きまぐレーザー,14,2|きゅうけつ,11,1|きょけんとつげき,14,1|きょじゅうざん,16,1|きょじゅうだん,16,1|きらきらストーム,17,2|きりさく,0,1|きりばらい,9,0|きりふだ,0,2|きんぞくおん,16,0|ぎんいろのかぜ,11,2|くさのちかい,4,2|くさぶえ,4,0|くさむすび,4,2|くさわけ,4,1|くすぐる,0,0|くちばしキャノン,9,1|くらいつく,15,1|くろいきり,5,0|くろいまなざし,0,0|けたぐり,6,1|げきりん,14,1|げんしのちから,12,2|こうげきしれい,11,1|こうごうせい,4,0|こうそくいどう,10,0|こうそくスピン,0,1|こおりのいぶき,5,2|こおりのつぶて,5,1|こおりのキバ,5,1|こがらしあらし,9,2|こころのめ,0,0|こごえるかぜ,5,2|こごえるせかい,5,2|こちこちフロスト,5,2|こなゆき,5,2|このは,4,1|このゆびとまれ,0,0|こらえる,0,0|ころがる,12,1|こわいかお,0,0|こんげんのはどう,2,2|さいきのいのり,0,0|さいはい,10,0|さいみんじゅつ,10,0|さきおくり,15,0|さきどり,0,0|さしおさえ,15,0|さばきのつぶて,0,2|さむいギャグ,5,0|さわぐ,0,2|ざぶざぶサーフ,2,2|しおづけ,12,1|しおふき,2,2|しおみず,2,2|しぜんのいかり,17,2|しぜんのちから,0,0|しぜんのめぐみ,0,1|したでなめる,13,1|しっとのほのお,1,2|しっぺがえし,15,1|しっぽきり,0,0|しっぽをふる,0,0|しねんのずつき,10,1|しびれごな,4,0|しぼりとる,0,2|しめつける,0,1|しょうりのまい,6,0|しろいきり,5,0|しんくうは,6,2|しんそく,0,1|しんぴのちから,10,2|しんぴのつるぎ,6,2|しんぴのまもり,0,0|じこあんじ,0,0|じこさいせい,0,0|じごくぐるま,6,1|じごくづき,15,1|じしん,8,1|じたばた,0,1|じだんだ,8,1|じならし,8,1|じばく,0,1|じばそうさ,3,0|じゃどくのくさり,7,2|じゃれつく,17,1|じゅうでん,3,0|じゅうりょく,10,0|じょうか,7,0|じわれ,8,1|じんつうりき,10,2|じんらい,3,2|すいとる,4,2|すいりゅうれんだ,2,1|すくすくボンバー,4,1|すてみタックル,0,1|すてゼリフ,15,0|すなあつめ,8,0|すなあらし,12,0|すなかけ,8,0|すなじごく,8,1|すりかえ,15,0|ずつき,0,1|せいちょう,0,0|せいなるつるぎ,6,1|せいなるほのお,1,1|ぜったいれいど,5,2|そうでん,3,0|そらをとぶ,9,1|たいあたり,0,1|たがやす,8,0|たきのぼり,2,1|たくわえる,0,0|たこがため,6,0|たたきつける,0,1|たたみがえし,6,0|たたりめ,13,2|たつまき,14,2|たてこもる,16,0|たまなげ,0,1|だいちのちから,8,2|だいちのはどう,0,2|だいばくはつ,0,1|だいふんげき,1,1|だいもんじ,1,2|だくりゅう,2,2|だましうち,15,1|だんがいのつるぎ,8,1|ちいさくなる,0,0|ちからをすいとる,4,0|ちきゅうなげ,6,1|ちょうおんぱ,0,0|ちょうのまい,11,0|ちょうはつ,15,0|ついばむ,9,1|つきのひかり,17,0|つけあがる,15,1|つじぎり,15,1|つっぱり,6,1|つつく,9,1|つのでつく,0,1|つのドリル,0,1|つばさでうつ,9,1|つばめがえし,9,1|つぶらなひとみ,17,0|つぼをつく,0,0|つめとぎ,15,0|つららおとし,5,1|つららばり,5,1|つるぎのまい,0,0|つるのムチ,4,1|てかげん,0,1|てだすけ,0,0|てっていこうせん,16,2|てっぺき,16,0|てをつなぐ,0,0|てんしのキッス,17,0|であいがしら,11,1|でんきショック,3,2|でんげきくちばし,3,1|でんげきは,3,2|でんこうせっか,0,1|でんこうそうげき,3,1|でんじは,3,0|でんじふゆう,3,0|でんじほう,3,2|とおせんぼう,0,0|とおぼえ,0,0|ときのほうこう,14,2|とぎすます,0,0|とぐろをまく,7,0|とける,7,0|とげキャノン,0,1|とっしん,0,1|とっておき,0,1|とどめばり,11,1|とびかかる,11,1|とびげり,6,1|とびつく,11,1|とびはねる,9,1|とびひざげり,6,1|ともえなげ,6,1|とんぼがえり,11,1|どくづき,7,1|どくどく,7,0|どくどくのキバ,7,1|どくのいと,7,0|どくのこな,7,0|どくばり,7,1|どくばりセンボン,7,1|どくびし,7,0|どくガス,7,0|どげざつき,15,1|どばどばオーラ,10,2|どろあそび,8,0|どろかけ,8,2|どろばくだん,8,2|どろぼう,15,1|ないしょばなし,0,0|なかまづくり,0,0|なかよくする,0,0|なきごえ,0,0|なげつける,15,1|なしくずし,0,1|なまける,0,0|なみだめ,0,0|なみのり,2,2|なやみのタネ,4,0|なりきり,10,0|にぎりつぶす,0,1|にどげり,6,1|にほんばれ,1,0|にらみつける,0,0|ねがいごと,0,0|ねこだまし,0,1|ねこのて,0,0|ねごと,0,0|ねっさのあらし,8,2|ねっさのだいち,8,2|ねっとう,2,2|ねっぷう,1,2|ねばねばネット,11,0|ねむりごな,4,0|ねむる,10,0|ねらいうち,2,2|ねをはる,4,0|ねんりき,10,2|のしかかり,0,1|のみこむ,0,0|のろい,13,0|はいすいのじん,6,0|はいよるいちげき,11,1|はかいこうせん,0,2|はがねのつばさ,16,1|はきだす,0,2|はさむ,0,1|はじけるほのお,1,2|はたきおとす,15,1|はたく,0,1|はっけい,6,1|はっぱカッター,4,1|はどうだん,6,2|はなびらのまい,4,2|はなふぶき,4,1|はねやすめ,9,0|はねる,0,0|はめつのねがい,16,2|はめつのひかり,17,2|はやてがえし,6,1|はらだいこ,0,0|はるのあらし,17,2|ばかぢから,6,1|ばくおんぱ,0,2|ばくれつパンチ,6,1|ばちばちアクセル,3,1|ひかりのかべ,10,0|ひけん・ちえなみ,15,1|ひっかく,0,1|ひっくりかえす,15,0|ひっさつまえば,0,1|ひのこ,1,2|ひみつのちから,0,1|ひゃっきやこう,13,2|ひやみず,2,2|ひょうざんおろし,5,1|びりびりちくちく,3,1|びりびりエレキ,3,2|ふいうち,15,1|ふういん,10,0|ふきとばし,0,0|ふくろだたき,15,1|ふしょくガス,7,0|ふぶき,5,2|ふみつけ,0,1|ふるいたてる,0,0|ふわふわフォール,9,1|ふんえん,1,2|ふんか,1,2|ふんじん,11,0|ふんどのこぶし,13,1|ぶきみなじゅもん,10,2|ぶちかまし,8,1|ぶんまわす,15,1|へびにらみ,0,0|へんしん,0,0|ほうでん,3,2|ほうふく,15,1|ほえる,0,0|ほおばる,0,0|ほごしょく,0,0|ほしがる,0,1|ほたるび,11,0|ほっぺすりすり,3,1|ほのおのうず,1,2|ほのおのちかい,1,2|ほのおのまい,1,2|ほのおのキバ,1,1|ほのおのパンチ,1,1|ほのおのムチ,1,1|ほろびのうた,0,0|ぼうぎょしれい,11,0|ぼうふう,9,2|まきつく,0,1|まきびし,8,0|まとわりつく,11,2|まねっこ,0,0|まほうのこな,10,0|まもる,0,0|まるくなる,0,0|まわしげり,6,1|みかづきのいのり,10,0|みかづきのまい,10,0|みがわり,0,0|みきり,6,0|みずあそび,2,0|みずあめボム,4,2|みずしゅりけん,2,2|みずでっぽう,2,2|みずのちかい,2,2|みずのはどう,2,2|みずびたし,2,0|みだれづき,0,1|みだれひっかき,0,1|みちづれ,13,0|みねうち,0,1|みやぶる,0,0|みらいよち,10,2|みわくのボイス,17,2|みをけずる,0,0|むしくい,11,1|むしのさざめき,11,2|むしのていこう,11,2|むねんのつるぎ,1,1|めいそう,10,0|めざましビンタ,6,1|めざめるダンス,0,2|めざめるパワー,0,2|めらめらバーン,1,1|もえあがるいかり,15,2|もえつきる,1,2|ものまね,0,0|もりののろい,4,0|もろはのずつき,12,1|やきつくす,1,2|やけっぱち,1,1|やつあたり,0,1|やどりぎのタネ,4,0|やまあらし,6,1|ゆうわく,0,0|ゆきげしき,5,0|ゆきなだれ,5,1|ゆびをふる,0,0|ゆめくい,10,2|ようかいえき,7,2|ようせいのかぜ,17,2|よこどり,15,0|らいげき,3,1|らいめいげり,6,1|りゅうせいぐん,14,2|りゅうのいかり,14,2|りゅうのいぶき,14,2|りゅうのはどう,14,2|りゅうのまい,14,0|りんごさん,4,2|りんしょう,0,2|れいとうパンチ,5,1|れいとうビーム,5,2|れんごく,1,2|れんぞくぎり,11,1|れんぞくパンチ,0,1|わたほうし,4,0|わるあがき,0,1|わるだくみ,15,0|わるわるゾーン,15,2|アイアンテール,16,1|アイアンヘッド,16,1|アイアンローラー,16,1|アイススピナー,5,1|アイスハンマー,5,1|アイスボール,5,1|アクアカッター,2,1|アクアジェット,2,1|アクアステップ,2,1|アクアテール,2,1|アクアブレイク,2,1|アクアリング,2,0|アクセルブレイク,6,1|アクセルロック,12,1|アクロバット,9,1|アシストギア,16,0|アシストパワー,10,2|アシッドボム,7,2|アストラルビット,13,2|アフロブレイク,0,1|アロマセラピー,4,0|アロマミスト,17,0|アンカーショット,16,1|アンコール,0,0|アーマーキャノン,1,2|アームハンマー,6,1|イカサマ,15,1|イナズマドライブ,3,2|インファイト,6,1|ウェザーボール,0,2|ウェーブタックル,2,1|ウッドハンマー,4,1|ウッドホーン,4,1|エアカッター,9,2|エアスラッシュ,9,2|エアロブラスト,9,2|エコーボイス,0,2|エナジーボール,4,2|エラがみ,2,1|エレキネット,3,2|エレキフィールド,3,0|エレキボール,3,2|エレクトロビーム,3,2|オウムがえし,9,0|オクタンほう,2,2|オーバードライブ,3,2|オーバーヒート,1,2|オーラぐるま,3,1|オーラウイング,10,2|オーロラビーム,5,2|オーロラベール,5,0|カウンター,6,1|カタストロフィ,15,2|ガリョウテンセイ,9,1|ガードシェア,10,0|ガードスワップ,10,0|キノコのほうし,4,0|キラースピン,7,1|キングシールド,16,0|ギアソーサー,16,1|ギアチェンジ,16,0|ギガインパクト,0,1|ギガドレイン,4,2|ギフトパス,0,0|クイックターン,2,1|クモのす,11,0|クラブハンマー,2,1|クリアスモッグ,7,2|クロスサンダー,3,1|クロスチョップ,6,1|クロスフレイム,1,2|クロスポイズン,7,1|クロロブラスト,4,2|グラススライダー,4,1|グラスフィールド,4,0|グラスミキサー,4,2|グランドフォース,8,1|グロウパンチ,6,1|ゲップ,7,2|コアパニッシャー,14,2|コスモパワー,10,0|コットンガード,4,0|コメットパンチ,16,1|コーチング,6,0|コートチェンジ,0,0|コールドフレア,5,2|ゴッドバード,9,1|ゴーストダイブ,13,1|ゴールドラッシュ,16,2|サイケこうせん,10,2|サイコウェーブ,10,2|サイコカッター,10,1|サイコキネシス,10,2|サイコシフト,10,0|サイコショック,10,2|サイコノイズ,10,2|サイコファング,10,1|サイコフィールド,10,0|サイコブレイク,10,2|サイコブレイド,10,1|サイコブースト,10,2|サイドチェンジ,10,0|サウザンアロー,8,1|サウザンウェーブ,8,1|サンダーダイブ,3,1|サンダープリズン,3,2|シェルアームズ,7,2|シェルブレード,2,1|シグナルビーム,11,2|シザークロス,11,1|シャカシャカほう,4,2|シャドークロー,13,1|シャドースチール,13,1|シャドーダイブ,13,1|シャドーパンチ,13,1|シャドーボール,13,2|シャドーボーン,13,1|シャドーレイ,13,2|シンクロノイズ,10,2|シンプルビーム,0,0|シードフレア,4,2|ジェットパンチ,2,1|ジオコントロール,17,0|ジャイロボール,16,1|ジャングルヒール,4,0|スイープビンタ,0,1|スカイアッパー,6,1|スキルスワップ,10,0|スケイルショット,14,1|スケイルノイズ,14,2|スケッチ,0,0|スターアサルト,6,1|スチームバースト,2,2|ステルスロック,12,0|ストーンエッジ,12,1|スパーク,3,1|スピードスター,0,2|スピードスワップ,10,0|スプーンまげ,10,0|スポットライト,0,0|スマートホーン,16,1|スモッグ,7,2|スレッドトラップ,11,0|ソウルクラッシュ,17,1|ソウルビート,14,0|ソニックブーム,0,2|ソーラービーム,4,2|ソーラーブレード,4,1|タキオンカッター,16,2|タネばくだん,4,1|タネマシンガン,4,1|タマゴうみ,0,0|タマゴばくだん,0,1|タールショット,12,0|ダイビング,2,1|ダイマックスほう,14,2|ダイヤストーム,12,1|ダストシュート,7,1|ダブルアタック,0,1|ダブルウイング,9,1|ダブルチョップ,14,1|ダブルニードル,11,1|ダブルパンツァー,16,1|ダメおし,15,1|ダークアクセル,15,1|ダークホール,15,0|チャージビーム,3,2|チャームボイス,17,2|ツインビーム,10,2|ツタこんぼう,4,1|テクスチャー,0,0|テクスチャー２,0,0|テクノバスター,0,2|テラクラスター,0,2|テラバースト,0,2|テレキネシス,10,0|テレポート,10,0|デカハンマー,16,1|デコレーション,17,0|デスウイング,9,2|トライアタック,0,2|トラップシェル,1,2|トラバサミ,4,1|トリック,10,0|トリックガード,17,0|トリックフラワー,4,1|トリックルーム,10,0|トリプルアクセル,5,1|トリプルキック,6,1|トリプルダイブ,2,1|トロピカルキック,4,1|トーチカ,7,0|ドわすれ,10,0|ドゲザン,15,1|ドラゴンアロー,14,1|ドラゴンエナジー,14,2|ドラゴンエール,14,0|ドラゴンクロー,14,1|ドラゴンダイブ,14,1|ドラゴンテール,14,1|ドラゴンハンマー,14,1|ドラムアタック,4,1|ドリルくちばし,9,1|ドリルライナー,8,1|ドレインキッス,17,2|ドレインパンチ,6,1|ナイトバースト,15,2|ナイトヘッド,13,2|ニトロチャージ,1,1|ニードルアーム,4,1|ニードルガード,4,0|ネコにこばん,0,1|ネズミざん,0,1|ハイドロカノン,2,2|ハイドロスチーム,2,2|ハイドロポンプ,2,2|ハイパードリル,0,1|ハイパーボイス,0,2|ハサミギロチン,0,1|ハッピータイム,0,0|ハバネロエキス,4,0|ハロウィン,13,0|ハートスタンプ,10,1|ハートスワップ,10,0|ハードプラント,4,2|ハードプレス,16,1|ハードローラー,11,1|バトンタッチ,0,0|バブルこうせん,2,2|バリアー,10,0|バリアーラッシュ,10,1|バレットパンチ,16,1|バークアウト,15,2|バーンアクセル,1,1|パラボラチャージ,3,2|パワフルエッジ,12,1|パワーウィップ,4,1|パワーシェア,10,0|パワーシフト,0,0|パワージェム,12,2|パワースワップ,10,0|パワートリック,10,0|ヒートスタンプ,1,1|ビックリヘッド,1,2|ビルドアップ,6,0|ピカピカサンダー,3,2|ピヨピヨパンチ,0,1|ファイトアクセル,6,1|ファストガード,6,0|フェアリーロック,17,0|フェイタルクロー,7,1|フェイント,0,1|フェザーダンス,9,0|フォトンゲイザー,10,2|フライングプレス,6,1|フラッシュ,0,0|フラフラダンス,0,0|フラワーガード,17,0|フラワーヒール,17,0|フリーズドライ,5,2|フリーズボルト,5,1|フリーフォール,9,1|フルールカノン,17,2|フレアソング,1,2|フレアドライブ,1,1|ブイブイブレイク,0,1|ブラストバーン,1,2|ブラッドムーン,0,2|ブリザードランス,5,1|ブレイククロー,0,1|ブレイズキック,1,1|ブレイブチャージ,10,0|ブレイブバード,9,1|ブロッキング,15,0|プラズマシャワー,3,0|プラズマフィスト,3,1|プリズムレーザー,10,2|プレゼント,0,1|ヘドロこうげき,7,2|ヘドロばくだん,7,2|ヘドロウェーブ,7,2|ヘビーボンバー,16,1|ベノムショック,7,2|ベノムトラップ,7,0|ホイールスピン,16,1|ホネこんぼう,8,1|ホネブーメラン,8,1|ボディパージ,16,0|ボディプレス,6,1|ボルテッカー,3,1|ボルトチェンジ,3,2|ボーンラッシュ,8,1|ポイズンアクセル,7,1|ポイズンテール,7,1|ポルターガイスト,13,1|マグニチュード,8,1|マグネットボム,16,1|マグマストーム,1,2|マジカルアクセル,17,1|マジカルシャイン,17,2|マジカルフレイム,1,2|マジカルリーフ,4,2|マジックコート,10,0|マジックルーム,10,0|マッドショット,8,2|マッハパンチ,6,1|マルチアタック,0,1|ミサイルばり,11,1|ミストバースト,17,2|ミストフィールド,17,0|ミストボール,10,2|ミラクルアイ,10,0|ミラーコート,10,2|ミラーショット,16,2|ミラータイプ,0,0|ミルクのみ,0,0|ムゲンダイビーム,14,2|ムーンフォース,17,2|メガトンキック,0,1|メガトンパンチ,0,1|メガドレイン,4,2|メガホーン,11,1|メタルクロー,16,1|メタルバースト,16,1|メテオドライブ,16,1|メテオビーム,12,2|メロメロ,0,0|ヨガのポーズ,10,0|ライジングボルト,3,2|ライトニングサーフライド,3,2|ラスターカノン,16,2|ラスターパージ,10,2|リサイクル,0,0|リフレクター,10,0|リフレッシュ,0,0|リベンジ,6,1|リーフストーム,4,2|リーフブレード,4,1|ルミナコリジョン,10,2|レイジングブル,0,1|ロケットずつき,0,1|ロックオン,0,0|ロックカット,12,0|ロッククライム,0,1|ロックブラスト,12,1|ローキック,6,1|ワイドガード,12,0|ワイドフォース,10,2|ワイドブレイカー,14,1|ワイルドボルト,3,1|ワンダースチーム,17,2|ワンダールーム,10,0|１０まんばりき,8,1|１０まんボルト,3,2|３ぼんのや,6,1|ＤＤラリアット,15,1|Ｇのちから,4,1|Ｖジェネレート,1,1'.split('|').map(x=>{const a=x.split(',');return [a[0],+a[1],+a[2]]});
+const MV_MAP=new Map(MOVES.map(x=>[x[0],x]));const MV_CLS=['変化','物理','特殊'];
+function monMoves(m){const a=Array.isArray(m.moves)?m.moves.slice(0,4):[];while(a.length<4)a.push('');return a}
+function monCollect(){if(!monEdit)return;{const mvIn=[...monSheet.querySelectorAll('[data-monmv]')];if(mvIn.length)monEdit.moves=mvIn.map(el=>el.value.trim())}{const ivIn=[...monSheet.querySelectorAll('[data-monivin]')];if(ivIn.length){const r=ivIn.map(el=>{const t=el.value.trim();if(t===''){const g=el.dataset.ivrg;return g?g.split(',').map(Number):null}const n=Math.max(0,Math.min(31,Math.round(+t)));return Number.isFinite(n)?[n,n]:null});
   if(r.some(Boolean))monEdit.iv=Object.assign({},monEdit.iv||{},{r});else if(monEdit.iv)monEdit.iv=Object.assign({},monEdit.iv,{r:null})}}const evIn=monSheet.querySelectorAll('[data-monev]');if(evIn.length){monEdit.ev=monEdit.ev||{};evIn.forEach(el=>monEdit.ev[el.dataset.monev]=Math.max(0,Math.min(252,Math.round(+el.value||0))))}monSheet.querySelectorAll('[data-monf]').forEach(el=>{monEdit[el.dataset.monf]=el.value.trim?el.value.trim():el.value})}
 monSheet.addEventListener('input',e=>{
+  if(e.target.dataset.monmv!=null){const i=e.target.dataset.monmv,q=kata(e.target.value.trim()),box=monSheet.querySelector(`[data-monmvres="${i}"]`),w=e.target.parentNode;
+    const mv=MV_MAP.get(e.target.value.trim());if(mv)w.style.setProperty('--tc',TY_C[mv[1]]);else w.style.removeProperty('--tc');
+    if(!q){box.innerHTML='';return}
+    const hits=MOVES.filter(x=>kata(x[0]).includes(q)).sort((a,b)=>kata(a[0]).indexOf(q)-kata(b[0]).indexOf(q)||a[0].length-b[0].length).slice(0,8);
+    box.innerHTML=hits.length?hits.map(x=>`<button type="button" data-monmvpick="${i}" data-mv="${esc(x[0])}"><span class="sn">${esc(x[0])}</span>${tyChip(x[1])}</button>`).join(''):'<div class="none">見つかりません（このまま入力できます）</div>';return}
   if(e.target.id==='monItem'){const q=kata(e.target.value.trim()),box=document.getElementById('monItemRes');
     if(!q){box.innerHTML='';return}
     const hits=HOLD_ITEMS.filter(n=>kata(n).includes(q)).sort((a,b)=>kata(a).indexOf(q)-kata(b).indexOf(q)||a.length-b.length).slice(0,8);
@@ -3737,6 +3785,7 @@ document.getElementById('vMon').addEventListener('click',e=>{
 });
 document.getElementById('monQ').addEventListener('input',e=>{S.mon.q=e.target.value;renderMon()});
 document.getElementById('monQi').addEventListener('input',e=>{S.mon.qi=e.target.value;renderMon()});
+document.querySelectorAll('[data-qx]').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById(b.dataset.qx);el.value='';S.mon[b.dataset.qx==='monQ'?'q':'qi']='';save();renderMon();el.focus()}));
 
 /* 個体管理 ⇔ リボン管理の連動（リボンの獲得状況は、いつもリボン管理のデータをそのまま読む） */
 const monRb=m=>m&&m.rb?S.rb.list.find(x=>x.id===m.rb)||null:null;
@@ -4465,14 +4514,17 @@ const monCard=document.getElementById('monCard');let monCardId=0,monCardBack=0;
 function monBase(m){const L=ivList();return (m.iv&&m.iv.mon&&L.find(e=>e.n===m.iv.mon&&e.d===m.sp))||L.find(e=>e.d===m.sp)||null}
 // レーダーチャート：上から時計回りに HP・攻撃・防御・素早さ・特防・特攻（ゲームのジャッジと同じ並び）
 const MC_ORD=[0,1,2,5,4,3];
-function mcRadar(r,nat){
+function mcRadar(r,nat,md){
   const W=300,H=262,cx=150,cy=132,R=88,L=LABELS.kanji;
-  const pt=(j,v)=>{const a=-Math.PI/2+j*Math.PI/3,d=R*v/31;return [cx+d*Math.cos(a),cy+d*Math.sin(a)]};
+  const mxv=Math.max(0,...r.map(v=>v?v[1]:0));
+  const M=md==='iv'?31:md==='ev'?252:Math.max(150,Math.ceil(mxv/50)*50);
+  const rings=md==='iv'?[10,20,31]:md==='ev'?[84,168,252]:Array.from({length:M/50},(_,k)=>(k+1)*50);
+  const pt=(j,v)=>{const a=-Math.PI/2+j*Math.PI/3,d=R*Math.min(v,M)/M;return [cx+d*Math.cos(a),cy+d*Math.sin(a)]};
   const poly=f=>MC_ORD.map((i,j)=>pt(j,f(i)).map(n=>n.toFixed(1)).join(',')).join(' ');
   let g='';
-  [10,20,31].forEach(v=>{g+=`<polygon class="mcg${v===31?' max':''}" points="${poly(()=>v)}"/>`});
-  MC_ORD.forEach((i,j)=>{const [x,y]=pt(j,31);g+=`<line class="mca" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`});
-  [10,20].forEach(v=>{const [x,y]=pt(0,v);g+=`<text class="mcrl" x="${(x+5).toFixed(1)}" y="${(y+(v===31?12:3)).toFixed(1)}">${v}</text>`});
+  rings.forEach(v=>{g+=`<polygon class="mcg${v===M?' max':''}" points="${poly(()=>v)}"/>`});
+  MC_ORD.forEach((i,j)=>{const [x,y]=pt(j,M);g+=`<line class="mca" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`});
+  rings.slice(0,-1).forEach(v=>{const [x,y]=pt(0,v);g+=`<text class="mcrl" x="${(x+5).toFixed(1)}" y="${(y+3).toFixed(1)}">${v}</text>`});
   const has=r.some(Boolean),rg=r.some(v=>v&&v[0]!==v[1]);
   if(has){
     g+=`<polygon class="mclo" points="${poly(i=>r[i]?r[i][0]:0)}"/>`;
@@ -4484,11 +4536,13 @@ function mcRadar(r,nat){
     const anc=Math.abs(Math.cos(a))<.1?'middle':Math.cos(a)>0?'start':'end',v=r[i];
     const cls=nat&&nat.up===i?' up':nat&&nat.dn===i?' dn':'',mk=nat&&nat.up===i?'↑':nat&&nat.dn===i?'↓':'';
     const yy=j===0?y-8:j===3?y+4:y-6;
-    const tv=v?(v[0]===v[1]?v[0]:v[0]+'〜'+v[1]):'－',jl=v?Math.min(ivLev(v[0]),ivLev(v[1])):-1;
-    g+=`<text class="mcl${cls}" x="${x.toFixed(1)}" y="${yy.toFixed(1)}" text-anchor="${anc}">${esc(L[i])}${mk}</text><text class="mcv${jl===5?' j5':jl===0?' j0':''}" x="${x.toFixed(1)}" y="${(yy+16).toFixed(1)}" text-anchor="${anc}">${tv}</text>`;
+    const tv=v?(v[0]===v[1]?v[0]:v[0]+'〜'+v[1]):'－';
+    const jc=md==='iv'&&v?(l=>l===5?' j5':l===0?' j0':'')(Math.min(ivLev(v[0]),ivLev(v[1]))):md==='ev'&&v&&v[0]>=252?' j5':'';
+    g+=`<text class="mcl${cls}" x="${x.toFixed(1)}" y="${yy.toFixed(1)}" text-anchor="${anc}">${esc(L[i])}${mk}</text><text class="mcv${jc}" x="${x.toFixed(1)}" y="${(yy+16).toFixed(1)}" text-anchor="${anc}">${tv}</text>`;
   });
-  return `<svg class="mc-radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="個体値のレーダーチャート">${g}</svg>`;
+  return `<svg class="mc-radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="${md==='iv'?'個体値':md==='ev'?'努力値':'種族値'}のレーダーチャート">${g}</svg>`;
 }
+let mcTab='radar',mcMode='iv';
 function renderMonCard(){
   const m=S.mon.list.find(x=>x.id===monCardId);if(!m){monCardClose();return}
   const e=monBase(m),L=LABELS.kanji,nat=ivNat(m.nature),r=(m.iv&&m.iv.r)||[null,null,null,null,null,null];
@@ -4509,27 +4563,48 @@ function renderMonCard(){
   const row=(k,v)=>v?`<div class="mondr"><span>${k}</span><b>${v}</b></div>`:'';
   const info=row('何の個体か',esc(m.purpose||''))+row('場所',esc(monWhere(m)))+(p?row('親',`${esc(p.name)}（ID ${esc(p.tid)}）${p.soft?'・'+esc(p.soft):''}`):'')+(t?row('リボン',`🎀 ${t.got}/${t.total}${t.mtotal?`・あかし ${t.mgot}/${t.mtotal}`:''}`):'')+(m.goal?row('努力値の目標',esc(evTxt(m.goal))):'')
     +((m.tags||[]).length?`<div class="montags">${m.tags.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'')+(m.memo?`<p class="monmemo">${esc(m.memo)}</p>`:'');
-  monCard.innerHTML=`<div class="sheet-in"><div class="sh-head"><h3>ステータス</h3><button class="btn" type="button" data-mcclose="1">閉じる</button></div>
-  <div class="mc-hero" style="--a1:${a1};--a2:${a2}"><div class="mc-top"><div class="mc-name"><b>${esc(monLabel(m))}</b><small>${m.nick&&m.sp?esc(e?tyShortName(e.n):monSp(m)):e&&e.n!==monSp(m)?esc(e.n):'\u00a0'}</small></div><div class="mc-lv"><small>Lv.</small><b>${lvOk?lv:'－'}</b>${g}</div></div>
-    <div class="mc-types">${e?`<span class="mc-no">No.${pad3(e.d)}</span>${e.t.map(x=>tyChip(x)).join('')}`:'<span class="mc-no">ポケモン未設定</span>'}</div></div>
+  const SL=mcSeq(),si=SL.findIndex(x=>x.id===m.id);
+  monCard.innerHTML=`<div class="sheet-in"><div class="sh-head"><h3>ステータス</h3>${SL.length>1?`<span class="mc-pos"><button type="button" data-mcnav="-1" aria-label="前のポケモン">‹</button><span>${si+1} / ${SL.length}</span><button type="button" data-mcnav="1" aria-label="次のポケモン">›</button></span>`:''}<button class="btn" type="button" data-mcclose="1">閉じる</button></div>
+  <div class="mc-hero" style="--a1:${a1};--a2:${a2}"><div class="mc-top"><div class="mc-name"><b>${esc(monLabel(m))}</b>${(()=>{const sub=m.nick&&m.sp?(e?tyShortName(e.n):monSp(m)):e&&e.n!==monSp(m)?e.n:'';return sub?`<small>（${esc(sub)}）</small>`:''})()}</div><div class="mc-lv"><small>Lv.</small><b>${lvOk?lv:'－'}</b>${g}</div></div>
+    <div class="mc-types">${e?`<span class="mc-no">No.${pad3(e.d)}</span>${e.t.map(x=>tyChip(x)).join('')}`:'<span class="mc-no">ポケモン未設定</span>'}</div><button type="button" class="mc-fav" data-mcfav="1" aria-pressed="${!!m.fav}" aria-label="お気に入り">${m.fav?'★':'☆'}</button></div>
   <div class="mc-facts">${fact('性格',natV)}${fact('特性',esc(m.ability||''))}${fact('持ち物',esc(m.item||''))}${fact('ボール',esc(m.ball||''))}</div>
-  <div class="mc-card"><div class="mc-ch"><h4>個体値</h4><span>合計<b>${r.some(Boolean)?(ivAll?(ivLo===ivHi?ivLo:ivLo+'〜'+ivHi):'－'):'－'}</b> / 186${n31?`・31が${n31}つ`:''}</span></div>
-    ${r.some(Boolean)?mcRadar(r,nat)+`<div class="mc-leg">${r.some(v=>v&&v[0]!==v[1])?'<span><i></i>少ないほう</span><span><i class="d"></i>多いほう</span>':''}</div>`
-      :`<div class="mc-empty">個体値はまだ記録されていません。${m.sp?'<button class="btn" type="button" data-mciv="1">個体値ジャッジで調べる</button>':''}</div>`}</div>
-  <div class="mc-card"><div class="mc-ch"><h4>能力</h4><span>${lvOk?'Lv.'+lv+'の実数値':'レベルを入れると実数値が出ます'}</span></div>
-    <div class="mc-st"><span class="h">能力</span><span class="h">種族値</span><span class="h">個体値</span><span class="h">努力値</span><span class="h">実数値</span>${rows}</div>
-    <div class="mc-tot"><span>種族値の合計<b>${e?e.b.reduce((s,v)=>s+v,0):'－'}</b></span><span>努力値の合計<b class="${evT>510?'bad':''}">${evT}</b> / 510</span></div></div>
+  ${(()=>{
+    const bR=STATS.map((_,i)=>e?[e.b[i],e.b[i]]:null),eR=EVK.map(k=>{const v=+ev[k]||0;return [v,v]});
+    const sum={base:`合計<b>${e?e.b.reduce((s,v)=>s+v,0):'－'}</b>`,iv:`合計<b>${r.some(Boolean)?(ivAll?(ivLo===ivHi?ivLo:ivLo+'〜'+ivHi):'－'):'－'}</b> / 186${n31?`・31が${n31}つ`:''}`,ev:`合計<b class="${evT>510?'bad':''}">${evT}</b> / 510`};
+    const leg={iv:r.some(v=>v&&v[0]!==v[1])?'<span><i></i>少ないほう</span><span><i class="d"></i>多いほう</span>':'',base:'',ev:''};
+    const body={base:e?mcRadar(bR,nat,'base'):'<div class="mc-empty">ポケモンが設定されていません。</div>',
+      iv:r.some(Boolean)?mcRadar(r,nat,'iv'):`<div class="mc-empty">個体値はまだ記録されていません。<span class="mc-ebtn"><button class="btn primary" type="button" data-mcivedit="1">個体値を入力する</button>${m.sp?'<button class="btn" type="button" data-mciv="1">個体値ジャッジで調べる</button>':''}</span></div>`,
+      ev:mcRadar(eR,nat,'ev')};
+    const K=[['base','種族値'],['iv','個体値'],['ev','努力値']];
+    return `<div class="mc-card mc-ab" data-tab="${mcTab}" data-md="${mcMode}"><div class="mc-ch"><h4>能力</h4><div class="seg mc-tabs" role="tablist"><button type="button" role="tab" data-mctab="radar" aria-pressed="${mcTab==='radar'}">レーダーチャート</button><button type="button" role="tab" data-mctab="table" aria-pressed="${mcTab==='table'}">表</button></div></div>
+    <div class="mc-panes"><div class="mc-pane" data-p="radar"><div class="mc-rt"><div class="seg mc-md" role="group" aria-label="チャートの種類">${K.map(([k,t])=>`<button type="button" data-mcmd="${k}" aria-pressed="${mcMode===k}">${t}</button>`).join('')}</div><div class="mc-sums">${K.map(([k])=>`<span data-m="${k}">${sum[k]}</span>`).join('')}</div></div>
+      <div class="mc-rws">${K.map(([k])=>`<div class="mc-rw" data-m="${k}">${body[k]}<div class="mc-leg">${leg[k]}</div></div>`).join('')}</div></div>
+    <div class="mc-pane" data-p="table"><div class="mc-sub">${lvOk?'Lv.'+lv+'の実数値':'レベルを入れると実数値が出ます'}</div>
+      <div class="mc-st"><span class="h">能力</span><span class="h">種族値</span><span class="h">個体値</span><span class="h">努力値</span><span class="h">実数値</span>${rows}</div>
+      <div class="mc-tot"><span>種族値の合計<b>${e?e.b.reduce((s,v)=>s+v,0):'－'}</b></span><span>努力値の合計<b class="${evT>510?'bad':''}">${evT}</b> / 510</span></div></div></div></div>`})()}
+  ${(()=>{const mv=monMoves(m);if(!mv.some(Boolean))return '';return `<div class="mc-card"><div class="mc-ch"><h4>覚えている技</h4></div><div class="mc-mv">${mv.map(v=>{const x=MV_MAP.get(v);return v?`<div class="mc-mvi"${x?` style="--tc:${TY_C[x[1]]}"`:''}><b>${esc(v)}</b>${x?`<small>${TY_N[x[1]]}・${MV_CLS[x[2]]}</small>`:''}</div>`:'<div class="mc-mvi none"><b>－</b></div>'}).join('')}</div></div>`})()}
   ${info?`<div class="mc-card mc-info">${info}</div>`:''}
   <div class="mc-acts"><button class="btn primary" type="button" data-mcedit="1">編集する</button>${m.sp?'<button class="btn" type="button" data-mciv="1">個体値ジャッジ</button><button class="btn" type="button" data-mcty="1">タイプ相性</button>':''}</div></div>`;
 }
+function mcSeq(){const L=monShown();return L.some(x=>x.id===monCardId)?L:S.mon.list}
+function mcGo(dir){const L=mcSeq();if(L.length<2)return;const i=L.findIndex(x=>x.id===monCardId);const n=L[(i+dir+L.length)%L.length];
+  const w=monCard.querySelector('.sheet-in'),top=w?w.scrollTop:0;monCardId=n.id;renderMonCard();const w2=monCard.querySelector('.sheet-in');w2.scrollTop=top;
+  w2.classList.remove('mc-in-l','mc-in-r');void w2.offsetWidth;w2.classList.add(dir>0?'mc-in-r':'mc-in-l')}
+{let sx=0,sy=0,ok=false;
+  monCard.addEventListener('touchstart',e=>{const t=e.touches[0];ok=e.touches.length===1&&!e.target.closest('input,select,textarea');sx=t.clientX;sy=t.clientY},{passive:true});
+  monCard.addEventListener('touchend',e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6)mcGo(dx<0?1:-1)},{passive:true});
+  monCard.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea'))return;if(e.key==='ArrowRight')mcGo(1);else if(e.key==='ArrowLeft')mcGo(-1)})}
 function monCardOpen(id){monCardId=id;monCard.hidden=false;document.body.classList.add('modal');renderMonCard();monCard.querySelector('.sheet-in').scrollTop=0;monCard.querySelector('[data-mcclose]')?.focus()}
 function monCardClose(){monCard.hidden=true;monCardId=0;if(monSheet.hidden&&sheetEl.hidden)document.body.classList.remove('modal')}
 monCard.addEventListener('click',ev=>{
   if(ev.target===monCard){monCardClose();return}
   const b=ev.target.closest('button');if(!b)return;const d=b.dataset,id=monCardId,x=S.mon.list.find(y=>y.id===id);
   if(d.mcclose){monCardClose();return}
+  if(d.mcnav){mcGo(+d.mcnav);return}
+  if(d.mctab||d.mcmd){const c=monCard.querySelector('.mc-ab');if(d.mctab){mcTab=d.mctab;c.dataset.tab=mcTab;c.querySelectorAll('[data-mctab]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.mctab===mcTab))}else{mcMode=d.mcmd;c.dataset.md=mcMode;c.querySelectorAll('[data-mcmd]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.mcmd===mcMode))}return}
   if(!x)return;
-  if(d.mcedit){monCard.hidden=true;monCardBack=id;monOpen(id);return}
+  if(d.mcfav){x.fav=!x.fav;b.setAttribute('aria-pressed',String(x.fav));b.textContent=x.fav?'★':'☆';save();renderMon();toast(x.fav?'お気に入りにしました':'お気に入りを外しました');return}
+  if(d.mcedit||d.mcivedit){monCard.hidden=true;monCardBack=id;monOpen(id);if(d.mcivedit){const i=monSheet.querySelector('[data-monivin]'),w=monSheet.querySelector('.sheet-in');if(i&&w){const h=w.querySelector('.sh-head');w.scrollTop+=i.closest('.srow').getBoundingClientRect().top-w.getBoundingClientRect().top-(h?h.offsetHeight:0)-8;i.focus({preventScroll:true})}}return}
   if(d.mciv){monCardClose();ivFromMon(x);return}
   if(d.mcty){monCardClose();tyFromMon(x);return}
 });
