@@ -300,6 +300,45 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ni{flex:none;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;background:var(--c,var(--b1))}
 .navbottom{margin-top:auto;border-top:1px solid var(--line);padding-top:8px}
 a.navitem{text-decoration:none}
+/* 下のタブバー・縦向き固定 */
+body{--tabh:calc(56px + env(safe-area-inset-bottom,0px))}
+body.fs,body.obsmode{--tabh:0px}
+body{padding-bottom:calc(var(--barh,190px) + var(--tabh) + 24px)}
+body:not(.fs) .bar{bottom:var(--tabh);padding-bottom:10px}
+.rinfo{padding-bottom:calc(12px + var(--tabh))}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:6;height:var(--tabh);background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+body.fs .tabbar{display:none}
+.tabbar-in{max-width:640px;height:56px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.tab{position:relative;border:none;background:none;padding:0 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:700;line-height:1.2;min-width:0;-webkit-tap-highlight-color:transparent}
+.tab .ni{width:30px;height:26px;border-radius:8px;font-size:11px;color:color-mix(in srgb,var(--c) 75%,var(--ink));background:color-mix(in srgb,var(--c) 18%,transparent);transition:background .15s,color .15s}
+.tab .tl{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab[aria-current="page"]{color:var(--ink)}
+.tab[aria-current="page"] .ni{color:#fff;background:var(--c)}
+.tab[aria-current="page"]::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--c)}
+.tab:active .ni{transform:scale(.92)}
+.navtools{display:contents}
+.setlist{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.setrow{display:flex;align-items:center;gap:10px;height:52px;padding:0 8px 0 10px}
+.setrow+.setrow{border-top:1px solid var(--line)}
+.setrow.moved{animation:rowflash .6s ease}
+@keyframes rowflash{from{background:var(--accent-soft)}}
+.setno{flex:none;width:16px;text-align:center;font-family:var(--f-num);font-size:13px;font-weight:700;color:var(--muted)}
+.setrow .ni{width:28px;height:28px;font-size:11px;border-radius:8px}
+.setrow select{flex:1;min-width:0;font-weight:700;font-size:14px;padding:7px 8px}
+.setrow .snt{flex:1;min-width:0;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mvb{flex:none;width:36px;height:36px;padding:0;border:1px solid var(--line);background:var(--sunken);border-radius:10px;display:grid;place-items:center;color:var(--ink)}
+.mvb svg{width:18px;height:18px}
+.mvb:disabled{opacity:.3;cursor:default}
+.mvb:not(:disabled):active{background:var(--line)}
+.rstbtn{padding:5px 10px;font-size:12px}
+.rotov{display:none;position:fixed;inset:0;z-index:200;background:var(--bg);color:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px}
+.rotov svg{width:64px;height:64px;color:var(--accent);margin-bottom:4px}
+.rotov b{font-family:var(--f-display);font-weight:400;font-size:20px}
+.rotov p{margin:0;font-size:13px;color:var(--muted)}
+@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){.rotov{display:flex}}
+body.obsmode .rotov{display:none!important}
+
 .extdlg{position:fixed;inset:0;z-index:60;background:rgb(8 12 28 / .5);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadein .15s ease}
 .extin{width:100%;max-width:320px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:20px 18px 16px;box-shadow:0 16px 40px rgb(0 0 0 / .3);text-align:center}
 .extt{margin:0;font-size:17px;font-weight:800}
@@ -1290,14 +1329,7 @@ body:not(.app) .obsapp{display:none!important}
   <nav aria-label="メニュー">
     <p class="navhead">Poke Tools</p>
     <p class="navlabel">ツール</p>
-    <button class="navitem" type="button" data-view="ev"><span class="ni" style="--c:var(--b1)">EV</span><span class="nt">努力値カウンター</span></button>
-    <button class="navitem" type="button" data-view="shiny"><span class="ni" style="--c:var(--sh)">色</span><span class="nt">色違い厳選カウンター</span></button>
-    <button class="navitem" type="button" data-view="ribbon"><span class="ni" style="--c:var(--rib)">リ</span><span class="nt">リボン管理</span></button>
-    <button class="navitem" type="button" data-view="dex"><span class="ni" style="--c:var(--dx)">図</span><span class="nt">図鑑埋め支援</span></button>
-    <button class="navitem" type="button" data-view="pb"><span class="ni" style="--c:var(--pb)">ポ</span><span class="nt">ポロック・ポフィン</span></button>
-    <button class="navitem" type="button" data-view="mon"><span class="ni" style="--c:var(--mon)">個</span><span class="nt">個体管理</span></button>
-    <button class="navitem" type="button" data-view="iv"><span class="ni" style="--c:var(--iv)">IV</span><span class="nt">個体値ジャッジ</span></button>
-    <button class="navitem navlast" type="button" data-view="type"><span class="ni" style="--c:var(--ty)">相</span><span class="nt">タイプ相性</span></button>
+    <div class="navtools" id="navTools"></div>
     <div class="navbottom">
       <a class="navitem navlink" href="https://noctis1008-wq.github.io/" target="_blank" rel="noopener"><span class="ni" style="--c:var(--muted);font-size:11px">Web</span><span class="nt">開発者ポータルサイト</span><span class="navext" aria-hidden="true">↗</span></a>
       <button class="navitem" type="button" data-view="settings"><span class="ni" style="--c:var(--muted)">設</span><span class="nt">設定</span></button>
@@ -1642,6 +1674,15 @@ body:not(.app) .obsapp{display:none!important}
     <p class="note">iPhoneはマナーモード（消音スイッチ）がオンだと音が鳴りません。</p>
   </section>
   <section>
+    <div class="h2row"><h2>下のバーに表示するツール</h2><button id="tabRst" class="btn rstbtn" type="button">元に戻す</button></div>
+    <div class="setlist" id="tabSet"></div>
+    <p class="note">いちばん下のバーに、左から順に5つ並びます。すでに並んでいるツールを選ぶと、場所が入れ替わります。</p>
+  </section>
+  <section>
+    <div class="h2row"><h2>メニューの並び順</h2><button id="navRst" class="btn rstbtn" type="button">元に戻す</button></div>
+    <div class="setlist" id="navSet"></div>
+  </section>
+  <section>
     <h2>このアプリについて</h2>
     <div class="stat">
       <button id="ppBtn" class="btn ppbtn" type="button">プライバシーポリシー<span aria-hidden="true">›</span></button>
@@ -1652,6 +1693,8 @@ body:not(.app) .obsapp{display:none!important}
 
 
 
+<div class="rotov" id="rotOv" aria-live="polite"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="22" y="8" width="20" height="36" rx="4"/><path d="M29 38h6"/><path d="M50 30a20 20 0 0 1-12 22"/><path d="M38 46l0 6 6 0"/><path d="M14 34a20 20 0 0 1 12-22"/><path d="M26 18l0-6-6 0"/></svg><b>縦向きでお使いください</b><p>スマホを縦にすると、そのまま続きから使えます</p></div>
+<nav id="tabBar" class="tabbar" aria-label="よく使うツール"><div class="tabbar-in" id="tabBarIn"></div></nav>
 <div id="obsView" class="obsview" hidden>
   <div class="obsmethod"></div>
   <div class="obsline"><span class="obscount">0</span></div>
@@ -4739,6 +4782,53 @@ monCard.addEventListener('click',ev=>{
 monCard.addEventListener('keydown',ev=>{if(ev.key==='Escape')monCardClose()});
 const VIEWS={ev:{t:'努力値カウンター',el:'vEv'},shiny:{t:'色違い厳選カウンター',el:'vShiny'},ribbon:{t:'リボン管理',el:'vRibbon'},dex:{t:'図鑑埋め支援',el:'vDex'},pb:{t:'ポロック・ポフィン',el:'vPb'},mon:{t:'個体管理',el:'vMon'},iv:{t:'個体値ジャッジ',el:'vIv'},type:{t:'タイプ相性',el:'vType'},settings:{t:'設定',el:'vSettings'}};
 const drawer=document.getElementById('drawer'),menuBtn=document.getElementById('menuBtn');
+/* ---------- 下のタブバー・メニューの並び ---------- */
+const TOOL_KEYS=['ev','shiny','ribbon','dex','pb','mon','iv','type'];
+const TOOL_META={ev:{ab:'EV',c:'--b1',s:'努力値'},shiny:{ab:'色',c:'--sh',s:'色違い'},ribbon:{ab:'リ',c:'--rib',s:'リボン'},dex:{ab:'図',c:'--dx',s:'図鑑'},pb:{ab:'ポ',c:'--pb',s:'ポロック'},mon:{ab:'個',c:'--mon',s:'個体管理'},iv:{ab:'IV',c:'--iv',s:'個体値'},type:{ab:'相',c:'--ty',s:'タイプ相性'}};
+const TAB_DEF=['ev','shiny','mon','iv','type'];
+
+function uiFix(a,def,n){const r=[];(Array.isArray(a)?a:[]).forEach(k=>{if(TOOL_KEYS.includes(k)&&!r.includes(k))r.push(k)});[...def,...TOOL_KEYS].forEach(k=>{if(r.length<n&&!r.includes(k))r.push(k)});return r.slice(0,n)}
+function uiNorm(){S.tabs=uiFix(S.tabs,TAB_DEF,5);S.navOrder=uiFix(S.navOrder,TOOL_KEYS,TOOL_KEYS.length)}
+const toolNi=k=>`<span class="ni" style="--c:var(${TOOL_META[k].c})" aria-hidden="true">${TOOL_META[k].ab}</span>`;
+const UP_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',DN_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+function renderNav(){
+  const box=document.getElementById('navTools');
+  box.innerHTML=S.navOrder.map((k,i)=>`<button class="navitem${i===S.navOrder.length-1?' navlast':''}" type="button" data-view="${k}"><span class="ni" style="--c:var(${TOOL_META[k].c})">${TOOL_META[k].ab}</span><span class="nt">${VIEWS[k].t}</span></button>`).join('');
+}
+function renderTabs(){
+  document.getElementById('tabBarIn').innerHTML=S.tabs.map(k=>`<button class="tab" type="button" data-tab="${k}" aria-label="${VIEWS[k].t}">${toolNi(k)}<span class="tl">${TOOL_META[k].s}</span></button>`).join('');
+  markTabs();
+}
+function markTabs(){const v=document.body.dataset.view;document.querySelectorAll('#tabBarIn [data-tab]').forEach(b=>{if(b.dataset.tab===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})}
+const mvBtns=(attr,i,n,name)=>`<button class="mvb" type="button" ${attr}="${i}" data-dir="-1" aria-label="${name}を上へ"${i===0?' disabled':''}>${UP_SVG}</button><button class="mvb" type="button" ${attr}="${i}" data-dir="1" aria-label="${name}を下へ"${i===n-1?' disabled':''}>${DN_SVG}</button>`;
+function renderUiSet(moved){
+  const ts=document.getElementById('tabSet');if(!ts)return;
+  ts.innerHTML=S.tabs.map((k,i)=>`<div class="setrow${moved&&moved[0]==='t'&&moved[1]===i?' moved':''}"><span class="setno">${i+1}</span>${toolNi(k)}<select data-tabsel="${i}" aria-label="${i+1}番目のツール">${TOOL_KEYS.map(o=>`<option value="${o}"${o===k?' selected':''}>${TOOL_META[o].s}</option>`).join('')}</select>${mvBtns('data-tabmv',i,S.tabs.length,VIEWS[k].t)}</div>`).join('');
+  document.getElementById('navSet').innerHTML=S.navOrder.map((k,i)=>`<div class="setrow${moved&&moved[0]==='n'&&moved[1]===i?' moved':''}"><span class="setno">${i+1}</span>${toolNi(k)}<span class="snt">${VIEWS[k].t}</span>${mvBtns('data-navmv',i,S.navOrder.length,VIEWS[k].t)}</div>`).join('');
+  document.getElementById('tabRst').disabled=S.tabs.join()===TAB_DEF.join();
+  document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
+}
+function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
+document.getElementById('vSettings').addEventListener('click',e=>{
+  const t=e.target.closest('[data-tabmv],[data-navmv],#tabRst,#navRst');if(!t||t.disabled)return;
+  if(t.id==='tabRst'){S.tabs=[...TAB_DEF];uiApply();toast('下のバーを元に戻しました');return}
+  if(t.id==='navRst'){S.navOrder=[...TOOL_KEYS];uiApply();toast('メニューの並びを元に戻しました');return}
+  const isT=t.hasAttribute('data-tabmv'),a=isT?S.tabs:S.navOrder,i=+(isT?t.dataset.tabmv:t.dataset.navmv),d=+t.dataset.dir,j=i+d;
+  if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];
+  const at=isT?'data-tabmv':'data-navmv';
+  uiApply([isT?'t':'n',j],`[${at}="${j}"][data-dir="${d}"]`);
+  if(document.activeElement===document.body||!document.activeElement)document.querySelector(`[${at}="${j}"][data-dir="${-d}"]`)?.focus();
+});
+document.getElementById('vSettings').addEventListener('change',e=>{
+  const s=e.target.closest('[data-tabsel]');if(!s)return;
+  const i=+s.dataset.tabsel,k=s.value,j=S.tabs.indexOf(k);
+  if(j>=0&&j!==i)S.tabs[j]=S.tabs[i];
+  S.tabs[i]=k;uiApply(['t',i]);
+});
+document.getElementById('tabBar').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b&&b.dataset.tab!==document.body.dataset.view)setView(b.dataset.tab)});
+uiNorm();renderNav();renderTabs();
+try{if(!location.hash.startsWith('#obs')&&screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{})}catch(e){}
+
 function openMenu(){drawer.hidden=false;menuBtn.setAttribute('aria-expanded','true');document.body.classList.add('modal');drawer.querySelector('[aria-current="page"]')?.focus()}
 function closeMenu(){if(drawer.hidden)return;drawer.hidden=true;menuBtn.setAttribute('aria-expanded','false');if(sheetEl.hidden)document.body.classList.remove('modal');menuBtn.focus()}
 function setView(v){
@@ -4756,6 +4846,8 @@ function setView(v){
   if(v==='type')renderTy();
   if(v==='iv')renderIv();
   if(v==='ribbon')renderRb();else document.getElementById('rbInfo').hidden=true;
+  if(v==='settings')renderUiSet();
+  markTabs();
   setBarH();window.scrollTo(0,0);
 }
 menuBtn.addEventListener('click',()=>drawer.hidden?openMenu():closeMenu());
