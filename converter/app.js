@@ -7,8 +7,8 @@
 // 各タグ末尾にある ?v= の 5 つを必ず一致させること。
 // ?v= を上げ忘れると、ブラウザが古い JS / CSS を使い続けて更新が反映されない。
 // ===========================================================================
-const APP_VERSION = "16";
-const APP_VERSION_DATE = "2026-10-20";
+const APP_VERSION = "17";
+const APP_VERSION_DATE = "2026-10-21";
 
 // ---------------------------------------------------------------------------
 // セーブ構造の根拠 (2026-09-21 に日本語版ROMの実バイトで確定)
@@ -99,6 +99,47 @@ const download = document.getElementById("download");
 
 let outputBytes = null;
 
+// ---------------------------------------------------------------------------
+// v17: 画面の状態(見た目だけ。変換の処理には関係しない)
+//   start = 最初 / busy = 解析中 / done = 変換できた / error = 変換できなかった
+//   上の手順(1 選ぶ → 2 変換 → 3 ダウンロード)と、body のクラスを切り替える。
+// ---------------------------------------------------------------------------
+const STEP_OF = {start: 1, busy: 2, done: 3, error: 2};
+function setUiState(state) {
+  const now = STEP_OF[state] || 1;
+  document.querySelectorAll("#steps .step").forEach(li => {
+    const n = Number(li.dataset.step);
+    const isNow = n === now, isDone = n < now;
+    li.classList.toggle("now", isNow);
+    li.classList.toggle("done", isDone);
+    li.classList.toggle("error", isNow && state === "error");
+    const b = li.querySelector("b");
+    if (b) b.textContent = isDone ? "✓" : (isNow && state === "error" ? "!" : String(n));
+    if (isNow) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
+  });
+  document.body.classList.toggle("is-busy", state === "busy");
+  document.body.classList.toggle("has-result", state === "done");
+  document.body.classList.toggle("has-error", state === "error");
+  document.body.classList.toggle("has-file", state !== "start");
+  const errorCard = document.getElementById("errorCard");
+  if (errorCard) errorCard.classList.toggle("hidden", state !== "error");
+  const nextCard = document.getElementById("nextCard");
+  const howCard = document.getElementById("howCard");
+  if (nextCard) nextCard.classList.toggle("hidden", state !== "done");
+  if (howCard) howCard.classList.toggle("hidden", state === "done");
+}
+function showResultSummary(gameName, outputSize) {
+  const short = gameName.replace("ポケットモンスター ", "");
+  const el = id => document.getElementById(id);
+  if (el("gameShort")) el("gameShort").textContent = short + " のセーブ";
+  if (el("dockGame")) el("dockGame").textContent = short;
+  if (el("dockSize")) el("dockSize").textContent = "sav.dat ・ " + outputSize.toLocaleString() + " bytes";
+}
+function scrollToTopOfFlow() {
+  // スマホでは結果・エラーが画面の上に来るようにする
+  if (window.matchMedia && window.matchMedia("(max-width: 959px)").matches) window.scrollTo({top: 0, behavior: "smooth"});
+}
+
 function le16(bytes, p) {
   return bytes[p] | (bytes[p + 1] << 8);
 }
@@ -131,12 +172,17 @@ function showError(message) {
   status.textContent = message;
   status.className = "status error";
   result.classList.add("hidden");
+  const errorText = document.getElementById("errorText");
+  if (errorText) errorText.textContent = message;
+  setUiState("error");
+  scrollToTopOfFlow();
 }
 
 async function convert(file) {
   status.textContent = "セーブデータを解析しています…";
   status.className = "status";
   result.classList.add("hidden");
+  setUiState("busy");
 
   const buffer = await file.arrayBuffer();
   const input = new Uint8Array(buffer);
@@ -199,6 +245,9 @@ async function convert(file) {
   status.textContent = "変換に成功しました。";
   status.className = "status";
   result.classList.remove("hidden");
+  showResultSummary(gameName, outputSize);
+  setUiState("done");
+  scrollToTopOfFlow();
 
   // 変換回数カウンターを +1 する (counter.js が定義する)。
   // カウンターが落ちていても変換には影響しないよう、存在確認してから呼ぶ。
@@ -206,7 +255,10 @@ async function convert(file) {
 }
 
 fileInput.addEventListener("change", () => {
-  if (fileInput.files.length) convert(fileInput.files[0]).catch(e => showError(e.message));
+  if (fileInput.files.length) convert(fileInput.files[0]).catch(e => showError(e.message)).finally(() => {
+    // v17: 同じファイルをもう一度選んでも読み込めるようにする(変換の結果は outputBytes に残る)
+    fileInput.value = "";
+  });
 });
 
 ["dragenter", "dragover"].forEach(type => {

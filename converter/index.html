@@ -2,84 +2,136 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f6f8">
   <meta name="google-adsense-account" content="ca-pub-9139206140818266">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9139206140818266" crossorigin="anonymous"></script>
   <title>ポケモン金銀クリスタル→VC版変換（ポケムーバー対応） | NER Converter</title>
   <!-- 末尾の ?v= はブラウザのキャッシュ対策。app.js の APP_VERSION を上げたら、
        index.html と privacy.html のこの数字も同じ値に揃えること。 -->
-  <script src="analytics.js?v=16"></script>
+  <script src="analytics.js?v=17"></script>
   <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
-  <main class="wrap">
-    <section class="hero">
-      <p class="eyebrow">POKÉMON GOLD / SILVER / CRYSTAL</p>
-      <h1 class="brand">
-        <img class="brand-logo" src="logo.webp?v=16" width="1200" height="409"
+<a class="skip-link" href="#main">本文へ移動</a>
+<!-- v17: 上部のバー(NER Pokémon Recovery と同じ)。YouTube・X・NER PORTAL はここに入れ、画面に重ならないようにした -->
+<header class="topbar">
+  <a class="brand" href="./" aria-label="NER Converter トップ"><img src="logo.webp?v=17" width="1200" height="409" alt=""><span>NER Converter</span></a>
+  <nav class="topbar-links" aria-label="外部リンク">
+    <a class="social-icon youtube-icon" href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer" aria-label="YouTube(新しいタブ)" title="YouTube"><span class="youtube-play" aria-hidden="true"></span></a>
+    <a class="social-icon x-icon" href="https://x.com/ner2048" target="_blank" rel="noopener noreferrer" aria-label="X(新しいタブ)" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.2-8.3L1.9 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.4 4.7H5.6z"/></svg></a>
+    <a class="portal-badge" href="https://noctis1008-wq.github.io/" title="NER PORTAL SITE"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="pbG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe14d"/><stop offset=".45" stop-color="#ff8a5c"/><stop offset=".75" stop-color="#ff4fd8"/><stop offset="1" stop-color="#9fd0ff"/></linearGradient></defs><path d="M8.5 25V13a7.5 7.5 0 0 1 15 0v12z" fill="none" stroke="url(#pbG)" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 25V14.2a4 4 0 0 1 8 0V25" fill="none" stroke="url(#pbG)" stroke-width="2" stroke-linejoin="round"/><path d="M16 15.2l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="#fff"/></svg><span>NER PORTAL<span class="portal-site"> SITE</span></span></a>
+  </nav>
+</header>
+<!-- v17: 手順の表示(1 選ぶ → 2 変換 → 3 ダウンロード)。app.js の setStep() で切り替える -->
+<ol class="steps" id="steps" aria-label="手順">
+  <li class="step now" data-step="1" aria-current="step"><i class="bar"></i><span><b>1</b><span class="s-short">選ぶ</span><span class="s-long">セーブファイルを選ぶ</span></span></li>
+  <li class="step" data-step="2"><i class="bar"></i><span><b>2</b><span class="s-short">変換</span><span class="s-long">VC 版に変換</span></span></li>
+  <li class="step" data-step="3"><i class="bar"></i><span><b>3</b><span class="s-short">ダウンロード</span><span class="s-long">sav.dat をダウンロード</span></span></li>
+</ol>
+
+<main class="wrap" id="main">
+  <div class="layout">
+  <div class="col-main">
+    <section class="hero card-d">
+      <h1 class="brand-h1">
+        <img class="brand-logo" src="logo.webp?v=17" width="1200" height="409"
              alt="ポケモン金銀クリスタル→VC版変換（ポケムーバー対応） NER Converter">
       </h1>
-      <p class="lead">実機・mGBAの日本語版「ポケットモンスター 金・銀・クリスタル」のセーブデータを<br>3DSのVC版で起動可能な形式に変換します。<br>ポケムーバーによるポケモンバンクへの転送にも対応しています。</p>
-    </section>
-
-    <section class="card">
-      <label class="drop" id="drop">
-        <input id="file" type="file" accept=".sav,.dat,application/octet-stream">
-        <span class="drop-title">セーブファイルを選択</span>
-        <span class="drop-sub">ここに .sav / .dat をドラッグ＆ドロップ</span>
-      </label>
-
-      <div id="status" class="status hidden"></div>
-
-      <div id="result" class="result hidden">
-        <div class="result-row"><span>判定</span><strong id="game"></strong></div>
-        <div class="result-row"><span>入力サイズ</span><strong id="size"></strong></div>
-        <div class="result-row"><span>チェックサム</span><strong id="checksum"></strong></div>
-        <div class="result-row"><span>VC互換パッチ</span><strong>適用済み</strong></div>
-        <button id="download" class="button">sav.dat をダウンロード</button>
+      <div class="hero-text">
+        <p class="hero-title">金・銀・クリスタルのセーブを<br class="m-br">3DSのVC版で遊べる形に</p>
+        <p class="lead">実機・mGBA の日本語版セーブを変換します。<br class="m-br">ポケムーバーでポケモンバンクへ送ることもできます。</p>
+        <p class="games"><span>日本語版</span><span>金・銀</span><span>クリスタル</span></p>
       </div>
     </section>
 
-    <section class="info">
-      <h2>対応範囲</h2>
-      <ul>
-        <li>日本語版 ポケットモンスター 金・銀・クリスタル</li>
-        <li>実機・エミュレーターから抽出したセーブ</li>
-        <li>処理はすべてブラウザ内で実行され、セーブデータはサーバーへ送信されません</li>
-      </ul>
+    <section class="card upload-card" id="uploadCard" aria-label="セーブファイルを選ぶ">
+      <label class="drop" id="drop">
+        <input id="file" type="file" accept=".sav,.dat,application/octet-stream">
+        <span class="drop-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span>
+        <span class="drop-title">セーブファイルを選ぶ</span>
+        <span class="drop-sub"><span class="when-touch">パソコンでは、ここへドラッグ＆ドロップ</span><span class="when-mouse">ここへ <code>.sav</code>・<code>.dat</code> をドラッグ＆ドロップ</span></span>
+        <span class="button drop-button" aria-hidden="true"><span class="pick-first">ファイルを選ぶ</span><span class="pick-again">別のファイルを選ぶ</span></span>
+        <span class="drop-fmt">実機・mGBA から取り出した <code>.sav</code>・<code>.dat</code></span>
+      </label>
 
-      <h2>使い方</h2>
-      <ol>
-        <li>実機またはmGBAからセーブデータを抽出します。</li>
-        <li>このページにセーブファイルを選択します。</li>
-        <li>生成された <code>sav.dat</code> をダウンロードします。</li>
-        <li>Checkpoint等を使用して対応する日本語VC版 金・銀・クリスタルへ書き込みます。</li>
-        <li>VC上でゲームを起動し、セーブを確認してからポケムーバーで確認します。</li>
-      </ol>
-      <p class="note">※ 変換前のセーブデータは必ずバックアップしてください。</p>
-      <p class="note">※ ファイル内の実データ領域には手を加えません。実データ外の一部の領域を00でパディングします。</p>
+      <div class="trust trust-m"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><p><b>セーブはこの端末の中だけで変換します</b>元のファイルは書き換えません。セーブの中身やファイル名を外部へ送ることはありません。</p></div>
 
+      <div id="status" class="status hidden" role="status" aria-live="polite"></div>
+
+      <!-- v17: 変換できなかったとき(文言は app.js が #status に入れたものをそのまま使う) -->
+      <div id="errorCard" class="error-card hidden" role="alert">
+        <h2 class="error-title"><span aria-hidden="true">⚠️</span>このファイルは変換できませんでした</h2>
+        <div class="errbox" id="errorText"></div>
+        <h3 class="sec-h">確かめてください</h3>
+        <ul class="chk">
+          <li>日本語版の 金・銀・クリスタル のセーブですか？（別の言語版は非対応）</li>
+          <li>実機・mGBA から取り出したセーブ（.sav／.dat）ですか？</li>
+          <li>壊れたセーブは変換できません。元のセーブは書き換えていません。</li>
+        </ul>
+        <label class="button" for="file">別のファイルを選ぶ</label>
+      </div>
+
+      <div id="result" class="result hidden">
+        <div class="result-head">
+          <span class="ok-big" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <div class="result-head-text"><h2>変換できました</h2><p id="gameShort"></p></div>
+          <label class="again" for="file">別のファイル</label>
+        </div>
+        <div class="file-row"><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></span><div><b>sav.dat</b><small>VC 版で使うセーブデータ</small></div></div>
+        <div class="kv">
+          <div class="result-row"><span>判定</span><strong id="game"></strong></div>
+          <div class="result-row"><span>入力サイズ</span><strong id="size"></strong></div>
+          <div class="result-row"><span>チェックサム</span><strong><i class="ok-ic" aria-hidden="true">✓</i><span id="checksum"></span></strong></div>
+          <div class="result-row"><span>VC互換パッチ</span><strong><i class="ok-ic" aria-hidden="true">✓</i>適用済み</strong></div>
+        </div>
+        <div class="dock" id="dock">
+          <p class="dock-meta"><span id="dockGame"></span><b id="dockSize">sav.dat</b></p>
+          <button id="download" class="button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>sav.dat をダウンロード</button>
+        </div>
+        <p class="note">※ ファイル内の実データ領域には手を加えません。実データ外の一部の領域を00でパディングします。</p>
+      </div>
+    </section>
+  </div>
+
+  <aside class="col-side">
+    <section class="card side-card trust-card">
+      <div class="trust trust-plain"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><p><b>この端末の中だけで変換</b>処理はすべてブラウザ内で行います。セーブの中身・ファイル名は送りません。元のファイルは書き換えません。</p></div>
     </section>
 
-    <footer>
-      <a href="../">ポータル</a> ·
-      <a href="privacy.html">プライバシーポリシー</a> ·
-      <a href="https://github.com/FM1337/sav2vc" target="_blank" rel="noopener">Reference: sav2vc</a>
-    
-    <div class="social-fixed" aria-label="作者リンク">
-      <a class="social-icon youtube-icon" href="https://www.youtube.com/@%E3%83%8D%E3%83%AB2048" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
-        <span class="youtube-play" aria-hidden="true"></span>
-      </a>
-      <a class="social-icon x-icon" href="https://x.com/ner2048" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
-        <span aria-hidden="true">𝕏</span>
-      </a>
-<a class="portal-badge" href="https://noctis1008-wq.github.io/" aria-label="NER PORTAL SITE" title="NER PORTAL SITE"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="pbG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe14d"/><stop offset=".45" stop-color="#ff8a5c"/><stop offset=".75" stop-color="#ff4fd8"/><stop offset="1" stop-color="#9fd0ff"/></linearGradient></defs><path d="M8.5 25V13a7.5 7.5 0 0 1 15 0v12z" fill="none" stroke="url(#pbG)" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 25V14.2a4 4 0 0 1 8 0V25" fill="none" stroke="url(#pbG)" stroke-width="2" stroke-linejoin="round"/><path d="M16 15.2l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="#fff"/></svg><span>NER PORTAL SITE</span></a>
+    <section class="card side-card info" id="howCard">
+      <h2 class="sec-h">使い方</h2>
+      <ol class="how">
+        <li><span>実機または mGBA からセーブデータを取り出す</span></li>
+        <li><span>このページでセーブファイルを選ぶ</span></li>
+        <li><span>できた <code>sav.dat</code> をダウンロード</span></li>
+        <li><span>Checkpoint などで、日本語版の VC 金・銀・クリスタルに書き込む</span></li>
+        <li><span>VC 上でゲームを起動してセーブを確認してから、ポケムーバーへ</span></li>
+      </ol>
+      <p class="warnbox"><span aria-hidden="true">⚠️</span><span>変換前のセーブデータは必ずバックアップしてください。</span></p>
+      <p class="note">※ 対応: 日本語版 ポケットモンスター 金・銀・クリスタル(実機・エミュレーターから取り出したセーブ)。</p>
+      <p class="note">※ ファイル内の実データ領域には手を加えません。実データ外の一部の領域を00でパディングします。</p>
+    </section>
 
-    </div>
+    <section class="card side-card info hidden" id="nextCard">
+      <h2 class="sec-h">次にすること</h2>
+      <ol class="how">
+        <li><span>Checkpoint などで、日本語版の VC 金・銀・クリスタルに <code>sav.dat</code> を書き込む</span></li>
+        <li><span>VC でゲームを起動し、セーブを確認する</span></li>
+        <li><span>確認できたら、ポケムーバーでポケモンバンクへ</span></li>
+      </ol>
+      <p class="warnbox"><span aria-hidden="true">⚠️</span><span>書き込む前に、今のセーブデータを必ずバックアップしてください。</span></p>
+    </section>
+  </aside>
+  </div>
 
-</footer>
-  </main>
-  <script src="app.js?v=16"></script>
-  <script src="counter.js?v=16"></script>
+  <footer>
+    <a href="../">ポータル</a> ·
+    <a href="privacy.html">プライバシーポリシー</a> ·
+    <a href="https://github.com/FM1337/sav2vc" target="_blank" rel="noopener">Reference: sav2vc</a>
+  </footer>
+</main>
+<script src="app.js?v=17"></script>
+<script src="counter.js?v=17"></script>
 </body>
 </html>
