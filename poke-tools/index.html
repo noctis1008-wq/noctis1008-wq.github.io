@@ -1742,7 +1742,6 @@ body:not(.app) .obsapp{display:none!important}
 .evx-gain .r{display:flex;column-gap:3px}
 #party .ilab{display:flex;flex-direction:column;justify-content:center;-webkit-line-clamp:unset}
 #party .ilab .in{display:block;white-space:nowrap;overflow:hidden}
-#party .ilab .is{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9.5px;font-weight:700;line-height:1.15;color:color-mix(in srgb,var(--c,var(--muted)) 85%,var(--ink))}
 #party .mopts{height:28px;flex:none}
 #party .isel,#party .rus{height:28px}
 .evx-sb{flex:none;display:flex;height:8px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}
@@ -2654,10 +2653,8 @@ function itemHint(id){
   return it.s?`${ITEM_STAT_N[it.s]}+${gen().pw}`:'';
 }
 const itemOptText=id=>{const h=itemHint(id);return SHORT_ITEM[id]+(h?`（${h}）`:'')};
-function itemLab(id){
-  const h=itemHint(id),it=ITEMS.find(x=>x.id===id),st=it&&it.s&&STATS.find(s=>s.k===it.s);
-  return `<span class="in">${SHORT_ITEM[id]}</span>`+(h?`<span class="is"${st?` style="--c:${st.c}"`:''}>${h}</span>`:'');
-}
+// 選んだあとの欄はアイテム名だけ（1行・縦中央。効く能力は一覧の中だけで出す）
+const itemLab=id=>`<span class="in">${SHORT_ITEM[id]}</span>`;
 const RUS_ICON='<svg viewBox="0 0 20 20" aria-hidden="true"><g fill="currentColor"><circle cx="10" cy="10" r="6"/><circle cx="4.6" cy="4.6" r="2.1"/><circle cx="15.4" cy="4.6" r="2.1"/><circle cx="4.6" cy="15.4" r="2.1"/><circle cx="15.4" cy="15.4" r="2.1"/></g><g fill="var(--rusbg)"><circle cx="7.7" cy="8.9" r="1.15"/><circle cx="12.3" cy="8.9" r="1.15"/></g><path d="M7.6 12.6h4.8" stroke="var(--rusbg)" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>';
 function renderParty(){
   partyEl.classList.toggle('picking',pick!==null);
