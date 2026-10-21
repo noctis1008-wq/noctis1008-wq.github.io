@@ -1491,8 +1491,10 @@ body:not(.app) .obsapp{display:none!important}
 .shx-sheet .obshow{margin:0}
 /* 厳選の条件シート：方法を切り替えても位置が動かないよう、シートの高さを固定し、下の設定部分だけを中でスクロールする */
 #shSetSheet .sheet-in{height:92%}
-#shSetSheet .shx-meth{grid-auto-rows:40px}
-#shSetSheet .shx-meth button{height:40px;min-height:0;overflow:hidden;padding:2px 6px;line-height:1.2}
+/* 厳選方法は横1列（はみ出す分は横にスクロール）にして、どの作品でも高さを同じにする */
+#shSetSheet .shx-meth{position:relative;display:flex;flex-wrap:nowrap;gap:6px;height:44px;align-items:center;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none;margin-inline:-2px;padding-inline:2px}
+#shSetSheet .shx-meth::-webkit-scrollbar{display:none}
+#shSetSheet .shx-meth button{flex:none;height:40px;min-height:0;padding:0 14px;border-radius:999px;white-space:nowrap;line-height:1}
 #shSetSheet .shx-optscroll{flex:1 1 0;min-height:110px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px}
 .shx-optscroll>*{flex-shrink:0}
 #shSetSheet .shx-opt{height:50px;min-height:0;padding:0}
@@ -2740,13 +2742,16 @@ shGenSel.innerHTML=SH_GENS.map(g=>`<option value="${g.id}">${g.n}</option>`).joi
 const shHorde=()=>shG().id===6&&S.sh.sit==='wild';
 const SH_GAB={2:'金銀',3:'RSE FRLG',4:'DPt HGSS',5:'BW BW2',6:'XY ORAS',7:'SM USUM',8:'剣盾 BDSP LA',9:'SV'};
 const shSitName=(g,k)=>{const t=g.id===8&&SH_NAMES8[k]?SH_NAMES8[k]:SITS[k].n;return g.id===9?t.replace(/（SV）$/,''):t};
+// 選んでいる厳選方法を横スクロールの真ん中あたりに見せる
+function shSitScroll(){const x=document.getElementById('shSitBtns'),b=x&&x.querySelector('[aria-pressed="true"]');if(!b||!x.clientWidth)return;
+  x.scrollLeft=b.offsetLeft-(x.clientWidth-b.offsetWidth)/2}
 function renderShSetup(){
   const g=shG(),s=shSit(),c=shCtx();
   shGenSel.value=String(g.id);
   shSitSel.innerHTML=SH_LIST[g.id].map(k=>`<option value="${k}">${g.id===8&&SH_NAMES8[k]?SH_NAMES8[k]:SITS[k].n}</option>`).join('');
   shSitSel.value=S.sh.sit;
   document.getElementById('shGenBtns').innerHTML=SH_GENS.map(x=>`<button type="button" data-shgen="${x.id}" aria-pressed="${x.id===g.id}"><small>第${x.id}世代</small><span>${SH_GAB[x.id]||x.n}</span></button>`).join('');
-  document.getElementById('shSitBtns').innerHTML=SH_LIST[g.id].map(k=>`<button type="button" data-shsit="${k}" aria-pressed="${k===S.sh.sit}">${shSitName(g,k)}</button>`).join('');
+  document.getElementById('shSitBtns').innerHTML=SH_LIST[g.id].map(k=>`<button type="button" data-shsit="${k}" aria-pressed="${k===S.sh.sit}">${shSitName(g,k)}</button>`).join('');shSitScroll();
   const row=(lab,ctl,sub)=>`<div class="shx-opt"><span class="l"><span>${lab}</span>${sub!=null?`<small>${sub}</small>`:''}</span>${ctl}</div>`;
   const step=(id,inp)=>`<div class="shx-step"><button type="button" data-shstep="${id}" data-d="-1" aria-label="1つ減らす">−</button>${inp}<button type="button" data-shstep="${id}" data-d="1" aria-label="1つ増やす">＋</button></div>`;
   let h='';
@@ -2781,7 +2786,7 @@ function shReach(x){
 // 数字が枠からはみ出すときだけ、文字を小さくする（枠の大きさは変えない）
 const shFit=(el,box,max,min)=>{el.style.fontSize='';if(!box.clientWidth)return;let f=max;while(box.scrollWidth>box.clientWidth+1&&f>min){f-=2;el.style.fontSize=f+'px'}};
 function shFitAll(){const c=document.getElementById('shCount'),a=document.getElementById('shNext'),b=document.getElementById('shSoFar');shFit(c,c.parentNode,54,24);shFit(a,a,26,14);shFit(b,b,26,14)}
-document.fonts&&document.fonts.ready.then(()=>shFitAll());addEventListener('resize',()=>shFitAll());
+document.fonts&&(document.fonts.ready.then(()=>{shFitAll();shSitScroll()}),document.fonts.addEventListener&&document.fonts.addEventListener('loadingdone',()=>{shFitAll();shSitScroll()}));addEventListener('resize',()=>{shFitAll();shSitScroll()});
 function renderShiny(bump){
   const ch=shChain(),p=shP(),sf=shSoFar(),n=S.sh.count;
   ['shCount','shPadCount'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.textContent=n.toLocaleString();if(bump){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump')}});
@@ -3480,7 +3485,7 @@ function renderShFoldSum(){
 const shSetSheet=document.getElementById('shSetSheet'),shObsSheet=document.getElementById('shObsSheet');
 function shSheet(el,on,back){
   el.hidden=!on;
-  if(on){document.body.classList.add('modal');el.querySelector('.sheet-in').scrollTop=0;return}
+  if(on){document.body.classList.add('modal');el.querySelector('.sheet-in').scrollTop=0;shSitScroll();return}
   if(!document.querySelector('.sheet:not([hidden]),#monCard:not([hidden]),#monFind:not([hidden])')&&drawer.hidden&&shPad.hidden)document.body.classList.remove('modal');
   if(back)document.getElementById(back)?.focus({preventScroll:true});
 }
