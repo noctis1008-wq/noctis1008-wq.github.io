@@ -4367,7 +4367,12 @@ function ivLinkMon(x){
   v.ev=Object.assign(zero(),x.ev||{});v.link=x.id;ivAddRecent(v.mon);
   return true;
 }
-function ivRecTo(x,R){x.iv={mon:S.iv.mon,lv:S.iv.lv,nat:S.iv.nat,real:Object.assign({},S.iv.real),r:R.rows.map(r=>r.st==='ok'?[r.lo,r.hi]:null)}}
+function ivRecTo(x,R){x.iv={mon:S.iv.mon,lv:S.iv.lv,nat:S.iv.nat,real:Object.assign({},S.iv.real),r:R.rows.map(r=>r.st==='ok'?[r.lo,r.hi]:null)};
+  // レベル・せいかく・努力値も、ジャッジの内容で上書きする
+  const lv=ivNum(S.iv.lv);if(lv!=null&&lv>=1&&lv<=100)x.lv=String(lv);
+  if(ivNat(S.iv.nat))x.nature=S.iv.nat;
+  x.ev=Object.fromEntries(EVK.map(k=>[k,Math.max(0,Math.min(252,Math.floor(+S.iv.ev[k]||0)))]));
+  const mem=S.members.find(m=>m.mon===x.id);if(mem){mem.ev=Object.assign({},x.ev);renderParty();renderTaps();renderCount()}}
 // 個体管理に表示する個体値（能力ごとのマス）
 function ivGrid(r){const L=LABELS[S.lm==='abc'?'abc':'kanji'];let lo=0,hi=0,all=true;
   const c=EVK.map((k,i)=>{const v=r[i];if(!v){all=false;return `<span class="mivc"><small>${esc(L[i])}</small><b>－</b></span>`}lo+=v[0];hi+=v[1];const a=ivLev(v[0]),b=ivLev(v[1]);
