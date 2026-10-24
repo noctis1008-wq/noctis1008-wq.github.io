@@ -987,7 +987,7 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxbusy-stg i svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
 .dxbusy-stg i .tr{fill:none;stroke:var(--line);stroke-width:2.6}
 .dxbusy-stg i .pg{fill:none;stroke:var(--dx);stroke-width:2.6;stroke-linecap:round;transition:stroke-dasharray .25s}
-.dxbusy-stg .s-gm i .tr{stroke:color-mix(in srgb,#9d93ea 45%,var(--line))}.dxbusy-stg .s-gm i .pg{stroke:#8b7cf0}
+.dxbusy-stg .s-now i .tr{stroke:color-mix(in srgb,var(--dx) 40%,var(--line))}.dxbusy-stg .s-gm.s-now i .tr{stroke:color-mix(in srgb,#8b7cf0 45%,var(--line))}.dxbusy-stg .s-gm i .pg{stroke:#8b7cf0}
 .dxbusy-stg i b{display:none;color:#fff;font-size:12px;font-weight:800;line-height:1}
 .dxbusy-stg .s-done{color:var(--ink)}.dxbusy-stg .s-done i{background:#1d8f50}.dxbusy-stg .s-done i svg{display:none}.dxbusy-stg .s-done i b{display:block}
 .dxbusy-stg .s-now{color:var(--ink);font-weight:800}
@@ -4887,10 +4887,15 @@ function dxDrawUp(cx,d,x,y,W,H){
   cx.save();cx.translate(x,y);cx.transform(...M);cx.drawImage(d.bm,0,0,d.o>=5?H:W,d.o>=5?W:H);cx.restore()}
 // 1枚を読む。帯さがし用の縮めた画像（約1200px）と、文字を読む細かい画像（約2400px）を作る。
 // 読めた帯 [{num, status}]、番号が確かでないときは null
+// 読み取り用のキャンバスは2つだけを使い回す。iPhone の Safari はキャンバスの合計メモリに上限があり、
+// 1枚ごとに新しく作ると、動画の画面を何十枚も読むうちに上限に達して読めなくなることがある
+const dxCv={};
+function dxCanvas(k,W,H){let c=dxCv[k];if(!c){c=dxCv[k]=document.createElement('canvas');c.width=W;c.height=H;c._cx=c.getContext('2d',{willReadFrequently:true})}
+  else if(c.width!==W||c.height!==H){c.width=W;c.height=H}return c}
 async function dxLocalRead(file){
   const d=await dxDecode(file);
   const draw=(mx,src)=>{const sc=Math.min(1,mx/Math.max(d.w,d.h)),W=Math.max(1,Math.round(d.w*sc)),H=Math.max(1,Math.round(d.h*sc));
-    const cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d',{willReadFrequently:true});cx.imageSmoothingQuality='high';
+    const cv=dxCanvas(src?'s':'b',W,H),cx=cv._cx;if(!cx)throw new Error('canvas');cx.imageSmoothingQuality='high';
     if(src)cx.drawImage(src,0,0,W,H);else dxDrawUp(cx,d,0,0,W,H);return {cv,px:cx.getImageData(0,0,W,H).data,W,H}};
   const B=draw(2400),S=draw(1200,B.cv);
   try{d.bm.close&&d.bm.close()}catch(e){}
@@ -4902,16 +4907,22 @@ async function dxLocalRead(file){
    同じページが2回出てきたら1枚にする。取り出した画面は、写真と同じ読み取り（スマホ内・Gemini）に渡す */
 const DX_VID_STEP=.1,DX_VID_MAX=600;
 const dxIsVideo=f=>/^video\//.test(f.type||'')||/\.(mp4|mov|m4v|webm|3gp|mkv)$/i.test(f.name||'');
-async function dxVideoFrames(file,prog,signal){
+async function dxVideoFrames(file,prog,signal,st0){
   const url=URL.createObjectURL(file),v=document.createElement('video');
   v.muted=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';v.src=url;
   const stop=()=>{if(signal&&signal.aborted)throw {code:'cancelled'}};
   const NG={msg:'動画を開けませんでした。この端末で再生できる形式（MP4・MOV）の動画を選んでください。'};
   try{
-    await new Promise((res,rej)=>{const t=setTimeout(()=>rej(NG),30000);v.addEventListener('loadeddata',()=>{clearTimeout(t);res()},{once:true});v.addEventListener('error',()=>{clearTimeout(t);rej(NG)},{once:true})});
-    // iPhone では、一度再生しないと画面を描けないことがある
-    try{await v.play();v.pause()}catch(e){}
-    const dur=v.duration,VW=v.videoWidth,VH=v.videoHeight;
+    // iPhone の Safari は、再生しようとするまで動画を読み込まない。先に（音なしで）再生を始めて読み込ませ、
+    // 読み込めたら止める。大きな動画は時間がかかるので、2分まで待つ（そのあいだもキャンセルできる）
+    await new Promise((res,rej)=>{let done=false;const end=(f,x)=>{if(done)return;done=true;clearTimeout(t);f(x)};
+      const t=setTimeout(()=>end(rej,NG),120000);
+      v.addEventListener('loadeddata',()=>end(res),{once:true});v.addEventListener('canplay',()=>end(res),{once:true});
+      v.addEventListener('error',()=>end(rej,NG),{once:true});
+      if(signal)signal.addEventListener('abort',()=>end(rej,{code:'cancelled'}),{once:true});
+      try{v.load()}catch(e){}try{const pp=v.play();if(pp&&pp.catch)pp.catch(()=>{})}catch(e){}});
+    try{v.pause()}catch(e){}
+    const dur=v.duration,VW=v.videoWidth,VH=v.videoHeight;if(st0)st0.textContent='動画から画面を取り出しています…';
     if(!isFinite(dur)||dur<=0||!VW||!VH)throw NG;
     if(dur>DX_VID_MAX)throw {msg:'動画が長すぎます。10分までの動画を選んでください。'};
     const seek=t=>new Promise((res,rej)=>{const tm=setTimeout(()=>rej(NG),15000);v.addEventListener('seeked',()=>{clearTimeout(tm);res()},{once:true});v.currentTime=Math.min(t,Math.max(0,dur-.02))});
@@ -4965,8 +4976,12 @@ async function dxVideoFrames(file,prog,signal){
     // 2) 選んだ場面を大きな画像で取り出す
     const sc=Math.min(1,2400/Math.max(VW,VH)),cb=document.createElement('canvas');cb.width=Math.round(VW*sc);cb.height=Math.round(VH*sc);
     const cbx=cb.getContext('2d'),out=[],nm=(file.name||'video').replace(/\.[^.]+$/,'');
-    for(let n=0;n<keep.length;n++){stop();await seek(S[keep[n]].t);cbx.drawImage(v,0,0,cb.width,cb.height);
-      const bl=await new Promise(r=>cb.toBlob(r,'image/jpeg',.92));if(bl)out.push(new File([bl],`${nm}_${S[keep[n]].t.toFixed(2)}.jpg`,{type:'image/jpeg'}));prog&&prog(.6+.4*(n+1)/keep.length)}
+    // 読めなかったとき用の、もう1コマ：同じ止まった場面の中で、0.2〜0.5秒はなれたコマ（あいだに大きな動きがないもの）
+    const alt=i=>{let b=-1;for(const o of [3,4,2,5,-3,-4,-2,-5]){const j=i+o;if(j<1||j>=S.length||D[j]>=thr)continue;let mv=0;for(let q=Math.min(i,j)+1;q<=Math.max(i,j);q++)mv=Math.max(mv,D[q]);if(mv<thr){b=j;break}}return b};
+    const snap=async t=>{await seek(t);cbx.drawImage(v,0,0,cb.width,cb.height);const bl=await new Promise(r=>cb.toBlob(r,'image/jpeg',.92));return bl?new File([bl],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'}):null};
+    for(let n=0;n<keep.length;n++){stop();const f=await snap(S[keep[n]].t);
+      if(f){const a=alt(keep[n]);if(a>=0){const fa=await snap(S[a].t);if(fa)f.dxAlt=fa}out.push(f)}
+      prog&&prog(.6+.4*(n+1)/keep.length)}
     return out;
   }finally{URL.revokeObjectURL(url);v.removeAttribute('src');try{v.load()}catch(e){}}
 }
@@ -4974,8 +4989,8 @@ async function dxVideoFrames(file,prog,signal){
 async function dxExpandVideos(files,st,signal){
   const out=[];let nv=0,nf=0;const vids=files.filter(dxIsVideo).length;dxStage('vid','now');
   for(const f of files){if(!dxIsVideo(f)){out.push(f);continue}nv++;
-    st.textContent=`動画から画面を取り出しています…${vids>1?`（${nv}/${vids}本目）`:''}`;
-    const fr=await dxVideoFrames(f,p=>{dxProg((nv-1+p)/vids);dxStage('vid','now',null,(nv-1+p)/vids)},signal);
+    st.textContent=`動画を読み込んでいます…${vids>1?`（${nv}/${vids}本目）`:''}`;
+    const fr=await dxVideoFrames(f,p=>{dxProg((nv-1+p)/vids);dxStage('vid','now',null,(nv-1+p)/vids)},signal,st);
     nf+=fr.length;out.push(...fr)}
   dxStage('vid','done',`${nf}枚`);
   return {files:out,nv,nf};
@@ -5066,7 +5081,8 @@ async function dxReadLocal(files,byNo,inDex,found,st,signal){
     if(signal&&signal.aborted)throw {code:'cancelled'};
     st.textContent=`読み取り中…（${i+1}/${files.length}枚）`;dxStage('local','now',`${i+1} / ${files.length}枚`,i/files.length);dxProg(i/files.length);await dxPaint();
     try{
-      const rows=await dxLocalRead(files[i]);
+      let rows=await dxLocalRead(files[i]);
+      if(!rows&&files[i].dxAlt)rows=await dxLocalRead(files[i].dxAlt);
       if(!rows){failed++;continue}
       rows.forEach(r=>{const s=byNo.get(r.num);if(!s||!inDex.has(s))return;
         const prev=found.get(s);if(!prev||r.status==='caught'||prev==='unknown')found.set(s,r.status)});
@@ -5197,7 +5213,7 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
     st.textContent=`スマホ内で読み取り中…（${i+1}/${files.length}枚）`;if(local)dxStage('local','now',`${i+1} / ${files.length}枚`,i/files.length);dxProg(.4*i/files.length);await dxPaint();if(dxScanCtl&&dxScanCtl.signal.aborted)throw {code:'cancelled'};
     let hk=null;try{hk=gmHash(await files[i].arrayBuffer())+'|'+dk}catch(e){}
     if(hk){if(seenH.has(hk)){nDup++;continue}seenH.add(hk)}
-    if(local){try{const rows=await dxLocalRead(files[i]);
+    if(local){try{let rows=await dxLocalRead(files[i]);if(!gmOkLocal(rows,inDex,byNo)&&files[i].dxAlt){const r2=await dxLocalRead(files[i].dxAlt);if(gmOkLocal(r2,inDex,byNo))rows=r2}
       if(gmOkLocal(rows,inDex,byNo)){rows.forEach(r=>{const s=byNo.get(r.num);if(s&&inDex.has(s))put(s,r.status)});nLocal++;continue}}catch(e){}}
     const c=hk&&gmCacheGet(hk);if(c&&useAi(c.v)){nCache++;continue}
     todo.push({f:files[i],hk});
@@ -5261,8 +5277,13 @@ async function dxOnFiles(e){
   const vt=vinfo?`動画${vinfo.nv>1?vinfo.nv+'本':''}から${vinfo.nf}枚の画面を取り出しました。${files.length>vinfo.nf?`画像とあわせて${files.length}枚`:`${files.length}枚`}のうち、${files.length-failed}枚を読み取りました。`:'';
   st.textContent=vinfo?vt:failed?`${failed}枚は読み取れませんでした。${mode==='local'?DX_SHOT_RETRY:mode==='gm'?'撮り直すか、別の画像で試してください。':'もう一度試すか、別のスクショを選んでください。'}`:'';
   if(!found.size){st.textContent=mode==='local'?'この図鑑のポケモンが見つかりませんでした。'+(failed?DX_SHOT_RETRY:'作品と図鑑が合っているか、上の「変更」で確かめてください。'):(st.textContent?st.textContent+' ':'')+'この図鑑のポケモンが見つかりませんでした。';return}
+  // 読めた番号のあいだで抜けている番号（ページを読めなかった所）
+  let gapT='';{const nOf=new Map(entries.map(([n,sp])=>[sp,n])),got=[...found.keys()].map(sp=>nOf.get(sp)).filter(n=>n!=null).sort((a,b)=>a-b);
+    if(got.length>1){const have=new Set(got),all=entries.map(x=>x[0]).filter(n=>n>got[0]&&n<got[got.length-1]&&!have.has(n)).sort((a,b)=>a-b),R=[];
+      for(const n of all){const l=R[R.length-1];if(l&&n===l[1]+1)l[1]=n;else R.push([n,n])}
+      if(R.length)gapT=`読めなかった番号：${R.slice(0,6).map(([a,b])=>a===b?pad3(a):pad3(a)+'〜'+pad3(b)).join('・')}${R.length>6?` ほか${R.length-6}か所`:''}。その部分を撮り直すか、スクショで足してください。`}}
   const few=vinfo?mode==='local'&&found.size<6:(mode==='local'&&(failed||found.size<3*files.length))||(mode==='gm');
-  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:vt+(mode==='gm'?dxGmSum+(failed?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
+  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:vt+gapT+(mode==='gm'?dxGmSum+(failed?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
   renderDxScan();
 }
 document.getElementById('dxShotFile').addEventListener('change',dxOnFiles);
