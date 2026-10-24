@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.10.21(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-25(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.10.25(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-25(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -32,7 +32,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 開発中 |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 2026.10.25(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
@@ -60,6 +60,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-10-25 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
+- やったこと: Poke tools の版 `APP_VER` を 2026.10.21 → 2026.10.25 に上げた(10-21 から図鑑埋め支援などを何度も直していたのに版が上がっておらず、「版が上がったら読み返す」ルールが働かないため)。いちばん上の「最新」の行と「現在の状態」の表もそろえた。ルール自体は session_01JUok… が 3 つのリポジトリに入れたものをそのまま使う。
+- 確かめたこと: 設定画面の版の表示が `APP_VER` から出ること。
+- 次の人へ: Poke tools を直して公開するときは `APP_VER`(`poke-tools/index.html`)を、その日の日付に上げて、「最新」の行もそろえてください。
 
 ### 2026-10-25 — Claude(https://claude.ai/code/session_01JUok9xt7wAbcW7ReTZmiLq)
 - やったこと: 運営者の指示でルールを変更。**記録は絶対**、**読み返すのは「指示されたとき」と「版が上がっているのに気づいたとき」だけ**(クレジットの節約)。いちばん上に「最新」の行を置き、作業の始めはそこだけを見ればよいようにした。3 つのリポジトリで同じルール(`HANDOFF.md`・`CLAUDE.md`・`AGENTS.md`・PR のチェック項目)。
