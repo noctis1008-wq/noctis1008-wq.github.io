@@ -933,11 +933,69 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxx-acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;flex:none}
 .dxx-sbtn{height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;white-space:nowrap;padding:0 6px;box-sizing:border-box;overflow:hidden}
 .dxx-sbtn svg{width:16px;height:16px;flex:none}
+/* カメラで登録 */
+:root{--gm-a:#5b4bd6;--gm-ink:#3b2f9e;--gm-chip:linear-gradient(135deg,#e8f0ff,#f3e8ff);--gm-chipb:#c9c3f5;--gm-chipt:#4b3fb5;--gm-cta:linear-gradient(135deg,#eef3ff,#f6eeff);--gm-txt:#4a4f6b;--gm-bar:#dcdff0;--ok-bg:#e3f5ea;--ok-t:#1d8f50}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gm-a:#7b6cf0;--gm-ink:#d6d0ff;--gm-chip:linear-gradient(135deg,#2a2f5c,#3a2a5c);--gm-chipb:#5a4fb0;--gm-chipt:#cfc8ff;--gm-cta:linear-gradient(135deg,#23284d,#2e2450);--gm-txt:#b9bdd6;--gm-bar:#3a3f63;--ok-bg:#163b28;--ok-t:#6fd59b}}
+:root[data-theme="dark"]{--gm-a:#7b6cf0;--gm-ink:#d6d0ff;--gm-chip:linear-gradient(135deg,#2a2f5c,#3a2a5c);--gm-chipb:#5a4fb0;--gm-chipt:#cfc8ff;--gm-cta:linear-gradient(135deg,#23284d,#2e2450);--gm-txt:#b9bdd6;--gm-bar:#3a3f63;--ok-bg:#163b28;--ok-t:#6fd59b}
+.dxc{display:flex;flex-direction:column;gap:12px}
+.dxc-sub{margin:-4px 0 0;font-size:13px;color:var(--muted)}
+.dxc-opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:16px;padding:14px;color:var(--ink);font:inherit}
+.dxc-opt.pri{border-color:color-mix(in srgb,var(--dx) 55%,var(--line));background:color-mix(in srgb,var(--dx) 7%,var(--surface))}
+.dxc-opt:active{filter:brightness(.96)}.dxc-opt:disabled{opacity:.45}
+.dxc-ic{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--sunken);color:var(--ink)}
+.dxc-opt.pri .dxc-ic{background:var(--dx);color:#fff}
+.dxc-ic svg{width:26px;height:26px}
+.dxc-t{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.dxc-t b{font-size:16px}.dxc-t small{font-size:12.5px;color:var(--muted);line-height:1.4}
+.dxc-chev{flex:none;color:var(--muted)}
+.dxc-lab{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin:4px 0 -4px}
+.dxc-mode{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.dxc-flow{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;flex-wrap:wrap}
+.dxc-chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 10px;background:var(--sunken);border:1px solid var(--line)}
+.dxc-chip svg{width:15px;height:15px}
+.dxc-chip.gm{background:var(--gm-chip);border-color:var(--gm-chipb);color:var(--gm-chipt)}
+.dxc-chip.off{opacity:.45;border-style:dashed}
+.dxc-arrow{color:var(--muted);font-size:13px}
+.dxc-badge{margin-left:auto;font-size:11px;font-weight:800;border-radius:999px;padding:3px 8px;background:var(--ok-bg);color:var(--ok-t)}
+.dxc-badge.no{background:var(--sunken);color:var(--muted)}
+.dxc-note{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0}
+.dxc-cta{border-radius:16px;padding:14px;background:var(--gm-cta);border:1.5px solid var(--gm-chipb);display:flex;flex-direction:column;gap:8px}
+.dxc-cta[hidden]{display:none}
+.dxc-ttl{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;color:var(--gm-ink)}
+.dxc-ttl svg{width:20px;height:20px;flex:none}
+.dxc-cta p{margin:0;font-size:12.5px;color:var(--gm-txt);line-height:1.5}
+.dxc-meter{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--gm-txt);margin-top:4px}
+.dxc-ml{flex:none;width:6.5em}
+.dxc-bar{display:block;flex:1;height:8px;border-radius:9px;background:var(--gm-bar);position:relative;overflow:hidden}
+.dxc-bar i{position:absolute;inset:0 auto 0 0;border-radius:9px}.dxc-bar i.lo{background:#9aa0bd}.dxc-bar i.hi{background:linear-gradient(90deg,#5b4bd6,#b06bea)}
+.dxc-go{height:42px;border:none;border-radius:12px;background:var(--gm-a);color:#fff;font-weight:800;font-size:14px;margin-top:4px}
+.dxc-tip{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--muted);background:none;border:none;padding:6px 8px;align-self:center}
+.dxc-ill{border-radius:16px;background:var(--sunken);border:1px solid var(--line);padding:14px;display:grid;place-items:center}
+.dxc-steps{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.dxc-steps li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45}
+.dxc-steps li b.n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--dx);color:#fff;display:grid;place-items:center;font-size:13px}
+.dxc-chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.dxc-chk input{width:18px;height:18px;margin:0;accent-color:var(--dx)}
+.dxc-pri{height:48px;border:none;border-radius:14px;background:var(--dx);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.dxc-pri svg{width:20px;height:20px}
+/* 読み取り中の段階 */
+.dxbusy-stg{display:flex;flex-direction:column;gap:8px;margin:14px 0 4px;text-align:left}
+.dxbusy-stg[hidden]{display:none}
+.dxbusy-stg>div{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted);width:100%}
+.dxbusy-stg>div[hidden]{display:none}
+.dxbusy-stg i{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;box-sizing:border-box}
+.dxbusy-stg .s-done{color:var(--ink)}.dxbusy-stg .s-done i{background:#1d8f50;border-color:#1d8f50;color:#fff}
+.dxbusy-stg .s-now{color:var(--ink);font-weight:800}.dxbusy-stg .s-now i{border-color:var(--dx);border-top-color:transparent;animation:dxspin 1s linear infinite}
+.dxbusy-stg .s-gm i{border-color:#9d93ea}
+.dxbusy-stg small{margin-left:auto;font-weight:600;font-size:12px;color:var(--muted);white-space:nowrap}
+@keyframes dxspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.dxbusy-stg .s-now i{animation:none}}
 .dxbusy{position:fixed;inset:0;z-index:70;background:rgb(8 12 28 / .55);display:flex;align-items:center;justify-content:center;padding:16px}
 .dxbusy[hidden]{display:none}
 .dxbusy-in{width:100%;max-width:320px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:20px 18px 16px;box-shadow:0 16px 40px rgb(0 0 0 / .3);text-align:center}
 .dxbusy-t{margin:0;font-size:17px;font-weight:800}
 .dxbusy-l{margin:8px 0 0;font-size:13px;color:var(--muted);min-height:2.6em;line-height:1.3}
+.dxbusy-l.sub{min-height:0;margin:6px 0 0;font-size:12px}.dxbusy-l.sub:empty{display:none}
 .dxbusy-g{margin-top:14px;height:12px;border-radius:999px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}
 .dxbusy-g span{display:block;height:100%;width:0;background:var(--dx);border-radius:999px;transition:width .25s}
 .dxbusy-p{margin:8px 0 0;font-size:14px;color:var(--muted)}.dxbusy-p b{font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums}
@@ -2686,18 +2744,54 @@ body:not(.app) .obsapp{display:none!important}
   <button class="dxx-ok" type="button" data-dxxclose="1" id="dxTagOk">表示する</button>
 </div></div>
 <div id="dxShotSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxShotT"><div class="sheet-in">
-  <div class="sh-head"><h3 id="dxShotT">動画・スクショから登録</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
-  <div id="dxShotBox" class="dxshot">
-    <div class="dxshotbtns"><button id="dxShotLocal" class="btn primary" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>スマホ内で読み取る</button><button id="dxShotAi" class="btn" type="button">AIで読み取る</button><button id="dxShotGm" class="btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>AIで読み取る（Gemini）</button></div>
-    <p id="dxShotNone" class="dxx-none" hidden>スクショからの登録は、今はサン・ムーンとウルトラサン・ウルトラムーン（3DS）の図鑑のリスト画面だけに対応しています。作品と図鑑は、上の「変更」から切り替えられます。</p>
-    <p id="dxShotHint" class="note" style="margin:0"></p>
+  <div class="sh-head"><h3 id="dxShotT">カメラで登録</h3><button class="btn" type="button" data-dxxclose="1">閉じる</button></div>
+  <div id="dxShotBox" class="dxshot dxc">
+    <p id="dxShotSub" class="dxc-sub"></p>
+    <button id="dxCamBtn" class="dxc-opt pri" type="button"><span class="dxc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.5l5-3v9l-5-3z"/><circle cx="7" cy="10" r="1" fill="currentColor"/></svg></span><span class="dxc-t"><b>カメラで撮る</b><small>図鑑の一覧を左右キーでめくりながら、動画で撮影します</small></span><span class="dxc-chev"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+    <button id="dxPickBtn" class="dxc-opt" type="button"><span class="dxc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="9.5" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg></span><span class="dxc-t"><b>写真・動画を選ぶ</b><small>スクショや撮った動画を、まとめて選べます</small></span><span class="dxc-chev"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+    <div class="dxc-lab">読み取りの方法</div>
+    <div id="dxModeBox" class="dxc-mode"></div>
+    <div id="dxGmCta" class="dxc-cta" hidden>
+      <div class="dxc-ttl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span id="dxGmCtaT">Gemini と連携すると、もっと正確に</span></div>
+      <p id="dxGmCtaP"></p>
+      <div id="dxGmMeter"><div class="dxc-meter"><span class="dxc-ml">スマホ内のみ</span><span class="dxc-bar"><i style="width:62%" class="lo"></i></span></div>
+      <div class="dxc-meter"><span class="dxc-ml"><b>＋ Gemini</b></span><span class="dxc-bar"><i style="width:95%" class="hi"></i></span></div></div>
+      <button id="dxGmLink" class="dxc-go" type="button">Gemini と連携する</button>
+    </div>
+    <button id="dxTipBtn" class="dxc-tip" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></svg>上手に撮るコツ</button>
     <input id="dxShotFile" type="file" accept="image/*,video/*" multiple hidden>
-    <p class="note" style="margin:0">スクショ内で登録されていないことを確認したポケモンは、登録を解除します。</p>
+    <input id="dxCamFile" type="file" accept="video/*" capture="environment" hidden>
     <p id="dxShotStatus" class="note" style="margin:0" role="status"></p>
   </div>
 </div></div>
+<div id="dxTipSheet" class="sheet dxx-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="dxTipT"><div class="sheet-in dxc">
+  <div class="sh-head"><h3 id="dxTipT">上手に撮るコツ</h3><button class="btn" type="button" data-dxtipclose="1">閉じる</button></div>
+  <div class="dxc-ill"><svg viewBox="0 0 300 170" width="300" height="170" style="max-width:100%;height:auto" font-family="sans-serif" role="img" aria-label="3DSの画面と左右キーのイラスト">
+ <defs><pattern id="dxczz" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M0 20 L14 6 L28 20" fill="none" stroke="#7fd3d6" stroke-width="9" opacity=".55"/></pattern></defs>
+ <rect x="40" y="8" width="220" height="154" rx="16" fill="#3a3f52"/>
+ <rect x="56" y="20" width="188" height="128" rx="4" fill="#3f8fd1"/><rect x="56" y="20" width="188" height="128" fill="url(#dxczz)"/>
+ <rect x="122" y="30" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="25" width="26" height="8" rx="2" fill="#3a2025"/>
+ <rect x="122" y="56" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="51" width="26" height="8" rx="2" fill="#3a2025"/>
+ <rect x="122" y="82" width="114" height="20" rx="3" fill="#8f2f2a"/><rect x="138" y="77" width="26" height="8" rx="2" fill="#3a2025"/>
+ <rect x="122" y="108" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="103" width="26" height="8" rx="2" fill="#3a2025"/>
+ <g fill="#fff" opacity=".9"><rect x="150" y="37" width="44" height="6" rx="3"/><rect x="150" y="63" width="36" height="6" rx="3"/><rect x="150" y="115" width="40" height="6" rx="3"/></g>
+ <rect x="150" y="89" width="50" height="6" rx="3" fill="#ff9c8f"/>
+ <circle cx="226" cy="40" r="5" fill="#fff"/><circle cx="226" cy="66" r="5" fill="#fff"/><circle cx="226" cy="118" r="5" fill="#555"/>
+ <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"><path d="M10 85 L30 70 L30 100 Z"/><path d="M290 85 L270 70 L270 100 Z"/></g>
+ <text x="20" y="122" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">◀ 前</text><text x="280" y="122" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">次 ▶</text>
+</svg></div>
+  <ol class="dxc-steps">
+    <li><b class="n">1</b><span>3DSの画面が<b>大きく</b>写るように、正面から撮ります。光が映りこまない向きにしてください。</span></li>
+    <li><b class="n">2</b><span>録画しながら、<b>左右キー</b>で図鑑のページをめくります。1ページごとに<b>0.5秒くらい</b>止めます。</span></li>
+    <li><b class="n">3</b><span>最後のページまで撮ったら、録画を止めて「ビデオを使用」を押します。</span></li>
+  </ol>
+  <label class="dxc-chk"><input type="checkbox" id="dxTipOff">次からは表示しない</label>
+  <button id="dxTipGo" class="dxc-pri" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.5l5-3v9l-5-3z"/></svg>カメラを起動</button>
+</div></div>
 <div id="dxBusy" class="dxbusy" hidden><div class="dxbusy-in" role="dialog" aria-modal="true" aria-labelledby="dxBusyT">
-  <div id="dxBusyMain"><p id="dxBusyT" class="dxbusy-t">読み取り中</p><p id="dxBusyL" class="dxbusy-l" aria-live="polite"></p>
+  <div id="dxBusyMain"><p id="dxBusyT" class="dxbusy-t">読み取り中</p>
+    <div id="dxBusyStg" class="dxbusy-stg"><div data-stg="vid"><i></i><span>動画から画面を取り出す</span><small></small></div><div data-stg="local"><i></i><span>スマホ内で読み取る</span><small></small></div><div data-stg="gm" class="s-gm"><i></i><span>Gemini で読み取る</span><small></small></div></div>
+    <p id="dxBusyL" class="dxbusy-l" aria-live="polite"></p>
     <div class="dxbusy-g" role="progressbar" aria-labelledby="dxBusyT" aria-valuemin="0" aria-valuemax="100"><span id="dxBusyF"></span></div>
     <p class="dxbusy-p"><b id="dxBusyP">0</b>%</p>
     <button id="dxBusyStop" class="btn dxbusy-b" type="button">キャンセル</button></div>
@@ -4491,8 +4585,6 @@ DXX_SHEETS.forEach(el=>el.addEventListener('click',e=>{
   if(el===dxBulkSheet&&Object.keys(dxReg()).length!==n0)dxSh(el,false);
 }));
 document.addEventListener('keydown',e=>{if(e.key!=='Escape'||(typeof stOpenEl!=='undefined'&&stOpenEl))return;const el=DXX_SHEETS.find(x=>!x.hidden);if(el)dxSh(el,false)});
-{const _u=dxShotUI;dxShotUI=function(){_u();const L=document.getElementById('dxShotLocal'),A=document.getElementById('dxShotAi'),none=L.hidden&&A.hidden;
-  document.getElementById('dxShotNone').hidden=!none;document.getElementById('dxShotHint').hidden=none}}
 {const _s=renderDxScan;renderDxScan=function(){if(!dxShotSheet.hidden)dxShotSheet.hidden=true;_s()}}
 
 /* 設定部分のたたみ（色違い・図鑑） */
@@ -4866,11 +4958,12 @@ async function dxVideoFrames(file,prog,signal){
 }
 // 選んだファイルのうち動画は、取り出した画面の画像に置きかえる
 async function dxExpandVideos(files,st,signal){
-  const out=[];let nv=0,nf=0;const vids=files.filter(dxIsVideo).length;
+  const out=[];let nv=0,nf=0;const vids=files.filter(dxIsVideo).length;dxStage('vid','now');
   for(const f of files){if(!dxIsVideo(f)){out.push(f);continue}nv++;
     st.textContent=`動画から画面を取り出しています…${vids>1?`（${nv}/${vids}本目）`:''}`;
     const fr=await dxVideoFrames(f,p=>dxProg((nv-1+p)/vids),signal);
     nf+=fr.length;out.push(...fr)}
+  dxStage('vid','done',`${nf}枚`);
   return {files:out,nv,nf};
 }
 /* 図鑑：読み取り中のポップアップ（進み具合のゲージと割合・キャンセル）。
@@ -4880,11 +4973,17 @@ const dxBusyEl=document.getElementById('dxBusy');let dxPR=[0,1],dxPV=0,dxBusyObs
 function dxProg(f){const v=Math.max(dxPV,Math.min(1,dxPR[0]+(dxPR[1]-dxPR[0])*Math.max(0,Math.min(1,f))));dxPV=v;const pc=Math.floor(v*100);
   document.getElementById('dxBusyF').style.width=pc+'%';document.getElementById('dxBusyP').textContent=pc;dxBusyEl.querySelector('[role=progressbar]').setAttribute('aria-valuenow',pc)}
 function dxRange(a,b){dxPR=[a,b];dxProg(0)}
+// 段階（vid：動画から画面を取り出す／local：スマホ内で読み取る／gm：Gemini で読み取る）。使う段階だけ出す
+function dxStages(on){const el=document.getElementById('dxBusyStg');let any=false;
+  el.querySelectorAll('[data-stg]').forEach(d=>{const v=!!on[d.dataset.stg];d.hidden=!v;any=any||v;d.classList.remove('s-now','s-done');d.querySelector('i').textContent='';d.querySelector('small').textContent=''});
+  el.hidden=!any;document.getElementById('dxBusyL').classList.toggle('sub',any)}
+function dxStage(k,state,info){const d=document.querySelector(`#dxBusyStg [data-stg="${k}"]`);if(!d)return;
+  d.classList.toggle('s-now',state==='now');d.classList.toggle('s-done',state==='done');d.querySelector('i').textContent=state==='done'?'✓':'';if(info!=null)d.querySelector('small').textContent=info}
 function dxBusy(on){
   const st=document.getElementById('dxShotStatus');
   if(on){dxPR=[0,1];dxPV=0;dxProg(0);document.getElementById('dxBusyMain').hidden=false;document.getElementById('dxBusyAsk').hidden=true;
-    document.getElementById('dxBusyL').textContent=st.textContent||'準備しています…';dxBusyEl.hidden=false;document.body.classList.add('modal');
-    dxBusyObs=new MutationObserver(()=>{document.getElementById('dxBusyL').textContent=st.textContent});dxBusyObs.observe(st,{childList:true,characterData:true,subtree:true});
+    document.getElementById('dxBusyL').textContent='';dxBusyEl.hidden=false;document.body.classList.add('modal');
+    dxBusyObs=new MutationObserver(()=>{const t=st.textContent,L=document.getElementById('dxBusyL');L.textContent=L.classList.contains('sub')&&/^(読み取り中|スマホ内で読み取り中|動画から画面を取り出し|準備しています|AIに送る画像を用意|AIで読み取り中)/.test(t)?'':t});dxBusyObs.observe(st,{childList:true,characterData:true,subtree:true});
     document.getElementById('dxBusyStop').focus({preventScroll:true})}
   else{dxBusyEl.hidden=true;if(dxBusyObs){dxBusyObs.disconnect();dxBusyObs=null}}
 }
@@ -4905,27 +5004,51 @@ let dxSample=null,dxImgMax=0,dxScan=null,dxScanCtl=null,dxShotMode='local';
     dxSample=sm;dxImgMax=lim.images.maxCount||1;dxShotUI();
   }catch(e){}
 })();
-const DX_SHOT_TIP='サン・ムーン／ウルトラサン・ウルトラムーン（3DS）の図鑑のリスト画面を読み取ります。<br><b>動画</b>：図鑑の一覧を左右キーでページを切り替えながら録画してください。1ページごとに少し（0.5秒くらい）止めると、止まった画面を自動で取り出して読み取ります。<br><b>スクショ・写真</b>：複数の画像をまとめて選んでも登録できます。カメラで撮るときは、帯の番号がはっきり見えるくらい画面を大きく写し、光が映りこまないようにしてください。',
-  DX_SHOT_RETRY='カメラで撮るときは、画面を大きく写し、ぶれないように、光が映りこまないように撮ってください。';
+const DX_SHOT_RETRY='カメラで撮るときは、画面を大きく写し、ぶれないように、光が映りこまないように撮ってください。';
+/* 図鑑：「カメラで登録」。撮る（カメラで動画）か、選ぶ（写真・動画）か。読み取りは「スマホ内 → 読めなかった画面だけ Gemini」がいつもの方法。
+   Gemini と連携していないときは、スマホ内だけで読み、連携するともっと正確になることを案内する。
+   スマホ内で読めない作品は、Gemini との連携が必要 */
+const DX_TIPK='ner-dx-camtip-off',DX_SP={phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>',spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>'};
+let dxPendAct='pick';
+const dxLocalOk=()=>DX_LOCAL_GAMES.includes(dxGame().id);
 function dxShotUI(){
-  const local=DX_LOCAL_GAMES.includes(dxGame().id);
-  document.getElementById('dxShotLocal').hidden=!local;
-  document.getElementById('dxShotAi').classList.toggle('primary',!local);
-  const h=document.getElementById('dxShotHint');
-  h.innerHTML=local?DX_SHOT_TIP:'スマホ内での読み取りは、今はサン・ムーンとウルトラサン・ウルトラムーン（3DS）の図鑑のリスト画面だけに対応しています。';
-  if(window.NER_APP)document.getElementById('dxShotAi').hidden=true;
+  const $=x=>document.getElementById(x),g=dxGame(),k=dxDexKey(g),local=dxLocalOk(),gm=!!gmKey()&&!window.NER_APP,can=local||gm;
+  const dexName=k==='nat'?'全国図鑑':((g.dex||[]).find(d=>String(d[0])===k)||[0,''])[1];
+  $('dxShotSub').textContent=`${dxAb(g.n)}${dexName?'・'+dexName:''}の一覧画面を読み取ります`;
+  $('dxCamBtn').disabled=$('dxPickBtn').disabled=!can;
+  const chipL=`<span class="dxc-chip${local?'':' off'}">${DX_SP.phone}スマホ内</span>`,chipG=`<span class="dxc-chip gm${gm?'':' off'}">${DX_SP.spark}Gemini</span>`;
+  $('dxModeBox').innerHTML=gm
+    ?`<div class="dxc-flow">${local?chipL+'<span class="dxc-arrow">→</span>':''}${chipG}<span class="dxc-badge">${local?'高精度':'連携済み'}</span></div><p class="dxc-note">${local?'まずスマホ内で読み取り、読めなかった画面だけを Gemini に送ります。':'この作品は、Gemini で読み取ります。'}</p>`
+    :`<div class="dxc-flow">${chipL}<span class="dxc-arrow">→</span>${chipG}<span class="dxc-badge no">未連携</span></div><p class="dxc-note">${local?'今はスマホ内だけで読み取ります。読めなかった画面は、登録されません。':'この作品は、スマホ内では読み取れません。'}</p>`;
+  const cta=$('dxGmCta');cta.hidden=gm||!!window.NER_APP;
+  if(!cta.hidden){$('dxGmCtaT').textContent=local?'Gemini と連携すると、もっと正確に':'この作品は Gemini との連携が必要です';
+    $('dxGmCtaP').textContent=local?'スマホ内で読めなかった画面（ぼけ・反射など）も、Gemini が読み取ります。無料で使えます（Google のキーを1回だけ設定）。':'Gemini と連携すると、この作品の図鑑の画面も読み取れます。無料で使えます（Google のキーを1回だけ設定）。';
+    $('dxGmMeter').hidden=!local}
+  $('dxTipBtn').hidden=!can;
 }
 {const _r=renderDxSetup;renderDxSetup=function(){_r();dxShotUI()}}
-document.getElementById('dxShotLocal').addEventListener('click',()=>{dxShotMode='local';document.getElementById('dxShotFile').click()});
-const DX_LOGIN='AIで読み取るには、Claudeへのログインが必要です。claude.aiまたはClaudeアプリでログインしてから、このページを開き直してください。';
-document.getElementById('dxShotAi').addEventListener('click',()=>{
-  if(!dxSample){document.getElementById('dxShotStatus').textContent=DX_LOGIN;toast('Claudeにログインしてください');return}
-  dxShotMode='ai';document.getElementById('dxShotFile').click()});
+// 撮る／選ぶ：Gemini を使うなら初めに18歳以上の確認、撮るときは初めに撮り方のコツ、それからカメラ（ファイル選び）を開く
+function dxGo(act,skipTip){dxPendAct=act;
+  if(gmKey()&&!window.NER_APP&&!gmOkd()){const c=document.getElementById('dxGmOk');c.querySelector('#gmOkAge').checked=false;c.querySelector('[data-gmok="1"]').disabled=true;c.hidden=false;document.body.classList.add('modal');c.querySelector('#gmOkAge').focus({preventScroll:true});return}
+  let off=false;try{off=localStorage.getItem(DX_TIPK)==='1'}catch(e){}
+  if(act==='cam'&&!skipTip&&!off){dxTip(true);return}
+  dxLaunch(act)}
+function dxLaunch(act){dxShotMode=gmKey()&&!window.NER_APP?'gm':'local';document.getElementById(act==='cam'?'dxCamFile':'dxShotFile').click()}
+const dxTipSheet=document.getElementById('dxTipSheet');
+function dxTip(on){dxTipSheet.hidden=!on;if(on){document.getElementById('dxTipOff').checked=false;document.body.classList.add('modal');document.getElementById('dxTipGo').focus({preventScroll:true})}else document.getElementById('dxCamBtn').focus({preventScroll:true})}
+document.getElementById('dxCamBtn').addEventListener('click',()=>dxGo('cam'));
+document.getElementById('dxPickBtn').addEventListener('click',()=>dxGo('pick'));
+document.getElementById('dxTipBtn').addEventListener('click',()=>dxTip(true));
+document.getElementById('dxTipGo').addEventListener('click',()=>{if(document.getElementById('dxTipOff').checked){try{localStorage.setItem(DX_TIPK,'1')}catch(e){}}dxTipSheet.hidden=true;dxGo('cam',true)});
+dxTipSheet.addEventListener('click',e=>{if(e.target===dxTipSheet||e.target.closest('[data-dxtipclose]'))dxTip(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dxTipSheet.hidden){e.stopImmediatePropagation();dxTip(false)}},true);
+document.getElementById('dxGmLink').addEventListener('click',e=>{gmFromDex=true;stOpen('gm');stRet=e.currentTarget});
+
 async function dxReadLocal(files,byNo,inDex,found,st,signal){
   let failed=0;
   for(let i=0;i<files.length;i++){
     if(signal&&signal.aborted)throw {code:'cancelled'};
-    st.textContent=`読み取り中…（${i+1}/${files.length}枚）`;dxProg(i/files.length);await dxPaint();
+    st.textContent=`読み取り中…（${i+1}/${files.length}枚）`;dxStage('local','now',`${i+1} / ${files.length}枚`);dxProg(i/files.length);await dxPaint();
     try{
       const rows=await dxLocalRead(files[i]);
       if(!rows){failed++;continue}
@@ -4933,6 +5056,7 @@ async function dxReadLocal(files,byNo,inDex,found,st,signal){
         const prev=found.get(s);if(!prev||r.status==='caught'||prev==='unknown')found.set(s,r.status)});
     }catch(e){failed++}
   }
+  dxStage('local','done',`${files.length-failed} / ${files.length}枚`);
   return failed;
 }
 async function dxReadAi(files,g,dexName,byNo,inDex,found,st){
@@ -5054,7 +5178,7 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
     n++;put(s,['caught','seen','none'].includes(x.status)?x.status:'unknown')});return n};
   let nLocal=0,nCache=0,nSent=0,nReq=0,nDup=0,failed=0,note='';const todo=[],seenH=new Set();
   for(let i=0;i<files.length;i++){
-    st.textContent=`スマホ内で読み取り中…（${i+1}/${files.length}枚）`;dxProg(.4*i/files.length);await dxPaint();if(dxScanCtl&&dxScanCtl.signal.aborted)throw {code:'cancelled'};
+    st.textContent=`スマホ内で読み取り中…（${i+1}/${files.length}枚）`;if(local)dxStage('local','now',`${i+1} / ${files.length}枚`);dxProg(.4*i/files.length);await dxPaint();if(dxScanCtl&&dxScanCtl.signal.aborted)throw {code:'cancelled'};
     let hk=null;try{hk=gmHash(await files[i].arrayBuffer())+'|'+dk}catch(e){}
     if(hk){if(seenH.has(hk)){nDup++;continue}seenH.add(hk)}
     if(local){try{const rows=await dxLocalRead(files[i]);
@@ -5069,11 +5193,12 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
 - "none": 見てもいない（「？？？」や影だけの欄）
 - "unknown": 判断できない
 ${local?'この作品のリスト画面では、明るい赤の帯は見たか捕まえたポケモン、暗い赤の帯（？？？）は見ていないポケモンです。帯の右はしに白と赤のボールがあれば捕まえた、灰色の丸なら見ただけです。番号は帯の上のタブに書かれています。\n':''}番号が読めない欄は入れないでください。画面にない番号を推測で足さないでください。`;
-  const nB=Math.ceil(todo.length/GM_TILES);
+  if(local)dxStage('local','done',`${nLocal} / ${files.length}枚`);
+  const nB=Math.ceil(todo.length/GM_TILES);dxStage('gm',todo.length?'now':'done',todo.length?`${todo.length}枚`:'不要');
   try{
     for(let b=0;b<nB;b++){
       const part=todo.slice(b*GM_TILES,(b+1)*GM_TILES),n=part.length;
-      st.textContent=`AIに送る画像を用意しています…（${b+1}/${nB}回目）`;dxProg(.4+.6*b/nB);
+      st.textContent=`AIに送る画像を用意しています…（${b+1}/${nB}回目）`;dxProg(.4+.6*b/nB);if(nB>1)dxStage('gm','now',`${b+1} / ${nB}回目`);
       let img;try{img=await gmComposite(part.map(x=>x.f))}catch(e){failed+=n;continue}
       const props={no:{type:'INTEGER'},status:{type:'STRING',enum:['caught','seen','none','unknown']}};if(n>1)props.tile={type:'INTEGER'};
       const body={contents:[{role:'user',parts:[{text:prompt(n)},{inline_data:{mime_type:'image/jpeg',data:img.data}}]}],
@@ -5087,47 +5212,45 @@ ${local?'この作品のリスト画面では、明るい赤の帯は見たか�
     if(!found.size)throw err;note=(err&&err.msg)||'';failed+=todo.length-nSent}
   const sum=[];if(nLocal)sum.push(`スマホ内で読めた画像 ${nLocal}枚`);if(nCache)sum.push(`前にAIで読んだ画像 ${nCache}枚`);if(nDup)sum.push(`同じ画像 ${nDup}枚は省きました`);
   sum.push(nSent?`AIに送った画像 ${nSent}枚（${nReq}回）`:note?'AIでは読み取れませんでした':'AIには送りませんでした');
+  if(todo.length)dxStage('gm','done',`${nSent}枚`);
   dxGmSum=sum.join('・')+'。'+(note?note+' ':'');
   return failed;
 }
-{const _u=dxShotUI;dxShotUI=function(){_u();const k=!!gmKey(),$=x=>document.getElementById(x),local=DX_LOCAL_GAMES.includes(dxGame().id);
-  $('dxShotGm').hidden=false;$('dxShotNone').hidden=true;$('dxShotHint').hidden=false;
-  if(!local)$('dxShotHint').textContent='この作品は、スマホ内での読み取りには対応していません。「AIで読み取る（Gemini）」で読み取れます。動画（止まった画面を取り出して送ります）のほか、複数のスクショをまとめて選んでも登録できます。'+(k?'':'初めてのときは、Gemini のキーの設定から始まります。')}}
 let gmFromDex=false;
 document.body.appendChild(document.getElementById('stGmSheet'));
 document.getElementById('stGmSheet').addEventListener('click',e=>{if(e.target===e.currentTarget||e.target.closest('[data-stclose]'))stClose()});
-{const _c=stClose;stClose=function(){const g=stOpenEl&&stOpenEl.id==='stGmSheet';_c();if(g){gmFromDex=false;if(document.querySelector('.sheet:not([hidden])'))document.body.classList.add('modal')}}}
-function gmGo(){
-  if(!gmKey()){gmFromDex=true;stOpen('gm');stRet=document.getElementById('dxShotGm');return}
-  if(!gmOkd()){const c=document.getElementById('dxGmOk');c.querySelector('#gmOkAge').checked=false;c.querySelector('[data-gmok="1"]').disabled=true;c.hidden=false;document.body.classList.add('modal');c.querySelector('#gmOkAge').focus({preventScroll:true});return}
-  dxShotMode='gm';document.getElementById('dxShotFile').click()}
-document.getElementById('dxShotGm').addEventListener('click',gmGo);
+{const _c=stClose;stClose=function(){const g=stOpenEl&&stOpenEl.id==='stGmSheet';_c();if(g){gmFromDex=false;dxShotUI();if(document.querySelector('.sheet:not([hidden])'))document.body.classList.add('modal')}}}
+// キーを保存したあと（図鑑から設定を開いたとき）：「カメラで登録」の画面を、連携済みの表示にする
+function gmGo(){dxShotUI();toast('Gemini と連携しました');document.getElementById('dxCamBtn').focus({preventScroll:true})}
 document.getElementById('gmOkAge').addEventListener('change',e=>{document.querySelector('#dxGmOk [data-gmok="1"]').disabled=!e.target.checked});
 document.getElementById('dxGmOk').addEventListener('click',e=>{const c=e.currentTarget,b=e.target.closest('[data-gmok]');
   if(e.target!==c&&!b)return;if(b&&b.dataset.gmok==='1'&&!document.getElementById('gmOkAge').checked)return;c.hidden=true;
-  if(b&&b.dataset.gmok==='1'){try{localStorage.setItem(GM_OKK,'1')}catch(x){}dxShotMode='gm';document.getElementById('dxShotFile').click()}
-  document.getElementById('dxShotGm').focus({preventScroll:true})});
-document.getElementById('dxShotFile').addEventListener('change',async e=>{
+  if(b&&b.dataset.gmok==='1'){try{localStorage.setItem(GM_OKK,'1')}catch(x){}dxGo(dxPendAct);return}
+  document.getElementById('dxCamBtn').focus({preventScroll:true})});
+async function dxOnFiles(e){
   let files=[...e.target.files];e.target.value='';if(!files.length)return;
   const mode=dxShotMode;if(mode==='ai'&&!dxSample)return;if(mode==='gm'&&!gmKey())return;
   const g=dxGame(),k=dxDexKey(g),dexName=k==='nat'?'全国図鑑':(g.dex.find(d=>String(d[0])===k)||[0,''])[1];
   const entries=dxEntries(),byNo=new Map(entries.map(([n,s])=>[n,s])),inDex=new Set(entries.map(x=>x[1]));
-  const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxShotLocal,#dxShotAi,#dxShotGm')];
-  btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();st.textContent='準備しています…';dxBusy(true);await dxPaint();
+  const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxCamBtn,#dxPickBtn,#dxGmLink')];
+  btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();st.textContent='準備しています…';dxBusy(true);
+  dxStages({vid:files.some(dxIsVideo),local:DX_LOCAL_GAMES.includes(g.id),gm:mode==='gm'});await dxPaint();
   const found=new Map();let failed=0,vinfo=null;
   try{
     if(files.some(dxIsVideo)){dxRange(0,.5);vinfo=await dxExpandVideos(files,st,dxScanCtl.signal);files=vinfo.files;dxRange(.5,1);
       if(!files.length)throw {msg:'動画の中に、止まっている画面が見つかりませんでした。図鑑の一覧で、1ページごとに少し（0.5秒くらい）止めながら録画してください。'}}
     failed=mode==='local'?await dxReadLocal(files,byNo,inDex,found,st,dxScanCtl.signal):mode==='gm'?await dxReadGm(files,g,dexName,byNo,inDex,found,st):await dxReadAi(files,g,dexName,byNo,inDex,found,st)}
-  catch(err){dxBusy(false);st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||(mode==='local'?'読み取れませんでした。'+DX_SHOT_RETRY:mode==='gm'?'Gemini で読み取れませんでした。':'この画面ではAIでの読み取りを使えません');btns.forEach(b=>b.disabled=false);return}
-  dxProg(1);await dxPaint();dxBusy(false);btns.forEach(b=>b.disabled=false);
+  catch(err){dxBusy(false);setTimeout(dxShotUI);st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||(mode==='local'?'読み取れませんでした。'+DX_SHOT_RETRY:mode==='gm'?'Gemini で読み取れませんでした。':'この画面ではAIでの読み取りを使えません');btns.forEach(b=>b.disabled=false);return}
+  dxProg(1);await dxPaint();dxBusy(false);btns.forEach(b=>b.disabled=false);dxShotUI();
   const vt=vinfo?`動画${vinfo.nv>1?vinfo.nv+'本':''}から${vinfo.nf}枚の画面を取り出しました。${files.length>vinfo.nf?`画像とあわせて${files.length}枚`:`${files.length}枚`}のうち、${files.length-failed}枚を読み取りました。`:'';
   st.textContent=vinfo?vt:failed?`${failed}枚は読み取れませんでした。${mode==='local'?DX_SHOT_RETRY:mode==='gm'?'撮り直すか、別の画像で試してください。':'もう一度試すか、別のスクショを選んでください。'}`:'';
   if(!found.size){st.textContent=mode==='local'?'この図鑑のポケモンが見つかりませんでした。'+(failed?DX_SHOT_RETRY:'作品と図鑑が合っているか、上の「変更」で確かめてください。'):(st.textContent?st.textContent+' ':'')+'この図鑑のポケモンが見つかりませんでした。';return}
   const few=vinfo?mode==='local'&&found.size<6:(mode==='local'&&(failed||found.size<3*files.length))||(mode==='gm');
   dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:vt+(mode==='gm'?dxGmSum+(failed?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
   renderDxScan();
-});
+}
+document.getElementById('dxShotFile').addEventListener('change',dxOnFiles);
+document.getElementById('dxCamFile').addEventListener('change',dxOnFiles);
 function renderDxScan(){
   if(!dxScan)return;
   const reg=dxReg(),lab={caught:'捕まえた',seen:'見ただけ',none:'見ていない',unknown:'不明'},num=new Map(dxEntries().map(([n,s])=>[s,n]));
