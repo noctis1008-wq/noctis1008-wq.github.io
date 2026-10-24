@@ -983,13 +983,15 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxbusy-stg[hidden]{display:none}
 .dxbusy-stg>div{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted);width:100%}
 .dxbusy-stg>div[hidden]{display:none}
-.dxbusy-stg i{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;box-sizing:border-box}
-.dxbusy-stg .s-done{color:var(--ink)}.dxbusy-stg .s-done i{background:#1d8f50;border-color:#1d8f50;color:#fff}
-.dxbusy-stg .s-now{color:var(--ink);font-weight:800}.dxbusy-stg .s-now i{border-color:var(--dx);border-top-color:transparent;animation:dxspin 1s linear infinite}
-.dxbusy-stg .s-gm i{border-color:#9d93ea}
-.dxbusy-stg small{margin-left:auto;font-weight:600;font-size:12px;color:var(--muted);white-space:nowrap}
-@keyframes dxspin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion: reduce){.dxbusy-stg .s-now i{animation:none}}
+.dxbusy-stg i{flex:none;position:relative;width:22px;height:22px;border-radius:50%;font-style:normal;display:grid;place-items:center}
+.dxbusy-stg i svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.dxbusy-stg i .tr{fill:none;stroke:var(--line);stroke-width:2.6}
+.dxbusy-stg i .pg{fill:none;stroke:var(--dx);stroke-width:2.6;stroke-linecap:round;transition:stroke-dasharray .25s}
+.dxbusy-stg .s-gm i .tr{stroke:color-mix(in srgb,#9d93ea 45%,var(--line))}.dxbusy-stg .s-gm i .pg{stroke:#8b7cf0}
+.dxbusy-stg i b{display:none;color:#fff;font-size:12px;font-weight:800;line-height:1}
+.dxbusy-stg .s-done{color:var(--ink)}.dxbusy-stg .s-done i{background:#1d8f50}.dxbusy-stg .s-done i svg{display:none}.dxbusy-stg .s-done i b{display:block}
+.dxbusy-stg .s-now{color:var(--ink);font-weight:800}
+.dxbusy-stg .s-gm i .pg{stroke:#8b7cf0}
 .dxbusy{position:fixed;inset:0;z-index:70;background:rgb(8 12 28 / .55);display:flex;align-items:center;justify-content:center;padding:16px}
 .dxbusy[hidden]{display:none}
 .dxbusy-in{width:100%;max-width:320px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:20px 18px 16px;box-shadow:0 16px 40px rgb(0 0 0 / .3);text-align:center}
@@ -2790,7 +2792,7 @@ body:not(.app) .obsapp{display:none!important}
 </div></div>
 <div id="dxBusy" class="dxbusy" hidden><div class="dxbusy-in" role="dialog" aria-modal="true" aria-labelledby="dxBusyT">
   <div id="dxBusyMain"><p id="dxBusyT" class="dxbusy-t">読み取り中</p>
-    <div id="dxBusyStg" class="dxbusy-stg"><div data-stg="vid"><i></i><span>動画から画面を取り出す</span><small></small></div><div data-stg="local"><i></i><span>スマホ内で読み取る</span><small></small></div><div data-stg="gm" class="s-gm"><i></i><span>Gemini で読み取る</span><small></small></div></div>
+    <div id="dxBusyStg" class="dxbusy-stg"><div data-stg="vid"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>動画から画面を取り出す</span><small></small></div><div data-stg="local"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>スマホ内で読み取る</span><small></small></div><div data-stg="gm" class="s-gm"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>Gemini で読み取る</span><small></small></div></div>
     <p id="dxBusyL" class="dxbusy-l" aria-live="polite"></p>
     <div class="dxbusy-g" role="progressbar" aria-labelledby="dxBusyT" aria-valuemin="0" aria-valuemax="100"><span id="dxBusyF"></span></div>
     <p class="dxbusy-p"><b id="dxBusyP">0</b>%</p>
@@ -4695,13 +4697,14 @@ function dxrComps(m,W,H,minA){
   return out;
 }
 const dxrAng=(a,b)=>{let d=Math.abs(a-b)%Math.PI;return Math.min(d,Math.PI-d)};
-// 帯の集まり：向き・太さ・長さのそろった、細長い赤いかたまりのいちばん大きい組
-function dxrBands(px,W,H){
-  const cs=dxrComps(dxrMask(px,W,H),W,H,Math.max(60,W*H*.0012)).filter(c=>c.L>c.Wd*3);
-  let best=[],bn=0;
-  for(const c of cs){const g=cs.filter(d=>dxrAng(d.th,c.th)<.14&&d.Wd>c.Wd*.7&&d.Wd<c.Wd*1.43&&d.L>c.L*.72&&d.L<c.L*1.39),gn=g.reduce((s,d)=>s+d.n,0);
-    if(g.length>best.length||(g.length===best.length&&gn>bn)){best=g;bn=gn}}
-  return best;
+// 帯の集まりの候補：向き・太さ・長さがそろい、縦にまっすぐ並んだ（帯の向きに見て位置がそろった）細長い赤いかたまりの組。大きい順。
+// 3DSの上の画面にも番号つきの赤い札が並ぶことがあるので、いちばん大きい組だけでなく、ほかの組も候補にする
+function dxrBandGroups(px,W,H){
+  const cs=dxrComps(dxrMask(px,W,H),W,H,Math.max(60,W*H*.0012)).filter(c=>c.L>c.Wd*3),seen=new Set(),out=[];
+  for(const c of cs){const co=Math.cos(c.th),si=Math.sin(c.th);
+    const g=cs.filter(d=>dxrAng(d.th,c.th)<.14&&d.Wd>c.Wd*.7&&d.Wd<c.Wd*1.43&&d.L>c.L*.72&&d.L<c.L*1.39&&Math.abs((d.cx-c.cx)*co+(d.cy-c.cy)*si)<c.L*.3);
+    const key=g.map(d=>cs.indexOf(d)).sort((a,b)=>a-b).join();if(g.length<2||seen.has(key))continue;seen.add(key);out.push({g,n:g.reduce((s,d)=>s+d.n,0)})}
+  return out.sort((a,b)=>b.g.length-a.g.length||b.n-a.n).map(x=>x.g);
 }
 // 1本の帯を、まっすぐに直すための枠（向き d・法線 n・左右のはし・上下のふちの線）
 // 帯は左が段になった形なので、向きは「下のふち（まっすぐな部分）」から決め直す
@@ -4816,7 +4819,13 @@ function dxrDecode(rows){
   return {base:bb,mean:best/(3*used),margin:(best-b2)/used,used,agree};
 }
 function dxrRead(pxS,WS,HS,pxB,WB,HB){
-  const bands=dxrBands(pxS,WS,HS);if(bands.length<2)return null;
+  // 候補の組を大きい順に読み、番号が確かめられた組を使う（どれもだめなら、いちばん大きい組の結果）
+  let first=null;
+  for(const bands of dxrBandGroups(pxS,WS,HS).slice(0,4)){const r=dxrRead1(bands,WS,pxB,WB,HB);if(r&&!r.fail)return r;if(!first)first=r}
+  return first;
+}
+function dxrRead1(bands,WS,pxB,WB,HB){
+  if(bands.length<2)return null;
   // 向きをそろえる（真上・真下を向いた帯は、角度が +90° と -90° に分かれることがある）
   const ref=bands[0].th;bands.forEach(c=>{if(Math.cos(c.th-ref)<0)c.th+=c.th<ref?Math.PI:-Math.PI});
   const s=WB/WS;let best=null;
@@ -4827,6 +4836,11 @@ function dxrRead(pxS,WS,HS,pxB,WB,HB){
     // 重なって2つに見つかった帯は、大きいほうだけ残す
     const md=a=>a.slice().sort((p,q)=>p-q)[a.length>>1],gm=md(fr.slice(1).map((x,i)=>x.p-fr[i].p));
     for(let i=fr.length-1;i>0;i--)if(fr[i].p-fr[i-1].p<gm*.4)fr.splice(fr[i].c.n>fr[i-1].c.n?i-1:i,1);
+    if(fr.length<2)continue;
+    // 一覧の帯は同じ間かくで並ぶ。間かくが合わない帯（上の画面の札など）で区切り、いちばん長い並びだけを使う
+    {const gs=fr.slice(1).map((x,i)=>x.p-fr[i].p).sort((a,b)=>a-b),pm=gs[gs.length>>1];let best=[0,1],a=0;
+      for(let i=1;i<=fr.length;i++){const r=i<fr.length?(fr[i].p-fr[i-1].p)/pm:0,ok=i<fr.length&&r>.8&&r<2.2&&Math.abs(r-Math.round(r))<.2;if(!ok){if(i-a>best[1]-best[0])best=[a,i];a=i}}
+      fr.splice(best[1]);fr.splice(0,best[0])}
     if(fr.length<2)continue;
     const gs=[];for(let i=1;i<fr.length;i++)gs.push(fr[i].p-fr[i-1].p);const pitch=Math.min(...gs);
     let k=0;fr.forEach((x,i)=>{if(i)k+=Math.max(1,Math.round((x.p-fr[i-1].p)/pitch));x.k=k});
@@ -4961,7 +4975,7 @@ async function dxExpandVideos(files,st,signal){
   const out=[];let nv=0,nf=0;const vids=files.filter(dxIsVideo).length;dxStage('vid','now');
   for(const f of files){if(!dxIsVideo(f)){out.push(f);continue}nv++;
     st.textContent=`動画から画面を取り出しています…${vids>1?`（${nv}/${vids}本目）`:''}`;
-    const fr=await dxVideoFrames(f,p=>dxProg((nv-1+p)/vids),signal);
+    const fr=await dxVideoFrames(f,p=>{dxProg((nv-1+p)/vids);dxStage('vid','now',null,(nv-1+p)/vids)},signal);
     nf+=fr.length;out.push(...fr)}
   dxStage('vid','done',`${nf}枚`);
   return {files:out,nv,nf};
@@ -4975,10 +4989,12 @@ function dxProg(f){const v=Math.max(dxPV,Math.min(1,dxPR[0]+(dxPR[1]-dxPR[0])*Ma
 function dxRange(a,b){dxPR=[a,b];dxProg(0)}
 // 段階（vid：動画から画面を取り出す／local：スマホ内で読み取る／gm：Gemini で読み取る）。使う段階だけ出す
 function dxStages(on){const el=document.getElementById('dxBusyStg');let any=false;
-  el.querySelectorAll('[data-stg]').forEach(d=>{const v=!!on[d.dataset.stg];d.hidden=!v;any=any||v;d.classList.remove('s-now','s-done');d.querySelector('i').textContent='';d.querySelector('small').textContent=''});
+  el.querySelectorAll('[data-stg]').forEach(d=>{const v=!!on[d.dataset.stg];d.hidden=!v;any=any||v;d.classList.remove('s-now','s-done');const g=d.querySelector('.pg');g.setAttribute('stroke-dasharray','0 100');g.style.opacity=0;d.querySelector('small').textContent=''});
   el.hidden=!any;document.getElementById('dxBusyL').classList.toggle('sub',any)}
-function dxStage(k,state,info){const d=document.querySelector(`#dxBusyStg [data-stg="${k}"]`);if(!d)return;
-  d.classList.toggle('s-now',state==='now');d.classList.toggle('s-done',state==='done');d.querySelector('i').textContent=state==='done'?'✓':'';if(info!=null)d.querySelector('small').textContent=info}
+// 段階の左の円は、その作業の進み具合（frac：0〜1）に合わせて12時の位置から時計回りに伸びる
+function dxStage(k,state,info,frac){const d=document.querySelector(`#dxBusyStg [data-stg="${k}"]`);if(!d)return;
+  d.classList.toggle('s-now',state==='now');d.classList.toggle('s-done',state==='done');if(info!=null)d.querySelector('small').textContent=info;
+  if(frac!=null||state==='done'){const v=state==='done'?100:Math.max(0,Math.min(100,frac*100));const g=d.querySelector('.pg');g.setAttribute('stroke-dasharray',`${v.toFixed(1)} 100`);g.style.opacity=v>0?1:0}}
 function dxBusy(on){
   const st=document.getElementById('dxShotStatus');
   if(on){dxPR=[0,1];dxPV=0;dxProg(0);document.getElementById('dxBusyMain').hidden=false;document.getElementById('dxBusyAsk').hidden=true;
@@ -5048,7 +5064,7 @@ async function dxReadLocal(files,byNo,inDex,found,st,signal){
   let failed=0;
   for(let i=0;i<files.length;i++){
     if(signal&&signal.aborted)throw {code:'cancelled'};
-    st.textContent=`読み取り中…（${i+1}/${files.length}枚）`;dxStage('local','now',`${i+1} / ${files.length}枚`);dxProg(i/files.length);await dxPaint();
+    st.textContent=`読み取り中…（${i+1}/${files.length}枚）`;dxStage('local','now',`${i+1} / ${files.length}枚`,i/files.length);dxProg(i/files.length);await dxPaint();
     try{
       const rows=await dxLocalRead(files[i]);
       if(!rows){failed++;continue}
@@ -5178,7 +5194,7 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
     n++;put(s,['caught','seen','none'].includes(x.status)?x.status:'unknown')});return n};
   let nLocal=0,nCache=0,nSent=0,nReq=0,nDup=0,failed=0,note='';const todo=[],seenH=new Set();
   for(let i=0;i<files.length;i++){
-    st.textContent=`スマホ内で読み取り中…（${i+1}/${files.length}枚）`;if(local)dxStage('local','now',`${i+1} / ${files.length}枚`);dxProg(.4*i/files.length);await dxPaint();if(dxScanCtl&&dxScanCtl.signal.aborted)throw {code:'cancelled'};
+    st.textContent=`スマホ内で読み取り中…（${i+1}/${files.length}枚）`;if(local)dxStage('local','now',`${i+1} / ${files.length}枚`,i/files.length);dxProg(.4*i/files.length);await dxPaint();if(dxScanCtl&&dxScanCtl.signal.aborted)throw {code:'cancelled'};
     let hk=null;try{hk=gmHash(await files[i].arrayBuffer())+'|'+dk}catch(e){}
     if(hk){if(seenH.has(hk)){nDup++;continue}seenH.add(hk)}
     if(local){try{const rows=await dxLocalRead(files[i]);
@@ -5198,7 +5214,7 @@ ${local?'この作品のリスト画面では、明るい赤の帯は見たか�
   try{
     for(let b=0;b<nB;b++){
       const part=todo.slice(b*GM_TILES,(b+1)*GM_TILES),n=part.length;
-      st.textContent=`AIに送る画像を用意しています…（${b+1}/${nB}回目）`;dxProg(.4+.6*b/nB);if(nB>1)dxStage('gm','now',`${b+1} / ${nB}回目`);
+      st.textContent=`AIに送る画像を用意しています…（${b+1}/${nB}回目）`;dxProg(.4+.6*b/nB);dxStage('gm','now',nB>1?`${b+1} / ${nB}回目`:null,b/nB);
       let img;try{img=await gmComposite(part.map(x=>x.f))}catch(e){failed+=n;continue}
       const props={no:{type:'INTEGER'},status:{type:'STRING',enum:['caught','seen','none','unknown']}};if(n>1)props.tile={type:'INTEGER'};
       const body={contents:[{role:'user',parts:[{text:prompt(n)},{inline_data:{mime_type:'image/jpeg',data:img.data}}]}],
