@@ -2792,7 +2792,7 @@ body:not(.app) .obsapp{display:none!important}
 </div></div>
 <div id="dxBusy" class="dxbusy" hidden><div class="dxbusy-in" role="dialog" aria-modal="true" aria-labelledby="dxBusyT">
   <div id="dxBusyMain"><p id="dxBusyT" class="dxbusy-t">読み取り中</p>
-    <div id="dxBusyStg" class="dxbusy-stg"><div data-stg="vid"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>動画から画面を取り出す</span><small></small></div><div data-stg="local"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>スマホ内で読み取る</span><small></small></div><div data-stg="gm" class="s-gm"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>Gemini で読み取る</span><small></small></div></div>
+    <div id="dxBusyStg" class="dxbusy-stg"><div data-stg="vid"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>動画から画像を取り出す</span><small></small></div><div data-stg="local"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>スマホ内で読み取る</span><small></small></div><div data-stg="gm" class="s-gm"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="tr" cx="12" cy="12" r="9.5"/><circle class="pg" cx="12" cy="12" r="9.5" pathLength="100" stroke-dasharray="0 100"/></svg><b>✓</b></i><span>Gemini で読み取る</span><small></small></div></div>
     <p id="dxBusyL" class="dxbusy-l" aria-live="polite"></p>
     <div class="dxbusy-g" role="progressbar" aria-labelledby="dxBusyT" aria-valuemin="0" aria-valuemax="100"><span id="dxBusyF"></span></div>
     <p class="dxbusy-p"><b id="dxBusyP">0</b>%</p>
@@ -4847,6 +4847,7 @@ function dxrRead1(bands,WS,pxB,WB,HB){
     const rows=fr.map(x=>{const F=dxrScaleFrame(x.f,s);return {k:x.k,fr:F,F:dxrDigits(pxB,WB,HB,F),M:dxrMark(pxB,WB,HB,F)}});
     const D=dxrDecode(rows);if(!D)continue;
     if(!best||D.mean+D.margin>best.D.mean+best.D.margin)best={D,rows};
+    if(dxrSure(D))break;
   }
   if(!best)return null;
   const {D,rows}=best;
@@ -4899,10 +4900,10 @@ async function dxLocalRead(file){
     if(src)cx.drawImage(src,0,0,W,H);else dxDrawUp(cx,d,0,0,W,H);return {cv,px:cx.getImageData(0,0,W,H).data,W,H}};
   const B=draw(2400),S=draw(1200,B.cv);
   try{d.bm.close&&d.bm.close()}catch(e){}
-  const r=dxrRead(S.px,S.W,S.H,B.px,B.W,B.H);
+  const r=dxrRead(S.px,S.W,S.H,B.px,B.W,B.H);file.dxNoList=!r;
   return r&&!r.fail&&r.rows?r.rows.map(x=>({num:x.num,status:x.status})):null;
 }
-/* 図鑑：動画から画面を取り出す。図鑑の一覧を左右キーでページ送りしながら録画した動画を想定。
+/* 図鑑：動画から画像を取り出す。図鑑の一覧を左右キーでページ送りしながら録画した動画を想定。
    1/6秒ごとに小さな画像で前との違いを測り、止まっている場面（ページを切り替えたあと）ごとに1枚を取り出す。
    同じページが2回出てきたら1枚にする。取り出した画面は、写真と同じ読み取り（スマホ内・Gemini）に渡す */
 const DX_VID_STEP=.1,DX_VID_MAX=600;
@@ -4922,7 +4923,7 @@ async function dxVideoFrames(file,prog,signal,st0){
       if(signal)signal.addEventListener('abort',()=>end(rej,{code:'cancelled'}),{once:true});
       try{v.load()}catch(e){}try{const pp=v.play();if(pp&&pp.catch)pp.catch(()=>{})}catch(e){}});
     try{v.pause()}catch(e){}
-    const dur=v.duration,VW=v.videoWidth,VH=v.videoHeight;if(st0)st0.textContent='動画から画面を取り出しています…';
+    const dur=v.duration,VW=v.videoWidth,VH=v.videoHeight;if(st0)st0.textContent='動画から画像を取り出しています…';
     if(!isFinite(dur)||dur<=0||!VW||!VH)throw NG;
     if(dur>DX_VID_MAX)throw {msg:'動画が長すぎます。10分までの動画を選んでください。'};
     const seek=t=>new Promise((res,rej)=>{const tm=setTimeout(()=>rej(NG),15000);v.addEventListener('seeked',()=>{clearTimeout(tm);res()},{once:true});v.currentTime=Math.min(t,Math.max(0,dur-.02))});
@@ -4933,7 +4934,26 @@ async function dxVideoFrames(file,prog,signal,st0){
     const cx=cs.getContext('2d',{willReadFrequently:true}),S=[],t0=performance.now();cx.imageSmoothingQuality='high';
     const thumb=()=>{cx.drawImage(v,0,0,tw*2,th*2);const d=cx.getImageData(0,0,tw*2,th*2).data,g=new Float32Array(tw*th),W2=tw*2;
       for(let y=0;y<th;y++)for(let x=0;x<tw;x++){let s=0;for(const [dx,dy] of [[0,0],[1,0],[0,1],[1,1]]){const i=((2*y+dy)*W2+2*x+dx)*4;s+=d[i]+d[i+1]+d[i+2]}g[y*tw+x]=s/12}return g};
-    const grab=t=>{S.push({t,g:thumb()});prog&&prog(.6*Math.min(1,t/dur))};
+    const bx=Math.ceil(tw/8),by=Math.ceil(th/8),bs=new Float32Array(bx*by),bn=new Float32Array(bx*by);
+    const dif1=(a,b,ox,oy)=>{bs.fill(0);bn.fill(0);for(let y=1;y<th-1;y++)for(let x=1;x<tw-1;x++){const k=(y>>3)*bx+(x>>3);bs[k]+=Math.abs(a[y*tw+x]-b[(y+oy)*tw+x+ox]);bn[k]++}
+      const m=[];for(let k=0;k<bs.length;k++)if(bn[k])m.push(bs[k]/bn[k]);m.sort((p,q)=>p-q);return m[Math.floor(m.length*.9)]};
+    const dif=(a,b)=>{let m=1e9;for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++)m=Math.min(m,dif1(a,b,ox,oy));return m};
+    // 見ている最中に、止まった場面の画像をその場で取っておく（あとで位置を移して取り直すより、ずっと速く、コマのずれもない）。
+    // 取った画像は、順に JPEG にして（メモリを使いすぎないように）待ち行列の数をおさえる
+    const nm=(file.name||'video').replace(/\.[^.]+$/,''),sc0=Math.min(1,2400/Math.max(VW,VH)),CW=Math.round(VW*sc0),CH=Math.round(VH*sc0);
+    const ce=document.createElement('canvas');ce.width=CW;ce.height=CH;const cex=ce.getContext('2d');cex.imageSmoothingQuality='high';
+    const caps=[],recD=[];let enc=Promise.resolve(),pend=0,run=0,mov=0;
+    const capture=(i,t)=>{if(pend>=6||!window.createImageBitmap)return;let pr;try{pr=createImageBitmap(v)}catch(e){return}
+      const c={i,t,f:null};caps.push(c);pend++;
+      enc=enc.then(()=>pr).then(async bm=>{cex.drawImage(bm,0,0,CW,CH);try{bm.close()}catch(e){}const bl=await new Promise(r=>ce.toBlob(r,'image/jpeg',.92));if(bl)c.f=new File([bl],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'})}).catch(()=>{}).then(()=>{pend--})};
+    const grab=t=>{const g=thumb(),i=S.length;S.push({t,g});
+      if(i){const d=dif(g,S[i-1].g);recD.push(d);if(recD.length>40)recD.shift();const md=recD.slice().sort((a,b)=>a-b)[recD.length>>1];
+        // 止まった1コマ目と4コマ目。動いている途中でも、動きが前より小さくなった瞬間（速くページを送ったとき）も取る
+        const tO=Math.max(3,md*1.6),pd=i>1?dif(S[i-1].g,S[i-2].g):1e9;
+        if(d<tO){run++;mov=0;if(run===1||run===4)capture(i,t)}else{run=0;mov++;
+          // ずっと動いている所（スクロールし続けたなど）は、1.5秒たったら0.75秒ごとに取る（あとで選ぶ場面と同じ決まり）
+          if(d<tO*4&&d<pd)capture(i,t);else if(mov>=Math.round(1.5/DX_VID_STEP)&&mov%Math.round(.75/DX_VID_STEP)===0)capture(i,t)}}
+      prog&&prog(.6*Math.min(1,t/dur))};
     // 再生しながら、表示されたコマを順に取る（コマごとに位置を移すより、ずっと速い）。できないときは位置を移して取る
     let played=false;
     if('requestVideoFrameCallback' in v){
@@ -4952,10 +4972,6 @@ async function dxVideoFrames(file,prog,signal,st0){
     }
     if(!played){S.length=0;for(let t=0;t<dur;t+=DX_VID_STEP){stop();await seek(t);grab(t)}}
     v.playbackRate=1;
-    const bx=Math.ceil(tw/8),by=Math.ceil(th/8),bs=new Float32Array(bx*by),bn=new Float32Array(bx*by);
-    const dif1=(a,b,ox,oy)=>{bs.fill(0);bn.fill(0);for(let y=1;y<th-1;y++)for(let x=1;x<tw-1;x++){const k=(y>>3)*bx+(x>>3);bs[k]+=Math.abs(a[y*tw+x]-b[(y+oy)*tw+x+ox]);bn[k]++}
-      const m=[];for(let k=0;k<bs.length;k++)if(bn[k])m.push(bs[k]/bn[k]);m.sort((p,q)=>p-q);return m[Math.floor(m.length*.9)]};
-    const dif=(a,b)=>{let m=1e9;for(let oy=-1;oy<=1;oy++)for(let ox=-1;ox<=1;ox++)m=Math.min(m,dif1(a,b,ox,oy));return m};
     const D=S.map((x,i)=>i?dif(x.g,S[i-1].g):1e9),sd=D.slice(1).sort((a,b)=>a-b);
     // 「止まっている」と「動いている」の境目は動画ごとに決める（違いの大きさを2つに分ける境目。手ぶれ・ノイズの多い動画では高くなる）
     let thr=3;{const L=sd.map(x=>Math.log(x+.5));let best=-1;for(let k=1;k<L.length;k++){const a=L.slice(0,k),b=L.slice(k),ma=a.reduce((p,q)=>p+q,0)/a.length,mb=b.reduce((p,q)=>p+q,0)/b.length,v=a.length*b.length*(ma-mb)**2;if(v>best){best=v;thr=Math.max(3,Math.exp((L[k-1]+L[k])/2)-.5)}}}
@@ -4977,8 +4993,8 @@ async function dxVideoFrames(file,prog,signal,st0){
       if(k!=null){let mv=0;for(let j=k+1;j<=i;j++)mv=Math.max(mv,D[j]);if(mv<thr&&dif(S[k].g,S[i].g)<noise*1.5){const A=seg[k]||[k,k],B=seg[i]||[i,i];seg[k]=[Math.min(A[0],B[0]),Math.max(A[1],B[1])];continue}}
       if(keep.some(k=>dif(S[k].g,S[i].g)<noise))continue;keep.push(i)}
     // 2) 選んだ場面を大きな画像で取り出す
-    const sc=Math.min(1,2400/Math.max(VW,VH)),cb=document.createElement('canvas');cb.width=Math.round(VW*sc);cb.height=Math.round(VH*sc);
-    const cbx=cb.getContext('2d'),out=[],nm=(file.name||'video').replace(/\.[^.]+$/,'');
+    await enc;
+    const cb=document.createElement('canvas');cb.width=CW;cb.height=CH;const cbx=cb.getContext('2d'),out=[];
     // 取り出したコマが、最初に見た小さな画像と同じ画面かを確かめる（iPhone では、位置を移した先のコマが少しずれることがある）。
     // 区間の真ん中に近いコマから順に試し、合ったコマを使う。2つ目に合ったコマは、読めなかったとき用の予備にする
     const okD=Math.max(noise*2,thr*.6);
@@ -4986,10 +5002,12 @@ async function dxVideoFrames(file,prog,signal,st0){
       const bl=await new Promise(r=>cb.toBlob(r,'image/jpeg',.92));return bl?{ok,f:new File([bl],`${nm}_${S[c].t.toFixed(2)}.jpg`,{type:'image/jpeg'})}:null};
     for(let n=0;n<keep.length;n++){stop();const k=keep[n],[a,z]=seg[k]||[Math.max(1,k-1),Math.min(S.length-1,k+1)],mid=(a+z)/2,cand=[];
       for(let c=a;c<=z;c++)cand.push(c);cand.sort((p,q)=>Math.abs(p-mid)-Math.abs(q-mid));
+      const got=caps.filter(c=>c.f&&c.i>=a&&c.i<=z).sort((p,q)=>Math.abs(p.i-mid)-Math.abs(q.i-mid));
+      if(got.length){const f=got[0].f;if(got[1])f.dxAlt=got[1].f;f.dxVid=1;out.push(f);prog&&prog(.6+.4*(n+1)/keep.length);continue}
       let main=null,spare=null,first=null,last=-9;
       for(const c of cand.slice(0,5)){const r=await snap(c);if(!r)continue;if(!first)first=r.f;
         if(r.ok){if(!main){main=r.f;last=c}else if(c!==last){spare=r.f;break}}}
-      const f=main||first;if(f){if(spare)f.dxAlt=spare;else if(main&&first&&first!==main)f.dxAlt=first;out.push(f)}
+      const f=main||first;if(f){if(spare)f.dxAlt=spare;else if(main&&first&&first!==main)f.dxAlt=first;f.dxVid=1;out.push(f)}
       prog&&prog(.6+.4*(n+1)/keep.length)}
     return out;
   }finally{URL.revokeObjectURL(url);v.removeAttribute('src');try{v.load()}catch(e){}}
@@ -5011,7 +5029,7 @@ const dxBusyEl=document.getElementById('dxBusy');let dxPR=[0,1],dxPV=0,dxBusyObs
 function dxProg(f){const v=Math.max(dxPV,Math.min(1,dxPR[0]+(dxPR[1]-dxPR[0])*Math.max(0,Math.min(1,f))));dxPV=v;const pc=Math.floor(v*100);
   document.getElementById('dxBusyF').style.width=pc+'%';document.getElementById('dxBusyP').textContent=pc;dxBusyEl.querySelector('[role=progressbar]').setAttribute('aria-valuenow',pc)}
 function dxRange(a,b){dxPR=[a,b];dxProg(0)}
-// 段階（vid：動画から画面を取り出す／local：スマホ内で読み取る／gm：Gemini で読み取る）。使う段階だけ出す
+// 段階（vid：動画から画像を取り出す／local：スマホ内で読み取る／gm：Gemini で読み取る）。使う段階だけ出す
 function dxStages(on){const el=document.getElementById('dxBusyStg');let any=false;
   el.querySelectorAll('[data-stg]').forEach(d=>{const v=!!on[d.dataset.stg];d.hidden=!v;any=any||v;d.classList.remove('s-now','s-done');const g=d.querySelector('.pg');g.setAttribute('stroke-dasharray','0 100');g.style.opacity=0;d.querySelector('small').textContent=''});
   el.hidden=!any;document.getElementById('dxBusyL').classList.toggle('sub',any)}
@@ -5023,7 +5041,7 @@ function dxBusy(on){
   const st=document.getElementById('dxShotStatus');
   if(on){dxPR=[0,1];dxPV=0;dxProg(0);document.getElementById('dxBusyMain').hidden=false;document.getElementById('dxBusyAsk').hidden=true;
     document.getElementById('dxBusyL').textContent='';dxBusyEl.hidden=false;document.body.classList.add('modal');
-    dxBusyObs=new MutationObserver(()=>{const t=st.textContent,L=document.getElementById('dxBusyL');L.textContent=L.classList.contains('sub')&&/^(読み取り中|スマホ内で読み取り中|動画から画面を取り出し|準備しています|AIに送る画像を用意|AIで読み取り中)/.test(t)?'':t});dxBusyObs.observe(st,{childList:true,characterData:true,subtree:true});
+    dxBusyObs=new MutationObserver(()=>{const t=st.textContent,L=document.getElementById('dxBusyL');L.textContent=L.classList.contains('sub')&&/^(読み取り中|スマホ内で読み取り中|動画から画像を取り出し|準備しています|AIに送る画像を用意|AIで読み取り中)/.test(t)?'':t});dxBusyObs.observe(st,{childList:true,characterData:true,subtree:true});
     document.getElementById('dxBusyStop').focus({preventScroll:true})}
   else{dxBusyEl.hidden=true;if(dxBusyObs){dxBusyObs.disconnect();dxBusyObs=null}}
 }
@@ -5084,6 +5102,9 @@ dxTipSheet.addEventListener('click',e=>{if(e.target===dxTipSheet||e.target.close
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dxTipSheet.hidden){e.stopImmediatePropagation();dxTip(false)}},true);
 document.getElementById('dxGmLink').addEventListener('click',e=>{gmFromDex=true;stOpen('gm');stRet=e.currentTarget});
 
+// 動画から取り出した画面のうち、図鑑の一覧が写っていないもの（録画の始まり・終わりのホーム画面など）。読めなくても困らないので、数えず・送らない
+let dxSkipped=0;
+const dxNoList=f=>!!(f.dxVid&&f.dxNoList&&(!f.dxAlt||f.dxAlt.dxNoList));
 async function dxReadLocal(files,byNo,inDex,found,st,signal){
   let failed=0;
   for(let i=0;i<files.length;i++){
@@ -5092,12 +5113,12 @@ async function dxReadLocal(files,byNo,inDex,found,st,signal){
     try{
       let rows=await dxLocalRead(files[i]);
       if(!rows&&files[i].dxAlt)rows=await dxLocalRead(files[i].dxAlt);
-      if(!rows){failed++;continue}
+      if(!rows){if(dxNoList(files[i]))dxSkipped++;else failed++;continue}
       rows.forEach(r=>{const s=byNo.get(r.num);if(!s||!inDex.has(s))return;
         const prev=found.get(s);if(!prev||r.status==='caught'||prev==='unknown')found.set(s,r.status)});
     }catch(e){failed++}
   }
-  dxStage('local','done',`${files.length-failed} / ${files.length}枚`);
+  dxStage('local','done',`${files.length-failed-dxSkipped} / ${files.length-dxSkipped}枚`);
   return failed;
 }
 async function dxReadAi(files,g,dexName,byNo,inDex,found,st){
@@ -5223,7 +5244,8 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
     let hk=null;try{hk=gmHash(await files[i].arrayBuffer())+'|'+dk}catch(e){}
     if(hk){if(seenH.has(hk)){nDup++;continue}seenH.add(hk)}
     if(local){try{let rows=await dxLocalRead(files[i]);if(!gmOkLocal(rows,inDex,byNo)&&files[i].dxAlt){const r2=await dxLocalRead(files[i].dxAlt);if(gmOkLocal(r2,inDex,byNo))rows=r2}
-      if(gmOkLocal(rows,inDex,byNo)){rows.forEach(r=>{const s=byNo.get(r.num);if(s&&inDex.has(s))put(s,r.status)});nLocal++;continue}}catch(e){}}
+      if(gmOkLocal(rows,inDex,byNo)){rows.forEach(r=>{const s=byNo.get(r.num);if(s&&inDex.has(s))put(s,r.status)});nLocal++;continue}}catch(e){}
+      if(dxNoList(files[i])){dxSkipped++;continue}}
     const c=hk&&gmCacheGet(hk);if(c&&useAi(c.v)){nCache++;continue}
     todo.push({f:files[i],hk});
   }
@@ -5276,14 +5298,14 @@ async function dxOnFiles(e){
   const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxCamBtn,#dxPickBtn,#dxGmLink')];
   btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();st.textContent='準備しています…';dxBusy(true);
   dxStages({vid:files.some(dxIsVideo),local:DX_LOCAL_GAMES.includes(g.id),gm:mode==='gm'});await dxPaint();
-  const found=new Map();let failed=0,vinfo=null;
+  const found=new Map();let failed=0,vinfo=null;dxSkipped=0;
   try{
     if(files.some(dxIsVideo)){dxRange(0,.5);vinfo=await dxExpandVideos(files,st,dxScanCtl.signal);files=vinfo.files;dxRange(.5,1);
       if(!files.length)throw {msg:'動画の中に、止まっている画面が見つかりませんでした。図鑑の一覧で、1ページごとに少し（0.5秒くらい）止めながら録画してください。'}}
     failed=mode==='local'?await dxReadLocal(files,byNo,inDex,found,st,dxScanCtl.signal):mode==='gm'?await dxReadGm(files,g,dexName,byNo,inDex,found,st):await dxReadAi(files,g,dexName,byNo,inDex,found,st)}
   catch(err){dxBusy(false);setTimeout(dxShotUI);st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||(mode==='local'?'読み取れませんでした。'+DX_SHOT_RETRY:mode==='gm'?'Gemini で読み取れませんでした。':'この画面ではAIでの読み取りを使えません');btns.forEach(b=>b.disabled=false);return}
   dxProg(1);await dxPaint();dxBusy(false);btns.forEach(b=>b.disabled=false);dxShotUI();
-  const vt=vinfo?`動画${vinfo.nv>1?vinfo.nv+'本':''}から${vinfo.nf}枚の画面を取り出しました。${files.length>vinfo.nf?`画像とあわせて${files.length}枚`:`${files.length}枚`}のうち、${files.length-failed}枚を読み取りました。`:'';
+  const nT=files.length-dxSkipped,vt=vinfo?`動画${vinfo.nv>1?vinfo.nv+'本':''}から${vinfo.nf}枚の画像を取り出しました。${dxSkipped?`図鑑の一覧が写っていない画像 ${dxSkipped}枚は省きました。`:''}${files.length>vinfo.nf?`画像とあわせて${nT}枚`:`${nT}枚`}のうち、${nT-failed}枚を読み取りました。`:'';
   st.textContent=vinfo?vt:failed?`${failed}枚は読み取れませんでした。${mode==='local'?DX_SHOT_RETRY:mode==='gm'?'撮り直すか、別の画像で試してください。':'もう一度試すか、別のスクショを選んでください。'}`:'';
   if(!found.size){st.textContent=mode==='local'?'この図鑑のポケモンが見つかりませんでした。'+(failed?DX_SHOT_RETRY:'作品と図鑑が合っているか、上の「変更」で確かめてください。'):(st.textContent?st.textContent+' ':'')+'この図鑑のポケモンが見つかりませんでした。';return}
   // 読めた番号のあいだで抜けている番号（ページを読めなかった所）
@@ -5292,7 +5314,7 @@ async function dxOnFiles(e){
       for(const n of all){const l=R[R.length-1];if(l&&n===l[1]+1)l[1]=n;else R.push([n,n])}
       if(R.length)gapT=`読めなかった番号：${R.slice(0,6).map(([a,b])=>a===b?pad3(a):pad3(a)+'〜'+pad3(b)).join('・')}${R.length>6?` ほか${R.length-6}か所`:''}。その部分を撮り直すか、スクショで足してください。`}}
   const few=vinfo?mode==='local'&&found.size<6:(mode==='local'&&(failed||found.size<3*files.length))||(mode==='gm');
-  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:vt+gapT+(mode==='gm'?dxGmSum+(failed?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
+  dxScan={mode,sel:new Set([...found].filter(([s,v])=>v!=='unknown').map(([s])=>s)),items:[...found].sort((a,b)=>(entries.findIndex(x=>x[1]===a[0]))-(entries.findIndex(x=>x[1]===b[0]))),tip:vt+gapT+(mode==='gm'?dxGmSum+(failed&&(!vinfo||gapT)?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
   renderDxScan();
 }
 document.getElementById('dxShotFile').addEventListener('change',dxOnFiles);
