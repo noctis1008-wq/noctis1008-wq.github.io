@@ -4931,9 +4931,9 @@ async function dxVideoFrames(file,prog,signal,st0){
     //    小さくするときは 2×2 を平均してノイズを減らし、比べるときは上下左右に1画素ずらしたものとも比べる（手ぶれ）
     const tw=96,th=Math.max(16,Math.round(tw*VH/VW)),cs=document.createElement('canvas');cs.width=tw*2;cs.height=th*2;
     const cx=cs.getContext('2d',{willReadFrequently:true}),S=[],t0=performance.now();cx.imageSmoothingQuality='high';
-    const grab=t=>{cx.drawImage(v,0,0,tw*2,th*2);const d=cx.getImageData(0,0,tw*2,th*2).data,g=new Float32Array(tw*th),W2=tw*2;
-      for(let y=0;y<th;y++)for(let x=0;x<tw;x++){let s=0;for(const [dx,dy] of [[0,0],[1,0],[0,1],[1,1]]){const i=((2*y+dy)*W2+2*x+dx)*4;s+=d[i]+d[i+1]+d[i+2]}g[y*tw+x]=s/12}
-      S.push({t,g});prog&&prog(.6*Math.min(1,t/dur))};
+    const thumb=()=>{cx.drawImage(v,0,0,tw*2,th*2);const d=cx.getImageData(0,0,tw*2,th*2).data,g=new Float32Array(tw*th),W2=tw*2;
+      for(let y=0;y<th;y++)for(let x=0;x<tw;x++){let s=0;for(const [dx,dy] of [[0,0],[1,0],[0,1],[1,1]]){const i=((2*y+dy)*W2+2*x+dx)*4;s+=d[i]+d[i+1]+d[i+2]}g[y*tw+x]=s/12}return g};
+    const grab=t=>{S.push({t,g:thumb()});prog&&prog(.6*Math.min(1,t/dur))};
     // 再生しながら、表示されたコマを順に取る（コマごとに位置を移すより、ずっと速い）。できないときは位置を移して取る
     let played=false;
     if('requestVideoFrameCallback' in v){
@@ -4959,8 +4959,11 @@ async function dxVideoFrames(file,prog,signal,st0){
     const D=S.map((x,i)=>i?dif(x.g,S[i-1].g):1e9),sd=D.slice(1).sort((a,b)=>a-b);
     // 「止まっている」と「動いている」の境目は動画ごとに決める（違いの大きさを2つに分ける境目。手ぶれ・ノイズの多い動画では高くなる）
     let thr=3;{const L=sd.map(x=>Math.log(x+.5));let best=-1;for(let k=1;k<L.length;k++){const a=L.slice(0,k),b=L.slice(k),ma=a.reduce((p,q)=>p+q,0)/a.length,mb=b.reduce((p,q)=>p+q,0)/b.length,v=a.length*b.length*(ma-mb)**2;if(v>best){best=v;thr=Math.max(3,Math.exp((L[k-1]+L[k])/2)-.5)}}}
-    const pick=[],used=new Uint8Array(S.length);
-    for(let i=1;i<S.length;){if(D[i]>=thr){i++;continue}let j=i,b=i;while(j<S.length&&D[j]<thr){used[j]=1;if(D[j]<D[b])b=j;j++}pick.push(b);i=j}
+    // 止まった区間ごとに、真ん中のコマを代表にする（はしのコマは、ページの切り替えにかかっていることがある）
+    const pick=[],used=new Uint8Array(S.length),seg={};
+    for(let i=1;i<S.length;){if(D[i]>=thr){i++;continue}let j=i;while(j<S.length&&D[j]<thr){used[j]=1;j++}
+      // 区間の最初のコマ i は「前のコマ i-1 と同じ」なので、i-1 も同じ画面。区間は i-1〜j-1
+      const a=i-1,z=j-1,b=Math.round((a+z)/2);pick.push(b);seg[b]=[a,z];i=j}
     // 止まっている時間が短い（速くページを送った）所：動きがいちばん小さくなった瞬間も取り出す
     for(let i=2;i<S.length-1;i++)if(!used[i]&&!used[i-1]&&D[i]<thr*4&&D[i]<D[i-1]&&D[i]<=D[i+1])pick.push(i);
     // ずっと動いている所（ゆっくりスクロールしたなど）は、0.75秒ごとにも取り出す（読み取りの確かめで、合わないものは使われない）
@@ -4971,16 +4974,22 @@ async function dxVideoFrames(file,prog,signal,st0){
     // また、前に取った場面と、ノイズくらいしか違わないもの（同じページに戻ったとき）も省く
     const st=D.slice(1).filter(x=>x<thr).sort((p,q)=>p-q),noise=(st[st.length>>1]||0)*.8+1,keep=[];
     for(const i of pick){const k=keep[keep.length-1];
-      if(k!=null){let mv=0;for(let j=k+1;j<=i;j++)mv=Math.max(mv,D[j]);if(mv<thr&&dif(S[k].g,S[i].g)<noise*1.5){if(D[i]<D[k])keep[keep.length-1]=i;continue}}
+      if(k!=null){let mv=0;for(let j=k+1;j<=i;j++)mv=Math.max(mv,D[j]);if(mv<thr&&dif(S[k].g,S[i].g)<noise*1.5){const A=seg[k]||[k,k],B=seg[i]||[i,i];seg[k]=[Math.min(A[0],B[0]),Math.max(A[1],B[1])];continue}}
       if(keep.some(k=>dif(S[k].g,S[i].g)<noise))continue;keep.push(i)}
     // 2) 選んだ場面を大きな画像で取り出す
     const sc=Math.min(1,2400/Math.max(VW,VH)),cb=document.createElement('canvas');cb.width=Math.round(VW*sc);cb.height=Math.round(VH*sc);
     const cbx=cb.getContext('2d'),out=[],nm=(file.name||'video').replace(/\.[^.]+$/,'');
-    // 読めなかったとき用の、もう1コマ：同じ止まった場面の中で、0.2〜0.5秒はなれたコマ（あいだに大きな動きがないもの）
-    const alt=i=>{let b=-1;for(const o of [3,4,2,5,-3,-4,-2,-5]){const j=i+o;if(j<1||j>=S.length||D[j]>=thr)continue;let mv=0;for(let q=Math.min(i,j)+1;q<=Math.max(i,j);q++)mv=Math.max(mv,D[q]);if(mv<thr){b=j;break}}return b};
-    const snap=async t=>{await seek(t);cbx.drawImage(v,0,0,cb.width,cb.height);const bl=await new Promise(r=>cb.toBlob(r,'image/jpeg',.92));return bl?new File([bl],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'}):null};
-    for(let n=0;n<keep.length;n++){stop();const f=await snap(S[keep[n]].t);
-      if(f){const a=alt(keep[n]);if(a>=0){const fa=await snap(S[a].t);if(fa)f.dxAlt=fa}out.push(f)}
+    // 取り出したコマが、最初に見た小さな画像と同じ画面かを確かめる（iPhone では、位置を移した先のコマが少しずれることがある）。
+    // 区間の真ん中に近いコマから順に試し、合ったコマを使う。2つ目に合ったコマは、読めなかったとき用の予備にする
+    const okD=Math.max(noise*2,thr*.6);
+    const snap=async c=>{await seek(S[c].t);const g=thumb(),ok=dif(g,S[c].g)<okD;cbx.drawImage(v,0,0,cb.width,cb.height);
+      const bl=await new Promise(r=>cb.toBlob(r,'image/jpeg',.92));return bl?{ok,f:new File([bl],`${nm}_${S[c].t.toFixed(2)}.jpg`,{type:'image/jpeg'})}:null};
+    for(let n=0;n<keep.length;n++){stop();const k=keep[n],[a,z]=seg[k]||[Math.max(1,k-1),Math.min(S.length-1,k+1)],mid=(a+z)/2,cand=[];
+      for(let c=a;c<=z;c++)cand.push(c);cand.sort((p,q)=>Math.abs(p-mid)-Math.abs(q-mid));
+      let main=null,spare=null,first=null,last=-9;
+      for(const c of cand.slice(0,5)){const r=await snap(c);if(!r)continue;if(!first)first=r.f;
+        if(r.ok){if(!main){main=r.f;last=c}else if(c!==last){spare=r.f;break}}}
+      const f=main||first;if(f){if(spare)f.dxAlt=spare;else if(main&&first&&first!==main)f.dxAlt=first;out.push(f)}
       prog&&prog(.6+.4*(n+1)/keep.length)}
     return out;
   }finally{URL.revokeObjectURL(url);v.removeAttribute('src');try{v.load()}catch(e){}}
