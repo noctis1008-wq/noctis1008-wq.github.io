@@ -1,0 +1,35 @@
+# 引き継ぎメモの確認: ファイルを変えたのに HANDOFF.md を変えていないコミット・PR に ✗ を付ける。
+# (公開を止めるものではない。✗ が付いたら、HANDOFF.md に作業ログを足すこと)
+name: 引き継ぎメモの確認
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: HANDOFF.md が更新されているか確かめる
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_PR: ${{ github.event.pull_request.base.sha }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then BASE="$BASE_PR"; else BASE="$BEFORE"; fi
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BASE" 2>/dev/null; then
+            echo "比べる元のコミットがないので確認しません。"; exit 0
+          fi
+          CHANGED=$(git diff --name-only "$BASE" HEAD)
+          echo "変わったファイル:"; echo "$CHANGED"
+          if [ -z "$CHANGED" ]; then exit 0; fi
+          if echo "$CHANGED" | grep -qx 'HANDOFF.md'; then
+            echo "✅ HANDOFF.md が更新されています。"
+          else
+            echo "::error title=引き継ぎメモがありません::ファイルを変えたのに HANDOFF.md が更新されていません。作業ログに記録を足してください(書き方は HANDOFF.md の先頭)。"
+            exit 1
+          fi
