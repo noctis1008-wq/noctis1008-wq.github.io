@@ -1,0 +1,5 @@
+<!doctype html><meta charset=utf8><script src="dxt.js"></script><script>
+async function px(url,max){const bm=await createImageBitmap(await (await fetch(url)).blob());const s=Math.min(1,max/Math.max(bm.width,bm.height)),W=Math.round(bm.width*s),H=Math.round(bm.height*s);
+  const c=new OffscreenCanvas(W,H),x=c.getContext('2d',{willReadFrequently:true});x.imageSmoothingQuality='high';x.drawImage(bm,0,0,W,H);return {p:x.getImageData(0,0,W,H).data,W,H}}
+async function run(urls,P,learn){const out=[];for(const u of urls){const B=await px(u,2400);out.push({u,r:dxtRead(B.p,B.W,B.H,P,learn)})}return out}
+</script>
