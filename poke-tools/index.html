@@ -4098,8 +4098,8 @@ rb(6,'skillful','グレートバトルリボン',['xy','oras'],'バトルハウ�
 rb(6,'expert','マスターバトルリボン',['xy','oras'],'バトルハウスのスーパールールで、バトルシャトレーヌに勝つ。',{ban:'box'});
 // 第7世代
 rb(7,'alola','アローラチャンプリボン',['sm','usum'],'アローラのポケモンリーグで殿堂入りしたときに手持ちにいると付く。');
-rb(7,'royalm','ロイヤルマスターリボン',['sm','usum'],'バトルロイヤルのマスターランクで優勝する。');
-rb(7,'gtree','グレートツリーリボン',['sm','usum'],'バトルツリーのノーマルルールで、バトルレジェンドに勝つ。',{ban:'box'});
+rb(7,'royalm','ロイヤルマスターリボン',['sm','usum'],'バトルロイヤルのマスターランクで優勝する。伝説・幻の一部（バトルツリーと同じ）は参加できない。',{ban:'box'});
+rb(7,'gtree','グレートツリーリボン',['sm','usum'],'バトルツリーのノーマルルールで、バトルレジェンドに勝つ。USUMのノーマルルールは、伝説・幻も参加できる（SMはできない）。',{ban:'boxsm'});
 rb(7,'mtree','マスターツリーリボン',['sm','usum'],'バトルツリーのスーパールールで、バトルレジェンドに勝つ。',{ban:'box'});
 // 第8世代
 rb(8,'galar','ガラルチャンプリボン',['swsh'],'ガラルのチャンピオンカップに優勝したときに手持ちにいると付く。');
@@ -4150,6 +4150,7 @@ function rbItems(sp){
     if(r.ban==='g3'&&G3BAN.has(id))return null;
     if(r.ban==='g4'&&G4BAN.has(id))return null;
     if(r.ban==='box'&&(L&6))return null;
+    if(r.ban==='boxsm'&&(L&6))games=games.filter(g=>g!=='sm'); // USUMのバトルツリー(ノーマル)は伝説・幻も参加できる
     if(r.ban==='myth'&&(L&4)){if(!SV_MYTH.has(id))return null;games=['sv'];}
     if(r.shadow&&!(L&8))return null;
     if(r.only&&!r.only.has(id))return null;
@@ -6113,7 +6114,7 @@ monSheet.addEventListener('click',e=>{
   if(d.monrbun){monCollect();monEdit.rb='';renderMonSheet();e.stopImmediatePropagation();return}
   if(d.monrbgo){const x=monRb(monEdit);if(!x)return;monCollect();
     if(monEdit.id){const i=S.mon.list.findIndex(y=>y.id===monEdit.id);if(i>=0)S.mon.list[i]=monEdit;save()}
-    S.rb.cur=x.id;monClose();setView('ribbon');e.stopImmediatePropagation();return}
+    S.rb.cur=x.id;monCardBack=0;monClose();monCardClose();setView('ribbon');e.stopImmediatePropagation();return}
 },true);
 // リボン管理でニックネームを変えたら、つないでいる個体にも反映する
 // ニックネームは、直した側からもう片方へ写す（リボン管理→個体管理はリボン管理の名前欄、逆は個体の保存時）
@@ -6560,7 +6561,7 @@ tyEl.addEventListener('click',e=>{
   const mon=t.closest('[data-tymon]');if(mon)tyAddRecent(mon.dataset.tymon);
   if(mon){S.ty.mon=mon.dataset.tymon;S.ty.abl='';S.ty.ov=null;S.ty.t=[];S.ty.at=tyDefTypes().slice();tyQSet(tyShortName(S.ty.mon));document.getElementById('tyQ').blur();document.getElementById('tyRes').innerHTML='';save();renderTyDef();return}
   if(t.closest('#tyClr')){S.ty.t=[];S.ty.at=[];S.ty.item='';S.ty.fld='';S.ty.aabl='';S.ty.mv2='';S.ty.mon='';S.ty.abl='';S.ty.ov=null;tyQSet('');document.getElementById('tyRes').innerHTML='';save();renderTyDef();return}
-  if(t.closest('#tyQx')){if(S.ty.mon){S.ty.t=tyDefTypes();S.ty.mon='';S.ty.abl='';S.ty.ov=null;save();renderTyDef()}tyQSet('');document.getElementById('tyRes').innerHTML='';document.getElementById('tyQ').focus();return}
+  if(t.closest('#tyQx')){S.ty.t=[];S.ty.at=[];S.ty.item='';S.ty.fld='';S.ty.aabl='';S.ty.mv2='';S.ty.mon='';S.ty.abl='';S.ty.ov=null;tyQSet('');document.getElementById('tyRes').innerHTML='';save();renderTyDef();document.getElementById('tyQ').focus();return}
   const sd=t.closest('[data-tyside]');if(sd){S.ty.side=sd.dataset.tyside;if(S.ty.side==='atk'&&!S.ty.at.length)S.ty.at=tyDefTypes().slice();save();renderTyDef();return}
   const col=t.closest('[data-tyc]');if(col&&col.closest('#tyTable')){S.ty.t=[+col.dataset.tyc];S.ty.at=[+col.dataset.tyc];S.ty.mon='';S.ty.abl='';S.ty.ov=null;S.ty.side='def';S.ty.tab='def';tyQSet('');save();renderTy();window.scrollTo(0,0);return}
   const row=t.closest('[data-tya]');if(row&&row.closest('#tyTable')){S.ty.at=[+row.dataset.tya];S.ty.mon='';S.ty.abl='';S.ty.ov=null;S.ty.side='atk';S.ty.tab='def';tyQSet('');save();renderTy();window.scrollTo(0,0);return}
@@ -7173,7 +7174,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.25b';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.25c';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
