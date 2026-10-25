@@ -18,7 +18,7 @@ im=Image.new('RGB',(len(labs)*(cw+8),n*(ch+4)+20),'white');dr=ImageDraw.Draw(im)
 for j,l in enumerate(labs):
   L=sorted([i for i in items if i[0]==l],key=lambda i:i[1]);dr.text((j*(cw+8)+4,4),f'{l}:{len(L)}',fill='black')
   for t,(lab,sc,u,m,kk) in enumerate(L[:n]):
-    nc=P.get('cols',{}).get('n',1);cp=P.get('cols',{}).get('pitch',0);yc=P['rows']['y0']+m.get('d',0)+(kk//nc)*P['rows']['pitch'];xo=(kk%nc)*cp;I=Image.open(u)
+    nc=P.get('cols',{}).get('n',1);cp=P.get('cols',{}).get('pitch',0);hs=P.get('cols',{}).get('scroll');yc=P['rows']['y0']+(0 if hs else m.get('d',0))+(kk//nc)*P['rows']['pitch'];xo=(kk%nc)*cp+(m.get('d',0) if hs else 0);I=Image.open(u)
     box=(m['ox']+(crop[0]+xo)*m['sx'],m['oy']+(yc+crop[1])*m['sy'],m['ox']+(crop[2]+xo)*m['sx'],m['oy']+(yc+crop[3])*m['sy'])
     im.paste(I.crop(tuple(int(v) for v in box)).resize((cw,ch)),(j*(cw+8)+4,20+t*(ch+4)))
 im.save(out);import collections;print(collections.Counter(i[0] for i in items))

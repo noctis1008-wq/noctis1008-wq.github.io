@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 game,dex,truth=sys.argv[1],sys.argv[2],json.load(open(sys.argv[3]));files=sys.argv[4:]
 T=truth.get(dex,{})
 with sync_playwright() as p:
-    b=p.chromium.launch();pg=b.new_page(viewport={'width':390,'height':844});errs=[];pg.on('pageerror',lambda e:errs.append(str(e)[:300]))
+    b=p.chromium.launch();pg=b.new_page(viewport={'width':390,'height':844});errs=[];pg.on('console',lambda m:print('LOG',m.text[:400]) if 'GAP' in m.text else None);pg.on('pageerror',lambda e:errs.append(str(e)[:300]))
     pg.route('**/fonts.googleapis.com/**',lambda r:r.abort());pg.goto('http://127.0.0.1:8765/poke-tools/index.html');pg.wait_for_timeout(400)
     pg.evaluate("""([g,d])=>{const o=document.getElementById('onb');if(o)o.hidden=true;document.body.classList.remove('modal');document.querySelectorAll('.sheet').forEach(x=>x.hidden=true);dxScan=null;dxCarry=null;
       S.dx.game=g;S.dx.dex[g]=d;localStorage.removeItem('ner-gemini-key');save();setView('dex');renderDex();dxShotMode='local'}""",[game,dex])
@@ -17,4 +17,5 @@ with sync_playwright() as p:
     miss=[n for n in T if n not in got]
     print(f'{el:.0f}秒 読めた{len(got)} 正しい{ok} 誤り{len(bad)} {bad[:8]} 正解表にない{len(extra)} 読めなかった{len(miss)} | {tip}')
     import collections;c=collections.Counter(got.values());print('数',dict(c),'捕まえた',c['caught'],'見つけた(捕まえた+見ただけ)',c['caught']+c['seen'])
+    print('gaps',pg.evaluate("JSON.stringify(dxScan.gaps)"));print('vt',st)
     print('errors',errs)

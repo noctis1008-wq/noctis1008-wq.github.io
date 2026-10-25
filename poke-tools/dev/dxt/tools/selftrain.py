@@ -32,11 +32,12 @@ for it in range(6):
         if len(st)!=len(s):t-=1.5;continue
         t+=sum(s[j][int(st[j])] for j in range(len(st)))
       if t>best:best=t;bb=b
-    mean=best/(len(S)*digits)
+    mean=best/(sum(len(s) for k,s in S) if not digits else len(S)*digits)
     if mean>.35:
       ok+=1
       for k,G in rows:
         st=str(bb+k).zfill(digits)
+        if len(st)!=len(G):continue
         for j,g in enumerate(G):
           d=int(st[j])
           if it>0 and d in T and (g@T[d])/192<0.55:continue # 見本と似ていない形（はしが切れた行など）は使わない

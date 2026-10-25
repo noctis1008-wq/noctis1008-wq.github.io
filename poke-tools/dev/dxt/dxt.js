@@ -79,11 +79,16 @@ function dxtGlyphs(px,W,H,m,P,yc,xo=0){
   for(let i=0;i<64;i++){wb+=hist[i];if(!wb)continue;const wf=tot-wb;if(!wf)break;sb+=i*hist[i];const mb=sb/wb,mf=(sum-sb)/wf,bt=wb*wf*(mb-mf)**2;if(bt>best){best=bt;th=i+.5}}
   const T=lo+th/64*(hi-lo),bin=new Uint8Array(ow*oh);let ink=0;for(let i=0;i<v.length;i++)if(v[i]>T){bin[i]=1;ink++}
   if(ink>v.length*.6)return null;
-  const colOn=[];for(let x=0;x<ow;x++){let c=0;for(let y=0;y<oh;y++)c+=bin[y*ow+x];colOn.push(N.colMin?c>Math.max(1,oh*N.colMin):c>0)} // 背景のもようの点だけの列は、文字の列にしない
+  const colOn=[];for(let x=0;x<ow;x++){let c=0;for(let y=0;y<oh;y++)c+=bin[y*ow+x];colOn.push(N.edge&&c>=oh*.9?false:N.colMin?c>Math.max(1,oh*N.colMin):c>0)} // （P.num.edge：上から下まで黒い列は、となりの本との境目なので外す） // 背景のもようの点だけの列は、文字の列にしない
   const G=[];for(let x=0;x<ow;){if(!colOn[x]){x++;continue}let e=x;while(e+1<ow&&colOn[e+1])e++;G.push([x,e]);x=e+1}
+  // （P.num.split：となり合う数字がくっついて1つの形になったとき（横長）、いちばん細い所で分ける）
+  if(N.split){const cc=x=>{let c=0;for(let y=0;y<oh;y++)c+=bin[y*ow+x];return c};const hgt=(a,e)=>{let y0=oh,y1=-1;for(let y=0;y<oh;y++)for(let x=a;x<=e;x++)if(bin[y*ow+x]){if(y<y0)y0=y;if(y>y1)y1=y}return y1-y0+1};
+    for(let i=0;i<G.length;i++){const [a,e]=G[i],h=hgt(a,e);if(e-a+1<=h*1.2)continue;let bx=-1,bv=1e9;for(let x=Math.round(a+(e-a)*.3);x<=Math.round(a+(e-a)*.7);x++){const v=cc(x);if(v<bv){bv=v;bx=x}}
+      if(bx>a&&bx<e){G.splice(i,1,[a,bx-1],[bx+1,e]);i--}}}
   const out=[];
   for(const [a,e] of G){let y0=oh,y1=-1;for(let y=0;y<oh;y++)for(let x=a;x<=e;x++)if(bin[y*ow+x]){if(y<y0)y0=y;if(y>y1)y1=y}
     if(y1-y0<oh*.35||(e-a+1)<(y1-y0+1)*.15)continue; // 点や線（「.」など）、細いすじ（行のふち）は数字ではない
+    if(N.edge&&y0===0&&y1===oh-1)continue; // 切り出した範囲の上から下までつながる形は、となりとの境目の線（P.num.edge の作品だけ）
     const f=new Float32Array(12*16),gw=e-a+1,gh=y1-y0+1;
     for(let gy=0;gy<16;gy++)for(let gx=0;gx<12;gx++){let s=0,n=0;
       const xs=a+gx*gw/12,xe=a+(gx+1)*gw/12,ys=y0+gy*gh/16,ye=y0+(gy+1)*gh/16;
@@ -125,8 +130,19 @@ function dxtDecode(R,maxNo,digits){
     if(t>best){b2=best;best=t;bb=b}else if(t>b2)b2=t}
   let agree=0;R.forEach(r=>{if(!r.S)return;const n=bb+r.k,s=digits?String(n).padStart(digits,'0'):String(n);if(s.length!==r.S.length)return;
     if(r.S.every((a,j)=>a.indexOf(Math.max(...a))===+s[j]))agree++});
-  return {base:bb,mean:best/(used*(digits||3)),margin:(best-b2)/used,used,agree};
+  // 平均は、くらべた数字の数で割る（桁数が変わる番号では、行ごとに桁数がちがう）
+  let nd=0;R.forEach(r=>{if(r.S)nd+=r.S.length});
+  return {base:bb,mean:best/Math.max(1,digits?used*digits:nd),margin:(best-b2)/used,used,agree};
 }
+// 番号が飛ぶ一覧（P.num.seq===false：SV の本棚。見ていないポケモンの本はない）は、本ごとに番号を読み、左から右へ増える本だけを使う
+function dxtIndep(R,maxNo){
+  const A=[];R.forEach(r=>{if(!r.S||!r.S.length)return;let s='',ok=true;for(const a of r.S){const o=a.map((v,i)=>[v,i]).sort((x,y)=>y[0]-x[0]);if(o[0][0]<.55||o[0][0]-o[1][0]<.06){ok=false;break}s+=o[0][1]}
+    if(!ok||s[0]==='0')return;const n=+s;if(n>=1&&n<=maxNo)A.push({k:r.k,n})});
+  // いちばん長い「増える並び」（読みまちがえた本を外す）
+  const L=A.map(()=>1),pv=A.map(()=>-1);for(let i=0;i<A.length;i++)for(let j=0;j<i;j++)if(A[j].n<A[i].n&&A[i].n-A[j].n>=A[i].k-A[j].k&&L[j]+1>L[i]){L[i]=L[j]+1;pv[i]=j}
+  let e=-1;L.forEach((v,i)=>{if(e<0||v>L[e])e=i});const keep=new Map();for(let i=e;i>=0;i=pv[i])keep.set(A[i].k,A[i].n);
+  return {keep,used:A.length,agree:keep.size}}
+const dxtSureI=D=>D.agree>=3&&D.agree*4>=D.used*3;
 // 確かか：数字が決めた番号と合わない行は 1 行まで（行が 3 行以下なら全部合うこと）
 const dxtSure=D=>D&&D.mean>=.45&&(D.used>=4?D.agree>=Math.max(3,D.used-1):D.agree===D.used&&D.agree>=2);
 // 1枚を読む。learn：見本づくり用に、行ごとの数字の形と特徴をそのまま返す
@@ -135,23 +151,35 @@ function dxtRead(pxB,WB,HB,P,learn){
   for(const m of Ms){
     // 一覧の画面か（型紙の目印の場所の明るさ・色が決まった範囲にあるか）
     if(P.chk&&!P.chk.every(c=>{const v=dxtFeat(pxB,WB,HB,m,{feat:[c.slice(0,4)]},0)[c[4]];return v>=c[5]&&v<=c[6]}))continue;
-    let dex=null,dexF=null;if(P.dex){dexF=dxtFeat(pxB,WB,HB,m,{feat:[P.dex.r],fref:[P.dex.fref||null]},0,learn);if(P.dex.cls){dex=dxtNear(dexF,P.dex.cls);if(dex==='unknown')dex=null}
+    let dex=null,dexF=null;
+    // 見出しの文字の形で図鑑を見分ける（P.dex.refs：図鑑ごとの形の見本。いちばん似ていて、fmin より似ているもの）
+    if(P.dex&&P.dex.refs){const F=dxtFeat(pxB,WB,HB,m,{feat:P.dex.refs.map(()=>P.dex.r),fref:P.dex.refs.map(x=>x.ref)},0);let b=-1;
+      P.dex.refs.forEach((x,i)=>{const v=F[i*7+6];if(v>b){b=v;dex=x.k}});if(!(b>=P.dex.fmin))dex=null}
+    else if(P.dex){dexF=dxtFeat(pxB,WB,HB,m,{feat:[P.dex.r],fref:[P.dex.fref||null]},0,learn);if(P.dex.cls){dex=dxtNear(dexF,P.dex.cls);if(dex==='unknown')dex=null}
       // 見出しの文字の形の見本があるときは、形がはっきり同じときだけ、その図鑑とする（ほかの図鑑の画面を取りちがえない）
       if(P.dex.fref&&P.dex.fmin!=null&&!(dexF[dexF.length-1]>=P.dex.fmin))dex=null;}
     // 行の位置：一覧がなめらかに動いて途中で止まる作品（P.rows.scroll）は、行の位置を少しずつずらしてみて、数字がいちばんよく読める位置を使う
     // マス目の作品（P.cols）は、行ごとに列を左から右へ。番号は左上から 1 ずつ増える（k ＝ 行×列の数＋列）
     const nc=P.cols?P.cols.n:1,cp=P.cols?P.cols.pitch:0;
-    const rowsAt=(d,feat)=>{const R=[];for(let r=0;r<P.rows.n;r++)for(let c=0;c<nc;c++){const yc=P.rows.y0+d+r*P.rows.pitch,xo=c*cp,k=r*nc+c,g=dxtGlyphs(pxB,WB,HB,m,P,yc,xo);
-      const S=P.tm&&g&&(!P.num.digits||g.length===P.num.digits)?g.map(x=>dxtCorr(x.f,P.tm,P.tm2)):null;
+    const rowsAt=(d,feat)=>{const R=[];const dy=P.cols&&P.cols.scroll?0:d,dx=P.cols&&P.cols.scroll?d:0;for(let r=0;r<P.rows.n;r++)for(let c=0;c<nc;c++){const yc=P.rows.y0+dy+r*P.rows.pitch,xo=dx+c*cp,k=r*nc+c,g=dxtGlyphs(pxB,WB,HB,m,P,yc,xo);
+      const cut=P.cols&&P.cols.xmin!=null&&(P.num.x0+xo<P.cols.xmin||P.num.x1+xo>P.cols.xmax); // 一覧の端で切れた列は数字を読まない
+      const S=!cut&&P.tm&&g&&(!P.num.digits||g.length===P.num.digits)?g.map(x=>dxtCorr(x.f,P.tm,P.tm2)):null;
       R.push({k,S,G:learn?g:null,F:feat?dxtFeat(pxB,WB,HB,m,P,yc,learn,xo):null})}return R};
     let d0=0;
-    if(P.rows.scroll&&P.tm){const sc=d=>rowsAt(d,false).reduce((t,r)=>t+(r.S?r.S.reduce((a,x)=>a+Math.max(...x),0):0),0);
-      let best=-1;const h=P.rows.pitch/2;for(let d=-h;d<=h;d+=P.rows.pitch/12){const v=sc(d);if(v>best){best=v;d0=d}}
-      for(const d of [d0-P.rows.pitch/24,d0+P.rows.pitch/24]){const v=sc(d);if(v>best){best=v;d0=d}}}
+    // （横に流れる一覧（P.cols.scroll：SV の本棚など）は、列の位置を同じようにずらして探す）
+    const scP=P.cols&&P.cols.scroll?P.cols.pitch:P.rows.scroll?P.rows.pitch:0;
+    if(scP){const sc=d=>rowsAt(d,false).reduce((t,r)=>t+(P.tm?(r.S?r.S.reduce((a,x)=>a+Math.max(...x),0):0):(r.G&&r.G.length>=1&&r.G.length<=(P.num.digits||3)?1:0)),0); // 見本がまだないとき（学習の最初）は、数字らしい形が切り出せた行の数
+      let best=-1;const h=scP/2;for(let d=-h;d<=h;d+=scP/12){const v=sc(d);if(v>best){best=v;d0=d}}
+      for(const d of [d0-scP/24,d0+scP/24]){const v=sc(d);if(v>best){best=v;d0=d}}}
     const rows=rowsAt(d0,true);
+    if(learn&&P.num.seq===false){const DI=P.tm?dxtIndep(rows,(P.dex&&P.dex.refs&&(P.dex.refs.find(x=>x.k===dex)||{}).max)||P.maxNo):null,sure=!!DI&&dxtSureI(DI);
+      out=out||[];out.push({m,d:d0,dex,sure,dexF:Array.from(dexF||[]),dexP:dexF&&dexF.P&&dexF.P[0],rows:rows.map(r=>{const n=sure&&DI.keep.has(r.k)?DI.keep.get(r.k):null;return {k:r.k,num:n,ok:n!=null,G:r.G&&r.G.map(x=>Array.from(x.f)),W:r.G&&r.G.map(x=>x.w),F:Array.from(r.F),Pt:r.F.P}})});continue}
     if(learn){const DL=P.tm?dxtDecode(rows,P.maxNo,P.num.digits):null,sure=DL&&dxtSure(DL);
       const okL=r=>{if(!sure||!r.S)return false;const n=DL.base+r.k,st=P.num.digits?String(n).padStart(P.num.digits,'0'):String(n);if(st.length!==r.S.length)return false;return r.S.every((a,j)=>a.indexOf(Math.max(...a))===+st[j])};
       out=out||[];out.push({m,d:d0,dex,sure,dexF:Array.from(dexF||[]),dexP:dexF&&dexF.P&&dexF.P[0],rows:rows.map(r=>({k:r.k,num:sure?DL.base+r.k:null,ok:okL(r),G:r.G&&r.G.map(x=>Array.from(x.f)),W:r.G&&r.G.map(x=>x.w),F:Array.from(r.F),Pt:r.F.P}))});continue}
+    const mxNo=(P.dex&&P.dex.refs&&(P.dex.refs.find(x=>x.k===dex)||{}).max)||P.maxNo; // 図鑑ごとの最大の番号
+    if(P.num.seq===false){const DI=dxtIndep(rows,mxNo);if(!dxtSureI(DI)){if(!out)out={fail:'num',dex};continue}
+      return {dex,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>({num:DI.keep.get(r.k),status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))}}
     const D=dxtDecode(rows,P.maxNo,P.num.digits);
     if(!D||!dxtSure(D)){if(D&&!out)out={fail:'num',dex};continue}
     // 1行ずつの確かめ：その行の数字が、決めた番号と2けた以上合う行だけを入れる（一覧の外・はしで切れた行・読みまちがえた行は入れない）

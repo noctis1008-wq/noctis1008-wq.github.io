@@ -17,7 +17,7 @@ for f in r:
     X.append(row['F']);L.append(l)
 P['cls']=build(X,L,getattr(R,'maxd',3.5))
 if DX:P['dex']['cls']=build(DX,DL,4.0)
-elif 'dex' in P:del P['dex']
+elif 'dex' in P and 'refs' not in P['dex']:del P['dex']
 if hasattr(R,'chk'):P['chk']=R.chk
 print(collections.Counter(L));print('見本で見分けた結果が決まりと同じ',sum(near(x,P['cls'])[0]==l for x,l in zip(X,L)),'/',len(X))
 json.dump(P,open(f'prof/{name}_full.json','w'))
