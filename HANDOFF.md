@@ -45,6 +45,7 @@
 
 ## 進行中・やり残し
 
+- **図鑑の読み取りの引き継ぎ資料**: `poke-tools/dev/dxt/HANDOFF-dex-reading.md`(しくみ・確かめた結果・やり残し・テストのしかた)。まずこれを読む。
 - 図鑑埋め支援: スマホ内で読める作品を、型紙のしくみで広げている(設計は 2026-10-25 の記録)。済み: 赤緑青ピカ・FRLG・ORAS・剣盾・BDSP・Z-A・SV(と前からの SM・USUM)。次: 段階3の残り(RS/E・DP・BW/BW2・HGSS・XY)、そのあと金銀・Let's Go・LA。運営者の録画は Claude の作業場所だけにある。
 - 図鑑埋め支援の高速化(2026.10.25d)は、iPhone での実際の時間をまだ確かめていない。結果の画面の「くわしく」に、かかった時間が出る。
 
@@ -63,6 +64,12 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
+
+- やったこと:担当の交代のため、図鑑の読み取りの引き継ぎ資料 `poke-tools/dev/dxt/HANDOFF-dex-reading.md` を書いた。テストをまとめて動かす `poke-tools/dev/dxt/tools/apptest_all.sh` を足した。アプリは変えていない(版はそのまま 2026.10.26a)。
+- 確かめたこと:資料の関数名・ファイルの場所が、今の `index.html`・`dev/dxt/` と合っていること。
+- 次の人へ:いちばん先にやるのは、運営者に iPhone で ORAS の動画をもう一度読んでもらい、かかった時間を確かめること(資料の 5 の 1)。運営者の録画はリポジトリにないので、もらい直す必要がある。
 
 ### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
 
