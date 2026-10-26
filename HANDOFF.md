@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.10.26e(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-26(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.10.26f(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-26(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -32,7 +32,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 2026.10.26e(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 2026.10.26f(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
@@ -64,6 +64,12 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
+
+- やったこと(Poke tools 2026.10.26f):運営者の iPhone で剣盾(全国図鑑・Gemini 連携あり)が 41秒・読めなかったページなし・捕まえた 378/見ただけ 99/見ていない 103 になった。作業場所(スマホ内だけ)は 377/99/104 で、1匹が「見ていない→捕まえた」になっていた。原因は `dxReadGm` で「前に AI で読んだ画像」(キャッシュ)の答えを、スマホ内の結果がそろう前に足していて、スマホ内で読めたポケモンを AI の答えで変えないしくみ(`localSp`)が効いていなかったこと。キャッシュの答えは、スマホ内の結果(動画の埋める処理も)がそろってから足すようにした。
+- 確かめたこと:剣盾 全国(Gemini 連携あり・通信は止めて)377/476、読めなかったページなし。構文チェック OK。キャッシュがある場合は作業場所では試せていない。
+- 次の人へ:運営者の iPhone にはキャッシュが残っているので、同じ動画で 377/99/104 になるかを見てもらう。
 
 ### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
 

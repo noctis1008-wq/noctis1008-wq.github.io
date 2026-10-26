@@ -5738,7 +5738,8 @@ function gmOkLocal(rows,inDex,byNo){
 }
 async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
   const key=gmKey(),nos=[...byNo.keys()],lo=Math.min(...nos),hi=Math.max(...nos),local=DX_LOCAL_GAMES.includes(g.id),dk=g.id+':'+dxDexKey(g)+(g.id==='la'?':own':'');
-  let localSp=new Set();
+  let localSp=new Set();const cachedAi=[];
+  const aiN=arr=>(arr||[]).filter(x=>{const no=Number(x&&x.no);if(!Number.isInteger(no)||no<lo||no>hi)return false;const s=byNo.get(no);return !!s&&inDex.has(s)}).length;
   const put=(s,stt)=>{const prev=found.get(s);if(!prev||prev==='unknown'||dxStRank(stt)>dxStRank(prev))found.set(s,stt)};
   // スマホ内で読めたポケモンは、AI の答えで変えない（AI に送るのはスマホ内で読めなかった画像で、印を読みまちがえることがある）
   const useAi=(arr)=>{let n=0;(arr||[]).forEach(x=>{const no=Number(x&&x.no);if(!Number.isInteger(no)||no<lo||no>hi)return;const s=byNo.get(no);if(!s||!inDex.has(s))return;
@@ -5756,7 +5757,8 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
     // スマホ内で読めなかった画像だけ：同じ画像は1回だけ AI に送る
     let hk=null;try{hk=gmHash(await files[i].arrayBuffer())+'|'+dk}catch(e){}
     if(hk){if(seenH.has(hk)){nDup++;continue}seenH.add(hk)}
-    const c=hk&&gmCacheGet(hk);if(c&&useAi(c.v)){nCache++;continue}
+    // 前に AI で読んだ答えは、スマホ内の結果がそろってから足す（先に足すと、スマホ内で読めたポケモンを AI の答えで変えてしまう）
+    const c=hk&&gmCacheGet(hk);if(c&&aiN(c.v)){cachedAi.push(c.v);nCache++;continue}
     todo.push({f:files[i],hk});
   }
   const prompt=n=>`これはポケモンのゲーム「${g.n}」の図鑑画面（${dexName}、番号は${lo}〜${hi}）を写した画像です。${n>1?`${n}枚の画像を1枚にまとめていて、それぞれの上の黒い帯に「画像 1」「画像 2」…と番号を書いています。`:''}スマホのカメラで画面を撮った写真のこともあり、斜め・光の映りこみ・色のずれがあることがあります。
@@ -5768,6 +5770,7 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
 ${g.id==='la'?'- "reg": 登録だけ（下の説明を見てください）\n'+DX_LA_AI+'\n':''}${['sm','usum'].includes(g.id)?'この作品のリスト画面では、明るい赤の帯は見たか捕まえたポケモン、暗い赤の帯（？？？）は見ていないポケモンです。帯の右はしに白と赤のボールがあれば捕まえた、灰色の丸なら見ただけです。番号は帯の上のタブに書かれています。\n':''}番号が読めない欄は入れないでください。画面にない番号を推測で足さないでください。`;
   if(local){await dxLocalFill(files,rows=>{dxNoteRows(rows);rows.forEach(r=>{const s=dxSpOf(r,byNo);if(s&&inDex.has(s))put(s,r.status)})},dxScanCtl&&dxScanCtl.signal,st);
     dxStage('local','done',`${nLocal} / ${files.filter(f=>!f.dxMov).length}枚`);localSp=new Set(found.keys())}
+  cachedAi.forEach(v=>useAi(v));
   const nB=Math.ceil(todo.length/GM_TILES);dxStage('gm',todo.length?'now':'done',todo.length?`${todo.length}枚`:'不要');
   try{
     for(let b=0;b<nB;b++){
@@ -7620,7 +7623,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.26e';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.26f';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
