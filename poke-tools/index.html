@@ -5333,8 +5333,8 @@ async function dxVideoFrames(file,prog,signal,st0){
     // （2倍速より遅くしか再生できない端末（ri<2）では、再生と取り合わないよう、その場では読まない）
     let ri=2;const RD=dxReaderOf(dxGame().id),spec=!!RD&&dxPoolOk()&&dxBmOk();
     // 動き続けている所から取る間かく。型紙で読む作品は、ボタンを押しっぱなしで一覧を流すと 0.2 秒で 9 行ほど進むので、0.2 秒ごとに取る
-    const MV0=Math.round((RD&&RD.dense?.2:1.5)/DX_VID_STEP),MV1=Math.round((RD&&RD.dense?.2:.75)/DX_VID_STEP),LO=RD&&RD.dense?6:4;
-    const capture=(i,t,lo,mv)=>{if(pend>=(lo?LO:8)||!window.createImageBitmap)return;let pr;try{pr=createImageBitmap(v)}catch(e){return}
+    const MV0=Math.round((RD&&RD.dense?.2:1.5)/DX_VID_STEP),MV1=Math.round((RD&&RD.dense?.2:.75)/DX_VID_STEP),LO=RD&&RD.dense?12:4;
+    const capture=(i,t,lo,mv)=>{if(pend>=(lo?LO:LO+4)||!window.createImageBitmap)return;let pr;try{pr=createImageBitmap(v)}catch(e){return}
       const c={i,t,f:null,rd:null,mv:!!mv};caps.push(c);pend++;
       if(spec&&ri>=2&&dxPoolWait()<=dxPool.ws.length*2){
         // 裏の処理で読む。保存用の画像は Gemini に送る大きさ（1400px）で作る
@@ -5567,11 +5567,12 @@ async function dxGapFill(files,add,signal,onProg){
         try{const P=dxPxOf((cx,W,H)=>cx.drawImage(vv,0,0,W,H),vv.videoWidth,vv.videoHeight);pend.push(dxReadPx(P,R).then(r=>{const rows=dxSetRows({},r);if(rows)add(rows)}))}catch(e){}};
       let k=0;
       while(k<ts.length&&performance.now()<deadline){if(signal&&signal.aborted)throw {code:'cancelled'};
-        await V.seek(Math.max(0,ts[k]-.05));
+        await V.seek(Math.max(0,ts[k]-.25)); // 少し前から再生する（再生が始まってすぐは、コマが飛びやすい）
         if(!('requestVideoFrameCallback' in vv)){grabNow(vv.currentTime);k++;continue} // 再生しながら取れないときは、位置を移して1コマずつ
         await new Promise(res=>{let done=false;const fin=()=>{if(done)return;done=true;clearTimeout(tm);try{vv.pause()}catch(e){}res()};const tm=setTimeout(fin,20000);
           const cb=(now,m)=>{if(done)return;const mt=m.mediaTime;if(signal&&signal.aborted){fin();return}
-            let hit=false;while(k<ts.length&&ts[k]<=mt+1/60){if(ts[k]>=mt-1/15)hit=true;k++}
+            // 前のコマからこのコマまでに過ぎた時刻があれば、このコマを取る（iPhone は再生の始まりや2倍速でコマが飛ぶことがあり、ぴったりの時刻のコマが来ないことがある）
+            let hit=false;while(k<ts.length&&ts[k]<=mt+1/60){hit=true;k++}
             if(hit)grabNow(mt);
             if(k>=ts.length||ts[k]-mt>1||performance.now()>deadline||mt>=dur-.05){fin();return}
             vv.requestVideoFrameCallback(cb)};
@@ -7616,7 +7617,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.26c';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.26d';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
