@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.10.26d(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-26(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.10.26e(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-26(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -32,7 +32,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 2026.10.26d(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 2026.10.26e(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
@@ -64,6 +64,13 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
+
+- やったこと(Poke tools 2026.10.26e):動画の動いている途中のコマで、見ていない欄を「捕まえた」と読みまちがえ、捕まえた数が画面より多くなる件を直した(`dxLocalFill` の `fin`)。動いている途中のコマだけで決まる「捕まえた」は、2枚以上で同じに読めたときだけにする。1枚だけのものは決めずに残し、読み直し(`dxGapFill`)でもう1枚を読みにいき、それでも1枚なら「不明」。
+  - 試したもの:「捕まえた・見ただけ」とも2枚以上にすると不明が19、「捕まえた」だけでも読み直しなしだと不明が10で、運営者の手間が多すぎたため、今の形にした。
+- 確かめたこと(作業場所):ORAS 全体 捕まえた 155・見つけた 261(画面 155/262)、不明 2、正解表との誤り0、154秒。剣盾 ガラル 288/360、SV パルデア 380/393(変わらず)。構文チェック OK。
+- 次の人へ:iPhone で ORAS をもう一度見てもらう。
 
 ### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
 

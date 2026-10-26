@@ -5589,10 +5589,13 @@ async function dxLocalFill(files,put,signal,st){
   const H0=new Set();for(const [d,S] of dxReadNums)S.forEach(x=>H0.add(d+':'+x));const vote=new Map();
     const voteRows=rows=>rows.forEach(x=>{const k=(x.dex||'_')+':'+x.num;if(H0.has(k))return;let c=vote.get(k);if(!c)vote.set(k,c={r:x,n:{}});c.n[x.status]=(c.n[x.status]||0)+1});
     files.forEach(f=>{if(f.dxMov&&f.dxRows)voteRows(f.dxRows)});
-    const fin=()=>{const out=[];for(const {r,n:c} of vote.values()){const E=Object.entries(c).sort((p,q)=>q[1]-p[1]);out.push({...r,status:E[1]&&E[1][1]===E[0][1]?'unknown':E[0][0]})}vote.clear();if(out.length)put(out)};
-    fin();
+    // 「捕まえた」は、動いている途中のコマ2枚以上で同じに読めたときだけにする（見ていない欄を捕まえたと読むまちがいがあったため）。
+    // 1枚だけのものは決めずに残し、下の読み直しでもう1枚を読みにいく。それでも1枚だけなら「不明」（運営者が選ぶ）
+    const fin=last=>{const out=[];for(const [k,{r,n:c}] of vote){const E=Object.entries(c).sort((p,q)=>q[1]-p[1]);let st=E[1]&&E[1][1]===E[0][1]?'unknown':E[0][0];
+      if(st==='caught'&&E[0][1]<2){if(!last)continue;st='unknown'}out.push({...r,status:st});vote.delete(k)}if(out.length)put(out)};
+    fin(false);
     st.textContent='読めなかった所を、動画から細かく読み直しています…';await dxPaint();
-    const tf=performance.now();dxGapN=await dxGapFill(files.filter(f=>!f.dxMov||f.dxRows),voteRows,signal,f=>dxProg(f*(dxShotMode==='gm'?.4:1)));dxTm.fill=performance.now()-tf;fin()
+    const tf=performance.now();dxGapN=await dxGapFill(files.filter(f=>!f.dxMov||f.dxRows),voteRows,signal,f=>dxProg(f*(dxShotMode==='gm'?.4:1)));dxTm.fill=performance.now()-tf;fin(true)
 }
 async function dxReadLocal(files,byNo,inDex,found,st,signal){
   let failed=0;const nf=files.length;
@@ -7617,7 +7620,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.26d';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.26e';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
