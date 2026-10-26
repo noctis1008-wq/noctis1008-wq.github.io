@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.10.26a(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-26(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.10.26b(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-26(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -32,7 +32,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 2026.10.26a(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援 など) | 2026.10.26b(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
@@ -64,6 +64,16 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
+
+- やったこと(Poke tools 2026.10.26b・図鑑埋め支援):運営者の iPhone で 2026.10.26a を試しても、ORAS・剣盾の「読めなかったページ」が前と同じだった。原因は、Gemini と連携していると読み方が `dxReadGm` になり、10.26a で足した「動いている途中のコマ・番号の抜けの読み直し・図鑑ごとの抜けの数え方」を通っていなかったこと。
+  - `dxReadLocal` の埋める処理を `dxLocalFill` に分け、`dxReadGm` でも(AI に送る前に)使うようにした。動いている途中のコマは AI に送らない。
+  - スマホ内で読めたポケモンは、AI の答えで変えない(AI に送るのはスマホ内で読めなかった画像で、印をまちがえることがある。剣盾で捕まえたが 377 → 382 に増えていたのはこれと考えている)。
+  - 「読めなかったページ」は Gemini のときも図鑑ごとの抜けで出し、AI で読めたポケモンは抜けにしない。
+  - `dxGapFill`:続けて取った2枚の番号の範囲の「中」で読めていない番号も読み直すようにした。
+- 確かめたこと:Gemini 連携あり(通信は止めてテスト):ORAS の一部の録画で抜けなし、剣盾 全国 377/476(スマホ内と同じ)。スマホ内:ORAS 全体 154/261(画面 155/262、抜けなし、誤り0)、SV パルデア 380/393。構文チェック OK。`tools/apptest.py` に `GM=1` で Gemini 連携ありの流れを試すしかけを足した。
+- 次の人へ:iPhone で、Gemini 連携ありのまま ORAS・剣盾の動画を読み直してもらう。
 
 ### 2026-10-26 — Claude(https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb)
 

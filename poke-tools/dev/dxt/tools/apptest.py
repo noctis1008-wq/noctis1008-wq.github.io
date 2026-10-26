@@ -5,9 +5,11 @@ game,dex,truth=sys.argv[1],sys.argv[2],json.load(open(sys.argv[3]));files=sys.ar
 T=truth.get(dex,{})
 with sync_playwright() as p:
     b=p.chromium.launch();pg=b.new_page(viewport={'width':390,'height':844});errs=[];pg.on('console',lambda m:print('LOG',m.text[:400]) if 'GAP' in m.text else None);pg.on('pageerror',lambda e:errs.append(str(e)[:300]))
-    pg.route('**/fonts.googleapis.com/**',lambda r:r.abort());pg.goto('http://127.0.0.1:8765/poke-tools/index.html');pg.wait_for_timeout(400)
+    pg.route('**/fonts.googleapis.com/**',lambda r:r.abort());pg.route('**/generativelanguage.googleapis.com/**',lambda r:r.abort());import os
+    if os.environ.get('GM'):pg.add_init_script('window.__GM=1')
+    pg.goto('http://127.0.0.1:8765/poke-tools/index.html');pg.wait_for_timeout(400)
     pg.evaluate("""([g,d])=>{const o=document.getElementById('onb');if(o)o.hidden=true;document.body.classList.remove('modal');document.querySelectorAll('.sheet').forEach(x=>x.hidden=true);dxScan=null;dxCarry=null;
-      S.dx.game=g;S.dx.dex[g]=d;localStorage.removeItem('ner-gemini-key');save();setView('dex');renderDex();dxShotMode='local'}""",[game,dex])
+      S.dx.game=g;S.dx.dex[g]=d;localStorage.removeItem('ner-gemini-key');save();setView('dex');renderDex();dxShotMode='local';if(window.__GM){localStorage.setItem(GM_K,'test-key');dxShotMode='gm'}}""",[game,dex])
     t0=time.time();pg.set_input_files('#dxShotFile',files)
     pg.wait_for_function("dxScan&&(dxScan.items)||document.getElementById('dxBusy').hidden&&!dxScan",timeout=1800000);el=time.time()-t0
     rows=pg.evaluate("()=>{if(!dxScan)return null;const m=new Map(dxEntries().map(([n,s])=>[s,n]));return dxScan.items.map(([s,v])=>[m.get(s),v])}")

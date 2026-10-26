@@ -5543,7 +5543,8 @@ async function dxGapFill(files,add,signal,onProg){
   for(const [v,L] of vids){L.sort((a,b)=>a.t-b.t);const M=v.dxMot;
     for(let i=0;i+1<L.length;i++){const A=L[i],B=L[i+1],by=X=>{const m=new Map();X.rows.forEach(r=>{const d=r.dex||'_';if(!m.has(d))m.set(d,[]);m.get(d).push(r.num)});return m},ma=by(A),mb=by(B);
       for(const [d,a] of ma){const b=mb.get(d);if(!b)continue;const aL=Math.min(...a),aH=Math.max(...a),bL=Math.min(...b),bH=Math.max(...b);
-        let lo,hi;if(aH<bL){lo=aH;hi=bL}else if(bH<aL){lo=bH;hi=aL}else continue;
+        // 2枚の番号の範囲のあいだ（とその中）で、まだ読めていない番号があれば読み直す（同じページを2回写しただけの組は除く）
+        if(aL===bL&&aH===bH)continue;const lo=Math.min(aL,bL),hi=Math.max(aH,bH);
         const H=dxReadNums.get(d)||new Set();let miss=0;for(let n=lo+1;n<hi;n++)if(!H.has(n))miss++;
         if(!miss||hi-lo>60)continue;
         // 2枚のあいだで動いた時刻（なければ、あいだを等分）
@@ -5562,6 +5563,18 @@ async function dxGapFill(files,add,signal,onProg){
     catch(e){if(e&&e.code==='cancelled')throw e}
     finally{if(V)V.close()}}
   return n}
+// 動画：止まった画面で読めなかった番号を、動いている途中のコマ・動画を細かく読み直したコマで埋める（スマホ内・Gemini のどちらの読み方でも使う）。
+// 動いている途中のコマは印（捕まえた・見ただけ）を読みまちがえやすいので、何枚かで読んだ印の多数決にする（同じ数なら「不明」）。put(rows)：読めた行を足す
+async function dxLocalFill(files,put,signal,st){
+  if(!files.some(f=>f.dxV))return;
+  const H0=new Set();for(const [d,S] of dxReadNums)S.forEach(x=>H0.add(d+':'+x));const vote=new Map();
+    const voteRows=rows=>rows.forEach(x=>{const k=(x.dex||'_')+':'+x.num;if(H0.has(k))return;let c=vote.get(k);if(!c)vote.set(k,c={r:x,n:{}});c.n[x.status]=(c.n[x.status]||0)+1});
+    files.forEach(f=>{if(f.dxMov&&f.dxRows)voteRows(f.dxRows)});
+    const fin=()=>{const out=[];for(const {r,n:c} of vote.values()){const E=Object.entries(c).sort((p,q)=>q[1]-p[1]);out.push({...r,status:E[1]&&E[1][1]===E[0][1]?'unknown':E[0][0]})}vote.clear();if(out.length)put(out)};
+    fin();
+    st.textContent='読めなかった所を、動画から細かく読み直しています…';await dxPaint();
+    dxGapN=await dxGapFill(files.filter(f=>!f.dxMov||f.dxRows),voteRows,signal,f=>dxProg(f*(dxShotMode==='gm'?.4:1)));fin()
+}
 async function dxReadLocal(files,byNo,inDex,found,st,signal){
   let failed=0;const nf=files.length;
   st.textContent=`読み取り中…（0/${nf}枚）`;dxStage('local','now',`0 / ${nf}枚`,0);await dxPaint();
@@ -5584,14 +5597,7 @@ async function dxReadLocal(files,byNo,inDex,found,st,signal){
   if(maj){const rk={caught:3,seen:2,none:1,unknown:0},out=[];for(const {r,n} of maj.values()){const E=Object.entries(n).sort((p,q)=>q[1]-p[1]||(rk[q[0]]||0)-(rk[p[0]]||0));out.push({...r,status:E[0][0]})}put0(out)}
   // 止まった画面で読めなかった番号を、動いている途中のコマ・動画を細かく読み直したコマで埋める。
   // 動いている途中のコマは印（捕まえた・見ただけ）を読みまちがえやすいので、何枚かで読んだ印の多数決にする（同じ数なら「不明」）
-  if(files.some(f=>f.dxV)){
-    const H0=new Set();for(const [d,S] of dxReadNums)S.forEach(x=>H0.add(d+':'+x));const vote=new Map();
-    const voteRows=rows=>rows.forEach(x=>{const k=(x.dex||'_')+':'+x.num;if(H0.has(k))return;let c=vote.get(k);if(!c)vote.set(k,c={r:x,n:{}});c.n[x.status]=(c.n[x.status]||0)+1});
-    files.forEach(f=>{if(f.dxMov&&f.dxRows)voteRows(f.dxRows)});
-    const fin=()=>{const out=[];for(const {r,n:c} of vote.values()){const E=Object.entries(c).sort((p,q)=>q[1]-p[1]);out.push({...r,status:E[1]&&E[1][1]===E[0][1]?'unknown':E[0][0]})}vote.clear();if(out.length)put(out)};
-    fin();
-    st.textContent='読めなかった所を、動画から細かく読み直しています…';await dxPaint();
-    dxGapN=await dxGapFill(files.filter(f=>!f.dxMov||f.dxRows),voteRows,signal,f=>dxProg(f));fin()}
+  await dxLocalFill(files,put,signal,st);
   const nT=files.length-nMov;
   dxStage('local','done',`${nT-failed-dxSkipped} / ${nT-dxSkipped}枚`);
   return failed;
@@ -5710,17 +5716,20 @@ function gmOkLocal(rows,inDex,byNo){
 }
 async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
   const key=gmKey(),nos=[...byNo.keys()],lo=Math.min(...nos),hi=Math.max(...nos),local=DX_LOCAL_GAMES.includes(g.id),dk=g.id+':'+dxDexKey(g)+(g.id==='la'?':own':'');
+  let localSp=new Set();
   const put=(s,stt)=>{const prev=found.get(s);if(!prev||prev==='unknown'||dxStRank(stt)>dxStRank(prev))found.set(s,stt)};
+  // スマホ内で読めたポケモンは、AI の答えで変えない（AI に送るのはスマホ内で読めなかった画像で、印を読みまちがえることがある）
   const useAi=(arr)=>{let n=0;(arr||[]).forEach(x=>{const no=Number(x&&x.no);if(!Number.isInteger(no)||no<lo||no>hi)return;const s=byNo.get(no);if(!s||!inDex.has(s))return;
-    n++;put(s,dxStOk(x&&x.status,g)?x.status:'unknown')});return n};
+    n++;if(localSp.has(s)&&found.get(s)!=='unknown')return;put(s,dxStOk(x&&x.status,g)?x.status:'unknown')});return n};
   let nLocal=0,nCache=0,nSent=0,nReq=0,nDup=0,failed=0,note='';const todo=[],seenH=new Set(),nf=files.length;
   // まずスマホ内で、何枚かを同時に読む
   if(local){st.textContent=`スマホ内で読み取り中…（0/${nf}枚）`;dxStage('local','now',`0 / ${nf}枚`,0);await dxPaint();
     await dxLocalReadAll(files,n=>{st.textContent=`スマホ内で読み取り中…（${n}/${nf}枚）`;dxStage('local','now',`${n} / ${nf}枚`,n/nf);dxProg(.4*n/nf)},dxScanCtl&&dxScanCtl.signal)}
   for(let i=0;i<files.length;i++){
     if(dxScanCtl&&dxScanCtl.signal.aborted)throw {code:'cancelled'};
+    if(files[i].dxMov)continue; // 動いている途中のコマは、あとで番号の抜けを埋めるのにだけ使う（AI には送らない）
     if(local){try{let rows=files[i].dxRows||null;if(!gmOkLocal(rows,inDex,byNo)&&files[i].dxAlt){const r2=files[i].dxAlt.dxRows||null;if(gmOkLocal(r2,inDex,byNo))rows=r2}
-      if(gmOkLocal(rows,inDex,byNo)){rows.forEach(r=>{const s=dxSpOf(r,byNo);if(s&&inDex.has(s))put(s,r.status)});nLocal++;continue}}catch(e){}
+      if(gmOkLocal(rows,inDex,byNo)){dxNoteRows(rows);rows.forEach(r=>{const s=dxSpOf(r,byNo);if(s&&inDex.has(s))put(s,r.status)});nLocal++;continue}}catch(e){}
       if(dxNoList(files[i])){dxSkipped++;continue}}
     // スマホ内で読めなかった画像だけ：同じ画像は1回だけ AI に送る
     let hk=null;try{hk=gmHash(await files[i].arrayBuffer())+'|'+dk}catch(e){}
@@ -5735,7 +5744,8 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
 - "none": 見てもいない（「？？？」や影だけの欄）
 - "unknown": 判断できない
 ${g.id==='la'?'- "reg": 登録だけ（下の説明を見てください）\n'+DX_LA_AI+'\n':''}${['sm','usum'].includes(g.id)?'この作品のリスト画面では、明るい赤の帯は見たか捕まえたポケモン、暗い赤の帯（？？？）は見ていないポケモンです。帯の右はしに白と赤のボールがあれば捕まえた、灰色の丸なら見ただけです。番号は帯の上のタブに書かれています。\n':''}番号が読めない欄は入れないでください。画面にない番号を推測で足さないでください。`;
-  if(local)dxStage('local','done',`${nLocal} / ${files.length}枚`);
+  if(local){await dxLocalFill(files,rows=>{dxNoteRows(rows);rows.forEach(r=>{const s=dxSpOf(r,byNo);if(s&&inDex.has(s))put(s,r.status)})},dxScanCtl&&dxScanCtl.signal,st);
+    dxStage('local','done',`${nLocal} / ${files.filter(f=>!f.dxMov).length}枚`);localSp=new Set(found.keys())}
   const nB=Math.ceil(todo.length/GM_TILES);dxStage('gm',todo.length?'now':'done',todo.length?`${todo.length}枚`:'不要');
   try{
     for(let b=0;b<nB;b++){
@@ -5779,7 +5789,7 @@ async function dxOnFiles(e){
   dxStages({vid:files.some(dxIsVideo),local:DX_LOCAL_GAMES.includes(g.id),gm:mode==='gm'});await dxPaint();
   const found=new Map(),tStart=performance.now();let failed=0,vinfo=null;dxSkipped=0;dxGapN=0;if(!dxCarry)dxReadNums=new Map();
   try{
-    if(files.some(dxIsVideo)){dxRange(0,.5);vinfo=await dxExpandVideos(files,st,dxScanCtl.signal);files=mode==='local'?vinfo.files:vinfo.files.filter(f=>!f.dxMov);dxRange(.5,1);
+    if(files.some(dxIsVideo)){dxRange(0,.5);vinfo=await dxExpandVideos(files,st,dxScanCtl.signal);files=mode==='ai'?vinfo.files.filter(f=>!f.dxMov):vinfo.files;dxRange(.5,1);
       if(!files.length)throw {msg:'動画の中に、止まっている画面が見つかりませんでした。図鑑の一覧で、1ページごとに少し（0.5秒くらい）止めながら録画してください。'}}
     failed=mode==='local'?await dxReadLocal(files,byNo,inDex,found,st,dxScanCtl.signal):mode==='gm'?await dxReadGm(files,g,dexName,byNo,inDex,found,st):await dxReadAi(files,g,dexName,byNo,inDex,found,st)}
   catch(err){dxBusy(false);setTimeout(dxShotUI);st.textContent=err&&err.code==='cancelled'?'中止しました':(err&&err.msg)||(mode==='local'?'読み取れませんでした。'+DX_SHOT_RETRY:mode==='gm'?'Gemini で読み取れませんでした。':'この画面ではAIでの読み取りを使えません');btns.forEach(b=>b.disabled=false);return}
@@ -5793,7 +5803,7 @@ async function dxOnFiles(e){
   // 読めた番号のあいだで抜けている番号（ページを読めなかった所）
   let gapT='',gaps=[];
   const runs=(L,lab)=>{const R=[];for(const n of L){const l=R[R.length-1];if(l&&n===l[1]+1)l[1]=n;else R.push([n,n,lab])}return R};
-  const perDex=mode==='local'&&[...dxReadNums.keys()].some(d=>d!=='_');
+  const perDex=mode!=='ai'&&[...dxReadNums.keys()].some(d=>d!=='_');
   if(dxNoSeq()){} // SV の本棚は、見ていないポケモンの本がないので、番号の抜けは「読めなかった」ではない
   else if(perDex){
     // 図鑑ごとに、読めた番号のあいだの抜け（全国図鑑で見ていても、録画した画面の図鑑の番号で出す）
@@ -5801,7 +5811,7 @@ async function dxOnFiles(e){
     const sel=dxDexKey(),many=[...dxReadNums.keys()].filter(d=>d!=='_').length>1;
     for(const [d,S] of dxReadNums){if(d==='_')continue;const L=[...S].sort((a,b)=>a-b);if(L.length<2)continue;const D=d==='nat'?null:DEXN[d],lo=D?D[0]:1,hi=D?D[0]+D[1].length-1:SPDB.length;
       const nm=d==='nat'?'全国':((g.dex.find(x=>String(x[0])===String(d))||[0,''])[1]).replace(/図鑑$/,''),lab=many||String(d)!==String(sel)?nm:'';
-      const miss=[];for(let n=Math.max(lo,L[0]+1);n<Math.min(hi+1,L[L.length-1]);n++)if(!S.has(n)&&inSel.has(dxSpOf({num:n,dex:d})))miss.push(n);gaps.push(...runs(miss,lab))}}
+      const miss=[];for(let n=Math.max(lo,L[0]+1);n<Math.min(hi+1,L[L.length-1]);n++)if(!S.has(n)){const sp=dxSpOf({num:n,dex:d});if(inSel.has(sp)&&!found.has(sp))miss.push(n)};gaps.push(...runs(miss,lab))}}
   else{const nOf=new Map(entries.map(([n,sp])=>[sp,n])),got=[...found.keys()].map(sp=>nOf.get(sp)).filter(n=>n!=null).sort((a,b)=>a-b);
     if(got.length>1){const have=new Set(got);gaps=runs(entries.map(x=>x[0]).filter(n=>n>got[0]&&n<got[got.length-1]&&!have.has(n)).sort((a,b)=>a-b),'')}}
   const gLab=([a,b,l])=>(l?l+' ':'')+(a===b?pad3(a):pad3(a)+'〜'+pad3(b));
@@ -7588,7 +7598,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.26a';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.26b';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
