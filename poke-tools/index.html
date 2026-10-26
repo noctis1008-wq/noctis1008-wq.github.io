@@ -970,6 +970,14 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-sizing:border-box}
 .dxx-ic{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;color:color-mix(in srgb,var(--dx) 80%,var(--ink));background:color-mix(in srgb,var(--dx) 18%,transparent)}
 .dxx-ic svg{width:15px;height:15px}
+.dxx-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:none;height:50px;padding:1px;margin:-2px 0}
+.dxx-tabs::-webkit-scrollbar{display:none}
+.dxx-tabs button{flex:1 0 auto;min-width:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:0 12px;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.dxx-tabs button b{font-size:13px;font-weight:800;line-height:17px;white-space:nowrap}
+.dxx-tabs button small{font-family:var(--f-num);font-size:11px;font-weight:700;color:var(--muted);line-height:14px;white-space:nowrap}
+.dxx-tabs button[aria-selected=true]{background:var(--dx);border-color:var(--dx);color:var(--dx-ink)}
+.dxx-tabs button[aria-selected=true] small{color:var(--dx-ink);opacity:.85}
+.dxs-views button{flex:1 1 0;min-width:0;padding:0 4px}.dxs-views button b{font-size:12px}.dxs-views button small{font-size:10.5px}
 .dxx-cond{display:flex;align-items:center;gap:10px;padding:10px 12px;height:66px;flex:none;width:100%;text-align:left;color:var(--ink);-webkit-tap-highlight-color:transparent}
 .dxx-cond:active{background:var(--sunken)}
 .dxx-cond .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
@@ -2541,6 +2549,7 @@ body:not(.app) .obsapp{display:none!important}
 
 <div class="wrap view" id="vDex" hidden>
   <button id="dxCond" class="dxx-card dxx-cond" type="button" aria-haspopup="dialog" aria-label="作品と図鑑を変更"><span class="dxx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg></span><span class="tx"><span class="t1" id="dxCondT"></span><span class="dxx-chips" id="dxChips"></span></span><span class="dxx-edit">変更<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <div id="dxTabs" class="dxx-tabs" role="tablist" aria-label="図鑑" hidden></div>
   <div id="dxProg" class="dxx-hero"></div>
   <div class="dxx-tb">
     <div class="dxx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="dxSearch" type="search" placeholder="名前で探す（ひらがなOK）" autocomplete="off" enterkeyhint="search" aria-label="名前で探す"><button type="button" class="dxx-qx" data-dxqx="1" aria-label="入力を消す" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -4502,8 +4511,13 @@ let dxTagOpen=false,dxTagEdit=false,dxCur=null;
 const dxGame=()=>DX_GAMES.find(x=>x.id===S.dx.game)||DX_GAMES[17];
 function dxDexKey(g=dxGame()){const k=S.dx.dex[g.id];if(k==='nat'&&g.nat)return 'nat';if(g.dex.some(d=>String(d[0])===String(k)))return String(k);if(g.nat)return 'nat';return g.dex[0]?String(g.dex[0][0]):'nat'} // 選んでいないときは全国図鑑（全国図鑑のない作品は、その作品の図鑑）
 // いま選んでいる図鑑の [番号, 種族番号] の並び
-function dxEntries(){
-  const g=dxGame(),k=dxDexKey(g);
+function dxEntries(){return dxEntriesOf(dxGame(),dxDexKey())}
+// 作品の図鑑ごとのタブ：[キー, 短い名前]。地方の図鑑のあとに全国
+function dxViews(g=dxGame()){const V=g.dex.map(d=>[String(d[0]),d[1].replace(/図鑑$/,'')]);if(g.nat)V.push(['nat','全国']);return V}
+const dxMulti=(g=dxGame())=>dxViews(g).length>1;
+// 作品のどれかの図鑑に入るポケモン（読み取りは、いま見ているタブにかかわらず、作品のすべての図鑑に振り分ける）
+function dxAllSp(g=dxGame()){const S0=new Set();dxViews(g).forEach(([k])=>dxEntriesOf(g,k).forEach(x=>S0.add(x[1])));return S0}
+function dxEntriesOf(g,k){
   if(k==='nat'){
     if(g.nat==='swsh'||g.nat==='sv'){const f=g.nat==='swsh'?1:4;return SPDB.filter(r=>r[3]&f).map(r=>[r[1],r[1]])}
     return Array.from({length:g.nat},(_,i)=>[i+1,i+1]);
@@ -4550,6 +4564,9 @@ function renderDxSetup(){
   const sv=g.nat==='swsh'||g.nat==='sv',opts=g.dex.map(d=>[String(d[0]),d[1]]);if(g.nat)opts.push(['nat',sv?'全国（連れて行けるポケモン）':'全国図鑑']);
   document.getElementById('dxDex').innerHTML=opts.map(([v,t])=>`<button type="button" data-dxdex="${v}" aria-pressed="${v===k}">${t}</button>`).join('');
   const all=dxEntries(),reg=dxReg(),got=all.filter(([n,s])=>reg[s]).length,tot=all.length,left=tot-got;
+  // 図鑑のタブ（図鑑が2つ以上ある作品だけ）。それぞれの登録済みの数を出す。登録はポケモンごとなので、どのタブで登録しても、ほかの図鑑にも入る
+  const tabs=document.getElementById('dxTabs'),V=dxViews(g);tabs.hidden=V.length<2;
+  if(V.length>1)tabs.innerHTML=V.map(([v,t])=>{const E=dxEntriesOf(g,v),n=E.filter(([x,s])=>reg[s]).length;return `<button type="button" role="tab" data-dxdex="${v}" aria-selected="${v===k}"><b>${t}</b><small>${n}/${E.length}</small></button>`}).join('');
   document.getElementById('dxProg').innerHTML=`<div class="lab"><span class="gl">${DXX_IC.check}登録済み</span><span class="left">${dxOwn()&&got?(()=>{const c1=all.filter(([n,s])=>reg[s]===1).length;return `捕まえた <b>${c1}</b>・登録だけ <b>${got-c1}</b>`})():tot&&!left?'コンプリート！':`あと <b>${left}</b>匹`}</span></div><div class="num"><b>${got}</b><span>/ ${tot}匹</span><span class="rt">${tot?Math.floor(got/tot*100):0}%</span></div><div class="dxx-hbar" role="progressbar" aria-label="登録済みの割合" aria-valuemin="0" aria-valuemax="${tot}" aria-valuenow="${got}"><span style="width:${tot?got/tot*100:0}%"></span></div>`;
   const dn=(opts.find(o=>o[0]===k)||['',''])[1];
   document.getElementById('dxCondT').textContent=k==='nat'&&sv?`${dxAb(g.n)}・全国（連れて行ける${tot}匹）`:`${dxAb(g.n)}・${dn}（${tot}匹）`;
@@ -5489,7 +5506,7 @@ const dxLocalOk=()=>DX_LOCAL_GAMES.includes(dxGame().id);
 function dxShotUI(){
   const $=x=>document.getElementById(x),g=dxGame(),k=dxDexKey(g),local=dxLocalOk(),gm=!!gmKey()&&!window.NER_APP,can=local||gm;
   const dexName=k==='nat'?'全国図鑑':((g.dex||[]).find(d=>String(d[0])===k)||[0,''])[1];
-  $('dxShotSub').textContent=`${dxAb(g.n)}${dexName?'・'+dexName:''}の一覧画面を読み取ります`;
+  $('dxShotSub').textContent=dxMulti(g)?`${dxAb(g.n)}の図鑑の一覧画面を読み取り、${dxViews(g).filter(v=>v[0]!=='nat').map(v=>v[1]).join('・')}${g.nat?'・全国':''}に振り分けます`:`${dxAb(g.n)}${dexName?'・'+dexName:''}の一覧画面を読み取ります`;
   $('dxCamBtn').disabled=$('dxPickBtn').disabled=!can;
   const chipL=`<span class="dxc-chip${local?'':' off'}">${DX_SP.phone}スマホ内</span>`,chipG=`<span class="dxc-chip gm${gm?'':' off'}">${DX_SP.spark}Gemini</span>`;
   $('dxModeBox').innerHTML=gm
@@ -5737,12 +5754,16 @@ function gmOkLocal(rows,inDex,byNo){
   return unk<=1&&miss<=1;
 }
 async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
-  const key=gmKey(),nos=[...byNo.keys()],lo=Math.min(...nos),hi=Math.max(...nos),local=DX_LOCAL_GAMES.includes(g.id),dk=g.id+':'+dxDexKey(g)+(g.id==='la'?':own':'');
+  const key=gmKey(),nos=[...byNo.keys()],lo=Math.min(...nos),hi=Math.max(...nos),local=DX_LOCAL_GAMES.includes(g.id);
+  // 図鑑が複数ある作品は、どの図鑑の画面かも AI に答えてもらい、その図鑑の番号表でポケモンにする
+  const MV=dxMulti(g)?dxViews(g).map(([v,t])=>[v,v==='nat'?'全国図鑑':(g.dex.find(d=>String(d[0])===v)||[0,t])[1],new Map(dxEntriesOf(g,v))]):null;
+  const dk=g.id+':'+(MV?'all':dxDexKey(g))+(g.id==='la'?':own':'');
+  const spOfAi=x=>{const no=Number(x&&x.no);if(!Number.isInteger(no))return null;if(MV){const m=MV.find(z=>z[1]===(x&&x.dex));return m?m[2].get(no)||null:null}if(no<lo||no>hi)return null;return byNo.get(no)||null};
   let localSp=new Set();const cachedAi=[];
-  const aiN=arr=>(arr||[]).filter(x=>{const no=Number(x&&x.no);if(!Number.isInteger(no)||no<lo||no>hi)return false;const s=byNo.get(no);return !!s&&inDex.has(s)}).length;
+  const aiN=arr=>(arr||[]).filter(x=>{const s=spOfAi(x);return !!s&&inDex.has(s)}).length;
   const put=(s,stt)=>{const prev=found.get(s);if(!prev||prev==='unknown'||dxStRank(stt)>dxStRank(prev))found.set(s,stt)};
   // スマホ内で読めたポケモンは、AI の答えで変えない（AI に送るのはスマホ内で読めなかった画像で、印を読みまちがえることがある）
-  const useAi=(arr)=>{let n=0;(arr||[]).forEach(x=>{const no=Number(x&&x.no);if(!Number.isInteger(no)||no<lo||no>hi)return;const s=byNo.get(no);if(!s||!inDex.has(s))return;
+  const useAi=(arr)=>{let n=0;(arr||[]).forEach(x=>{const s=spOfAi(x);if(!s||!inDex.has(s))return;
     n++;if(localSp.has(s)&&found.get(s)!=='unknown')return;put(s,dxStOk(x&&x.status,g)?x.status:'unknown')});return n};
   let nLocal=0,nCache=0,nSent=0,nReq=0,nDup=0,failed=0,note='';const todo=[],seenH=new Set(),nf=files.length;
   // まずスマホ内で、何枚かを同時に読む
@@ -5761,8 +5782,8 @@ async function dxReadGm(files,g,dexName,byNo,inDex,found,st){
     const c=hk&&gmCacheGet(hk);if(c&&aiN(c.v)){cachedAi.push(c.v);nCache++;continue}
     todo.push({f:files[i],hk});
   }
-  const prompt=n=>`これはポケモンのゲーム「${g.n}」の図鑑画面（${dexName}、番号は${lo}〜${hi}）を写した画像です。${n>1?`${n}枚の画像を1枚にまとめていて、それぞれの上の黒い帯に「画像 1」「画像 2」…と番号を書いています。`:''}スマホのカメラで画面を撮った写真のこともあり、斜め・光の映りこみ・色のずれがあることがあります。
-画面に見えているポケモンの欄を、すべて読み取ってください。各欄について、${n>1?'どの画像か（tile、帯の番号）、':''}画面に書かれている図鑑番号（no）と状態（status）を答えます。status は次のどれかです。
+  const prompt=n=>`これはポケモンのゲーム「${g.n}」の図鑑画面（${MV?`この作品の図鑑は ${MV.map(z=>z[1]).join('・')} があり、画像ごとにどれかの図鑑`:`${dexName}、番号は${lo}〜${hi}`}）を写した画像です。${n>1?`${n}枚の画像を1枚にまとめていて、それぞれの上の黒い帯に「画像 1」「画像 2」…と番号を書いています。`:''}スマホのカメラで画面を撮った写真のこともあり、斜め・光の映りこみ・色のずれがあることがあります。
+画面に見えているポケモンの欄を、すべて読み取ってください。各欄について、${n>1?'どの画像か（tile、帯の番号）、':''}${MV?'どの図鑑の画面か（dex、画面の見出しで判断）、':''}画面に書かれている図鑑番号（no）と状態（status）を答えます。status は次のどれかです。
 - "caught": 捕まえた印（モンスターボールのマーク）が付いている
 - "seen": 見ただけ（名前や姿はあるが、捕まえた印がない）
 - "none": 見てもいない（「？？？」や影だけの欄）
@@ -5777,12 +5798,12 @@ ${g.id==='la'?'- "reg": 登録だけ（下の説明を見てください）\n'+D
       const part=todo.slice(b*GM_TILES,(b+1)*GM_TILES),n=part.length;
       st.textContent=`AIに送る画像を用意しています…（${b+1}/${nB}回目）`;dxProg(.4+.6*b/nB);dxStage('gm','now',nB>1?`${b+1} / ${nB}回目`:null,b/nB);
       let img;try{img=await gmComposite(part.map(x=>x.f))}catch(e){failed+=n;continue}
-      const props={no:{type:'INTEGER'},status:{type:'STRING',enum:g.id==='la'?['caught','reg','seen','none','unknown']:['caught','seen','none','unknown']}};if(n>1)props.tile={type:'INTEGER'};
+      const props={no:{type:'INTEGER'},status:{type:'STRING',enum:g.id==='la'?['caught','reg','seen','none','unknown']:['caught','seen','none','unknown']}};if(n>1)props.tile={type:'INTEGER'};if(MV)props.dex={type:'STRING',enum:MV.map(z=>z[1])};
       const body={contents:[{role:'user',parts:[{text:prompt(n)},{inline_data:{mime_type:'image/jpeg',data:img.data}}]}],
-        generationConfig:{temperature:0,responseMimeType:'application/json',responseSchema:{type:'ARRAY',items:{type:'OBJECT',properties:props,required:n>1?['tile','no','status']:['no','status']}}}};
+        generationConfig:{temperature:0,responseMimeType:'application/json',responseSchema:{type:'ARRAY',items:{type:'OBJECT',properties:props,required:[...(n>1?['tile']:[]),...(MV?['dex']:[]),'no','status']}}}};
       const j=await gmAsk(key,body,st,`AIで読み取り中…（${n}枚をまとめて${nB>1?`・${b+1}/${nB}回目`:''}）`);nReq++;nSent+=n;
       const arr=gmParse(j);if(!arr){failed+=n;continue}
-      const per=part.map(()=>[]);arr.forEach(x=>{const t=n>1?Number(x&&x.tile):1;if(Number.isInteger(t)&&t>=1&&t<=n)per[t-1].push({no:x.no,status:x.status})});
+      const per=part.map(()=>[]);arr.forEach(x=>{const t=n>1?Number(x&&x.tile):1;if(Number.isInteger(t)&&t>=1&&t<=n)per[t-1].push(MV?{dex:x.dex,no:x.no,status:x.status}:{no:x.no,status:x.status})});
       part.forEach((p,i)=>{if(useAi(per[i])){if(p.hk)gmCachePut(p.hk,per[i])}else failed++});
     }
   }catch(err){if(err&&err.code==='cancelled')throw err;
@@ -5808,7 +5829,7 @@ async function dxOnFiles(e){
   let files=[...e.target.files];e.target.value='';if(!files.length)return;
   const mode=dxShotMode;if(mode==='ai'&&!dxSample)return;if(mode==='gm'&&!gmKey())return;
   const g=dxGame(),k=dxDexKey(g),dexName=k==='nat'?'全国図鑑':(g.dex.find(d=>String(d[0])===k)||[0,''])[1];
-  const entries=dxEntries(),byNo=new Map(entries.map(([n,s])=>[n,s])),inDex=new Set(entries.map(x=>x[1]));
+  const entries=dxEntries(),byNo=new Map(entries.map(([n,s])=>[n,s])),inDex=dxMulti(g)?dxAllSp(g):new Set(entries.map(x=>x[1])); // 図鑑が複数ある作品は、すべての図鑑に振り分ける
   const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxCamBtn,#dxPickBtn,#dxGmLink')];
   btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();st.textContent='準備しています…';dxBusy(true);
   dxStages({vid:files.some(dxIsVideo),local:DX_LOCAL_GAMES.includes(g.id),gm:mode==='gm'});await dxPaint();
@@ -5832,7 +5853,7 @@ async function dxOnFiles(e){
   if(dxNoSeq()){} // SV の本棚は、見ていないポケモンの本がないので、番号の抜けは「読めなかった」ではない
   else if(perDex){
     // 図鑑ごとに、読めた番号のあいだの抜け（全国図鑑で見ていても、録画した画面の図鑑の番号で出す）
-    const inSel=new Set(entries.map(x=>x[1])); // えらんだ図鑑に入るポケモンの番号の抜けだけを出す
+    const inSel=inDex; // 作品の図鑑に入るポケモンの番号の抜けだけを出す
     const sel=dxDexKey(),many=[...dxReadNums.keys()].filter(d=>d!=='_').length>1;
     for(const [d,S] of dxReadNums){if(d==='_')continue;const L=[...S].sort((a,b)=>a-b);if(L.length<2)continue;const D=d==='nat'?null:DEXN[d],lo=D?D[0]:1,hi=D?D[0]+D[1].length-1:SPDB.length;
       const nm=d==='nat'?'全国':((g.dex.find(x=>String(x[0])===String(d))||[0,''])[1]).replace(/図鑑$/,''),lab=many||String(d)!==String(sel)?nm:'';
@@ -5842,7 +5863,7 @@ async function dxOnFiles(e){
   const gLab=([a,b,l])=>(l?l+' ':'')+(a===b?pad3(a):pad3(a)+'〜'+pad3(b));
   if(gaps.length)gapT=`読めなかった番号：${gaps.slice(0,6).map(gLab).join('・')}${gaps.length>6?` ほか${gaps.length-6}か所`:''}。その部分を撮り直すか、スクショで足してください。`;
   const few=vinfo?mode==='local'&&found.size<6:(mode==='local'&&(failed||found.size<3*files.length))||(mode==='gm');
-  const order=new Map(entries.map((x,i)=>[x[1],i]));
+  const order=new Map();[entries,...dxViews(g).map(([v])=>dxEntriesOf(g,v))].forEach(E=>E.forEach(x=>{if(!order.has(x[1]))order.set(x[1],order.size)}));
   dxScan={mode,items:[...found].sort((a,b)=>(order.get(a[0])??1e9)-(order.get(b[0])??1e9)),fix:carry?carry.fix:{},off:new Set(carry?carry.off:[]),tab:null,gaps,failed:vinfo?0:failed,
     src:(vinfo?`動画${vinfo.nv>1?vinfo.nv+'本':''}から画像${nT}枚`:`画像${nT}枚`)+'を読み取りました',
     tip:`かかった時間：${Math.max(1,Math.round((performance.now()-tStart)/1000))}秒${dxTm.vid!=null?`（動画から取り出す ${Math.round(dxTm.vid/1000)}秒${dxTm.fill!=null?`・読めなかった所の読み直し ${Math.round(dxTm.fill/1000)}秒`:''}）`:''}。`+vt+(mode==='gm'?dxGmSum+(failed&&(!vinfo||gapT)?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
@@ -5884,10 +5905,18 @@ function dxsRow(sp,v,reg,num){
 function renderDxScan(){
   if(!dxScan)return;
   if(dxScan.done){renderDxDone();return}
-  const reg=dxReg(),num=new Map(dxEntries().map(([n,sp])=>[sp,n])),c=dxsCounts(),tot=dxScan.items.length;
+  const reg=dxReg(),c=dxsCounts(),tot=dxScan.items.length,g=dxGame(),V=dxMulti(g)?dxViews(g):null;
+  // 図鑑が複数ある作品：読み取った結果を図鑑ごとに振り分けて見せる（一覧の番号はその図鑑の番号）。登録はポケモンごとなので、反映は全部の図鑑をまとめて行う
+  if(V&&!V.some(([v])=>v===dxScan.view))dxScan.view=dxDexKey(g);
+  const vk=V?dxScan.view:dxDexKey(g),VE=dxEntriesOf(g,vk),num=new Map(VE.map(([n,sp])=>[sp,n])),inV=V?new Set(VE.map(x=>x[1])):null,vIdx=new Map(VE.map((x,i)=>[x[1],i]));
+  const itemsV=inV?dxScan.items.filter(([sp])=>inV.has(sp)).sort((a,b)=>vIdx.get(a[0])-vIdx.get(b[0])):dxScan.items;
   if(!dxScan.tab)dxScan.tab=c.unk&&dxScan.items.some(([sp,v])=>v==='unknown'&&!dxScan.fix[sp])?'unk':c.chg?'chg':'all';
   const tab=dxScan.tab,G=dxScan.gaps||[];
-  const list=dxScan.items.filter(([sp,v])=>tab==='all'||(tab==='unk'?v==='unknown':dxsChg(dxsKind(sp,v,reg))||(v==='unknown'&&dxScan.fix[sp]&&false)));
+  const list=itemsV.filter(([sp,v])=>tab==='all'||(tab==='unk'?v==='unknown':dxsChg(dxsKind(sp,v,reg))||(v==='unknown'&&dxScan.fix[sp]&&false)));
+  const nV={all:itemsV.length,chg:itemsV.filter(([sp,v])=>dxsChg(dxsKind(sp,v,reg))).length,unk:itemsV.filter(([sp,v])=>v==='unknown').length};
+  const per=V?`<div class="dxx-tabs dxs-views" role="tablist" aria-label="図鑑ごとの結果">${V.map(([v,t])=>{const E=new Set(dxEntriesOf(g,v).map(x=>x[1]));let a=0,n=0;
+      dxScan.items.forEach(([sp,vv])=>{if(!E.has(sp))return;n++;const k=dxsKind(sp,vv,reg);if((k==='add'||k==='mod')&&!dxScan.off.has(sp))a++});
+      return `<button type="button" role="tab" data-dxsview="${v}" aria-selected="${v===vk}"><b>${t}</b><small>${n}匹${a?`・+${a}`:''}</small></button>`}).join('')}</div>`:'';
   const warn=G.length?`<div class="dxs-warn"><p class="t">${DXS_ICON.warn}読めなかったページがあります</p>
       <div class="dxs-gap">${G.slice(0,8).map(([a,b,l])=>`<span>${l?l+' ':''}${a===b?pad3(a):pad3(a)+'〜'+pad3(b)}</span>`).join('')}${G.length>8?`<span>ほか${G.length-8}か所</span>`:''}</div>
       <p>この番号のポケモンは、登録を変えません。そのページだけ撮り直すと、続けて足せます。</p>
@@ -5906,8 +5935,9 @@ function renderDxScan(){
     <div class="dxs-sum"><p class="dxs-big"><b>${tot}</b><span>匹を読み取りました</span></p><div class="dxs-bar">${bar}</div><div class="dxs-leg">${leg}</div></div>
     <div class="dxs-chg"><div class="add${c.add?'':' zero'}"><small>新しく登録</small><b>+${c.add}</b>${c.mod?`<small>種類を変える ${c.mod}</small>`:''}</div><div class="rem${c.rem?'':' zero'}"><small>登録を外す</small><b>−${c.rem}</b></div><div><small>変わらない</small><b>${c.same}</b></div></div>
     ${dxScan.tip?`<button type="button" class="dxs-src" data-dxssrc="1" aria-expanded="${open}">${dxScan.src}・くわしく${DXS_ICON.chev}</button><p class="dxs-detail"${open?'':' hidden'}>${dxScan.tip}</p>`:''}
-    <div class="dxs-tabs" role="group" aria-label="表示する範囲"><button type="button" data-dxstab="all" aria-pressed="${tab==='all'}">すべて<b>${tot}</b></button><button type="button" data-dxstab="chg" aria-pressed="${tab==='chg'}">変わるもの<b>${c.chg}</b></button><button type="button" data-dxstab="unk" aria-pressed="${tab==='unk'}">不明<b>${c.unk}</b></button></div>
-    <div class="dxs-list">${list.length?list.map(([sp,v])=>dxsRow(sp,v,reg,num)).join(''):`<div class="dxs-empty">${tab==='unk'?'不明のポケモンはいません':'変わるポケモンはいません'}</div>`}</div>
+    ${per}
+    <div class="dxs-tabs" role="group" aria-label="表示する範囲"><button type="button" data-dxstab="all" aria-pressed="${tab==='all'}">すべて<b>${nV.all}</b></button><button type="button" data-dxstab="chg" aria-pressed="${tab==='chg'}">変わるもの<b>${nV.chg}</b></button><button type="button" data-dxstab="unk" aria-pressed="${tab==='unk'}">不明<b>${nV.unk}</b></button></div>
+    <div class="dxs-list">${list.length?list.map(([sp,v])=>dxsRow(sp,v,reg,num)).join(''):`<div class="dxs-empty">${tab==='unk'?'不明のポケモンはいません':tab==='all'?'この図鑑のポケモンは読み取れませんでした':'変わるポケモンはいません'}</div>`}</div>
     <div class="dxapply dxs-foot"><button class="btn primary" type="button" data-dxsapply="1"${c.add+c.rem+c.mod?'':' disabled'}>${btn}</button><small>${c.unk&&dxScan.items.some(([sp,v])=>v==='unknown'&&!dxScan.fix[sp])?'「不明」は、選ぶまで変わりません':'チェックを外したポケモンは変わりません'}</small></div></div>`;
   const sc2=dxSheetEl.querySelector('.sheet-in');if(sc2)sc2.scrollTop=top;
 }
@@ -5931,6 +5961,7 @@ dxSheetEl.addEventListener('click',e=>{
   const d=b.dataset;
   if(d.dxsundo&&dxScan.done){const r=dxReg();Object.entries(dxScan.done.prev).forEach(([sp,v])=>{if(v)r[sp]=v;else delete r[sp]});dxSave();dxScan=null;dxClose();toast('反映する前の状態に戻しました');return}
   if(dxScan.done)return;
+  if(d.dxsview){dxScan.view=d.dxsview;renderDxScan();const sc=dxSheetEl.querySelector('.dxs-views');sc&&sc.scrollIntoView({block:'nearest'});return}
   if(d.dxstab){dxScan.tab=d.dxstab;renderDxScan();const sc=dxSheetEl.querySelector('.dxs-tabs');sc&&sc.scrollIntoView({block:'nearest'});return}
   if(d.dxssrc){const op=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',String(op));b.nextElementSibling.hidden=!op;return}
   if(d.dxsck){const sp=+d.dxsck;if(dxScan.off.has(sp))dxScan.off.delete(sp);else dxScan.off.add(sp);renderDxScan();return}
@@ -7623,7 +7654,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.26f';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.26g';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
