@@ -54,8 +54,10 @@ function dxtInk(o,n,mode){const v=new Float32Array(n);
       for(let i=0;i<n;i++){const r=o[i*3],g=o[i*3+1],b=o[i*3+2];if(r<0){c[i]=-1;continue}const mx=Math.max(r,g,b),mn=Math.min(r,g,b);
         c[i]=ch===0?(r+g+b)/3:ch===1?r:ch===2?g:ch===3?b:mx-mn;mu+=c[i];k++}
       if(!k)continue;mu/=k;let tv=0;for(let i=0;i<n;i++)if(c[i]>=0)tv+=(c[i]-mu)**2;if(tv<1)continue;
-      const sv=Array.from(c).filter(x=>x>=0).sort((a,b)=>a-b);let bs=0;
-      for(let q=1;q<20;q++){const t=sv[Math.floor(sv.length*q/20)];let n0=0,s0=0,n1=0,s1=0;for(const x of sv){if(x<=t){n0++;s0+=x}else{n1++;s1+=x}}if(!n0||!n1)continue;const bv=n0*n1*(s0/n0-s1/n1)**2/(sv.length);if(bv>bs)bs=bv}
+      // （速さのため、並べかえのかわりに 256 区切りの度数で数える。分け目は 5% きざみの位置）
+      const hc=new Float64Array(256),hs=new Float64Array(256);for(let i=0;i<n;i++){const x=c[i];if(x<0)continue;const q=Math.min(255,Math.max(0,x|0));hc[q]++;hs[q]+=x}
+      let bs=0;for(let q=1;q<20;q++){const idx=Math.floor(k*q/20);let cum=0,tb=0;for(;tb<256;tb++){cum+=hc[tb];if(cum>idx)break}
+        let n0=0,s0=0;for(let z=0;z<=tb&&z<256;z++){n0+=hc[z];s0+=hs[z]}const n1=k-n0,s1=mu*k-s0;if(!n0||!n1)continue;const bv=n0*n1*(s0/n0-s1/n1)**2/k;if(bv>bs)bs=bv}
       const sc=bs/tv;if(sc>best){best=sc;bc=c}}
     if(!bc)return v;let lo=1e9,hi=-1e9;for(const x of bc)if(x>=0){lo=Math.min(lo,x);hi=Math.max(hi,x)}
     const mid=(lo+hi)/2;let up=0,k=0;for(const x of bc)if(x>=0){k++;if(x>mid)up++}const dark=up>k/2;
