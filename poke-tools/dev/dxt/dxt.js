@@ -155,7 +155,37 @@ const dxtSureI=D=>D.agree>=3&&D.agree*4>=D.used*3;
 // 確かか：数字が決めた番号と合わない行は 1 行まで（行が 3 行以下なら全部合うこと）
 const dxtSure=D=>D&&D.mean>=.45&&(D.used>=4?D.agree>=Math.max(3,D.used-1):D.agree===D.used&&D.agree>=2);
 // 1枚を読む。learn：見本づくり用に、行ごとの数字の形と特徴をそのまま返す
+// 番号のない一覧（P.tiles：金銀クリスタルの「しんがたずかん」）。名前の文字（8×8 の升目）を見本とくらべ、図鑑の並び（P.tiles.names）と合う位置を、画面全体で決める。
+// 名前の1字は [文字の見本の番号, 濁点・半濁点（0：なし）]（-1：見本にない字。くらべない）。「ー」が5つで印がない行＝見ていない。行の左の升目に色（ボール）＝捕まえた
+function dxtReadTiles(px,W,H,P){
+  const Ms=dxtMap(px,W,H,P);if(!Ms)return null;const T=P.tiles,nC=T.cls.length;let out=null;
+  for(const m of Ms){
+    const lum=(x,y)=>{const X=Math.round(m.ox+(x+.5)*m.sx),Y=Math.round(m.oy+(y+.5)*m.sy);if(X<0||Y<0||X>=W||Y>=H)return 0;const k=(Y*W+X)*4;return (px[k]+px[k+1]+px[k+2])/3};
+    const tile=(x0,y0,line)=>{const v=new Float32Array(64);for(let y=0;y<8;y++){let on=0;for(let x=0;x<8;x++){const a=lum(x0+x,y0+y);v[y*8+x]=a;if(a>128)on++}if(line&&on>=7)for(let x=0;x<8;x++)v[y*8+x]=0}
+      let mu=0;for(const a of v)mu+=a;mu/=64;let n=0;for(let i=0;i<64;i++){v[i]-=mu;n+=v[i]*v[i]}n=Math.sqrt(n);if(n<200)return null;for(let i=0;i<64;i++)v[i]/=n;return v};
+    const corr=(v,C)=>C.map(c=>{let s=0;for(let i=0;i<64;i++)s+=v[i]*c[i];return s});
+    const am=a=>{let b=0;for(let i=1;i<a.length;i++)if(a[i]>a[b])b=i;return b};
+    const R=[];
+    for(let r=0;r<T.n;r++){const y=T.y0+r*T.pitch,S=[],Mk=[];
+      for(let j=0;j<T.len;j++){const v=tile(T.x0+8*j,y);S.push(v?corr(v,T.cls):null);const w=tile(T.x0+8*j,y-8,true);Mk.push(w?corr(w,T.mcls):null)}
+      let sat=0;for(let yy=0;yy<8;yy++)for(let xx=0;xx<8;xx++){const X=Math.round(m.ox+(T.ball+xx+.5)*m.sx),Y=Math.round(m.oy+(y+yy+.5)*m.sy);if(X<0||Y<0||X>=W||Y>=H)continue;const k=(Y*W+X)*4,a=px[k],b=px[k+1],c=px[k+2];if(Math.max(a,b,c)-Math.min(a,b,c)>80)sat++}
+      const ball=sat>=10,un=!ball&&S.every(x=>x&&am(x)===T.dash&&x[T.dash]>.7);
+      R.push({k:r,S,Mk,ball,un})}
+    const named=R.filter(x=>!x.un&&x.S.some(Boolean));if(named.length<2)continue;
+    const sc=(b,row)=>{const nm=T.names[b+row.k];if(!nm)return -9;let t=0;for(let j=0;j<T.len;j++){const e=nm[j],S=row.S[j];
+      if(!e){t+=S?-.5:.3;continue}if(e[0]<0)continue;if(!S){t-=.5;continue}t+=S[e[0]];
+      const M=row.Mk[j];if(e[1]>0)t+=M?.5*M[e[1]-1]:-.3;else if(e[1]===0&&M)t-=.3}return t};
+    let best=-1e9,b2=-1e9,bb=0;for(let b=0;b+T.n<=T.names.length;b++){let t=0;for(const row of named)t+=sc(b,row);if(t>best){b2=best;best=t;bb=b}else if(t>b2)b2=t}
+    // 行ごとの確かめ：くらべた字がほぼ全部（1字まで）いちばん似ている字と同じ行だけを使う
+    const okRow=row=>{const nm=T.names[bb+row.k];if(!nm)return false;let bad=0,n=0;for(let j=0;j<T.len;j++){const e=nm[j],S=row.S[j];
+      if(!e){if(S)bad++;continue}if(e[0]<0)continue;n++;if(!S||am(S)!==e[0])bad++}return n>0&&bad<=1};
+    const agree=named.filter(okRow).length;
+    if(!(agree>=2&&agree>=named.length-(named.length>=4?1:0)&&best-b2>1.5)){if(!out)out={fail:'num'};continue}
+    return {dex:T.dex,rows:R.filter(x=>x.un||okRow(x)).map(x=>({num:bb+x.k+1,status:x.un?'none':x.ball?'caught':'seen'}))}}
+  return out||{fail:'nolist'};
+}
 function dxtRead(pxB,WB,HB,P,learn){
+  if(P.tiles)return learn?null:dxtReadTiles(pxB,WB,HB,P);
   const Ms=dxtMap(pxB,WB,HB,P);if(!Ms)return null;let out=null;
   for(const m of Ms){
     // 一覧の画面か（型紙の目印の場所の明るさ・色が決まった範囲にあるか）
