@@ -6,3 +6,4 @@ def lab(F):
   if F[3]>0.07:return 'caught'+sfx,-abs(F[3]-0.07)
   t=0.17 if cur else 0.06
   return ('none' if F[7]<t else 'seen')+sfx,-abs(F[7]-t)
+aug=True # 明るさを変えた静止画でも学ぶ（mkprof.py）

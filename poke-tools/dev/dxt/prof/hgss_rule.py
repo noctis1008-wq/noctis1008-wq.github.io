@@ -3,3 +3,4 @@ def skip(u):return False
 def lab(F):
   if F[1]>0.2:return 'caught',-abs(F[1]-0.2)
   return ('none' if F[7]<0.05 else 'seen'),-abs(F[7]-0.05)
+aug=True # 明るさを変えた静止画でも学ぶ（mkprof.py）

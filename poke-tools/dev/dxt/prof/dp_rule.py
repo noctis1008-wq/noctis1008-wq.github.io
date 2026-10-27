@@ -5,3 +5,4 @@ def lab(F):
   return ('none' if F[7]<0.1 else 'seen'),-abs(F[7]-0.1)
 # 見出しが「ぜんこくずかん」の形と同じなら全国図鑑（シンオウ図鑑の画面は、選んでいる図鑑で数える）
 def dex(u,F):return 'nat' if F[6]>0.8 else None
+aug=True # 明るさを変えた静止画でも学ぶ（mkprof.py）

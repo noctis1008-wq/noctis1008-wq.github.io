@@ -184,6 +184,12 @@ function dxtReadTiles(px,W,H,P){
     return {dex:T.dex,rows:R.filter(x=>x.un||okRow(x)).map(x=>({num:bb+x.k+1,status:x.un?'none':x.ball?'caught':'seen'}))}}
   return out||{fail:'nolist'};
 }
+// 印が読めなかった行（unknown）には、その行の場所 box（画像の幅・高さに対する割合 [左, 上, 右, 下]）を付ける。
+// Gemini と連携しているときは、その行だけを切り出してまとめて送る（画面まるごとは送らない）
+function dxtBoxOf(P,m,r,WB,HB,o){if(o.status!=='unknown')return o;
+  let x0=P.num.x0,x1=P.num.x1;for(const f of P.feat){x0=Math.min(x0,f[0]);x1=Math.max(x1,f[2])}
+  const h=(P.rows.pitch||60)*.6,X=x=>Math.max(0,Math.min(1,(m.ox+(x+r.xo)*m.sx)/WB)),Y=y=>Math.max(0,Math.min(1,(m.oy+y*m.sy)/HB));
+  const pd=(x1-x0)*.12;o.box=[X(x0-pd),Y(r.yc-h),X(x1+pd),Y(r.yc+h)].map(v=>+v.toFixed(4));return o}
 function dxtRead(pxB,WB,HB,P,learn){
   if(P.tiles)return learn?null:dxtReadTiles(pxB,WB,HB,P);
   const Ms=dxtMap(pxB,WB,HB,P);if(!Ms)return null;let out=null;
@@ -204,7 +210,7 @@ function dxtRead(pxB,WB,HB,P,learn){
     const rowsAt=(d,feat)=>{const R=[];const dy=P.cols&&P.cols.scroll?0:d,dx=P.cols&&P.cols.scroll?d:0;for(let r=0;r<P.rows.n;r++)for(let c=0;c<nc;c++){const at=P.rows.at&&P.rows.at[r],yc=(at?at[0]:P.rows.y0+r*P.rows.pitch)+dy,xo=dx+c*cp+(at?at[1]:0),k=r*nc+c,g=dxtGlyphs(pxB,WB,HB,m,P,yc,xo);
       const cut=P.cols&&P.cols.xmin!=null&&(P.num.x0+xo<P.cols.xmin||P.num.x1+xo>P.cols.xmax); // 一覧の端で切れた列は数字を読まない
       const S=!cut&&P.tm&&g&&(!P.num.digits||g.length===P.num.digits)?g.map(x=>P.num.one&&x.w<P.num.one?[0,1,0,0,0,0,0,0,0,0]:dxtCorr(x.f,P.tm,P.tm2)):null; // （P.num.one：細い棒だけの「1」（RS/E など）は、形をそろえると比べられないので、幅で「1」とする）
-      R.push({k,S,G:learn?g:null,F:feat?dxtFeat(pxB,WB,HB,m,P,yc,learn,xo):null})}return R};
+      R.push({k,yc,xo,S,G:learn?g:null,F:feat?dxtFeat(pxB,WB,HB,m,P,yc,learn,xo):null})}return R};
     let d0=0;
     // （横に流れる一覧（P.cols.scroll：SV の本棚など）は、列の位置を同じようにずらして探す）
     const scP=P.cols&&P.cols.scroll?P.cols.pitch:P.rows.scroll?P.rows.pitch:0;
@@ -219,13 +225,13 @@ function dxtRead(pxB,WB,HB,P,learn){
       out=out||[];out.push({m,d:d0,dex,sure,dexF:Array.from(dexF||[]),dexP:dexF&&dexF.P&&dexF.P[0],rows:rows.map(r=>({k:r.k,num:sure?DL.base+r.k:null,ok:okL(r),G:r.G&&r.G.map(x=>Array.from(x.f)),W:r.G&&r.G.map(x=>x.w),F:Array.from(r.F),Pt:r.F.P}))});continue}
     const mxNo=(P.dex&&P.dex.refs&&(P.dex.refs.find(x=>x.k===dex)||{}).max)||P.maxNo; // 図鑑ごとの最大の番号
     if(P.num.seq===false){const DI=dxtIndep(rows,mxNo);if(!dxtSureI(DI)){if(!out)out={fail:'num',dex};continue}
-      return {dex,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>({num:DI.keep.get(r.k),status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))}}
+      return {dex,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:DI.keep.get(r.k),status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))}}
     const D=dxtDecode(rows,P.maxNo,P.num.digits,P.num.pre);
     if(!D||!dxtSure(D)){if(D&&!out)out={fail:'num',dex};continue}
     // 1行ずつの確かめ：その行の数字が、決めた番号と2けた以上合う行だけを入れる（一覧の外・はしで切れた行・読みまちがえた行は入れない）
     const okRow=r=>{if(!r.S||D.base+r.k<1)return false;const n=D.base+r.k,st=P.num.digits?String(n).padStart(P.num.digits,'0'):String(n);if(st.length!==r.S.length)return false;
       let c=0;r.S.forEach((a,j)=>{if(a.indexOf(Math.max(...a))===+st[j])c++});return c>=Math.min(2,st.length)};
-    return {dex,rows:rows.filter(okRow).map(r=>({num:D.base+r.k,status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))};
+    return {dex,rows:rows.filter(okRow).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:D.base+r.k,status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))};
   }
   // 型紙では読めなかった画面は「省く」ではなく「読めなかった」とする（Gemini と連携していれば、Gemini に回る。カメラで斜めに撮った画面など）
   return out||(learn?null:{fail:'nolist'});
