@@ -62,6 +62,8 @@ function dxtInk(o,n,mode){const v=new Float32Array(n);
     if(!bc)return v;let lo=1e9,hi=-1e9;for(const x of bc)if(x>=0){lo=Math.min(lo,x);hi=Math.max(hi,x)}
     const mid=(lo+hi)/2;let up=0,k=0;for(const x of bc)if(x>=0){k++;if(x>mid)up++}const dark=up>k/2;
     for(let i=0;i<n;i++)v[i]=bc[i]<0?0:dark?hi-bc[i]:bc[i]-lo;return v}
+  // （lum：明るさそのまま。地が暗く文字が明るい作品（BW）で、文字が太く見えて明るい点が半分を超えても、白黒を入れかえない）
+  if(mode==='lum'){for(let i=0;i<n;i++){const r=o[i*3];v[i]=r<0?0:(o[i*3]+o[i*3+1]+o[i*3+2])/3}return v}
   if(mode==='auto'){
     // 文字の色が行で変わる作品（カーソルの行だけ白い など）：明るさで2つに分け、数の少ないほうを文字とする
     const L=new Float32Array(n);let lo=1e9,hi=-1e9;for(let i=0;i<n;i++){const r=o[i*3];L[i]=r<0?-1:(o[i*3]+o[i*3+1]+o[i*3+2])/3;if(r>=0){lo=Math.min(lo,L[i]);hi=Math.max(hi,L[i])}}
