@@ -39,9 +39,13 @@ function dxtMap(px,W,H,P){
 // 型紙の座標の四角 [x0,y0,x1,y1] を、ow×oh の RGB に縮めて取り出す（2×2 の点の平均）
 function dxtPatch(px,W,H,m,x0,y0,x1,y1,ow,oh){
   const o=new Float32Array(ow*oh*3),fx=(x1-x0)/ow,fy=(y1-y0)/oh;
+  // （速さのため、点の位置は列ごと・行ごとに先に計算しておく。計算のしかたと結果は同じ）
+  const XS=new Int32Array(ow*2),YS=new Int32Array(oh*2);
+  for(let i=0;i<ow;i++){XS[i*2]=Math.round(m.ox+(x0+(i+.25)*fx)*m.sx);XS[i*2+1]=Math.round(m.ox+(x0+(i+.75)*fx)*m.sx)}
+  for(let j=0;j<oh;j++){YS[j*2]=Math.round(m.oy+(y0+(j+.25)*fy)*m.sy);YS[j*2+1]=Math.round(m.oy+(y0+(j+.75)*fy)*m.sy)}
   for(let j=0;j<oh;j++)for(let i=0;i<ow;i++){let r=0,g=0,b=0,n=0;
-    for(let dy=.25;dy<1;dy+=.5)for(let dx=.25;dx<1;dx+=.5){const X=Math.round(m.ox+(x0+(i+dx)*fx)*m.sx),Y=Math.round(m.oy+(y0+(j+dy)*fy)*m.sy);
-      if(X<0||Y<0||X>=W||Y>=H)continue;const k=(Y*W+X)*4;r+=px[k];g+=px[k+1];b+=px[k+2];n++}
+    for(let a=0;a<2;a++){const Y=YS[j*2+a];if(Y<0||Y>=H)continue;for(let c=0;c<2;c++){const X=XS[i*2+c];
+      if(X<0||X>=W)continue;const k=(Y*W+X)*4;r+=px[k];g+=px[k+1];b+=px[k+2];n++}}
     const q=(j*ow+i)*3;if(n){o[q]=r/n;o[q+1]=g/n;o[q+2]=b/n}else o[q]=o[q+1]=o[q+2]=-1}
   return o;
 }
