@@ -1,4 +1,4 @@
-# 図鑑埋め支援「カメラで登録」の読み取り — 引き継ぎ資料（2026-10-27、Poke tools 2026.10.27a 時点）
+# 図鑑埋め支援「カメラで登録」の読み取り — 引き継ぎ資料（2026-10-27、Poke tools 2026.10.27b 時点）
 
 前の担当：Claude（https://claude.ai/code/session_01BWDmMQYtkKkp2qcmPnnoVb）。2026-10-27 から Grok Bot（Poke Tools担当）が引き継ぎ（RS/E・DP/Pt・HGSS を追加）。
 リポジトリ全体の決まり（記録は `HANDOFF.md` の作業ログ・`APP_VER` を上げる・`git add -A` は使わない・公開リポジトリなので個人のセーブの中身は書かない）は、リポジトリ直下の `HANDOFF.md` を見てください。この資料は、図鑑の読み取りのしくみ・進み具合・途中の作業だけをまとめたものです。
@@ -79,6 +79,7 @@
 - **2026.10.26e**：動いている途中のコマだけで決まる「捕まえた」は2枚以上そろったときだけ（1枚なら読み直しでもう1枚を読みにいき、それでも1枚なら「不明」）。
 - **2026.10.26g（図鑑のタブ）**：図鑑が複数ある作品は、図鑑の画面にタブ（`#dxTabs`・`dxViews`・`dxEntriesOf`）。読み取りは作品のすべての図鑑に振り分け（`dxAllSp`）、結果の画面にも図鑑ごとのタブ（`dxScan.view`）。Gemini には図鑑名（`dex`）も答えてもらう。
 - **2026.10.27a**：型紙に RS/E・DP/Pt・HGSS を足した。`dxt.js` に、型紙で使うときだけ効く3つ（`num.one`・`num.pre`・`rows.at`）を足した。今までの型紙には書いていないので、読み方は変わらない。
+- **2026.10.27b（速さ。読み方は同じ）**：型紙の作品は Worker で縮めた画像（pxS）を作らない（`tpl.noS`）。保存用の JPEG は Gemini 連携のときだけ（`dxBmPx` の `jpg()`、`J=0` なら作らない）。動画のコマは空いている Worker があれば `VideoFrame` で渡す（`dxVF`。描けなければ `createImageBitmap` に戻す）。2倍速で再生できなくても待ちが少なければ Worker で読む。再生のあとで取り直す画面も Worker で読む（`File.dxPend`）。測り方：Playwright で `Emulation.setCPUThrottlingRate` 4・6、`taskset -c 0,1`。HGSS 83→40秒（6倍）など、`HANDOFF.md` の 2026-10-27 の記録。
 - 結果の画面：`renderDxScan`（`dxs-…`）。LEGENDS アルセウスだけ「自分で捕まえた」（1）と「登録だけ」（2）を分ける（`dxOwn()`）。
 
 ---

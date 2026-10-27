@@ -5204,7 +5204,7 @@ function dxr7Rows(pxS,WS,HS,pxB,WB,HB){const r=dxrRead(pxS,WS,HS,pxB,WB,HB);if(!
    確かめ方 dxrSure（3本以上の行が合うこと）を、ほかの世代でも使える */
 const DX_READERS={
   // 型紙で読む作品（第7世代 SM・USUM 以外）。作品ごとの違いは型紙 DXT_PROF に書く。arg は使う型紙の名前
-  tpl:{games:Object.keys(DXT_GAME),entry:'dxtRows',arg:gid=>DXT_GAME[gid],dense:true,
+  tpl:{games:Object.keys(DXT_GAME),entry:'dxtRows',arg:gid=>DXT_GAME[gid],dense:true,noS:true,
     fns:()=>[dxtBox,dxtScreens,dxtMap,dxtPatch,dxtInk,dxtGlyphs,dxtCorr,dxtFeat,dxtNear,dxtDecode,dxtIndep,dxtRead,dxtRows],
     vals:()=>({DXT_PROF,dxtSure,dxtSureI})},
   gen7:{games:['sm','usum'],entry:'dxr7Rows',
@@ -5222,10 +5222,10 @@ function dxPoolOk(){
   try{if(!window.Worker||!window.Blob||!window.URL)return false;
     const src=Object.values(DX_READERS).map(R=>Object.entries(R.vals()).map(([k,v])=>`const ${k}=${typeof v==='function'?v.toString():JSON.stringify(v)};`).join('\n')+'\n'+R.fns().map(f=>f.toString()).join('\n')).join('\n')
       +'\n'+dxBmPx.toString()
-      +'\nonmessage=async e=>{const d=e.data;let r=null,err=0,blob=null;try{if(d.bm){const P=dxBmPx(d.bm,d.J);r=self[d.entry](P.pxS,P.WS,P.HS,P.pxB,P.WB,P.HB,d.arg);blob=await P.jpg}else r=self[d.entry](d.pxS,d.WS,d.HS,d.pxB,d.WB,d.HB,d.arg)}catch(x){err=String(x)}postMessage({r,err,blob})}';
+      +'\nonmessage=async e=>{const d=e.data;let r=null,err=0,blob=null;try{if(d.bm){const P=dxBmPx(d.bm,d.J,d.noS);r=self[d.entry](P.pxS,P.WS,P.HS,P.pxB,P.WB,P.HB,d.arg);if(d.J)blob=await P.jpg()}else r=self[d.entry](d.pxS,d.WS,d.HS,d.pxB,d.WB,d.HB,d.arg)}catch(x){err=String(x);if(d.bm)try{d.bm.close()}catch(y){}}postMessage({r,err,blob,vf:!!(d.bm&&self.VideoFrame&&d.bm instanceof self.VideoFrame)})}';
     const url=URL.createObjectURL(new Blob([src],{type:'text/javascript'})),n=Math.max(2,Math.min(3,(navigator.hardwareConcurrency||4)-1)); // iPhone の Safari は数を少なめに知らせることがあるので、2つ以上にする
     for(let i=0;i<n;i++){const w=new Worker(url);
-      w.onmessage=e=>{const j=w._j;w._j=null;dxPool.free.push(w);dxPump();if(e.data.err)console.warn('dx worker',e.data.err);if(j)j.res(j.sent?(e.data.err?undefined:{r:e.data.r,blob:e.data.blob}):e.data.err?null:e.data.r)};
+      w.onmessage=e=>{const j=w._j;w._j=null;dxPool.free.push(w);dxPump();if(e.data.err){console.warn('dx worker',e.data.err);if(e.data.vf)dxVF=false}if(j)j.res(j.sent?(e.data.err?undefined:{r:e.data.r,blob:e.data.blob}):e.data.err?null:e.data.r)};
       w.onerror=ev=>{try{ev.preventDefault()}catch(x){}dxPoolDown()};
       dxPool.ws.push(w);dxPool.free.push(w)}
   }catch(e){dxPoolDown()}
@@ -5233,16 +5233,20 @@ function dxPoolOk(){
 // Worker がこわれたとき：読みかけ・待っているものは、この画面で読む
 function dxPoolDown(){const js=[...(dxPool.ws||[]).map(w=>w._j),...dxPool.q].filter(Boolean);(dxPool.ws||[]).forEach(w=>{w._j=null;try{w.terminate()}catch(e){}});dxPool.ws=[];dxPool.free=[];dxPool.q=[];js.forEach(j=>j.main())}
 function dxPump(){while(dxPool.free.length&&dxPool.q.length){const j=dxPool.q.shift();if(j.cancel){if(j.bm)try{j.bm.close()}catch(e){}j.res(undefined);continue}const w=dxPool.free.pop();w._j=j;
-  if(j.bm){const bm=j.bm;j.bm=null;j.sent=1;w.postMessage({entry:j.R.entry,arg:j.arg,bm,J:j.J},[bm]);continue}
+  if(j.bm){const bm=j.bm;j.bm=null;j.sent=1;w.postMessage({entry:j.R.entry,arg:j.arg,bm,J:j.J,noS:!!j.R.noS},[bm]);continue}
   const P=j.P;j.P=null;w.postMessage({entry:j.R.entry,arg:j.arg,pxS:P.pxS,WS:P.WS,HS:P.HS,pxB:P.pxB,WB:P.WB,HB:P.HB});j.keep=P}}
 /* 動画のコマ（ImageBitmap）を、そのまま裏の処理に渡して読む。画素にする・縮める・保存用の JPEG（長い辺 J 以下）を作るのも裏で行う
    （この画面の処理を止めないので、再生中のコマの見落としが出にくい）。結果は {r: 読んだ結果, blob: JPEG}。だめなら undefined */
-function dxBmPx(bm,J){
-  const W=bm.width,H=bm.height,cv=(w,h)=>{const c=new OffscreenCanvas(w,h),x=c.getContext('2d',{willReadFrequently:true});x.imageSmoothingQuality='high';return [c,x]};
+// noS：縮めた画像（約1200px）を使わない読み方（型紙）。作らない（1枚ごとの手間が大きく、iPhone では読み取りが遅くなっていた）
+// 保存用の JPEG（長い辺 J 以下）は jpg() を呼んだときだけ作る（スマホ内だけで読むときは使わないので作らない）
+function dxBmPx(bm,J,noS){
+  const W=bm.displayWidth||bm.width,H=bm.displayHeight||bm.height,cv=(w,h)=>{const c=new OffscreenCanvas(w,h),x=c.getContext('2d',{willReadFrequently:true});x.imageSmoothingQuality='high';return [c,x]};
   const sb=Math.min(1,2400/Math.max(W,H)),WB=Math.max(1,Math.round(W*sb)),HB=Math.max(1,Math.round(H*sb)),[cb,xb]=cv(WB,HB);xb.drawImage(bm,0,0,WB,HB);try{bm.close()}catch(e){}
-  const ss=Math.min(1,1200/Math.max(WB,HB)),WS=Math.max(1,Math.round(WB*ss)),HS=Math.max(1,Math.round(HB*ss)),[cs,xs]=cv(WS,HS);xs.drawImage(cb,0,0,WS,HS);
-  const sj=Math.min(1,J/Math.max(WB,HB)),[cj,xj]=cv(Math.max(1,Math.round(WB*sj)),Math.max(1,Math.round(HB*sj)));xj.drawImage(cb,0,0,cj.width,cj.height);
-  return {pxB:xb.getImageData(0,0,WB,HB).data,WB,HB,pxS:xs.getImageData(0,0,WS,HS).data,WS,HS,jpg:cj.convertToBlob({type:'image/jpeg',quality:.92})}}
+  let pxS=null,WS=0,HS=0;
+  if(!noS){const ss=Math.min(1,1200/Math.max(WB,HB));WS=Math.max(1,Math.round(WB*ss));HS=Math.max(1,Math.round(HB*ss));const [cs,xs]=cv(WS,HS);xs.drawImage(cb,0,0,WS,HS);pxS=xs.getImageData(0,0,WS,HS).data}
+  const jpg=()=>{const sj=Math.min(1,J/Math.max(WB,HB)),[cj,xj]=cv(Math.max(1,Math.round(WB*sj)),Math.max(1,Math.round(HB*sj)));xj.drawImage(cb,0,0,cj.width,cj.height);return cj.convertToBlob({type:'image/jpeg',quality:.92})};
+  return {pxB:xb.getImageData(0,0,WB,HB).data,WB,HB,pxS,WS,HS,jpg}}
+let dxVF=typeof VideoFrame==='function'; // 動画のコマを VideoFrame で裏の処理に渡せるか（裏の処理で描けなかったら、やめる）
 const dxBmOk=()=>typeof OffscreenCanvas!=='undefined'&&(()=>{try{return !!new OffscreenCanvas(1,1).getContext('2d')}catch(e){return false}})();
 function dxReadBm(bm,R,J,tag){return new Promise(res=>{const j={bm,J,R,arg:dxArg(R),res,tag,main:()=>{if(j.bm)try{j.bm.close()}catch(e){}res(undefined)}};if(!dxPoolOk()){j.main();return}dxPool.q.push(j);dxPump()})}
 // 画素 P を読む（結果は entry の返す形）。cancel() で、まだ始まっていなければ取りやめる（結果は undefined）
@@ -5281,11 +5285,11 @@ const dxCv={};
 function dxCanvas(k,W,H){let c=dxCv[k];if(!c){c=dxCv[k]=document.createElement('canvas');c.width=W;c.height=H;c._cx=c.getContext('2d',{willReadFrequently:true})}
   else if(c.width!==W||c.height!==H){c.width=W;c.height=H}return c}
 // 読み取り用の画素（細かい画像 約2400px と、それを縮めた 約1200px）。draw(cx,W,H) で全体を描く
-function dxPxOf(draw,w,h){
+function dxPxOf(draw,w,h,noS){
   const mk=(mx,src)=>{const sc=Math.min(1,mx/Math.max(w,h)),W=Math.max(1,Math.round(w*sc)),H=Math.max(1,Math.round(h*sc));
     const cv=dxCanvas(src?'s':'b',W,H),cx=cv._cx;if(!cx)throw new Error('canvas');cx.imageSmoothingQuality='high';
     if(src)cx.drawImage(src,0,0,W,H);else draw(cx,W,H);return {cv,px:cx.getImageData(0,0,W,H).data,W,H}};
-  const B=mk(2400),S=mk(1200,B.cv);return {pxS:S.px,WS:S.W,HS:S.H,pxB:B.px,WB:B.W,HB:B.H}}
+  const B=mk(2400),S=noS?{px:null,W:0,H:0}:mk(1200,B.cv);return {pxS:S.px,WS:S.W,HS:S.H,pxB:B.px,WB:B.W,HB:B.H}}
 // 読んだ結果をファイルに覚えておく（同じファイルを2回読まない）。dxRows：読めた行（読めなければ null）、dxNoList：一覧が写っていない
 function dxSetRows(file,r){file.dxNoList=!r;file.dxRows=r&&!r.fail&&r.rows?(r.dex?r.rows.map(x=>({...x,dex:r.dex})):r.rows):null;return file.dxRows}
 // 読んだ行の番号 → ポケモン。行に図鑑（dex）が付いていれば、その図鑑の番号表を使う（録画の途中で図鑑を切りかえても、番号を取りちがえない）
@@ -5297,7 +5301,7 @@ async function dxLocalRead(file){
   if(file.dxPend){const r=await file.dxPend;file.dxPend=null;if(r!==undefined)return dxSetRows(file,r)}
   const R=dxReaderOf(dxGame().id);if(!R)return null;
   const d=await dxDecode(file);let P;
-  try{P=dxPxOf((cx,W,H)=>dxDrawUp(cx,d,0,0,W,H),d.w,d.h)}finally{try{d.bm.close&&d.bm.close()}catch(e){}}
+  try{P=dxPxOf((cx,W,H)=>dxDrawUp(cx,d,0,0,W,H),d.w,d.h,R.noS)}finally{try{d.bm.close&&d.bm.close()}catch(e){}}
   return dxSetRows(file,await dxReadPx(P,R));
 }
 // 何枚かを同時に読む（読めなかったら予備の画面 dxAlt も読む）。prog(読み終わった枚数)
@@ -5353,11 +5357,18 @@ async function dxVideoFrames(file,prog,signal,st0){
     let ri=2;const RD=dxReaderOf(dxGame().id),spec=!!RD&&dxPoolOk()&&dxBmOk();
     // 動き続けている所から取る間かく。型紙で読む作品は、ボタンを押しっぱなしで一覧を流すと 0.2 秒で 9 行ほど進むので、0.2 秒ごとに取る
     const MV0=Math.round((RD&&RD.dense?.2:1.5)/DX_VID_STEP),MV1=Math.round((RD&&RD.dense?.2:.75)/DX_VID_STEP),LO=RD&&RD.dense?12:4;
-    const capture=(i,t,lo,mv)=>{if(pend>=(lo?LO:LO+4)||!window.createImageBitmap)return;let pr;try{pr=createImageBitmap(v)}catch(e){return}
+    // （2倍速より遅くしか再生できない端末でも、待ちが少なければ裏で読む。この画面で JPEG にして、あとでまた画素に戻すほうが、ずっと重い）
+    // コマは、空いている裏の処理があれば VideoFrame で渡す（画素を写さないので、この画面の手間がほぼない。createImageBitmap は1枚ごとに画素を写す）。
+    // VideoFrame は動画の再生のバッファーを借りるので、すぐに読まれるときだけ使う（ためこむと再生が止まることがある）
+    const capture=(i,t,lo,mv)=>{if(pend>=(lo?LO:LO+4)||!window.createImageBitmap)return;
+      const toW=spec&&dxPoolWait()<=dxPool.ws.length*(ri>=2?2:1);let pr=null;
+      if(toW&&dxVF&&dxPool.free.length&&!dxPool.q.length){try{pr=Promise.resolve(new VideoFrame(v,{timestamp:Math.round(t*1e6)}))}catch(e){dxVF=false}}
+      if(!pr)try{pr=createImageBitmap(v)}catch(e){return}
       const c={i,t,f:null,rd:null,mv:!!mv};caps.push(c);pend++;
-      if(spec&&ri>=2&&dxPoolWait()<=dxPool.ws.length*2){
-        // 裏の処理で読む。保存用の画像は Gemini に送る大きさ（1400px）で作る
-        c.rd=pr.then(bm=>dxReadBm(bm,RD,GM_MAX,c)).then(x=>{if(!x||!x.blob)return;c.f=new File([x.blob],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'});dxSetRows(c.f,x.r)}).catch(()=>{}).then(()=>{pend--});return}
+      if(toW){
+        // 裏の処理で読む。保存用の画像は Gemini に送る大きさ（1400px）で作る。スマホ内だけで読むときは画像を使わないので作らない（読んだ結果だけを持つ）
+        const J=dxShotMode==='gm'?GM_MAX:0;
+        c.rd=pr.then(bm=>dxReadBm(bm,RD,J,c)).then(x=>{if(!x||J&&!x.blob)return;c.f=new File(x.blob?[x.blob]:[],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'});dxSetRows(c.f,x.r)}).catch(()=>{}).then(()=>{pend--});return}
       enc=enc.then(()=>pr).then(async bm=>{cex.drawImage(bm,0,0,CW,CH);try{bm.close()}catch(e){}
         const bl=await new Promise(r=>ce.toBlob(r,'image/jpeg',.92));if(bl)c.f=new File([bl],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'})}).catch(()=>{}).then(()=>{pend--})};
     const grab=t=>{const g=thumb(),i=S.length;S.push({t,g});
@@ -5432,8 +5443,14 @@ async function dxVideoFrames(file,prog,signal,st0){
     // 取り出したコマが、最初に見た小さな画像と同じ画面かを確かめる（iPhone では、位置を移した先のコマが少しずれることがある）。
     // 区間の真ん中に近いコマから順に試し、合ったコマを使う。2つ目に合ったコマは、読めなかったとき用の予備にする
     const okD=Math.max(noise*2,thr*.6);
-    const snap=async c=>{await seek(S[c].t);const g=thumb(),ok=dif(g,S[c].g)<okD;cbx.drawImage(v,0,0,cb.width,cb.height);
-      const bl=await new Promise(r=>cb.toBlob(r,'image/jpeg',.92));return bl?{ok,f:new File([bl],`${nm}_${S[c].t.toFixed(2)}.jpg`,{type:'image/jpeg'})}:null};
+    // スマホ内だけで読むときは、JPEG にせず、そのコマをそのまま裏の処理に渡して読む（JPEG にして、あとで画素に戻すのは、iPhone ではとても重い）。
+    // 読んだ結果は dxPend に入れておき、読み取りの段階で受け取る
+    const snap=async c=>{await seek(S[c].t);const g=thumb(),ok=dif(g,S[c].g)<okD,fn=`${nm}_${S[c].t.toFixed(2)}.jpg`;
+      if(spec&&dxShotMode!=='gm'){let bm=null;if(dxVF&&dxPool.free.length&&!dxPool.q.length)try{bm=new VideoFrame(v,{timestamp:Math.round(S[c].t*1e6)})}catch(e){dxVF=false}
+        if(!bm)try{bm=await createImageBitmap(v)}catch(e){bm=null}
+        if(bm){const f=new File([],fn,{type:'image/jpeg'});f.dxPend=dxReadBm(bm,RD,0).then(x=>x?x.r:undefined);return {ok,f}}}
+      cbx.drawImage(v,0,0,cb.width,cb.height);
+      const bl=await new Promise(r=>cb.toBlob(r,'image/jpeg',.92));return bl?{ok,f:new File([bl],fn,{type:'image/jpeg'})}:null};
     for(let n=0;n<keep.length;n++){stop();const k=keep[n],[a,z]=seg[k]||[Math.max(1,k-1),Math.min(S.length-1,k+1)],mid=(a+z)/2,cand=[];
       for(let c=a;c<=z;c++)cand.push(c);cand.sort((p,q)=>Math.abs(p-mid)-Math.abs(q-mid));
       const got=caps.filter(c=>c.f&&c.i>=a&&c.i<=z).sort((p,q)=>Math.abs(p.i-mid)-Math.abs(q.i-mid));
@@ -5582,8 +5599,8 @@ async function dxGapFill(files,add,signal,onProg){
   for(const [v,S] of T){const ts=[...S].sort((p,q)=>p-q);let V=null;
     try{V=await dxVidOpen(v);const vv=V.v,dur=vv.duration||0,deadline=t0+1000*Math.min(60,Math.max(15,dur*.5));
       const grabNow=mt=>{n++;onProg&&onProg(Math.min(1,n/total));
-        if(okBm){let pr;try{pr=createImageBitmap(vv)}catch(e){return}pend.push(pr.then(bm=>dxReadBm(bm,R,640)).then(x=>{const rows=x&&dxSetRows({},x.r);if(rows)add(rows)}).catch(()=>{}));return}
-        try{const P=dxPxOf((cx,W,H)=>cx.drawImage(vv,0,0,W,H),vv.videoWidth,vv.videoHeight);pend.push(dxReadPx(P,R).then(r=>{const rows=dxSetRows({},r);if(rows)add(rows)}))}catch(e){}};
+        if(okBm){let pr;try{pr=createImageBitmap(vv)}catch(e){return}pend.push(pr.then(bm=>dxReadBm(bm,R,0)).then(x=>{const rows=x&&dxSetRows({},x.r);if(rows)add(rows)}).catch(()=>{}));return}
+        try{const P=dxPxOf((cx,W,H)=>cx.drawImage(vv,0,0,W,H),vv.videoWidth,vv.videoHeight,R.noS);pend.push(dxReadPx(P,R).then(r=>{const rows=dxSetRows({},r);if(rows)add(rows)}))}catch(e){}};
       let k=0;
       while(k<ts.length&&performance.now()<deadline){if(signal&&signal.aborted)throw {code:'cancelled'};
         await V.seek(Math.max(0,ts[k]-.25)); // 少し前から再生する（再生が始まってすぐは、コマが飛びやすい）
@@ -7656,7 +7673,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.27a';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.27b';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
