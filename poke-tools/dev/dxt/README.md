@@ -14,6 +14,9 @@ Poke tools の図鑑埋め支援で、スマホ内で図鑑の画面を読むし
 7. 番号が飛ぶ一覧（`num.seq:false`。SV の本棚は、見ていないポケモンの本がない）は、本ごとに番号を読み、左から右へ増える本だけを使う（`dxtIndep`）。一覧の端で切れた列（`cols.xmin`・`cols.xmax` の外）は読まない。
 8. `num.split`：となりの数字がくっついて横長の形になったら、いちばん細い所で分ける。`num.edge`：上から下まで続く列（本と本の境目）は数字にしない。
 9. 図鑑の見分けは、見出しの形の見本 `dex.refs`（`{k:図鑑, ref:形, max:その図鑑の最大の番号}`）でもできる。
+10. `num.one`：細い棒だけの「1」（RS/E）は、形をそろえると比べられないので、この幅（高さとの比）より細い形を「1」とする。`tools/selftrain.py` では `ONE=0.38` のように同じ値を渡す。
+11. `num.pre`：一覧の始めで、1番より上に空いた行がいくつまであるか（RS/E・DP はカーソルが真ん中のまま一覧が始まる）。
+12. `rows.at`：行の間かくがそろわない一覧（DP・Pt の輪のように曲がった一覧）は、`[行の中心の y, 左右のずれ]` を行ごとに書く（`y0`・`pitch` のかわり）。
 
 ## アプリでの動画の読み方（index.html）
 
@@ -24,7 +27,7 @@ Poke tools の図鑑埋め支援で、スマホ内で図鑑の画面を読むし
 
 ## 型紙を作る手順（例：作品 xx）
 
-道具は Python と Playwright（Chromium）を使います。`harness.html` を `python3 -m http.server 8766` で開ける場所に置いて使います（道具の中のパス `/home/claude/gen`・`/tmp/claude-0` は、作った人の作業場所です。自分の場所に直してください）。
+道具は Python と Playwright（Chromium）を使います。`harness.html` を `python3 -m http.server 8766` で開ける場所に置いて使います（道具の中のパス `/home/claude/gen`・`/tmp/claude-0` は、作った人の作業場所です。自分の場所に直すか、その名前でリンクを作ってください。Playwright の Chromium は MKV（H.264）の録画もそのまま再生できた（2026-10-27）ので、webm に直さなくてもよい）。
 
 1. `tools/stills.py 録画 st/xx 8`：録画から止まった場面を取り出す。
 2. `prof/xx.json` を書く：設計の大きさ `W`・`H`、行 `rows`（`y0`・`pitch`・`n`）、列 `cols`、番号の四角 `num`、特徴の四角 `feat`、最大の番号 `maxNo`。
@@ -33,5 +36,5 @@ Poke tools の図鑑埋め支援で、スマホ内で図鑑の画面を読むし
 5. `tools/selftrain.py 学習.json 'グループ:{"0":7,...}' prof/xx_tm.json 最大の番号`：番号の並びを使って、0〜9 の見本を作る。
 6. `tools/status.py`（グループ分け）・`tools/bylabel.py`（決まりで名前を付けて、境目に近い行から並べる）で、状態の見分け方を決め、`prof/xx_rule.py` に書く。「?」や「-----」の形は `tools/mkref.py` で形の見本にできる。
 7. `tools/mkprof.py xx`：型紙を仕上げる（`prof/xx_full.json`）。
-8. `tools/read.py`・`tools/check.py`：全部の場面を読み、同じ番号の食いちがいがないか、画面の「捕まえた数・見つけた数」と合うかを確かめる。
+8. `tools/read.py`・`tools/check.py`（1枚の数字の読みを見るのは `tools/dbgnum.py 型紙 画像`）：全部の場面を読み、同じ番号の食いちがいがないか、画面の「捕まえた数・見つけた数」と合うかを確かめる。
 9. `prof/games.json` に `"型紙の名前":["作品のid"]` を足し、`tools/inject.py` で `index.html` に組み込む。`tools/apptest.py` で、アプリの画面での読み取りを確かめる。

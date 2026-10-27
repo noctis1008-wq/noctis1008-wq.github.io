@@ -17,7 +17,7 @@ im=Image.new('RGB',(k*(cw+8),n*(ch+4)+20),'white');dr=ImageDraw.Draw(im)
 for j in range(k):
   idx=np.where(a==j)[0];dr.text((j*(cw+8)+4,4),f'{j}:{len(idx)}',fill='black')
   for t,i in enumerate(rng.permutation(idx)[:n]):
-    u,m,kk=ref[i];nc=P.get('cols',{}).get('n',1);cp=P.get('cols',{}).get('pitch',0);hs=P.get('cols',{}).get('scroll');yc=P['rows']['y0']+(0 if hs else m.get('d',0))+(kk//nc)*P['rows']['pitch'];xo=(kk%nc)*cp+(m.get('d',0) if hs else 0);I=Image.open(u)
+    u,m,kk=ref[i];nc=P.get('cols',{}).get('n',1);cp=P.get('cols',{}).get('pitch',0);hs=P.get('cols',{}).get('scroll');AT=P['rows'].get('at');yc=(AT[kk//nc][0] if AT else P['rows']['y0']+(kk//nc)*P['rows']['pitch'])+(0 if hs else m.get('d',0));xo=(kk%nc)*cp+(m.get('d',0) if hs else 0)+(AT[kk//nc][1] if AT else 0);I=Image.open(u)
     box=(m['ox']+(crop[0]+xo)*m['sx'],m['oy']+(yc+crop[1])*m['sy'],m['ox']+(crop[2]+xo)*m['sx'],m['oy']+(yc+crop[3])*m['sy'])
     im.paste(I.crop(tuple(int(v) for v in box)).resize((cw,ch)),(j*(cw+8)+4,20+t*(ch+4)))
 im.save(out+'.png');print([int((a==j).sum()) for j in range(k)])

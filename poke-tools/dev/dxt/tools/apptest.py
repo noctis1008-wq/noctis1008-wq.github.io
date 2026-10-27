@@ -21,3 +21,4 @@ with sync_playwright() as p:
     import collections;c=collections.Counter(got.values());print('数',dict(c),'捕まえた',c['caught'],'見つけた(捕まえた+見ただけ)',c['caught']+c['seen'])
     print('gaps',pg.evaluate("JSON.stringify(dxScan.gaps)"));print('vt',st)
     print('errors',errs)
+    allno=pg.evaluate("()=>dxEntries().map(([n,s])=>n)");print('未読の番号',[n for n in allno if str(n) not in got][:60])

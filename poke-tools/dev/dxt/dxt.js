@@ -124,10 +124,11 @@ function dxtNear(F,C){let best=null,bd=1e9,b2=1e9;
   for(const c of C.c){let d=0;for(let i=0;i<F.length;i++){const z=(F[i]-c.m[i])/C.s[i];d+=z*z}d=Math.sqrt(d/F.length);if(d<bd){b2=bd;bd=d;best=c}else if(d<b2)b2=d}
   return best&&bd<C.max?best.k:'unknown'}
 // 番号：すべての行にいちばん合う「いちばん上の番号」。行 i の番号は base+i。けた数が合わない行は減点
-function dxtDecode(R,maxNo,digits){
+// pre：一覧の始めで、1番より上に空いた行がいくつまであるか（P.num.pre。RS/E はカーソルが真ん中のまま一覧が始まる）
+function dxtDecode(R,maxNo,digits,pre=0){
   let best=-1e9,b2=-1e9,bb=0;const used=R.filter(r=>r.S).length;if(used<2)return null;
-  for(let b=1;b<=maxNo;b++){let t=0;
-    for(const r of R){if(!r.S)continue;const n=b+r.k;if(n>maxNo){t-=3;continue}const s=digits?String(n).padStart(digits,'0'):String(n);
+  for(let b=1-pre;b<=maxNo;b++){let t=0;
+    for(const r of R){if(!r.S)continue;const n=b+r.k;if(n>maxNo||n<1){t-=3;continue}const s=digits?String(n).padStart(digits,'0'):String(n);
       if(s.length!==r.S.length){t-=1.5;continue}for(let j=0;j<s.length;j++)t+=r.S[j][+s[j]]}
     if(t>best){b2=best;best=t;bb=b}else if(t>b2)b2=t}
   let agree=0;R.forEach(r=>{if(!r.S)return;const n=bb+r.k,s=digits?String(n).padStart(digits,'0'):String(n);if(s.length!==r.S.length)return;
@@ -161,11 +162,12 @@ function dxtRead(pxB,WB,HB,P,learn){
       // 見出しの文字の形の見本があるときは、形がはっきり同じときだけ、その図鑑とする（ほかの図鑑の画面を取りちがえない）
       if(P.dex.fref&&P.dex.fmin!=null&&!(dexF[dexF.length-1]>=P.dex.fmin))dex=null;}
     // 行の位置：一覧がなめらかに動いて途中で止まる作品（P.rows.scroll）は、行の位置を少しずつずらしてみて、数字がいちばんよく読める位置を使う
+    // 行の間かくがそろわない一覧（P.rows.at：[行の中心の y, 左右のずれ] の並び。DP・Pt の図鑑は輪のように曲がった一覧）は、行ごとの位置を使う
     // マス目の作品（P.cols）は、行ごとに列を左から右へ。番号は左上から 1 ずつ増える（k ＝ 行×列の数＋列）
     const nc=P.cols?P.cols.n:1,cp=P.cols?P.cols.pitch:0;
-    const rowsAt=(d,feat)=>{const R=[];const dy=P.cols&&P.cols.scroll?0:d,dx=P.cols&&P.cols.scroll?d:0;for(let r=0;r<P.rows.n;r++)for(let c=0;c<nc;c++){const yc=P.rows.y0+dy+r*P.rows.pitch,xo=dx+c*cp,k=r*nc+c,g=dxtGlyphs(pxB,WB,HB,m,P,yc,xo);
+    const rowsAt=(d,feat)=>{const R=[];const dy=P.cols&&P.cols.scroll?0:d,dx=P.cols&&P.cols.scroll?d:0;for(let r=0;r<P.rows.n;r++)for(let c=0;c<nc;c++){const at=P.rows.at&&P.rows.at[r],yc=(at?at[0]:P.rows.y0+r*P.rows.pitch)+dy,xo=dx+c*cp+(at?at[1]:0),k=r*nc+c,g=dxtGlyphs(pxB,WB,HB,m,P,yc,xo);
       const cut=P.cols&&P.cols.xmin!=null&&(P.num.x0+xo<P.cols.xmin||P.num.x1+xo>P.cols.xmax); // 一覧の端で切れた列は数字を読まない
-      const S=!cut&&P.tm&&g&&(!P.num.digits||g.length===P.num.digits)?g.map(x=>dxtCorr(x.f,P.tm,P.tm2)):null;
+      const S=!cut&&P.tm&&g&&(!P.num.digits||g.length===P.num.digits)?g.map(x=>P.num.one&&x.w<P.num.one?[0,1,0,0,0,0,0,0,0,0]:dxtCorr(x.f,P.tm,P.tm2)):null; // （P.num.one：細い棒だけの「1」（RS/E など）は、形をそろえると比べられないので、幅で「1」とする）
       R.push({k,S,G:learn?g:null,F:feat?dxtFeat(pxB,WB,HB,m,P,yc,learn,xo):null})}return R};
     let d0=0;
     // （横に流れる一覧（P.cols.scroll：SV の本棚など）は、列の位置を同じようにずらして探す）
@@ -176,16 +178,16 @@ function dxtRead(pxB,WB,HB,P,learn){
     const rows=rowsAt(d0,true);
     if(learn&&P.num.seq===false){const DI=P.tm?dxtIndep(rows,(P.dex&&P.dex.refs&&(P.dex.refs.find(x=>x.k===dex)||{}).max)||P.maxNo):null,sure=!!DI&&dxtSureI(DI);
       out=out||[];out.push({m,d:d0,dex,sure,dexF:Array.from(dexF||[]),dexP:dexF&&dexF.P&&dexF.P[0],rows:rows.map(r=>{const n=sure&&DI.keep.has(r.k)?DI.keep.get(r.k):null;return {k:r.k,num:n,ok:n!=null,G:r.G&&r.G.map(x=>Array.from(x.f)),W:r.G&&r.G.map(x=>x.w),F:Array.from(r.F),Pt:r.F.P}})});continue}
-    if(learn){const DL=P.tm?dxtDecode(rows,P.maxNo,P.num.digits):null,sure=DL&&dxtSure(DL);
+    if(learn){const DL=P.tm?dxtDecode(rows,P.maxNo,P.num.digits,P.num.pre):null,sure=DL&&dxtSure(DL);
       const okL=r=>{if(!sure||!r.S)return false;const n=DL.base+r.k,st=P.num.digits?String(n).padStart(P.num.digits,'0'):String(n);if(st.length!==r.S.length)return false;return r.S.every((a,j)=>a.indexOf(Math.max(...a))===+st[j])};
       out=out||[];out.push({m,d:d0,dex,sure,dexF:Array.from(dexF||[]),dexP:dexF&&dexF.P&&dexF.P[0],rows:rows.map(r=>({k:r.k,num:sure?DL.base+r.k:null,ok:okL(r),G:r.G&&r.G.map(x=>Array.from(x.f)),W:r.G&&r.G.map(x=>x.w),F:Array.from(r.F),Pt:r.F.P}))});continue}
     const mxNo=(P.dex&&P.dex.refs&&(P.dex.refs.find(x=>x.k===dex)||{}).max)||P.maxNo; // 図鑑ごとの最大の番号
     if(P.num.seq===false){const DI=dxtIndep(rows,mxNo);if(!dxtSureI(DI)){if(!out)out={fail:'num',dex};continue}
       return {dex,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>({num:DI.keep.get(r.k),status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))}}
-    const D=dxtDecode(rows,P.maxNo,P.num.digits);
+    const D=dxtDecode(rows,P.maxNo,P.num.digits,P.num.pre);
     if(!D||!dxtSure(D)){if(D&&!out)out={fail:'num',dex};continue}
     // 1行ずつの確かめ：その行の数字が、決めた番号と2けた以上合う行だけを入れる（一覧の外・はしで切れた行・読みまちがえた行は入れない）
-    const okRow=r=>{if(!r.S)return false;const n=D.base+r.k,st=P.num.digits?String(n).padStart(P.num.digits,'0'):String(n);if(st.length!==r.S.length)return false;
+    const okRow=r=>{if(!r.S||D.base+r.k<1)return false;const n=D.base+r.k,st=P.num.digits?String(n).padStart(P.num.digits,'0'):String(n);if(st.length!==r.S.length)return false;
       let c=0;r.S.forEach((a,j)=>{if(a.indexOf(Math.max(...a))===+st[j])c++});return c>=Math.min(2,st.length)};
     return {dex,rows:rows.filter(okRow).map(r=>({num:D.base+r.k,status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))};
   }
