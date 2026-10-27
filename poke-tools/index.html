@@ -2887,7 +2887,7 @@ body:not(.app) .obsapp{display:none!important}
 </svg></div>
   <ol class="dxc-steps">
     <li><b class="n">1</b><span>3DSの画面が<b>大きく</b>写るように、正面から撮ります。光が映りこまない向きにしてください。</span></li>
-    <li><b class="n">2</b><span>録画しながら、<b>左右キー</b>で図鑑のページをめくります。1ページごとに<b>0.5秒くらい</b>止めます。</span></li>
+    <li><b class="n">2</b><span>一覧の<b>いちばん上（No.001）</b>を出してから録画を始め、<b>左右キー</b>で図鑑のページをめくります。1ページごとに<b>0.5秒くらい</b>止めます。</span></li>
     <li><b class="n">3</b><span>最後のページまで撮ったら、録画を止めて「ビデオを使用」を押します。</span></li>
   </ol>
   <label class="dxc-chk"><input type="checkbox" id="dxTipOff">次からは表示しない</label>
@@ -5410,6 +5410,8 @@ async function dxVideoFrames(file,prog,signal,st0){
     // （型紙の vseg：絵が動き続ける作品（XY の一覧のポケモン）。止まった場面でも違いが小さく残り、あとで選ぶ場面の多くが、見ているときに取ったコマの外になる。
     //   そういう作品は、見ているコマをすべて取って読む（あとで位置を移して取り直すと、1枚ごとにとても時間がかかる））
     const vseg=!!RD&&dxVseg();
+    // （vseg で止まっている間は、2コマに1つだけ取る。同じ画面を何度も読んでも多数決の結果は同じで、iPhone では1コマ読むごとに時間がかかる）
+    const VS=window.__VS||2;
     const MV0=Math.round((RD&&RD.dense?.2:1.5)/DX_VID_STEP),MV1=Math.round((RD&&RD.dense?.2:.75)/DX_VID_STEP),LO=RD&&RD.dense?12:4;
     // （2倍速より遅くしか再生できない端末でも、待ちが少なければ裏で読む。この画面で JPEG にして、あとでまた画素に戻すほうが、ずっと重い）
     // コマは、空いている裏の処理があれば VideoFrame で渡す（画素を写さないので、この画面の手間がほぼない。createImageBitmap は1枚ごとに画素を写す）。
@@ -5429,7 +5431,7 @@ async function dxVideoFrames(file,prog,signal,st0){
       if(i){const d=dif(g,S[i-1].g);S[i].d=d;recD.push(d);if(recD.length>40)recD.shift();const md=recD.slice().sort((a,b)=>a-b)[recD.length>>1];
         // 止まった1コマ目と4コマ目。動いている途中でも、動きが前より小さくなった瞬間（速くページを送ったとき）も取る
         const tO=Math.max(3,md*1.6),pd=i>1?S[i-1].d:1e9;
-        if(vseg&&spec){if(d<tO){run++;mov=0}else{run=0;mov++}capture(i,t,0,d>=tO)}
+        if(vseg&&spec){if(d<tO){run++;mov=0}else{run=0;mov++}if(d>=tO||(run-1)%VS===0)capture(i,t,0,d>=tO)}
         else if(d<tO){run++;mov=0;if(run===1||run===4)capture(i,t)}else{run=0;mov++;
           // ずっと動いている所（スクロールし続けたなど）は、1.5秒たったら0.75秒ごとに取る（あとで選ぶ場面と同じ決まり）
           // （動いている途中の分は、止まった場面の分の枠を残すため、待ちが少ないときだけ取る）
@@ -5509,6 +5511,8 @@ async function dxVideoFrames(file,prog,signal,st0){
     for(let n=0;n<keep.length;n++){stop();const k=keep[n],[a,z]=seg[k]||[Math.max(1,k-1),Math.min(S.length-1,k+1)],mid=(a+z)/2,cand=[];
       for(let c=a;c<=z;c++)cand.push(c);cand.sort((p,q)=>Math.abs(p-mid)-Math.abs(q-mid));
       const got=caps.filter(c=>c.f&&c.i>=a&&c.i<=z).sort((p,q)=>Math.abs(p.i-mid)-Math.abs(q.i-mid));
+      // （vseg：取ったコマがない場面は、位置を移して取り直さない（前後に取ったコマで同じ画面を読んでいる。位置を移すのは iPhone でとても遅い））
+      if(vseg&&spec&&!got.length)continue;
       if(got.length){const f=got[0].f;if(got[1])f.dxAlt=got[1].f;f.dxVid=1;f.dxV=file;f.dxT=S[got[0].i].t;out.push(f);prog&&prog(.6+.4*(n+1)/keep.length);continue}
       let main=null,spare=null,first=null,last=-9;
       for(const c of cand.slice(0,5)){const r=await snap(c);if(!r)continue;if(!first)first=r.f;
@@ -5921,10 +5925,10 @@ async function dxGmAfterLocal(o){
   // 1) 「不明」のポケモン：止まった画面・行の場所がわかるものを選ぶ
   const need=new Map();for(const [s,v] of found)if(v==='unknown')need.set(s,null);
   if(need.size)for(const f of files)for(const x of [f,f.dxAlt]){if(!x||!x.dxRows||!hasPx(x))continue;
-    for(const r of x.dxRows){if(r.status!=='unknown')continue;const s=dxSpOf(r,byNo);if(!need.has(s))continue;const c=need.get(s),sc=(r.box?2:0)+(f.dxMov?0:1);
-      if(!c||sc>c.sc)need.set(s,{x,box:r.box||null,s,sc})}}
+    for(const r of x.dxRows){if(r.status!=='unknown')continue;const s=dxSpOf(r,byNo);if(!need.has(s))continue;const c=need.get(s),sc=(r.box?2+r.box[1]:0)+(f.dxMov?0:1); // （行の場所がわかり、止まった画面で、画面の下のほうにある行（見出しにかかりにくい）を選ぶ）
+      if(!c||sc>c.sc)need.set(s,{x,box:r.box||null,s,sc,num:r.num,dex:r.dex||null})}}
   const items=[];const byBox=new Map();
-  for(const c of need.values()){if(!c)continue;if(c.box){items.push({x:c.x,box:c.box,s:c.s});continue}
+  for(const c of need.values()){if(!c)continue;if(c.box){items.push({x:c.x,box:c.box,s:c.s,num:c.num,dex:c.dex});continue}
     // 行の場所がわからないときは、画面まるごと（同じ画面は1回だけ）
     let it=byBox.get(c.x);if(!it){it={x:c.x,box:null,s:null};byBox.set(c.x,it);items.push(it)}}
   // 2) 一覧が読めなかった画面
@@ -5941,9 +5945,11 @@ async function dxGmAfterLocal(o){
       if(miss)addFr(f)}}
   // 前に AI で読んだ答え
   const vkey=it=>{const x=it.x;return (x.dxV?`${x.dxV.name}|${x.dxV.size}|${(+x.dxT).toFixed(3)}`:`${x.name}|${x.size}|${x.lastModified}`)+'|'+(it.box||[]).join(',')+'|'+dk};
-  const accept=(it,arr)=>useAi((arr||[]).filter(a=>!it.s||spOfAi(a)===it.s));
+  const accept=(it,arr)=>{arr=arr||[];if(!it.box||!it.s)return useAi(arr.filter(a=>!it.s||spOfAi(a)===it.s));
+    const a=arr.find(a=>Number(a&&a.no)===it.num)||(arr.length===1?arr[0]:null);if(!a)return 0;const st=dxStOk(a.status,g)?a.status:'unknown';
+    if(!found.has(it.s)||found.get(it.s)==='unknown')found.set(it.s,st);return st==='unknown'?0:1};
   const todo=[];let nCache=0;for(const it of items){it.hk=vkey(it);const c=gmCacheGet(it.hk);if(c&&c.v&&c.v.length&&accept(it,c.v)){nCache++;continue}todo.push(it)}
-  const B=gmPack(todo),nB=B.length;let nReq=0,nSent=0,note='';
+  const B=gmPack(todo),nB=B.length,tG=performance.now();let nReq=0,nSent=0,nOk=0,note='';
   dxStage('gm',nB?'now':'done',nB?(nB>1?`1 / ${nB}回目`:`${todo.length}か所`):'不要',0);
   // 動画からその時刻の画面を取り直す（動画ごとに1つだけ開く）
   const vc=new Map();const img=async x=>{if(x.size>0)return await dxDecode(x);let V=vc.get(x.dxV);if(!V){V=await dxVidOpen(x.dxV);vc.set(x.dxV,V)}
@@ -5953,18 +5959,18 @@ async function dxGmAfterLocal(o){
       st.textContent=`AIに送る画像を用意しています…（${nB>1?`${b+1}/${nB}回目`:`${n}か所`}）`;dxProg(.4+.6*b/nB);dxStage('gm','now',nB>1?`${b+1} / ${nB}回目`:`${n}か所`,b/nB);
       let sh;try{sh=await gmSheet(part,img)}catch(e){continue}
       const props={no:{type:'INTEGER'},status:{type:'STRING',enum:g.id==='la'?['caught','reg','seen','none','unknown']:['caught','seen','none','unknown']}};if(n>1)props.tile={type:'INTEGER'};if(o.MV)props.dex={type:'STRING',enum:o.MV.map(z=>z[1])};
-      const cut=part.some(it=>it.box)?'\nこのうち、一覧の1行（または1マス）だけを切り出した画像は、その行の番号と状態だけを答えてください（となりの行がはしに少し写っていても、それは答えません）。':'';
+      const cut=part.some(it=>it.box)?'\nこのうち、一覧の1行（または1マス）だけを切り出した画像は、その行の番号と状態だけを答えてください（となりの行がはしに少し写っていても、それは答えません）。'+part.map((it,i)=>it.box?`\n画像 ${i+1}：番号 ${it.num} の欄`:'').join(''):'';
       const body={contents:[{role:'user',parts:[{text:prompt(n)+cut},{inline_data:{mime_type:'image/jpeg',data:sh.data}}]}],
         generationConfig:{temperature:0,responseMimeType:'application/json',responseSchema:{type:'ARRAY',items:{type:'OBJECT',properties:props,required:[...(n>1?['tile']:[]),...(o.MV?['dex']:[]),'no','status']}}}};
       const j=await gmAsk(key,body,st,`AIで読み取り中…（${n}か所をまとめて${nB>1?`・${b+1}/${nB}回目`:''}）`);nReq++;nSent+=n;
       const arr=gmParse(j);if(!arr)continue;
       const per=part.map(()=>[]);arr.forEach(x=>{const t=n>1?Number(x&&x.tile):1;if(Number.isInteger(t)&&t>=1&&t<=n)per[t-1].push(o.MV?{dex:x.dex,no:x.no,status:x.status}:{no:x.no,status:x.status})});
-      part.forEach((it,i)=>{if(accept(it,per[i])){gmCachePut(it.hk,per[i]);if(!it.box&&!it.s&&failed>0)failed--}})}
+      part.forEach((it,i)=>{if(accept(it,per[i])){nOk++;gmCachePut(it.hk,per[i]);if(!it.box&&!it.s&&failed>0)failed--}})}
   }catch(err){if(err&&err.code==='cancelled')throw err;note=(err&&err.msg)||''}
   finally{for(const V of vc.values())V.close()}
-  dxProg(1);dxStage('gm','done',nReq?`${nReq}回（${nSent}か所）`:'不要');
+  if(nReq)dxTm.gm=performance.now()-tG;dxProg(1);dxStage('gm','done',nReq?`${nReq}回（${nSent}か所）`:'不要');
   const sum=[];if(nLocal)sum.push(`スマホ内で読めた画像 ${nLocal}枚`);if(nCache)sum.push(`前にAIで読んだ所 ${nCache}か所`);
-  sum.push(nSent?`AIに送った所 ${nSent}か所（${nReq}回）`:note?'AIでは読み取れませんでした':'AIには送りませんでした（スマホ内で決まりました）');
+  sum.push(nSent?`AIに送った所 ${nSent}か所（${nReq}回・読めた所 ${nOk}か所）`:note?'AIでは読み取れませんでした':'AIには送りませんでした（スマホ内で決まりました）');
   dxGmSum=sum.join('・')+'。'+(note?note+' ':'');
   return failed}
 // くわしく：図鑑ごとに、その図鑑の画面で読んだ数と、ゲームの画面の上の数（読めたとき）。合わない図鑑があれば、そう書く
@@ -6024,7 +6030,7 @@ async function dxOnFiles(e){
   const order=new Map();[entries,...dxViews(g).map(([v])=>dxEntriesOf(g,v))].forEach(E=>E.forEach(x=>{if(!order.has(x[1]))order.set(x[1],order.size)}));
   dxScan={mode,items:[...found].sort((a,b)=>(order.get(a[0])??1e9)-(order.get(b[0])??1e9)),fix:carry?carry.fix:{},off:new Set(carry?carry.off:[]),tab:null,gaps,failed:vinfo?0:failed,
     src:(vinfo?`動画${vinfo.nv>1?vinfo.nv+'本':''}から画像${nT}枚`:`画像${nT}枚`)+'を読み取りました',
-    tip:dxTallyText(g)+`かかった時間：${Math.max(1,Math.round((performance.now()-tStart)/1000))}秒${dxTm.vid!=null?`（動画から取り出す ${Math.round(dxTm.vid/1000)}秒${dxTm.fill!=null?`・読めなかった所の読み直し ${Math.round(dxTm.fill/1000)}秒`:''}）`:''}。`+vt+(mode==='gm'?dxGmSum+(failed&&(!vinfo||gapT)?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
+    tip:dxTallyText(g)+`かかった時間：${Math.max(1,Math.round((performance.now()-tStart)/1000))}秒${dxTm.vid!=null?`（動画から取り出す ${Math.round(dxTm.vid/1000)}秒${dxTm.fill!=null?`・読めなかった所の読み直し ${Math.round(dxTm.fill/1000)}秒`:''}${dxTm.gm!=null?`・AIでの読み取り ${Math.max(1,Math.round(dxTm.gm/1000))}秒`:''}）`:dxTm.gm!=null?`（AIでの読み取り ${Math.max(1,Math.round(dxTm.gm/1000))}秒）`:''}。`+vt+(mode==='gm'?dxGmSum+(failed&&(!vinfo||gapT)?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
   renderDxScan();
 }
 document.getElementById('dxShotFile').addEventListener('change',dxOnFiles);
@@ -7812,7 +7818,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.27h';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.27i';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
