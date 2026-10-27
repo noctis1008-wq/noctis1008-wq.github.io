@@ -190,6 +190,15 @@ function dxtBoxOf(P,m,r,WB,HB,o){if(o.status!=='unknown')return o;
   let x0=P.num.x0,x1=P.num.x1;for(const f of P.feat){x0=Math.min(x0,f[0]);x1=Math.max(x1,f[2])}
   const h=(P.rows.pitch||60)*.6,X=x=>Math.max(0,Math.min(1,(m.ox+(x+r.xo)*m.sx)/WB)),Y=y=>Math.max(0,Math.min(1,(m.oy+y*m.sy)/HB));
   const pd=(x1-x0)*.12;o.box=[X(x0-pd),Y(r.yc-h),X(x1+pd),Y(r.yc+h)].map(v=>+v.toFixed(4));return o}
+// 画面の上の数（P.hdr：SV の「捕まえた・見つけた」の数）。parts の場所ごとに字を切り出し、P.hdr.tm（0〜9 の形）と相関でくらべる。
+// 字ごとに、いちばん似た形が min より似ていて、2番目と gap 以上はなれているときだけ読む（読めなければ null）
+function dxtHdr(px,W,H,m,P){const Hd=P.hdr;if(!Hd)return null;const out=[];
+  for(const [x0,x1] of Hd.parts){const g=dxtGlyphs(px,W,H,m,{...P,num:{...P.num,x0,x1,y0:Hd.y0,y1:Hd.y1,digits:0}},Hd.y,0);if(!g||!g.length||g.length>3)return null;let s='';
+    for(const x of g){const f=x.f,n=f.length;let mu=0;for(let i=0;i<n;i++)mu+=f[i];mu/=n;let v=0;for(let i=0;i<n;i++)v+=(f[i]-mu)**2;v=Math.sqrt(v/n)||1;
+      let b=-2,b2=-2,bd=-1;Hd.tm.forEach((t,d)=>{let c=0;for(let i=0;i<n;i++)c+=(f[i]-mu)/v*t[i];c/=n;if(c>b){b2=b;b=c;bd=d}else if(c>b2)b2=c});
+      if(b<Hd.min||b-b2<Hd.gap)return null;s+=bd}
+    if(s.length>1&&s[0]==='0')return null;out.push(+s)}
+  return out[1]>=out[0]?out:null}
 function dxtRead(pxB,WB,HB,P,learn){
   if(P.tiles)return learn?null:dxtReadTiles(pxB,WB,HB,P);
   const Ms=dxtMap(pxB,WB,HB,P);if(!Ms)return null;let out=null;
@@ -225,7 +234,7 @@ function dxtRead(pxB,WB,HB,P,learn){
       out=out||[];out.push({m,d:d0,dex,sure,dexF:Array.from(dexF||[]),dexP:dexF&&dexF.P&&dexF.P[0],rows:rows.map(r=>({k:r.k,num:sure?DL.base+r.k:null,ok:okL(r),G:r.G&&r.G.map(x=>Array.from(x.f)),W:r.G&&r.G.map(x=>x.w),F:Array.from(r.F),Pt:r.F.P}))});continue}
     const mxNo=(P.dex&&P.dex.refs&&(P.dex.refs.find(x=>x.k===dex)||{}).max)||P.maxNo; // 図鑑ごとの最大の番号
     if(P.num.seq===false){const DI=dxtIndep(rows,mxNo);if(!dxtSureI(DI)){if(!out)out={fail:'num',dex};continue}
-      return {dex,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:DI.keep.get(r.k),status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))}}
+      return {dex,hdr:P.hdr&&dex?dxtHdr(pxB,WB,HB,m,P):null,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:DI.keep.get(r.k),status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))}}
     const D=dxtDecode(rows,P.maxNo,P.num.digits,P.num.pre);
     if(!D||!dxtSure(D)){if(D&&!out)out={fail:'num',dex};continue}
     // 1行ずつの確かめ：その行の数字が、決めた番号と2けた以上合う行だけを入れる（一覧の外・はしで切れた行・読みまちがえた行は入れない）
