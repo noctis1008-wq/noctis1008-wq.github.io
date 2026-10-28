@@ -5433,14 +5433,16 @@ async function dxVideoFrames(file,prog,signal,st0){
     // 動き続けている所から取る間かく。型紙で読む作品は、ボタンを押しっぱなしで一覧を流すと 0.2 秒で 9 行ほど進むので、0.2 秒ごとに取る
     // （型紙の vseg：絵が動き続ける作品（XY の一覧のポケモン）。止まった場面でも違いが小さく残り、あとで選ぶ場面の多くが、見ているときに取ったコマの外になる。
     //   そういう作品は、見ているコマをすべて取って読む（あとで位置を移して取り直すと、1枚ごとにとても時間がかかる））
-    const vseg=!!RD&&dxVseg();
+    const vseg=!!RD&&dxVseg();const BP=spec&&!!RD&&dxNoSeq()&&!vseg,BPN=6,BPK=window.__BPK||1;let bpW=null;
     // （vseg で止まっている間は、2コマに1つだけ取る。同じ画面を何度も読んでも多数決の結果は同じで、iPhone では1コマ読むごとに時間がかかる）
     const VS=window.__VS||2;
     const MV0=Math.round((RD&&RD.dense?.2:1.5)/DX_VID_STEP),MV1=Math.round((RD&&RD.dense?.2:.75)/DX_VID_STEP),LO=RD&&RD.dense?12:4;
     // （2倍速より遅くしか再生できない端末でも、待ちが少なければ裏で読む。この画面で JPEG にして、あとでまた画素に戻すほうが、ずっと重い）
     // コマは、空いている裏の処理があれば VideoFrame で渡す（画素を写さないので、この画面の手間がほぼない。createImageBitmap は1枚ごとに画素を写す）。
     // VideoFrame は動画の再生のバッファーを借りるので、すぐに読まれるときだけ使う（ためこむと再生が止まることがある）
-    const capture=(i,t,lo,mv)=>{if(pend>=(lo?LO:LO+4)||!window.createImageBitmap)return;
+    // （SV など番号の並びで確かめない作品は、待ちが多くても取りこぼさない：取りこぼすと、あとで位置を移して取り直すことになり、とても遅い（1コアで3倍以上）。
+    //   そのかわり、待ちが BPN 枚たまったら再生を止めて、読み終わるのを待つ。取るコマが端末の速さで変わらないので、結果も毎回同じになる）
+    const capture=(i,t,lo,mv)=>{if((!BP&&pend>=(lo?LO:LO+4))||!window.createImageBitmap)return;
       const toW=spec;let pr=null; // （型紙で読む作品は、いつもそのコマの画素をそのまま裏の処理で読む。JPEG にして、あとで読むと画素が少し変わり、同じ動画でも結果が毎回少し変わった）
       if(toW&&dxVF&&dxPool.free.length&&!dxPool.q.length){try{pr=Promise.resolve(new VideoFrame(v,{timestamp:Math.round(t*1e6)}))}catch(e){dxVF=false}}
       if(!pr)try{pr=createImageBitmap(v)}catch(e){return}
@@ -5448,14 +5450,15 @@ async function dxVideoFrames(file,prog,signal,st0){
       if(toW){
         // 裏の処理で読む。画像（JPEG）は作らない（読んだ結果だけを持つ）。Gemini と連携していても同じ：
         // Gemini に送るのは、読み終わってから決まらなかった所だけで、そのときに動画のその時刻から取り直す（1枚ごとに JPEG にすると、iPhone ではとても重い）
-        c.rd=pr.then(bm=>dxReadBm(bm,RD,0,c)).then(x=>{if(!x)return;c.f=new File([],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'});c.f.dxV=file;c.f.dxT=t;dxSetRows(c.f,x.r)}).catch(()=>{}).then(()=>{pend--});return}
+        c.rd=pr.then(bm=>dxReadBm(bm,RD,0,c)).then(x=>{if(!x)return;c.f=new File([],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'});c.f.dxV=file;c.f.dxT=t;dxSetRows(c.f,x.r)}).catch(()=>{}).then(()=>{pend--;if(bpW&&pend<BPN){const w=bpW;bpW=null;w()}});return}
       enc=enc.then(()=>pr).then(async bm=>{cex.drawImage(bm,0,0,CW,CH);try{bm.close()}catch(e){}
         const bl=await new Promise(r=>ce.toBlob(r,'image/jpeg',.92));if(bl)c.f=new File([bl],`${nm}_${t.toFixed(2)}.jpg`,{type:'image/jpeg'})}).catch(()=>{}).then(()=>{pend--})};
     const grab=t=>{const g=thumb(),i=S.length;S.push({t,g});
       if(i){const d=dif(g,S[i-1].g);S[i].d=d;recD.push(d);if(recD.length>40)recD.shift();const md=recD.slice().sort((a,b)=>a-b)[recD.length>>1];
         // 止まった1コマ目と4コマ目。動いている途中でも、動きが前より小さくなった瞬間（速くページを送ったとき）も取る
         const tO=Math.max(3,md*1.6),pd=i>1?S[i-1].d:1e9;
-        if(vseg&&spec){if(d<tO){run++;mov=0}else{run=0;mov++}if(d>=tO||(run-1)%VS===0)capture(i,t,0,d>=tO)}
+        if(BP){if(d<tO){run++;mov=0}else{run=0;mov++}if(i%BPK===0)capture(i,t)}
+        else if(vseg&&spec){if(d<tO){run++;mov=0}else{run=0;mov++}if(d>=tO||(run-1)%VS===0)capture(i,t,0,d>=tO)}
         else if(d<tO){run++;mov=0;if(run===1||run===4)capture(i,t)}else{run=0;mov++;
           // ずっと動いている所（スクロールし続けたなど）は、1.5秒たったら0.75秒ごとに取る（あとで選ぶ場面と同じ決まり）
           // （動いている途中の分は、止まった場面の分の枠を残すため、待ちが少ないときだけ取る）
@@ -5476,7 +5479,8 @@ async function dxVideoFrames(file,prog,signal,st0){
             const mt=m.mediaTime;if(pmt>=0&&mt>pmt&&mt-pmt<fd0)fd0=mt-pmt;pmt=mt;
             if(lastG>=0&&mt-lastG>DX_VID_STEP*2.5&&ri>0&&mt<dur-.05){busy=true;if(mt>1.5)nMiss[ri]++;ri--;v.pause();try{v.playbackRate=RATES[ri]}catch(e){}
               next=lastG+DX_VID_STEP;prevM=-1;okFrom=lastG;seek(lastG).then(()=>{busy=false;if(done)return;v.requestVideoFrameCallback(cb);v.play().catch(rej)},rej);return}
-            if(mt>=next-1e-3){grab(mt);lastG=mt;next=mt+DX_VID_STEP}
+            if(mt>=next-1e-3){grab(mt);lastG=mt;next=mt+DX_VID_STEP;
+              if(BP&&pend>=BPN&&mt<dur-.05){busy=true;v.pause();new Promise(r=>{bpW=r}).then(()=>{busy=false;if(done)return;v.requestVideoFrameCallback(cb);v.play().catch(rej)});return}}
             if(ri<3&&mt-okFrom>3*(1+2*nMiss[ri+1])){ri++;okFrom=mt;try{v.playbackRate=RATES[ri]}catch(e){}}
             if(mt>=dur-.05)fin();else v.requestVideoFrameCallback(cb)};
           v.requestVideoFrameCallback(cb);v.addEventListener('ended',()=>{if(!busy)fin()});
@@ -5536,7 +5540,7 @@ async function dxVideoFrames(file,prog,signal,st0){
       for(let c=a;c<=z;c++)cand.push(c);cand.sort((p,q)=>Math.abs(p-mid)-Math.abs(q-mid));
       const got=caps.filter(c=>c.f&&c.i>=a&&c.i<=z).sort((p,q)=>Math.abs(p.i-mid)-Math.abs(q.i-mid));
       // （vseg：取ったコマがない場面は、位置を移して取り直さない（前後に取ったコマで同じ画面を読んでいる。位置を移すのは iPhone でとても遅い））
-      if(vseg&&spec&&!got.length)continue;
+      if((vseg&&spec||BP)&&!got.length)continue;
       if(got.length){const f=got[0].f;if(got[1])f.dxAlt=got[1].f;f.dxVid=1;f.dxV=file;f.dxT=S[got[0].i].t;out.push(f);prog&&prog(.6+.4*(n+1)/keep.length);continue}
       let main=null,spare=null,first=null,last=-9;
       for(const c of cand.slice(0,5)){const r=await snap(c);if(!r)continue;if(!first)first=r.f;
@@ -7897,7 +7901,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28d';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28e';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
