@@ -5478,13 +5478,16 @@ async function dxVideoFrames(file,prog,signal,st0){
         // 再生の速さは端末にあわせて決める。0.1秒ごとのコマを1つも見落とさないのが前提：
         // 見落としたら速さを下げ、最後に見た所まで戻って見直す。余裕があれば（0.1秒のあいだに2コマ以上届く状態が3秒続いたら）上げる
         // 見落とした速さは、次に上げるまでに長く待つ（はじめのカクつきなどで、ずっと遅いままにならないように）
-        const RATES=[1,1.5,2,3],nMiss=[0,0,0,0];ri=2;let pmt=-1;let lastG=-1,prevM=-1,okFrom=0,busy=false;
+        const RATES=[1,1.5,2,3],nMiss=[0,0,0,0];ri=2;let pmt=-1;let lastG=-1,prevM=-1,okFrom=0,busy=false,nextK=0;
         await new Promise((res,rej)=>{let done=false;const fin=()=>{if(!done){done=true;v.pause();res()}};
           const cb=(now,m)=>{if(done)return;if(signal&&signal.aborted){v.pause();rej({code:'cancelled'});return}
             const mt=m.mediaTime;if(pmt>=0&&mt>pmt&&mt-pmt<fd0)fd0=mt-pmt;pmt=mt;
             if(lastG>=0&&mt-lastG>DX_VID_STEP*2.5&&ri>0&&mt<dur-.05){busy=true;if(mt>1.5)nMiss[ri]++;ri--;v.pause();try{v.playbackRate=RATES[ri]}catch(e){}
-              next=lastG+DX_VID_STEP;prevM=-1;okFrom=lastG;seek(lastG).then(()=>{busy=false;if(done)return;v.requestVideoFrameCallback(cb);v.play().catch(rej)},rej);return}
-            if(mt>=next-1e-3){grab(mt);lastG=mt;next=mt+DX_VID_STEP;
+              next=lastG+DX_VID_STEP;if(BP){const fe=dxSnapFd(fd0),st=Math.max(1,Math.round(DX_VID_STEP/fe));nextK=(Math.floor(Math.round(lastG/fe)/st)+1)*st}prevM=-1;okFrom=lastG;seek(lastG).then(()=>{busy=false;if(done)return;v.requestVideoFrameCallback(cb);v.play().catch(rej)},rej);return}
+            // （BP（SV）：取るコマは、動画の中のコマの番号の目もり（0.1秒ごと。30fps なら 3コマに1つ）で決める。届いた時刻から 0.1秒あとにすると、
+            //   取るコマが端末の速さでずれていき、毎回ちがうコマになる。目もりのコマが飛んだときは、位置を移さずに次に届いたコマを取る（速さを優先））
+            const fe=BP?dxSnapFd(fd0):0,kk=BP?Math.round(mt/fe):0;
+            if(BP?kk>=nextK:mt>=next-1e-3){grab(mt);lastG=mt;next=mt+DX_VID_STEP;if(BP){const st=Math.max(1,Math.round(DX_VID_STEP/fe));nextK=(Math.floor(kk/st)+1)*st}
               if(BP&&pend>=BPN&&mt<dur-.05){busy=true;v.pause();new Promise(r=>{bpW=r}).then(()=>{busy=false;if(done)return;v.requestVideoFrameCallback(cb);v.play().catch(rej)});return}}
             if(ri<3&&mt-okFrom>3*(1+2*nMiss[ri+1])){ri++;okFrom=mt;try{v.playbackRate=RATES[ri]}catch(e){}}
             if(mt>=dur-.05)fin();else v.requestVideoFrameCallback(cb)};
@@ -5652,6 +5655,8 @@ let dxSkipped=0,dxGapN=0,dxTm={},dxDexTally=null,dxHint=new Map(),dxHdrN=0;
 const dxNoList=f=>!!(f.dxVid&&f.dxNoList&&(!f.dxAlt||f.dxAlt.dxNoList));
 // 番号が飛ぶのが当たり前の作品（SV の本棚：見ていないポケモンの本はない）か
 const dxVseg=(gid=dxGame().id)=>{try{const k=DXT_GAME[gid];return !!(k&&DXT_PROF[k].vseg)}catch(e){return false}};
+// 1コマの長さ：測った一番短いあいだを、よくある長さ（30・60・24・25・50・120fps）にそろえる（時刻の端数で、コマの番号がずれないように）
+const dxSnapFd=f=>{if(!(f<1))return 1/30;for(const r of [30,60,24,25,50,120,29.97,59.94])if(Math.abs(f*r-1)<.04)return 1/r;return f};
 const dxNoSeq=(gid=dxGame().id)=>{try{const k=DXT_GAME[gid];return !!(k&&DXT_PROF[k].num.seq===false)}catch(e){return false}};
 // 読めた番号（図鑑ごと）。「読めなかったページ」は、この図鑑ごとの番号の抜けで出す
 let dxReadNums=new Map(),dxReadSt=new Map();
@@ -5798,7 +5803,10 @@ async function dxReadLocal(files,byNo,inDex,found,st,signal){
       putS(rows);
     }catch(e){failed++}
   }
-  if(maj){const rk={caught:3,seen:2,none:1,unknown:0},out=[],vs=dxVseg();for(const {r,n,g:G} of maj.values()){if(vs&&Object.keys(n).length>1)delete n.unknown; // （vseg：見出しにかくれて「不明」と読んだ画面は、ほかの画面で読めていれば数えない）
+  if(maj){const rk={caught:3,seen:2,none:1,unknown:0},out=[],vs=dxVseg();for(const {r,n,g:G} of maj.values()){if((vs||dxNoSeq())&&Object.keys(n).length>1)delete n.unknown;
+    // （SV：「見ていない」とだけ読んだ本は使わない。SV の本棚には見ていないポケモンの本がないので、これは動いている途中のコマなどの読みちがいで、
+    //   取るコマが1コマずれると、出たり出なかったりする（同じ動画で結果が毎回変わる）。ほかの印と読んだ画面もあれば、多数決で決める）
+    if(dxNoSeq()&&Object.keys(n).length===1&&n.none)continue; // （vseg：見出しにかくれて「不明」と読んだ画面は、ほかの画面で読めていれば数えない）
     const E=Object.entries(n).sort((p,q)=>q[1]-p[1]||(rk[q[0]]||0)-(rk[p[0]]||0)),GE=Object.entries(G||{}).sort((p,q)=>q[1]-p[1]);
       out.push({...r,status:E[0][0],g:E[0][0]==='unknown'&&GE[0]&&!(GE[1]&&GE[1][1]===GE[0][1])?GE[0][0]:undefined})}put0(out);
     // 図鑑ごとに、その図鑑の画面で読んだ印の数（SV の本棚は、図鑑ごとに印がちがうことがある：キタカミで捕まえたポケモンが、ブルーベリーの棚では灰色 など。
@@ -7950,7 +7958,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28f';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28g';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
