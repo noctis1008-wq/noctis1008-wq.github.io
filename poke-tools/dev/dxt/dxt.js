@@ -125,6 +125,9 @@ function dxtFeat(px,W,H,m,P,yc,learn,xo=0){
       if(P.fref[ri]){const t=P.fref[ri];let best=-1;for(let oy=0;oy<=6;oy++)for(let ox=0;ox<=8;ox++){const g=cut(ox,oy);let c=0;for(let i=0;i<n;i++)c+=g[i]*t[i];if(c/n>best)best=c/n}F.push(best)}}});
   return F;
 }
+// 印の状態。見本の名前が「unknown_…」（XY：いちばん上の行で、マスの上が見出しの帯にかかっている）のときは「不明」とし、
+// 型紙に hint があれば、その四角（hint.r：絵のまん中。見出しの帯にかからない所）の特徴で「見ただけ／見ていない」の見込み g を付ける（印がないことは分かっている。アプリが画面の上の数と合うときだけ使う）
+function dxtSt(P,F,hf){const k=dxtNear(F,P.cls),st=k.replace(/_.*$/,''),o={status:st};const h=P.hint;if(h&&hf&&st==='unknown'&&k!=='unknown')o.g=hf(h.r)[h.i]>h.t?h.hi:h.lo;return o}
 // いちばん近い見本の名前（特徴は見本ごとのばらつきで割る）。遠すぎるときは 'unknown'
 function dxtNear(F,C){let best=null,bd=1e9,b2=1e9;
   for(const c of C.c){let d=0;for(let i=0;i<F.length;i++){const z=(F[i]-c.m[i])/C.s[i];d+=z*z}d=Math.sqrt(d/F.length);if(d<bd){b2=bd;bd=d;best=c}else if(d<b2)b2=d}
@@ -234,13 +237,13 @@ function dxtRead(pxB,WB,HB,P,learn){
       out=out||[];out.push({m,d:d0,dex,sure,dexF:Array.from(dexF||[]),dexP:dexF&&dexF.P&&dexF.P[0],rows:rows.map(r=>({k:r.k,num:sure?DL.base+r.k:null,ok:okL(r),G:r.G&&r.G.map(x=>Array.from(x.f)),W:r.G&&r.G.map(x=>x.w),F:Array.from(r.F),Pt:r.F.P}))});continue}
     const mxNo=(P.dex&&P.dex.refs&&(P.dex.refs.find(x=>x.k===dex)||{}).max)||P.maxNo; // 図鑑ごとの最大の番号
     if(P.num.seq===false){const DI=dxtIndep(rows,mxNo);if(!dxtSureI(DI)){if(!out)out={fail:'num',dex};continue}
-      return {dex,hdr:P.hdr&&dex?dxtHdr(pxB,WB,HB,m,P):null,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:DI.keep.get(r.k),status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))}}
+      return {dex,hdr:P.hdr&&dex?dxtHdr(pxB,WB,HB,m,P):null,rows:rows.filter(r=>DI.keep.has(r.k)).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:DI.keep.get(r.k),...dxtSt(P,r.F,R=>dxtFeat(pxB,WB,HB,m,{feat:[R]},r.yc,0,r.xo))}))}}
     const D=dxtDecode(rows,P.maxNo,P.num.digits,P.num.pre);
     if(!D||!dxtSure(D)){if(D&&!out)out={fail:'num',dex};continue}
     // 1行ずつの確かめ：その行の数字が、決めた番号と2けた以上合う行だけを入れる（一覧の外・はしで切れた行・読みまちがえた行は入れない）
     const okRow=r=>{if(!r.S||D.base+r.k<1)return false;const n=D.base+r.k,st=P.num.digits?String(n).padStart(P.num.digits,'0'):String(n);if(st.length!==r.S.length)return false;
       let c=0;r.S.forEach((a,j)=>{if(a.indexOf(Math.max(...a))===+st[j])c++});return c>=Math.min(2,st.length)};
-    return {dex,rows:rows.filter(okRow).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:D.base+r.k,status:dxtNear(r.F,P.cls).replace(/_.*$/,'')}))};
+    return {dex,hdr:P.hdr&&dex?dxtHdr(pxB,WB,HB,m,P):null,rows:rows.filter(okRow).map(r=>dxtBoxOf(P,m,r,WB,HB,{num:D.base+r.k,...dxtSt(P,r.F,R=>dxtFeat(pxB,WB,HB,m,{feat:[R]},r.yc,0,r.xo))}))};
   }
   // 型紙では読めなかった画面は「省く」ではなく「読めなかった」とする（Gemini と連携していれば、Gemini に回る。カメラで斜めに撮った画面など）
   return out||(learn?null:{fail:'nolist'});
