@@ -562,8 +562,16 @@ body:not([data-view="ev"]) .bar:not(.shbar),body:not([data-view="ev"]) .pad{disp
 .rbx-msep{height:1px;background:var(--line);margin:4px 6px}
 .rbx-sec{position:relative;margin-bottom:12px;border:1px solid var(--line);border-radius:16px;padding:0 10px 10px;background:var(--surface)}
 .rbx-sec.done{border-color:#e0a800;box-shadow:0 0 0 1px #e0a80055}
+/* （全部そろった世代の枠は、ほかの所のボタンの .done（白い字・太字・13px）を受けつがない。ライトでは見出しの字が白くなり、見えなかった） */
+.rbx-sec.done{color:var(--ink);font-size:inherit;font-weight:inherit}
 .rbx-sec>h3{position:sticky;top:calc(var(--sa-top,env(safe-area-inset-top,0px)) + var(--apph,58px) + var(--rpinh,96px) + var(--rgenh,58px));z-index:3;display:flex;align-items:center;gap:8px;height:46px;margin:0 -10px;padding:0 10px;border-radius:15px 15px 0 0;background:var(--surface);font-size:14px;font-weight:700;border-bottom:1px solid transparent;white-space:nowrap}
-.rbx-sec>h3.stuck{border-radius:0;border-bottom-color:var(--line);box-shadow:0 6px 10px -8px rgb(0 0 0 / .3)}
+.rbx-sec>h3.stuck{border-radius:0;border-bottom-color:transparent;box-shadow:0 6px 10px -8px rgb(0 0 0 / .3);margin:0 -12px;padding:0 12px;background:var(--bg)}
+/* 上に固定した世代の見出し：枠の上の線と角の丸みを、見出しが自分で描く（枠の上の部分はスクロールで上に消えるため）。
+   見出しは枠の線と外側の影（1px）までかぶさる幅にして、角の外は背景の色。高さは変えない */
+.rbx-sec>h3.stuck::before{content:"";position:absolute;inset:1px 1px 0;z-index:-1;border:1px solid var(--line);border-bottom-color:var(--line);border-radius:16px 16px 0 0;background:var(--surface)}
+.rbx-sec.done>h3.stuck::before{border-color:#e0a800;border-bottom-color:var(--line);box-shadow:0 0 0 1px #e0a80055}
+/* 世代のタブを上に固定したとき：その上（ポケモンのカードのまわり）から下の、世代の枠の線が見えないように、背景の色でおおう */
+.rbx-gen.stuck::before{content:"";position:absolute;left:-6px;right:-6px;top:calc(-1 * var(--rpinh,96px) - 2px);bottom:0;z-index:-1;background:var(--bg)}
 .rbx-sic{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--gc) 16%,transparent);color:color-mix(in srgb,var(--gc) 80%,var(--ink))}
 .rbx-sic svg{width:15px;height:15px}
 .rbx-st{flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:4px;overflow:hidden}
@@ -6939,6 +6947,7 @@ function rbStuck(){
   const pin=document.getElementById('rbPin');if(!pin)return;
   const ab=document.querySelector('.appbar').getBoundingClientRect().bottom,pt=pin.getBoundingClientRect();
   pin.classList.toggle('stuck',pt.top<=ab+.5&&scrollY>0);
+  {const g=document.getElementById('rbGen');if(g)g.classList.toggle('stuck',scrollY>0&&g.getBoundingClientRect().top<=ab+pin.offsetHeight+.5)}
   const secs=v.querySelectorAll('.rbx-sec');
   secs.forEach(sec=>{const h=sec.firstElementChild,r=h.getBoundingClientRect(),sr=sec.getBoundingClientRect();h.classList.toggle('stuck',r.top>sr.top+2)});
   // 今見ている世代のタイルに色を付ける
@@ -7958,7 +7967,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28g';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28h';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
