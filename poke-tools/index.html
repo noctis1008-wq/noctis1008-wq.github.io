@@ -898,6 +898,11 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxs-warn .t{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;color:var(--st-rt);margin:0}
 .dxs-warn .t svg{width:18px;height:18px;flex:none}
 .dxs-warn p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.5}
+.dxs-hint{border-radius:16px;padding:12px 14px;border:1.5px solid color-mix(in srgb,var(--st-s) 55%,var(--line));background:color-mix(in srgb,var(--st-s) 9%,var(--surface));display:flex;flex-direction:column;gap:6px;flex:none}
+.dxs-hint .t{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;color:var(--st-st);margin:0}
+.dxs-hint .t svg{width:18px;height:18px;flex:none}
+.dxs-hint ul{margin:0;padding:0 0 0 1.1em;display:flex;flex-direction:column;gap:4px}
+.dxs-hint li{font-size:13px;line-height:1.5;color:var(--ink)}
 .dxs-gap{display:flex;flex-wrap:wrap;gap:6px}.dxs-gap span{font-family:var(--f-num);font-weight:700;font-size:13px;border-radius:8px;padding:3px 8px;background:var(--surface);border:1px solid var(--line)}
 .dxs-acts{display:flex;gap:8px}.dxs-acts button{flex:1;height:40px;border-radius:10px;font-weight:800;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .dxs-acts .p{background:var(--st-r);border-color:var(--st-r);color:#fff}
@@ -5649,8 +5654,9 @@ const dxNoList=f=>!!(f.dxVid&&f.dxNoList&&(!f.dxAlt||f.dxAlt.dxNoList));
 const dxVseg=(gid=dxGame().id)=>{try{const k=DXT_GAME[gid];return !!(k&&DXT_PROF[k].vseg)}catch(e){return false}};
 const dxNoSeq=(gid=dxGame().id)=>{try{const k=DXT_GAME[gid];return !!(k&&DXT_PROF[k].num.seq===false)}catch(e){return false}};
 // 読めた番号（図鑑ごと）。「読めなかったページ」は、この図鑑ごとの番号の抜けで出す
-let dxReadNums=new Map();
-function dxNoteRows(rows){rows.forEach(r=>{const d=r.dex||'_';let S=dxReadNums.get(d);if(!S)dxReadNums.set(d,S=new Set());S.add(r.num)})}
+let dxReadNums=new Map(),dxReadSt=new Map();
+function dxNoteRows(rows){rows.forEach(r=>{const d=r.dex||'_';let S=dxReadNums.get(d);if(!S)dxReadNums.set(d,S=new Set());S.add(r.num);
+  const k=d+':'+r.num,o=dxReadSt.get(k),R={caught:3,reg:3,seen:2,none:1};if(!o||(R[r.status]||0)>(R[o]||0))dxReadSt.set(k,r.status)})}
 // 動画を、位置を移してコマを取るために開く
 async function dxVidOpen(file){const url=URL.createObjectURL(file),v=document.createElement('video');v.muted=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';v.src=url;
   await new Promise((res,rej)=>{const t=setTimeout(()=>rej(0),60000);const ok=()=>{clearTimeout(t);res()};v.addEventListener('loadeddata',ok,{once:true});v.addEventListener('canplay',ok,{once:true});v.addEventListener('error',()=>{clearTimeout(t);rej(0)},{once:true});
@@ -6056,6 +6062,47 @@ async function dxGmAfterLocal(o){
   sum.push(nSent?`AIに送った所 ${nSent}か所（${nReq}回・読めた所 ${nOk}か所）`+(nRej?`。AIの答えは、ゲームの画面の上の数と合わないので使いませんでした`:''):note?'AIでは読み取れませんでした':'AIには送りませんでした（スマホ内で決まりました）');
   dxGmSum=sum.join('・')+'。'+(note?note+' ':'');
   return failed}
+// 録り方のヒント（結果の画面のいちばん上に、ことばで出す）。読めた番号と図鑑の番号の範囲・画面の上の数から決める：
+// ・図鑑の画面（型紙の dex）がわかる作品で、選んでいる図鑑の画面を1つも読んでいない → 選んでいる図鑑と録画の図鑑がちがう
+// ・図鑑のはじめの番号を読んでいない → 最初の行が映っていない（SV の本棚は、見ていないポケモンの本がないので出さない）
+// ・図鑑の最後の番号まで読んでいなくて、最後に読んだ行が「見ていない」（その先にも行がある）か、動画が動いている途中で終わった → 最後まで映っていない
+// ・動画で、読めた番号のあいだに抜け → スクロールが速すぎる（抜けた所は、動画のコマをすべて読み直しても読めなかった所）
+// ・画面の上の数と、読んだ数が合わない（ほかのヒントがないとき）
+function dxRecHints(g,entries,gaps,vids,files){const H=[],sel=dxDexKey(g),multi=dxMulti(g),keys=[...dxReadNums.keys()].filter(d=>d!=='_'),noSeq=dxNoSeq();
+  const nm=d=>d==='nat'?'全国図鑑':((g.dex.find(x=>String(x[0])===String(d))||[0,''])[1]);
+  if(keys.length&&!multi&&!keys.includes(String(sel))){H.push(`選んでいる図鑑（${nm(sel)}）と、録画した図鑑が違うようです。上の「変更」で、録画した図鑑を選んでください`);return H}
+  // はじめの番号が、いちばん上に写っていた画面：読めた画面のうち、その番号を読んだ最初の画面が、ほかの画面と同じくらいの行を読めているか
+  //  （図鑑の最初の行が写っていても、題名の重なりなどで読めなかっただけのときは、その画面で読めた行が少ない。それより前に読めなかった画面があるときも出さない）
+  const F0=(files||[]).filter(f=>!f.dxMov),TA=F0.map(f=>f.dxT),RA=F0.map(f=>f.dxRows||(f.dxAlt&&f.dxAlt.dxRows)||null),RF=RA.filter(x=>x&&x.length),cnt=RF.map(x=>x.length).sort((a,b)=>a-b),med=cnt[Math.floor(cnt.length*.9)]||0; // （ほかの画面：よく読めた画面（上から1割）の行の数）
+  const topOk=(d,n)=>{const i=RA.findIndex(x=>x&&x.some(y=>(y.dex||'_')===d&&y.num===n)),R=RA[i];return i>=0&&!RA.slice(0,i).some(x=>!x||!x.length)&&R.length>=med&&Math.min(...R.filter(y=>(y.dex||'_')===d).map(y=>y.num))===n};
+  const D=keys.length?(multi?keys:[String(sel)]):['_'];let first=null,last=null,firstS=null,lastS=null;
+  if(!noSeq)for(const d of D){const S=dxReadNums.get(d);if(!S||!S.size)continue;const L=[...S].sort((a,b)=>a-b);
+    let E=entries;if(d!=='_')try{E=dxEntriesOf(g,d)}catch(e){E=null}if(!E||!E.length)continue;const N=E.map(x=>x[0]),lo=Math.min(...N),hi=Math.max(...N);
+    const lab=D.length>1?nm(d).replace(/図鑑$/,'')+'の':'';
+    const ft=`${lab}最初の行（No.${pad3(lo)}${L[0]-1>lo?'〜'+pad3(L[0]-1):''}）が映っていません。一覧のいちばん上から録画してください`;
+    if(L[0]>lo&&!first&&topOk(d,L[0]))first=ft;else if(L[0]-lo>=5&&!firstS)firstS=ft;
+    const mx=L[L.length-1],lt=`${lab}最後まで映っていません（No.${pad3(mx)} のあとが映っていません）。一覧のいちばん下まで録画してください`;
+    if(mx<hi&&!last&&dxReadSt.get(d+':'+mx)==='none')last=lt; // （最後に読んだ行が「見ていない」：その先にも行がある）
+    else if(hi-mx>=5&&!lastS)lastS=lt} // （画面の数が足りないときにだけ使う。図鑑の番号の最後の数個は、一覧に出ない作品がある）
+  if(first)H.push(first);
+  // （抜けが短い（4つ以下）所は、写っていても読めなかっただけのことが多いので、ここでは出さない（「読めなかったページ」の欄に出る））
+  // （そのあいだに、止まっていたのに読めなかった画面があるときも出さない。スクロールが速すぎたのではなく、読めなかっただけ）
+  const has=(x,n)=>x&&x.some(y=>y.num===n),unread=(a,b)=>{let i=-1;RA.forEach((x,k)=>{if(has(x,a-1))i=k});const j=RA.findIndex((x,k)=>k>i&&has(x,b+1));
+    return i>=0&&j>i&&(RA.slice(i+1,j).some(x=>!x||!x.length)||!(TA[j]-TA[i]<.6))}; // （0.6秒以上かかって通った所は、止まって写っていたのに読めなかっただけ）
+  let GB=vids.length?gaps.filter(([a,b])=>b-a+1>=5&&!unread(a,b)):[];
+  // （短い抜けでも、すばやく通った所に3か所以上あれば、速すぎてとびとびにしか写っていない。その範囲をまとめて出す）
+  if(!GB.length&&vids.length){const g2=gaps.filter(([a,b])=>!unread(a,b));const A=[...dxReadNums.values()].flatMap(S=>[...S]),rg=Math.max(...A)-Math.min(...A);
+    // （一覧の全体にちらばる短い抜け（作品によって、どのページでも同じ行が読みにくい）は、速すぎたのではない。範囲が一覧の4割より広いときは出さない）
+    if(g2.length>=3&&g2[g2.length-1][1]-g2[0][0]<=rg*.4)GB=[[g2[0][0],g2[g2.length-1][1],g2[0][2],1]]}
+  if(GB.length){const [a,b,l,sp]=GB[0];H.push(`${l?l+' ':''}No.${a===b?pad3(a):pad3(a)+'〜'+pad3(b)}${GB.length>1?` など${GB.length}か所`:''}${sp?'のあたりが、とびとびにしか':'が'}映っていません（スクロールが速すぎます）。ゆっくり送って録画してください`)}
+  if(last)H.push(last);
+  if(!H.length&&dxDexTally){const bad=[...dxDexTally].filter(([d,t])=>t.hdr&&(keys.length?keys.includes(String(d)):String(d)===String(sel))&&(t.hdr[0]!==t.hc||t.hdr[1]!==t.hc+t.hs));
+    // （少しだけ合わない（見つけた数が 4 以下か 3% 未満ちがう）のは、読みまちがいのことが多いので出さない。大きく少ない・多いときは、図鑑がちがうことが多い）
+    const B=bad.map(([d,t])=>({f:t.hc+t.hs,h:t.hdr[1]})).filter(x=>Math.abs(x.h-x.f)>=5&&Math.abs(x.h-x.f)>=x.h*.03);
+    // （多すぎる → 図鑑がちがう。少ない → 読めなかったページ（上の欄に出る）がなければ、映っていない所がある。図鑑の最後の番号まで読んでいなければ、最後まで映っていない）
+    if(B.length){if(B.some(x=>x.f>x.h))H.push(`読めた数が、ゲームの画面の数より多くなりました。選んでいる図鑑と、録画した図鑑が同じか確かめてください（上の「変更」で選べます）`);
+      else if((firstS||lastS)&&!gaps.length)H.push(...[firstS,lastS].filter(Boolean));else if(B.some(x=>x.f<x.h*.6)&&!gaps.length)H.push(`読めた数が、ゲームの画面の数よりかなり少なめです。選んでいる図鑑と録画した図鑑が同じか、一覧を最初から最後まで録画したか、確かめてください`);else if(!gaps.length)H.push(`読めた数が、ゲームの画面の数より少なめです。映っていない所があるようです。一覧の最初から最後まで、ゆっくり送って録画してください`)}}
+  return H.slice(0,3)}
 // くわしく：図鑑ごとに、その図鑑の画面で読んだ数と、ゲームの画面の上の数（読めたとき）。合わない図鑑があれば、そう書く
 function dxTallyText(g){if(!dxDexTally||!dxDexTally.size)return '';const V=dxViews(g).filter(([v])=>dxDexTally.has(v));if(!V.length||(V.length<2&&![...dxDexTally.values()].some(x=>x.hdr)))return '';
   let bad=[];const T=V.map(([v,t])=>{const x=dxDexTally.get(v);if(!x.hdr)return `${t} 捕まえた${x.caught}・見つけた${x.caught+x.seen}`;
@@ -6080,7 +6127,7 @@ async function dxOnFiles(e){
   const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxCamBtn,#dxPickBtn,#dxGmLink')];
   btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();st.textContent='準備しています…';dxBusy(true);
   dxStages({vid:files.some(dxIsVideo),local:DX_LOCAL_GAMES.includes(g.id),gm:mode==='gm'});await dxPaint();
-  const found=new Map(),tStart=performance.now();let failed=0,vinfo=null;dxSkipped=0;dxGapN=0;dxTm={};dxDexTally=null;if(!dxCarry)dxReadNums=new Map();
+  const found=new Map(),tStart=performance.now();let failed=0,vinfo=null;dxSkipped=0;dxGapN=0;dxTm={};dxDexTally=null;if(!dxCarry){dxReadNums=new Map();dxReadSt=new Map()}const vids0=files.filter(dxIsVideo);
   try{
     if(files.some(dxIsVideo)){dxRange(0,.5);{const t1=performance.now();vinfo=await dxExpandVideos(files,st,dxScanCtl.signal);dxTm.vid=performance.now()-t1}files=mode==='ai'?vinfo.files.filter(f=>!f.dxMov):vinfo.files;dxRange(.5,1);
       if(!files.length)throw {msg:'動画の中に、止まっている画面が見つかりませんでした。図鑑の一覧で、1ページごとに少し（0.5秒くらい）止めながら録画してください。'}}
@@ -6109,9 +6156,10 @@ async function dxOnFiles(e){
     if(got.length>1){const have=new Set(got);gaps=runs(entries.map(x=>x[0]).filter(n=>n>got[0]&&n<got[got.length-1]&&!have.has(n)).sort((a,b)=>a-b),'')}}
   const gLab=([a,b,l])=>(l?l+' ':'')+(a===b?pad3(a):pad3(a)+'〜'+pad3(b));
   if(gaps.length)gapT=`読めなかった番号：${gaps.slice(0,6).map(gLab).join('・')}${gaps.length>6?` ほか${gaps.length-6}か所`:''}。その部分を撮り直すか、スクショで足してください。`;
+  const hints=mode==='ai'?[]:dxRecHints(g,entries,gaps,vinfo?vids0:[],files);
   const few=vinfo?mode==='local'&&found.size<6:(mode==='local'&&(failed||found.size<3*files.length))||(mode==='gm');
   const order=new Map();[entries,...dxViews(g).map(([v])=>dxEntriesOf(g,v))].forEach(E=>E.forEach(x=>{if(!order.has(x[1]))order.set(x[1],order.size)}));
-  dxScan={mode,items:[...found].sort((a,b)=>(order.get(a[0])??1e9)-(order.get(b[0])??1e9)),fix:carry?carry.fix:{},off:new Set(carry?carry.off:[]),tab:null,gaps,failed:vinfo?0:failed,
+  dxScan={mode,items:[...found].sort((a,b)=>(order.get(a[0])??1e9)-(order.get(b[0])??1e9)),fix:carry?carry.fix:{},off:new Set(carry?carry.off:[]),tab:null,gaps,hints,failed:vinfo?0:failed,
     src:(vinfo?`動画${vinfo.nv>1?vinfo.nv+'本':''}から画像${nT}枚`:`画像${nT}枚`)+'を読み取りました',
     tip:dxTallyText(g)+`かかった時間：${Math.max(1,Math.round((performance.now()-tStart)/1000))}秒${dxTm.vid!=null?`（動画から取り出す ${Math.round(dxTm.vid/1000)}秒${dxTm.fill!=null?`・読めなかった所の読み直し ${Math.round(dxTm.fill/1000)}秒`:''}${dxTm.gm!=null?`・AIでの読み取り ${Math.max(1,Math.round(dxTm.gm/1000))}秒`:''}）`:dxTm.gm!=null?`（AIでの読み取り ${Math.max(1,Math.round(dxTm.gm/1000))}秒）`:''}。`+vt+(mode==='gm'?dxGmSum+(failed&&(!vinfo||gapT)?`${failed}枚は読み取れませんでした。撮り直すか、別の画像で試してください。`:''):few?(failed&&!vinfo?`${failed}枚は読み取れませんでした。`:'読み取れた数が少なめです。')+DX_SHOT_RETRY:'')};
   renderDxScan();
@@ -6129,7 +6177,7 @@ const dxStOk=(v,g=dxGame())=>['caught','seen','none'].includes(v)||(v==='reg'&&g
 const dxStRank=v=>({caught:4,reg:3,seen:2,none:1}[v]||0);
 // 読み取った状態 → 登録の値（0＝未登録、1＝捕まえた、2＝登録だけ）。不明は null
 const dxsTo=e=>e==='caught'?1:e==='reg'?(dxOwn()?2:1):e==='unknown'?null:0;
-const DXS_ICON={warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></svg>',chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'};
+const DXS_ICON={info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v6M12 7.5v.01"/></svg>',warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/></svg>',chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'};
 // その欄の、いまの状態（不明を選んだときは、選んだ状態）と、登録がどう変わるか
 function dxsEff(sp,v){return v==='unknown'?(dxScan.fix[sp]||'unknown'):v}
 function dxsKind(sp,v,reg){const t=dxsTo(dxsEff(sp,v)),c=reg[sp]||0;if(t==null)return 'unk';
@@ -6171,6 +6219,7 @@ function renderDxScan(){
     :dxScan.failed?`<div class="dxs-warn"><p class="t">${DXS_ICON.warn}読めなかった画像が ${dxScan.failed}枚 あります</p>
       <p>その画像のポケモンは、登録を変えません。撮り直すと、続けて足せます。</p>
       <div class="dxs-acts"><button class="p" type="button" data-dxsmore="cam">撮り直す</button><button type="button" data-dxsmore="pick">スクショを足す</button></div></div>`:'';
+  const HN=dxScan.hints||[],hint=HN.length?`<div class="dxs-hint" role="note"><p class="t">${DXS_ICON.info}録り方のヒント</p><ul>${HN.map(x=>`<li>${x}</li>`).join('')}</ul></div>`:'';
   const STS=dxOwn()?['caught','reg','seen','none','unknown']:['caught','seen','none','unknown'];
   const bar=STS.map(x=>c[x]?`<i class="dxs-c-${x}" style="width:${c[x]/tot*100}%"></i>`:'').join('');
   const leg=STS.filter(x=>x!=='unknown'||c[x]).map(x=>`<span><i class="dxs-c-${x}"></i>${DXS_LAB[x]} <b>${c[x]}</b></span>`).join('');
@@ -6178,7 +6227,7 @@ function renderDxScan(){
   const sc=dxSheetEl.querySelector('.sheet-in'),top=sc?sc.scrollTop:0,open=!!dxSheetEl.querySelector('.dxs-src[aria-expanded=true]');
   dxSheetEl.hidden=false;document.body.classList.add('modal');dxCur=null;
   dxSheetEl.innerHTML=`<div class="sheet-in dxs"><div class="sh-head"><h3>読み取り結果</h3><button class="btn" type="button" data-dxsclose="1">閉じる</button></div>
-    ${warn}
+    ${hint}${warn}
     <div class="dxs-sum"><p class="dxs-big"><b>${tot}</b><span>匹を読み取りました</span></p><div class="dxs-bar">${bar}</div><div class="dxs-leg">${leg}</div></div>
     <div class="dxs-chg"><div class="add${c.add?'':' zero'}"><small>新しく登録</small><b>+${c.add}</b>${c.mod?`<small>種類を変える ${c.mod}</small>`:''}</div><div class="rem${c.rem?'':' zero'}"><small>登録を外す</small><b>−${c.rem}</b></div><div><small>変わらない</small><b>${c.same}</b></div></div>
     ${dxScan.tip?`<button type="button" class="dxs-src" data-dxssrc="1" aria-expanded="${open}">${dxScan.src}・くわしく${DXS_ICON.chev}</button><p class="dxs-detail"${open?'':' hidden'}>${dxScan.tip}</p>`:''}
@@ -7901,7 +7950,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28e';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28f';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
