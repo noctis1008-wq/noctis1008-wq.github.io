@@ -5441,7 +5441,7 @@ async function dxVideoFrames(file,prog,signal,st0){
     // コマは、空いている裏の処理があれば VideoFrame で渡す（画素を写さないので、この画面の手間がほぼない。createImageBitmap は1枚ごとに画素を写す）。
     // VideoFrame は動画の再生のバッファーを借りるので、すぐに読まれるときだけ使う（ためこむと再生が止まることがある）
     const capture=(i,t,lo,mv)=>{if(pend>=(lo?LO:LO+4)||!window.createImageBitmap)return;
-      const toW=spec&&dxPoolWait()<=dxPool.ws.length*(ri>=2?2:1);let pr=null;
+      const toW=spec;let pr=null; // （型紙で読む作品は、いつもそのコマの画素をそのまま裏の処理で読む。待ちが多いときに JPEG にしてあとで読むと画素が少し変わり、同じ動画でも結果が毎回少し変わった）
       if(toW&&dxVF&&dxPool.free.length&&!dxPool.q.length){try{pr=Promise.resolve(new VideoFrame(v,{timestamp:Math.round(t*1e6)}))}catch(e){dxVF=false}}
       if(!pr)try{pr=createImageBitmap(v)}catch(e){return}
       const c={i,t,f:null,rd:null,mv:!!mv};caps.push(c);pend++;
@@ -7874,7 +7874,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28b';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28c';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
