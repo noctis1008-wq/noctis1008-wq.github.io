@@ -2441,15 +2441,47 @@ body:not(.app) .obsapp{display:none!important}
 .sheet-in>.sh-head{padding-top:20px}
 .sheet-in>.sh-head::before{content:"";position:absolute;top:7px;left:50%;width:40px;height:5px;margin-left:-20px;border-radius:9px;background:var(--grab);pointer-events:none}
 @media (min-width:700px){#monCard .sheet-in,#monFind .sheet-in{border-bottom:1px solid var(--pop-edge)}#monCard .sh-head::before,#monFind .sh-head::before{display:none}}
-/* 11) タイプのマス(2026.10.28i):選んだマスはリングをやめ、暗くへこませる(チェックは残す)。2倍以上のマスに、前の「選んだマス」のリング(すき間＋ふち)、4倍はリング＋赤い光 */
-/* 共通：影を変数で重ねる（--hl=2倍以上の枠、--prs=押したときの凹み） */
-#vType .tyb{--hl:0 0 0 0 transparent;--prs:inset 0 -2px 0 rgb(0 0 0 / .12);box-shadow:var(--hl),var(--prs)}
-#vType .tyb[aria-pressed=true]{box-shadow:var(--hl),var(--prs)}
-/* 2倍以上：以前「選んだタイプ」に使っていた枠（すき間 2px＋ふち 2px。ダークは白、ライトは濃紺） */
-#vType .tygrid.has .tyb.mw{--hl:0 0 0 2px var(--surface),0 0 0 4px var(--ink)}
-/* 案C：かなり暗く凹む／4倍は枠＋赤い光 */
-#vType .tyb[aria-pressed=true]{transform:translateY(2px);background-image:linear-gradient(180deg,rgb(0 0 0 / .5),rgb(0 0 0 / .36) 60%,rgb(0 0 0 / .3));--prs:inset 0 3px 8px rgb(0 0 0 / .55),inset 0 0 0 1px rgb(0 0 0 / .18)}
-#vType .tygrid.has .tyb.mw4{--hl:0 0 0 2px var(--surface),0 0 0 4px var(--ink),0 0 10px 4px color-mix(in srgb,var(--weak) 75%,transparent)}
+/* 12) タイプ相性の作り直し(2026.10.28j・運営者が決めた r5 案):上の小さいタイプのボタン(6列)で選び、下の枠に「倍率ごとの段」で結果を並べる。
+   段の名前(弱点など)は出さず、倍率は小数(×0.5・×0.25・×0.75 …)。実際に出た倍率の段だけ出す。等倍(×1)はいちばん下で、押すと開く。 */
+:root{--tym4:#b0102c;--tym2:#e5484d;--tymh:#2a7bd6;--tymq:#163f9a;--tyring:#1b2340}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--tym4:#ff3d5e;--tym2:#f0686c;--tymh:#5b9cff;--tymq:#8fb8ff;--tyring:rgb(0 0 0 / .55)}}
+:root[data-theme="dark"]{--tym4:#ff3d5e;--tym2:#f0686c;--tymh:#5b9cff;--tymq:#8fb8ff;--tyring:rgb(0 0 0 / .55)}
+/* 上の2つの切りかえ(タイプ相性/タイプ変更・受けるとき/攻撃するとき):44px → 34px */
+#vType .tytabs{height:34px}
+#vType .tytabs button{font-size:13px;padding:0 2px}
+#vType .tyside{height:34px}
+#vType .tyside button{font-size:13px}
+/* タイプのボタン:6列・高さ36。結果が出ても薄くしない */
+#vType #tyGrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+#vType #tyGrid .tyb{height:36px;border-radius:10px;padding:0;font-size:11.5px;letter-spacing:-.06em;opacity:1;filter:none;background-image:linear-gradient(180deg,rgb(255 255 255 / .16),rgb(255 255 255 / 0) 55%,rgb(0 0 0 / .06));box-shadow:inset 0 -2px 0 rgb(0 0 0 / .14)}
+#vType #tyGrid .tyb .tyn.long{font-size:10px}
+/* 選んだボタン:暗くへこむ＋白い枠(ライトでは外側に濃いふち)＋右上のチェック */
+#vType #tyGrid .tyb[aria-pressed=true]{transform:translateY(2px);background-image:linear-gradient(180deg,rgb(0 0 0 / .5),rgb(0 0 0 / .36) 60%,rgb(0 0 0 / .3));box-shadow:0 0 0 2.5px #fff,0 0 0 4px var(--tyring),inset 0 3px 8px rgb(0 0 0 / .55),inset 0 0 0 1px rgb(0 0 0 / .18)}
+#vType #tyGrid .tyb[aria-pressed=true]::after{content:"✓";position:absolute;top:-8px;right:-7px;width:17px;height:17px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:9.5px;font-weight:900;line-height:13px;box-sizing:border-box;border:2px solid var(--surface);text-shadow:none;text-align:center}
+/* 結果の枠:高さを取っておき(受けるとき190・攻撃するとき126)、段が減っても枠は縮まない */
+#vType #tySum{display:block;margin:10px 0 0;box-sizing:border-box;border:1px solid var(--line);border-radius:12px;background:var(--sunken);padding:4px 8px;overflow:hidden}
+#vType #tySum span{height:auto;line-height:inherit;padding:0;border:0;background:none;font-size:inherit;border-radius:0;box-sizing:content-box}
+#vType .tyrbox{display:flex;flex-direction:column}
+#vType .tyrrow{display:grid;grid-template-columns:46px 1fr;gap:6px;align-items:center;border-top:1px solid var(--line);min-height:32px;padding:3px 0;box-sizing:border-box}
+#vType .tyrrow:first-child{border-top:none}
+#vType .tyrrow>b{font-family:var(--f-num);font-size:15.5px;font-weight:900;letter-spacing:-.02em;line-height:1.1}
+#vType .tyrrow.c4>b{color:var(--tym4)}#vType .tyrrow.c2>b{color:var(--tym2)}#vType .tyrrow.c2s>b{color:color-mix(in srgb,var(--tym2) 70%,var(--muted))}
+#vType .tyrrow.ch>b{color:var(--tymh)}#vType .tyrrow.chs>b{color:color-mix(in srgb,var(--tymh) 70%,var(--muted))}#vType .tyrrow.cq>b{color:var(--tymq)}#vType .tyrrow.c0>b{color:var(--muted)}
+#vType .tyrrow.c4{background:linear-gradient(90deg,color-mix(in srgb,var(--tym4) 14%,transparent),transparent 70%);margin:0 -8px;padding:3px 8px}
+#vType .tyrrow.c4:first-child{border-radius:10px 10px 0 0}
+#vType .tyrcs{display:flex;flex-wrap:wrap;gap:3px;align-content:center}
+#vType #tySum .tyrcs .tyc{width:49px;padding:3px 0;border-radius:7px;background:var(--tc);color:#fff;line-height:1.4;display:inline-flex;font-size:10.5px;letter-spacing:-.06em}
+#vType #tySum .tyrrow.c0 .tyc{box-shadow:inset 0 0 0 2px rgb(0 0 0 / .25)}
+#vType #tySum .tyrrow.eqc .tyc{opacity:.85}
+#vType .tyreqw{margin-top:auto}
+#vType .tyreq{width:100%;height:30px;display:flex;align-items:center;gap:8px;border:none;border-top:1px solid var(--line);background:none;padding:0;color:var(--muted);font:inherit;font-weight:800;cursor:pointer}
+#vType .tyreq b{font-family:var(--f-num);font-size:15px;width:46px;text-align:left}
+#vType #tySum .tyreq .tyrn{font-size:12px}
+#vType #tySum .tyreq .tyrchev{margin-left:auto;width:24px;height:24px;border-radius:8px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;box-sizing:border-box}
+#vType .tyreq .tyrchev::before{content:"";width:6px;height:6px;border:solid var(--muted);border-width:0 2px 2px 0;transform:translateY(-2px) rotate(45deg);transition:transform .15s}
+#vType .tyreq[aria-expanded=true] .tyrchev::before{transform:translateY(2px) rotate(-135deg)}
+#vType .tyreqcs{padding:0 0 8px 52px}
+#vType .tyrnone{font-size:12px;color:var(--muted);font-weight:700;padding:8px 0}
 </style>
 
 <header class="appbar"><div class="appbar-in">
@@ -7247,7 +7279,7 @@ function tyApply(types,mon,key){
 const tyFmtD=m=>String(+m.toFixed(3));
 function tyMulCls(m){return m===0?'mz':m>2?'mw mw4':m>1?'mw':m<1?'mr':'mn'}
 // タイプのボタン（mul があれば、それぞれに倍率を表示）
-function tyGridHtml(sel,mul){return tyTypes().map(i=>{const m=mul?mul[i]:null;return `<button type="button" class="tyb${m!=null?' '+tyMulCls(m):''}" data-ty="${i}" style="${tyStyle(i)}" aria-pressed="${sel.includes(i)}"><span class="tyn${TY_N[i].length>4?' long':''}">${TY_N[i]}</span>${m!=null?`<span class="tyx">×${tyFmtD(m)}</span>`:'<span class="tyx tyx0">–</span>'}</button>`}).join('')}
+function tyGridHtml(sel){return tyTypes().map(i=>`<button type="button" class="tyb" data-ty="${i}" style="${tyStyle(i)}" aria-pressed="${sel.includes(i)}"><span class="tyn${TY_N[i].length>4?' long':''}">${TY_N[i]}</span></button>`).join('')}
 // 攻撃側の特性：[登場世代(参考), 説明]
 const TY_ATK_ABL={'きもったま':[4,'ノーマル・かくとう技がゴーストに当たる'],'しんがん':[9,'ノーマル・かくとう技がゴーストに当たる'],'いろめがね':[4,'いまひとつを2倍にする'],'ノーマルスキン':[4,'技がすべてノーマルになる'],'スカイスキン':[6,'ノーマル技がひこうになる'],'フリーズスキン':[6,'ノーマル技がこおりになる'],'フェアリースキン':[6,'ノーマル技がフェアリーになる'],'エレキスキン':[7,'ノーマル技がでんきになる']};
 const TY_SKIN={'スカイスキン':9,'フリーズスキン':5,'フェアリースキン':17,'エレキスキン':3};
@@ -7265,11 +7297,18 @@ function tyAtkMul(atk,fld){
   });
   return o;
 }
+// 結果：実際に出た倍率の段だけを、大きい順に並べる（倍率は小数。特性・持ち物で ×0.75・×1.5 なども出る）
+// 等倍（×1）はいちばん下で、押すと開く。開いた状態は、アプリを開いている間だけ覚える（保存しない）
+let tyEqOpen=false;
+const tyFmtX=m=>'×'+String(+m.toFixed(4));
+function tyMulRowCls(m){return m===0?'c0':m>=4?'c4':m>=2?'c2':m>1?'c2s':m===.5?'ch':m>.5?'chs':'cq'}
 function tySumHtml(mul,side){
-  const v=Object.values(mul),n=f=>v.filter(f).length;
-  return side==='def'
-    ?`<span class="w">弱点 ${n(x=>x>1)}</span><span class="r">いまひとつ ${n(x=>x>0&&x<1)}</span><span class="z">効果なし ${n(x=>x===0)}</span>`
-    :`<span class="w">抜群 ${n(x=>x>1)}</span><span class="r">いまひとつ ${n(x=>x>0&&x<1)}</span><span class="z">効果なし ${n(x=>x===0)}</span>`;
+  const none=!Object.keys(mul).length,g=new Map();
+  Object.entries(mul).forEach(([a,m])=>{if(m===1)return;if(!g.has(m))g.set(m,[]);g.get(m).push(+a)});
+  const eq=Object.entries(mul).filter(([,m])=>m===1).map(([a])=>+a);
+  const rows=[...g.entries()].sort((a,b)=>b[0]-a[0]).map(([m,ts])=>`<div class="tyrrow ${tyMulRowCls(m)}"><b>${tyFmtX(m)}</b><div class="tyrcs">${ts.map(t=>tyChip(t)).join('')}</div></div>`).join('');
+  const eqh=none?'':`<div class="tyreqw"><button type="button" class="tyreq" id="tyEqTog" aria-expanded="${tyEqOpen}"><b>×1</b><span class="tyrn">${eq.length}タイプ</span><span class="tyrchev" aria-hidden="true"></span></button>${tyEqOpen&&eq.length?`<div class="tyrcs tyreqcs">${eq.map(t=>tyChip(t)).join('')}</div>`:''}</div>`;
+  return `<div class="tyrbox" style="min-height:${side==='atk'?126:190}px">${none?`<div class="tyrnone">${side==='atk'?'技のタイプ':'タイプ'}を押すと、ここに倍率が出ます</div>`:rows}${eqh}</div>`;
 }
 function tyShortName(n){const r=n.match(/^(.+)（(.+)）$/);return r&&r[2].includes(r[1])?r[2]:n}
 function renderTyDef(){
@@ -7343,6 +7382,7 @@ function renderTyTbl(){
 }
 tyEl.addEventListener('click',e=>{
   const t=e.target;
+  if(t.closest('#tyEqTog')){tyEqOpen=!tyEqOpen;renderTyDef();return}
   if(t.closest('#tyOvOff')){S.ty.ov=null;S.ty.at=tyDefTypes().slice();save();renderTy();return}
   if(t.closest('#tyChgReset')){S.ty.t=[];S.ty.at=[];S.ty.item='';S.ty.mon='';S.ty.abl='';S.ty.ov=null;tyQSet('');document.getElementById('tyRes').innerHTML='';save();renderTyChg();return}
   const ct=t.closest('[data-tycat]');if(ct){S.ty.cat=S.ty.cat===ct.dataset.tycat?'':ct.dataset.tycat;save();renderTyCat();return}
@@ -7976,7 +8016,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28i';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28j';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
