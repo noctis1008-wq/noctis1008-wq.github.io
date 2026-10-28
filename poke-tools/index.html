@@ -2441,6 +2441,15 @@ body:not(.app) .obsapp{display:none!important}
 .sheet-in>.sh-head{padding-top:20px}
 .sheet-in>.sh-head::before{content:"";position:absolute;top:7px;left:50%;width:40px;height:5px;margin-left:-20px;border-radius:9px;background:var(--grab);pointer-events:none}
 @media (min-width:700px){#monCard .sheet-in,#monFind .sheet-in{border-bottom:1px solid var(--pop-edge)}#monCard .sh-head::before,#monFind .sh-head::before{display:none}}
+/* 11) タイプのマス(2026.10.28i):選んだマスはリングをやめ、暗くへこませる(チェックは残す)。2倍以上のマスに、前の「選んだマス」のリング(すき間＋ふち)、4倍はリング＋赤い光 */
+/* 共通：影を変数で重ねる（--hl=2倍以上の枠、--prs=押したときの凹み） */
+#vType .tyb{--hl:0 0 0 0 transparent;--prs:inset 0 -2px 0 rgb(0 0 0 / .12);box-shadow:var(--hl),var(--prs)}
+#vType .tyb[aria-pressed=true]{box-shadow:var(--hl),var(--prs)}
+/* 2倍以上：以前「選んだタイプ」に使っていた枠（すき間 2px＋ふち 2px。ダークは白、ライトは濃紺） */
+#vType .tygrid.has .tyb.mw{--hl:0 0 0 2px var(--surface),0 0 0 4px var(--ink)}
+/* 案C：かなり暗く凹む／4倍は枠＋赤い光 */
+#vType .tyb[aria-pressed=true]{transform:translateY(2px);background-image:linear-gradient(180deg,rgb(0 0 0 / .5),rgb(0 0 0 / .36) 60%,rgb(0 0 0 / .3));--prs:inset 0 3px 8px rgb(0 0 0 / .55),inset 0 0 0 1px rgb(0 0 0 / .18)}
+#vType .tygrid.has .tyb.mw4{--hl:0 0 0 2px var(--surface),0 0 0 4px var(--ink),0 0 10px 4px color-mix(in srgb,var(--weak) 75%,transparent)}
 </style>
 
 <header class="appbar"><div class="appbar-in">
@@ -7967,7 +7976,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28h';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28i';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
