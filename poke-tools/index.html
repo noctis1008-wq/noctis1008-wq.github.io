@@ -5425,7 +5425,7 @@ async function dxVideoFrames(file,prog,signal,st0){
     // 取った画像は、順に JPEG にして（メモリを使いすぎないように）待ち行列の数をおさえる
     const nm=(file.name||'video').replace(/\.[^.]+$/,''),sc0=Math.min(1,(dxReaderOf(dxGame().id)?2400:GM_MAX)/Math.max(VW,VH)),CW=Math.round(VW*sc0),CH=Math.round(VH*sc0);
     const ce=document.createElement('canvas');ce.width=CW;ce.height=CH;const cex=ce.getContext('2d');cex.imageSmoothingQuality='high';
-    const caps=[],recD=[];let enc=Promise.resolve(),pend=0,run=0,mov=0;
+    const caps=[],recD=[];let enc=Promise.resolve(),pend=0,run=0,mov=0,fd0=1;
     // スマホ内で読める作品なら、取った画像をその場で裏の処理（Worker）に渡して読み始める（再生と同時に読むので、あとで待たない）。
     // 読む順番待ちが多いときは、メモリを使いすぎないように、その場では読まない（あとで読む）
     // （2倍速より遅くしか再生できない端末（ri<2）では、再生と取り合わないよう、その場では読まない）
@@ -5441,7 +5441,7 @@ async function dxVideoFrames(file,prog,signal,st0){
     // コマは、空いている裏の処理があれば VideoFrame で渡す（画素を写さないので、この画面の手間がほぼない。createImageBitmap は1枚ごとに画素を写す）。
     // VideoFrame は動画の再生のバッファーを借りるので、すぐに読まれるときだけ使う（ためこむと再生が止まることがある）
     const capture=(i,t,lo,mv)=>{if(pend>=(lo?LO:LO+4)||!window.createImageBitmap)return;
-      const toW=spec;let pr=null; // （型紙で読む作品は、いつもそのコマの画素をそのまま裏の処理で読む。待ちが多いときに JPEG にしてあとで読むと画素が少し変わり、同じ動画でも結果が毎回少し変わった）
+      const toW=spec;let pr=null; // （型紙で読む作品は、いつもそのコマの画素をそのまま裏の処理で読む。JPEG にして、あとで読むと画素が少し変わり、同じ動画でも結果が毎回少し変わった）
       if(toW&&dxVF&&dxPool.free.length&&!dxPool.q.length){try{pr=Promise.resolve(new VideoFrame(v,{timestamp:Math.round(t*1e6)}))}catch(e){dxVF=false}}
       if(!pr)try{pr=createImageBitmap(v)}catch(e){return}
       const c={i,t,f:null,rd:null,mv:!!mv};caps.push(c);pend++;
@@ -5470,10 +5470,10 @@ async function dxVideoFrames(file,prog,signal,st0){
         // 再生の速さは端末にあわせて決める。0.1秒ごとのコマを1つも見落とさないのが前提：
         // 見落としたら速さを下げ、最後に見た所まで戻って見直す。余裕があれば（0.1秒のあいだに2コマ以上届く状態が3秒続いたら）上げる
         // 見落とした速さは、次に上げるまでに長く待つ（はじめのカクつきなどで、ずっと遅いままにならないように）
-        const RATES=[1,1.5,2,3],nMiss=[0,0,0,0];ri=2;let lastG=-1,prevM=-1,okFrom=0,busy=false;
+        const RATES=[1,1.5,2,3],nMiss=[0,0,0,0];ri=2;let pmt=-1;let lastG=-1,prevM=-1,okFrom=0,busy=false;
         await new Promise((res,rej)=>{let done=false;const fin=()=>{if(!done){done=true;v.pause();res()}};
           const cb=(now,m)=>{if(done)return;if(signal&&signal.aborted){v.pause();rej({code:'cancelled'});return}
-            const mt=m.mediaTime;
+            const mt=m.mediaTime;if(pmt>=0&&mt>pmt&&mt-pmt<fd0)fd0=mt-pmt;pmt=mt;
             if(lastG>=0&&mt-lastG>DX_VID_STEP*2.5&&ri>0&&mt<dur-.05){busy=true;if(mt>1.5)nMiss[ri]++;ri--;v.pause();try{v.playbackRate=RATES[ri]}catch(e){}
               next=lastG+DX_VID_STEP;prevM=-1;okFrom=lastG;seek(lastG).then(()=>{busy=false;if(done)return;v.requestVideoFrameCallback(cb);v.play().catch(rej)},rej);return}
             if(mt>=next-1e-3){grab(mt);lastG=mt;next=mt+DX_VID_STEP}
@@ -5495,7 +5495,7 @@ async function dxVideoFrames(file,prog,signal,st0){
     // 型紙で読む作品：似た行が並ぶ一覧は、縮めた画像では流れても変化が小さく見える。小さな変化も別の場面として扱う
     if(RD&&RD.dense)thr=Math.min(thr,1.2);
     // 動いた時刻を覚えておく（あとで、番号が飛んだ所を細かく読み直すときに、動いている途中のコマを選ぶのに使う）
-    file.dxMot={t:S.map(x=>x.t),d:D,thr};
+    file.dxMot={t:S.map(x=>x.t),d:D,thr};file.dxFd=fd0>=1/121&&fd0<=1/23?fd0:1/30; // （1コマの長さ。読み直しで、あいだのコマをすべて読むのに使う）
     // 止まった区間ごとに、真ん中のコマを代表にする（はしのコマは、ページの切り替えにかかっていることがある）
     const pick=[],used=new Uint8Array(S.length),seg={};
     for(let i=1;i<S.length;){if(D[i]>=thr){i++;continue}let j=i;while(j<S.length&&D[j]<thr){used[j]=1;j++}
@@ -5657,7 +5657,12 @@ async function dxVidOpen(file){const url=URL.createObjectURL(file),v=document.cr
 /* 動画で、続けて取り出した2枚のあいだで番号が飛んだ所を読み直す。
    ボタンを押しっぱなしで一覧を流すと、ページの境目の行が、止まった画面ではいつも半分しか写らないことがある（ORAS など）。
    その行は、ページが動いている途中のコマにはまるごと写るので、2枚のあいだの「動いた時刻」の前後のコマ（1/30秒きざみ）を読む */
-async function dxGapFill(files,add,signal,onProg){
+const DX_GS=1; // 読み直しの再生の速さ（届かなかったコマは、あとで位置を移して取る）
+let dxGfSeek=0,dxDetMode=null; // （読み直しで、再生中に届かず位置を移して取ったコマの数。調べる用）
+// 読み直すコマが DX_DET_MAX 以下なら「毎回同じ結果」の読み方（det）：あいだのコマをすべて、コマの番号で読む（等倍で再生して届いたコマ・届かなければ位置を移す）。
+// 動いている途中に見ていたコマ（取れるコマが毎回ちがう）は使わない。多いとき（長い動画をずっと流した ORAS など）は、前の速い読み方（動いた時刻の前後だけ）
+const DX_DET_MAX=360;
+async function dxGapFill(files,add,signal,onProg,opt={}){const DX_DET=!!opt.det;
   const R=dxReaderOf(dxGame().id);if(!R||dxNoSeq())return 0;
   const vids=new Map();
   files.forEach(f=>{const x=f.dxRows||(f.dxAlt&&f.dxAlt.dxRows);if(!f.dxV||!x||!x.length)return;let L=vids.get(f.dxV);if(!L)vids.set(f.dxV,L=[]);L.push({t:f.dxT,rows:x})});
@@ -5668,25 +5673,42 @@ async function dxGapFill(files,add,signal,onProg){
         // 2枚の番号の範囲のあいだ（とその中）で、まだ読めていない番号があれば読み直す（同じページを2回写しただけの組は除く）
         if(aL===bL&&aH===bH)continue;const lo=Math.min(aL,bL),hi=Math.max(aH,bH);
         const H=dxReadNums.get(d)||new Set();let miss=0;for(let n=lo+1;n<hi;n++)if(!H.has(n))miss++;
-        if(!miss||hi-lo>60)continue;
-        // 2枚のあいだで動いた時刻（なければ、あいだを等分）
-        const ts=new Set();
-        if(M){for(let k=1;k<M.t.length;k++){const t=M.t[k];if(t<=A.t||t>B.t+1e-3||M.d[k]<M.thr)continue;[-2/30,-1/30,0].forEach(o=>{const x=t+o;if(x>A.t&&x<B.t)ts.add(+x.toFixed(3))})}}
-        if(!ts.size)for(let k=1;k<=6;k++)ts.add(+(A.t+(B.t-A.t)*k/7).toFixed(3));
-        jobs.push({v,ts:[...ts].sort((p,q)=>p-q).slice(0,12)});break}}}
+        if(!miss||!DX_DET&&hi-lo>60)continue;
+        // 2枚のあいだのコマを、1コマずつすべて読む（コマの番号で決めるので、何回読んでも同じコマ・同じ画素になる。
+        //   前は、見ているときに取れた時刻の前後を読んでいて、取れた時刻が毎回少しちがうため、結果も毎回少し変わった）。
+        //   （ぜんぶで DX_DET_MAX コマより多ければ、この読み方は使わない）
+        if(!DX_DET){const ts=new Set();
+          if(M){for(let k=1;k<M.t.length;k++){const t=M.t[k];if(t<=A.t||t>B.t+1e-3||M.d[k]<M.thr)continue;[-2/30,-1/30,0].forEach(o=>{const x=t+o;if(x>A.t&&x<B.t)ts.add(+x.toFixed(3))})}}
+          if(!ts.size)for(let k=1;k<=6;k++)ts.add(+(A.t+(B.t-A.t)*k/7).toFixed(3));
+          jobs.push({v,ts:[...ts].sort((p,q)=>p-q).slice(0,12)});break}
+        const fd=v.dxFd||1/30,k0=Math.floor(A.t/fd)+1,k1=Math.ceil(B.t/fd)-1,ts=[];
+        for(let k=k0;k<=k1;k++)ts.push(k);
+        if(ts.length)jobs.push({v,ts:ts.map(k=>+((k+.5)*fd).toFixed(4))});break}}}
   // 読み直すコマの時刻を動画ごとにまとめ、位置を移すのは「次の時刻が1秒以上先」のときだけにして、あいだは2倍速で再生しながら取る
   // （1コマごとに位置を移すと、iPhone では1回に時間がかかり、全体がとても遅くなった）。読むのは裏の処理で同時に行う。
   // かける時間には上限を設ける（動画の長さの半分・最大60秒）。上限を過ぎたら、残りは「読めなかったページ」として出す
   let n=0,total=0;const T=new Map();jobs.forEach(j=>{let S=T.get(j.v);if(!S)T.set(j.v,S=new Set());j.ts.forEach(t=>S.add(t))});
-  for(const S of T.values())total+=S.size;if(!total)return 0;
+  for(const S of T.values())total+=S.size;if(opt.count)return total;if(!total)return 0;
   const pend=[],t0=performance.now(),okBm=dxPoolOk()&&dxBmOk()&&!!window.createImageBitmap;
   for(const [v,S] of T){const ts=[...S].sort((p,q)=>p-q);let V=null;
-    try{V=await dxVidOpen(v);const vv=V.v,dur=vv.duration||0,deadline=t0+1000*Math.min(60,Math.max(15,dur*.5));
+    try{V=await dxVidOpen(v);const vv=V.v,dur=vv.duration||0,deadline=t0+1000*(DX_DET?120:Math.min(60,Math.max(15,dur*.5)));
       const grabNow=mt=>{n++;onProg&&onProg(Math.min(1,n/total));
-        if(okBm){let pr;try{pr=createImageBitmap(vv)}catch(e){return}pend.push(pr.then(bm=>dxReadBm(bm,R,0)).then(x=>{const rows=x&&dxSetRows({},x.r);if(rows)add(rows)}).catch(()=>{}));return}
+        if(okBm){let pr;try{pr=DX_DET&&dxVF?Promise.resolve(new VideoFrame(vv,{timestamp:Math.round(mt*1e6)})):createImageBitmap(vv)}catch(e){try{pr=createImageBitmap(vv)}catch(e2){return}}pend.push(pr.then(bm=>dxReadBm(bm,R,0)).then(x=>{const rows=x&&dxSetRows({},x.r);if(rows)add(rows)}).catch(()=>{}));return}
         try{const P=dxPxOf((cx,W,H)=>cx.drawImage(vv,0,0,W,H),vv.videoWidth,vv.videoHeight,R.noS);pend.push(dxReadPx(P,R).then(r=>{const rows=dxSetRows({},r);if(rows)add(rows)}))}catch(e){}};
       let k=0;
-      while(k<ts.length&&performance.now()<deadline){if(signal&&signal.aborted)throw {code:'cancelled'};
+      // （1コマずつ位置を移して取る。再生しながら取ると、どのコマが届くかが毎回ちがう）
+      // （つづいたコマは、はじめのコマに位置を移してから等倍で再生し、届いたコマを番号（再生の時刻÷1コマの長さ）で取る。届かなかったコマだけ、あとで位置を移して取る。
+      //   位置を移すのは、動画によっては1回ごとに前のキーフレームから読み直すので、とても遅い）
+      if(DX_DET){const fd=v.dxFd||1/30,want=new Set(ts.map(t=>Math.floor(t/fd))),got=new Set(),K=[...want].sort((p,q)=>p-q);
+        const take=k=>{if(!want.has(k)||got.has(k))return;got.add(k);grabNow((k+.5)*fd)};
+        for(let i=0;i<K.length&&performance.now()<deadline;){if(signal&&signal.aborted)throw {code:'cancelled'};let j=i;while(j+1<K.length&&K[j+1]-K[j]<=3)j++;const ka=K[i],kb=K[j];i=j+1;if(got.has(ka)&&got.has(kb))continue;
+          await V.seek((ka+.5)*fd);take(ka);if(kb===ka||!('requestVideoFrameCallback' in vv))continue;
+          await new Promise(res=>{let done=false;const fin=()=>{if(done)return;done=true;clearTimeout(tm);try{vv.pause()}catch(e){}res()};const tm=setTimeout(fin,20000);
+            const cb=(now,m)=>{if(done)return;const kk=Math.round(m.mediaTime/fd);take(kk);if(kk>=kb||performance.now()>deadline||m.mediaTime>=dur-.05){fin();return}vv.requestVideoFrameCallback(cb)};
+            vv.requestVideoFrameCallback(cb);try{vv.playbackRate=DX_GS}catch(e){}const pp=vv.play();if(pp&&pp.catch)pp.catch(fin)})}
+        for(const kk of K){if(got.has(kk))continue;if(performance.now()>deadline)break;if(signal&&signal.aborted)throw {code:'cancelled'};await V.seek((kk+.5)*fd);take(kk);dxGfSeek++}
+        k=ts.length}
+      while(!DX_DET&&k<ts.length&&performance.now()<deadline){if(signal&&signal.aborted)throw {code:'cancelled'};
         await V.seek(Math.max(0,ts[k]-.25)); // 少し前から再生する（再生が始まってすぐは、コマが飛びやすい）
         if(!('requestVideoFrameCallback' in vv)){grabNow(vv.currentTime);k++;continue} // 再生しながら取れないときは、位置を移して1コマずつ
         await new Promise(res=>{let done=false;const fin=()=>{if(done)return;done=true;clearTimeout(tm);try{vv.pause()}catch(e){}res()};const tm=setTimeout(fin,20000);
@@ -5710,14 +5732,15 @@ async function dxLocalFill(files,put,signal,st){
     const voteRows=rows=>rows.forEach(x=>{const k=(x.dex||'_')+':'+x.num;if(H0.has(k))return;let c=vote.get(k);if(!c)vote.set(k,c={r:x,n:{}});c.n[x.status]=(c.n[x.status]||0)+1});
     // （番号が飛ぶのが当たり前の作品（SV の本棚）は、動いている途中のコマでは埋めない。止まった画面で読めなかった番号の多くは、棚にない番号で、
     //   動いている途中のコマで本の番号を読みまちがえると、棚にないポケモンを「捕まえた」にしてしまう（ブルーベリー図鑑で 2匹多かった））
-    if(!dxNoSeq())files.forEach(f=>{if(f.dxMov&&f.dxRows)voteRows(f.dxRows)});
+    const det=!dxNoSeq()&&await dxGapFill(files.filter(f=>!f.dxMov),null,signal,null,{det:true,count:true})<=DX_DET_MAX;dxDetMode=det;
+    if(!dxNoSeq()&&!det)files.forEach(f=>{if(f.dxMov&&f.dxRows)voteRows(f.dxRows)});
     // 「捕まえた」は、動いている途中のコマ2枚以上で同じに読めたときだけにする（見ていない欄を捕まえたと読むまちがいがあったため）。
     // 1枚だけのものは決めずに残し、下の読み直しでもう1枚を読みにいく。それでも1枚だけなら「不明」（運営者が選ぶ）
     const fin=last=>{const out=[];for(const [k,{r,n:c}] of vote){const E=Object.entries(c).sort((p,q)=>q[1]-p[1]);let st=E[1]&&E[1][1]===E[0][1]?'unknown':E[0][0];
       if(st==='caught'&&E[0][1]<2){if(!last)continue;st='unknown'}out.push({...r,status:st});vote.delete(k)}if(out.length)put(out)};
     fin(false);
     st.textContent='読めなかった所を、動画から細かく読み直しています…';await dxPaint();
-    const tf=performance.now();dxGapN=await dxGapFill(files.filter(f=>!f.dxMov||f.dxRows),voteRows,signal,f=>dxProg(f*(dxShotMode==='gm'?.4:1)));dxTm.fill=performance.now()-tf;fin(true)
+    const tf=performance.now();dxGapN=await dxGapFill(files.filter(f=>det?!f.dxMov:(!f.dxMov||f.dxRows)),voteRows,signal,f=>dxProg(f*(dxShotMode==='gm'?.4:1)),{det});dxTm.fill=performance.now()-tf;fin(true)
 }
 // 画面の上の数（型紙の hdr：捕まえた・見つけた）。図鑑ごとに、いちばん多く読めた数（2枚以上）を「ゲームの画面の数」とし、結果の数とくらべる（dxDexTally）。
 // SV の本棚（図鑑ごとに印がちがう）は、図鑑の棚で読んだ印の数とくらべる。ほかの作品は、その図鑑のポケモンの結果の数とくらべる
@@ -7874,7 +7897,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28c';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28d';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
