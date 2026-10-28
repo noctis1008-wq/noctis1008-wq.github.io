@@ -209,9 +209,23 @@ function dxtHdr(px,W,H,m,P,dk){const Hd=P.hdr;if(!Hd)return null;const tm=Hd.tm=
       if(!best){v.length=0;break}v.push(best[0])}
     const d=S.d!=null?S.d:dk||null;if(v.length===2&&v[1]>=v[0]&&!out.some(o=>o.d===d&&o.v[0]===v[0]&&o.v[1]===v[1]))out.push({d,v})}
   return out.length?out:null}
+// 画面の端の見つけ方は、明るさで少し変わる（iPhone は暗い所をより暗くする。BW/BW2 の下の画面は、倍率が 2% ずれて番号が読めないことがある）。
+// 型紙の mapJit（倍率の割合の並び）があれば、読めなかったとき・図鑑の見出しが分からなかったときだけ、倍率を少し変えた写し方（左上・右下・まん中にそろえる）でも読んでみる
 function dxtRead(pxB,WB,HB,P,learn){
   if(P.tiles)return learn?null:dxtReadTiles(pxB,WB,HB,P);
-  const Ms=dxtMap(pxB,WB,HB,P);if(!Ms)return null;let out=null;
+  const Ms=dxtMap(pxB,WB,HB,P);if(!Ms)return null;let r=dxtRead1(pxB,WB,HB,P,learn,Ms);
+  if(learn||!P.mapJit||!(r.fail||P.dex&&P.dex.refs&&!r.dex))return r;
+  const J=[];for(const k of P.mapJit)for(const a of [0,1,.5])for(const m of Ms)J.push({ox:m.ox+(1-k)*P.W*m.sx*a,oy:m.oy+(1-k)*P.H*m.sy*a,sx:m.sx*k,sy:m.sy*k});
+  // （読めなかったときは、倍率を変えた写し方の2つ以上で、番号と印がまったく同じに読めたときだけ使う。動いている途中のぼやけたコマを、まちがえて読まない）
+  if(r.fail){const ok=[],key=q=>q.rows.map(x=>x.num+':'+x.status).join(',');let res=null;
+    for(const m of J){const q=dxtRead1(pxB,WB,HB,P,learn,[m]);if(q.fail||!q.rows.length)continue;const k=key(q),o=ok.find(x=>x.k===k);if(o){res=o.q.dex?o.q:q;break}ok.push({k,q})}
+    if(!res)return r;r=res;if(r.dex)return r}
+  // 一覧は読めたが見出しが分からないとき：見出しの形だけを、倍率を変えた写し方でもくらべる（一覧を読む写し方と、見出しがいちばん合う写し方が少しちがうことがある）
+  if(!r.fail&&P.dex&&P.dex.refs){let b=-1,bk=null,bm=null;for(const m of [...Ms,...J]){if(P.chk&&!P.chk.every(c=>{const v=dxtFeat(pxB,WB,HB,m,{feat:[c.slice(0,4)]},0)[c[4]];return v>=c[5]&&v<=c[6]}))continue;
+      const F=dxtFeat(pxB,WB,HB,m,{feat:P.dex.refs.map(()=>P.dex.r),fref:P.dex.refs.map(x=>x.ref)},0);P.dex.refs.forEach((x,i)=>{if(F[i*7+6]>b){b=F[i*7+6];bk=x.k;bm=m}})}
+    if(b>=P.dex.fmin){r.dex=bk;if(P.hdr&&!r.hdr)r.hdr=dxtHdr(pxB,WB,HB,bm,P,bk)}}
+  return r}
+function dxtRead1(pxB,WB,HB,P,learn,Ms){let out=null;
   for(const m of Ms){
     // 一覧の画面か（型紙の目印の場所の明るさ・色が決まった範囲にあるか）
     if(P.chk&&!P.chk.every(c=>{const v=dxtFeat(pxB,WB,HB,m,{feat:[c.slice(0,4)]},0)[c[4]];return v>=c[5]&&v<=c[6]}))continue;
