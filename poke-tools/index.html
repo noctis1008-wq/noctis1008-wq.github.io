@@ -1074,6 +1074,23 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxc-go{height:42px;border:none;border-radius:12px;background:var(--gm-a);color:#fff;font-weight:800;font-size:14px;margin-top:4px}
 .dxc-tip{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--muted);background:none;border:none;padding:6px 8px;align-self:center}
 .dxc-ill{border-radius:16px;background:var(--sunken);border:1px solid var(--line);padding:14px;display:grid;place-items:center}
+/* 上手に撮るコツの絵：左右キーで図鑑のページをめくる様子をくり返す（前は動かない絵だった）。
+   ページ（No.001〜／No.005〜）を入れかえ、そのすぐ前に押すキーを光らせる。1ページごとに約2.5秒止める。
+   動きを減らす設定（iPhone の「視差効果を減らす」など）でも、使い方の説明なので止めない：すべらせずに、入れかえるだけにする */
+.dxc-pg{transform-box:fill-box}
+.dxc-pA{animation:dxcA 6s infinite}.dxc-pB{animation:dxcB 6s infinite}
+.dxc-kr{animation:dxcKr 6s infinite}.dxc-kl{animation:dxcKl 6s infinite}
+@keyframes dxcA{0%,44%{opacity:1;transform:none}50%,94%{opacity:0;transform:translateX(-10px)}100%{opacity:1;transform:none}}
+@keyframes dxcB{0%,44%{opacity:0;transform:translateX(10px)}50%,94%{opacity:1;transform:none}100%{opacity:0;transform:translateX(10px)}}
+@keyframes dxcKr{0%,38%,52%,100%{opacity:0}41%,49%{opacity:1}}
+@keyframes dxcKl{0%,88%,100%{opacity:0}91%,99%{opacity:1}}
+@media (prefers-reduced-motion: reduce){
+  /* （全体の「動きを減らす」で animation:none!important になっているので、この絵だけ戻す。すべらせずに入れかえる） */
+  .dxc-ill .dxc-pA{animation:dxcAr 6s infinite!important}.dxc-ill .dxc-pB{animation:dxcBr 6s infinite!important}
+  .dxc-ill .dxc-kr{animation:dxcKr 6s infinite!important}.dxc-ill .dxc-kl{animation:dxcKl 6s infinite!important}
+}
+@keyframes dxcAr{0%,47%{opacity:1}48%,97%{opacity:0}98%,100%{opacity:1}}
+@keyframes dxcBr{0%,47%{opacity:0}48%,97%{opacity:1}98%,100%{opacity:0}}
 .dxc-steps{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
 .dxc-steps li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45}
 .dxc-steps li b.n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--dx);color:#fff;display:grid;place-items:center;font-size:13px}
@@ -2929,14 +2946,10 @@ body:not(.app) .obsapp{display:none!important}
  <defs><pattern id="dxczz" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M0 20 L14 6 L28 20" fill="none" stroke="#7fd3d6" stroke-width="9" opacity=".55"/></pattern></defs>
  <rect x="40" y="8" width="220" height="154" rx="16" fill="#3a3f52"/>
  <rect x="56" y="20" width="188" height="128" rx="4" fill="#3f8fd1"/><rect x="56" y="20" width="188" height="128" fill="url(#dxczz)"/>
- <rect x="122" y="30" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="25" width="26" height="8" rx="2" fill="#3a2025"/>
- <rect x="122" y="56" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="51" width="26" height="8" rx="2" fill="#3a2025"/>
- <rect x="122" y="82" width="114" height="20" rx="3" fill="#8f2f2a"/><rect x="138" y="77" width="26" height="8" rx="2" fill="#3a2025"/>
- <rect x="122" y="108" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="103" width="26" height="8" rx="2" fill="#3a2025"/>
- <g fill="#fff" opacity=".9"><rect x="150" y="37" width="44" height="6" rx="3"/><rect x="150" y="63" width="36" height="6" rx="3"/><rect x="150" y="115" width="40" height="6" rx="3"/></g>
- <rect x="150" y="89" width="50" height="6" rx="3" fill="#ff9c8f"/>
- <circle cx="226" cy="40" r="5" fill="#fff"/><circle cx="226" cy="66" r="5" fill="#fff"/><circle cx="226" cy="118" r="5" fill="#555"/>
+ <g class="dxc-pg dxc-pA"><rect x="122" y="30" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="25" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="44" font-size="9" font-weight="700" fill="#fff">001</text><rect x="152" y="37" width="36" height="6" rx="3" fill="#fff" opacity=".9"/><circle cx="226" cy="40" r="5" fill="#fff"/><rect x="122" y="56" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="51" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="70" font-size="9" font-weight="700" fill="#fff">002</text><rect x="152" y="63" width="50" height="6" rx="3" fill="#fff" opacity=".9"/><circle cx="226" cy="66" r="5" fill="#fff"/><rect x="122" y="82" width="114" height="20" rx="3" fill="#8f2f2a"/><rect x="138" y="77" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="96" font-size="9" font-weight="700" fill="#fff">003</text><rect x="152" y="89" width="40" height="6" rx="3" fill="#ff9c8f" opacity=".9"/><circle cx="226" cy="92" r="5" fill="#fff"/><rect x="122" y="108" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="103" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="122" font-size="9" font-weight="700" fill="#fff">004</text><rect x="152" y="115" width="44" height="6" rx="3" fill="#fff" opacity=".9"/><circle cx="226" cy="118" r="5" fill="#555"/></g>
+ <g class="dxc-pg dxc-pB"><rect x="122" y="30" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="25" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="44" font-size="9" font-weight="700" fill="#fff">005</text><rect x="152" y="37" width="36" height="6" rx="3" fill="#fff" opacity=".9"/><circle cx="226" cy="40" r="5" fill="#fff"/><rect x="122" y="56" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="51" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="70" font-size="9" font-weight="700" fill="#fff">006</text><rect x="152" y="63" width="50" height="6" rx="3" fill="#fff" opacity=".9"/><circle cx="226" cy="66" r="5" fill="#555"/><rect x="122" y="82" width="114" height="20" rx="3" fill="#8f2f2a"/><rect x="138" y="77" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="96" font-size="9" font-weight="700" fill="#fff">007</text><rect x="152" y="89" width="40" height="6" rx="3" fill="#ff9c8f" opacity=".9"/><circle cx="226" cy="92" r="5" fill="#fff"/><rect x="122" y="108" width="114" height="20" rx="3" fill="#ef5a45"/><rect x="138" y="103" width="26" height="8" rx="2" fill="#3a2025"/><text x="128" y="122" font-size="9" font-weight="700" fill="#fff">008</text><rect x="152" y="115" width="44" height="6" rx="3" fill="#fff" opacity=".9"/><circle cx="226" cy="118" r="5" fill="#fff"/></g>
  <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"><path d="M10 85 L30 70 L30 100 Z"/><path d="M290 85 L270 70 L270 100 Z"/></g>
+ <g fill="#ff6a4b" stroke="#ff6a4b" stroke-width="2.5" stroke-linejoin="round"><path class="dxc-kl" d="M10 85 L30 70 L30 100 Z" opacity="0"/><path class="dxc-kr" d="M290 85 L270 70 L270 100 Z" opacity="0"/></g>
  <text x="20" y="122" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">◀ 前</text><text x="280" y="122" font-size="12" font-weight="700" fill="var(--muted)" text-anchor="middle">次 ▶</text>
 </svg></div>
   <ol class="dxc-steps">
@@ -8016,7 +8029,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28j';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.28k';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
