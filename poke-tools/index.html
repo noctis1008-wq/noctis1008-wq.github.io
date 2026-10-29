@@ -3128,7 +3128,9 @@ function normalize(){
     S.targets.forEach(ex);S.members.forEach(ex);S.presets.forEach(p=>{(p.members||[]).forEach(ex);(p.targets||[]).forEach(ex)});S.noEx=1}
 }
 normalize();
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+// 保存の前に、努力値カウンターとつないだ個体管理の個体へ、努力値・目標を写す（2026.10.29a。
+// 前は画面を描き直すときだけ写していたので、保存される値が1回分おくれていた）
+const save=()=>{try{evSyncMon()}catch(e){}try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 
 // 能力名の表示切り替え（こうげき／攻撃／A）
 const LABELS={kana:['HP','こうげき','ぼうぎょ','とくこう','とくぼう','すばやさ'],kanji:['HP','攻撃','防御','特攻','特防','素早さ'],abc:['H','A','B','C','D','S']};
@@ -3556,6 +3558,25 @@ sheetEl.addEventListener('click',e=>{
   }
   save();renderSheet();renderParty();renderTaps();renderCount();renderLog();
 });
+// 数字を打っているあいだも、すぐに手持ち・個体管理へ反映する（入力欄は描き直さない）。
+// 「戻す」の記録は1回の入力で1つ。確定（change）のときに、言葉を最後の値に直す
+sheetEl.addEventListener('input',e=>{
+  const el=e.target,act=el.dataset.act,k=el.dataset.k;if(act!=='sev'&&act!=='sgoal')return;
+  const m=S.members[sheetI],C=CAP(),raw=el.value.trim();if(!m||raw==='')return;
+  let v=Math.max(0,Math.min(C,parseInt(raw)||0));
+  if(act==='sev'){
+    v=Math.min(v,510-(sum(m.ev)-m.ev[k]));if(v===m.ev[k])return;
+    const nm=STATS.find(s=>s.k===k).n;
+    if(el.dataset.o==null){el.dataset.o=String(m.ev[k]);pushHist('edit',`${m.name}：${nm}を${m.ev[k]}→${v}に変更`)}
+    else{const h=S.history[S.history.length-1];if(h)h.label=`${m.name}：${nm}を${el.dataset.o}→${v}に変更`}
+    m.ev[k]=v;
+  }else{
+    if(!m.goal)m.goal=noGoal();
+    const others=STATS.reduce((a,s)=>a+(s.k===k?0:(m.goal[s.k]||0)),0);v=Math.min(v,510-others);
+    if(m.goal[k]===v)return;m.goal[k]=v;
+  }
+  save();renderParty();renderTaps();renderCount();
+});
 sheetEl.addEventListener('change',e=>{
   const el=e.target,act=el.dataset.act,k=el.dataset.k;if(!act)return;
   const m=S.members[sheetI],C=CAP();
@@ -3564,7 +3585,12 @@ sheetEl.addEventListener('change',e=>{
     let v=Math.max(0,Math.min(C,parseInt(el.value)||0));
     const lim=510-(sum(m.ev)-m.ev[k]);
     if(v>lim){v=lim;toast(`合計が510を超えるので、${STATS.find(s=>s.k===k).n}を${v}にしました`)}
-    if(v!==m.ev[k]){pushHist('edit',`${m.name}：${STATS.find(s=>s.k===k).n}を${m.ev[k]}→${v}に変更`);m.ev[k]=v}
+    if(el.dataset.o!=null){
+      // 打っているあいだに反映ずみ。戻す記録の言葉を最後の値に直す（元の値に戻したなら記録を消す）
+      const o=+el.dataset.o,h=S.history[S.history.length-1];delete el.dataset.o;m.ev[k]=v;
+      if(h&&h.kind==='edit'){if(v===o)S.history.pop();else h.label=`${m.name}：${STATS.find(s=>s.k===k).n}を${o}→${v}に変更`}
+    }
+    else if(v!==m.ev[k]){pushHist('edit',`${m.name}：${STATS.find(s=>s.k===k).n}を${m.ev[k]}→${v}に変更`);m.ev[k]=v}
   }
   if(act==='sgoal'){
     const raw=el.value.trim();
@@ -6804,7 +6830,7 @@ monSheet.addEventListener('click',e=>{
     if(evm!=null&&S.members[evm]&&!evMonOf(S.members[evm])){S.members[evm].mon=m.id;renderParty()}
     {const mem=S.members.find(x=>x.mon===m.id);if(mem&&m.ev){let tot=0,cut=false;EVK.forEach(k=>{let v=Math.min(CAP(),+m.ev[k]||0);if(tot+v>510){v=Math.max(0,510-tot);cut=true}tot+=v;mem.ev[k]=v;m.ev[k]=v});renderParty();renderTaps();renderCount();if(cut)setTimeout(()=>toast('努力値の合計が510を超えたので、超えた分を減らしました'),400)}}
     save();monClose();renderMon();toast(isNew?'登録しました':'保存しました');return}
-  if(d.mondel){armed(b,'削除','本当に削除',()=>{M.list=M.list.filter(x=>x.id!==m.id);save();monClose();renderMon();toast('削除しました')});return}
+  if(d.mondel){armed(b,'削除','本当に削除',()=>{M.list=M.list.filter(x=>x.id!==m.id);S.members.forEach(y=>{if(y.mon===m.id)delete y.mon});save();monClose();renderMon();toast('削除しました')});return}
 });
 // 入力欄の内容を編集中の個体に移す
 // 技の一覧（名前,タイプ番号,分類 0変化/1物理/2特殊）。出典：PokeAPI のデータ
@@ -8030,7 +8056,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.28l';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.29a';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
@@ -8162,6 +8188,17 @@ try{if(!location.hash.startsWith('#obs')&&screen.orientation&&screen.orientation
 
 function openMenu(){drawer.hidden=false;menuBtn.setAttribute('aria-expanded','true');document.body.classList.add('modal');drawer.querySelector('[aria-current="page"]')?.focus()}
 function closeMenu(){if(drawer.hidden)return;drawer.hidden=true;menuBtn.setAttribute('aria-expanded','false');if(sheetEl.hidden)document.body.classList.remove('modal');menuBtn.focus()}
+// ほかのタブ・ウィンドウで保存されたら、その内容に入れかえて、今の画面を描き直す（ここでは保存しない）
+addEventListener('storage',e=>{
+  if(e.key!==KEY||!e.newValue)return;
+  let n;try{n=JSON.parse(e.newValue)}catch(_){return}
+  if(!n||!Array.isArray(n.members)||!Array.isArray(n.targets))return;
+  const v=S.view;S=n;S.view=v;
+  try{normalize();S.mon=Object.assign({list:[],parents:[],tags:MON_TAG0.slice(),q:'',qi:'',ftags:[],f:{},sort:'add',dir:'desc',uid:0},S.mon||{});
+    if(v==='ev'||!v){renderParty();renderTaps();renderCount();renderLog();if(!sheetEl.hidden){if(sheetEl.contains(document.activeElement)&&document.activeElement.tagName==='INPUT'){}else renderSheet()}}
+    if(v==='mon'&&monSheet.hidden)renderMon();
+  }catch(_){}
+});
 function setView(v){
   if(!VIEWS[v])v='ev';
   S.view=v;save();
