@@ -901,6 +901,7 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 .dxs-chg .zero{opacity:.55}
 .dxs-src{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);background:none;border:none;padding:0;align-self:flex-start;text-align:left}
 .dxs-src svg{width:14px;height:14px;flex:none;transition:transform .2s}.dxs-src[aria-expanded=true] svg{transform:rotate(180deg)}
+.dxs-cmp{font-size:12.5px;line-height:1.5;padding:8px 12px;border-radius:12px;background:var(--sunken);color:var(--ink);display:flex;flex-direction:column;gap:4px;flex:none}.dxs-cmp p{margin:0}.dxs-cmp .h{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.dxs-cmp b{font-family:var(--f-num)}.dxs-cmp .ok{color:var(--st-c);font-weight:800}.dxs-cmp .ng{color:var(--st-r);font-weight:800}.dxs-cmp.ng{border:1.5px solid color-mix(in srgb,var(--st-r) 45%,var(--line))}
 .dxs-detail{margin:-4px 0 0;font-size:12.5px;line-height:1.55;padding:10px 12px;border-radius:12px;background:var(--sunken);color:var(--ink)}
 .dxs-warn{border-radius:16px;padding:12px 14px;border:1.5px solid color-mix(in srgb,var(--st-r) 55%,var(--line));background:color-mix(in srgb,var(--st-r) 7%,var(--surface));display:flex;flex-direction:column;gap:8px}
 .dxs-warn .t{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14.5px;color:var(--st-rt);margin:0}
@@ -5739,7 +5740,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dxTipSheet.hidden)
 document.getElementById('dxGmLink').addEventListener('click',e=>{gmFromDex=true;stOpen('gm');stRet=e.currentTarget});
 
 // 動画から取り出した画面のうち、図鑑の一覧が写っていないもの（録画の始まり・終わりのホーム画面など）。読めなくても困らないので、数えず・送らない
-let dxSkipped=0,dxGapN=0,dxTm={},dxDexTally=null,dxHint=new Map(),dxHdrN=0;
+let dxSkipped=0,dxGapN=0,dxTm={},dxDexTally=null,dxHint=new Map(),dxHdrN=0,dxShelf=null;
 const dxNoList=f=>!!(f.dxVid&&f.dxNoList&&(!f.dxAlt||f.dxAlt.dxNoList));
 // 番号が飛ぶのが当たり前の作品（SV の本棚：見ていないポケモンの本はない）か
 const dxVseg=(gid=dxGame().id)=>{try{const k=DXT_GAME[gid];return !!(k&&DXT_PROF[k].vseg)}catch(e){return false}};
@@ -5869,6 +5870,31 @@ function dxHdrResolve(found,inDex){if(dxNoSeq()||!dxDexTally)return 0;let n=0;
     else if(dc===0&&ds>0){const G=U.map(sp=>dxHint.get(sp));if(G.every(Boolean)&&G.filter(x=>x==='seen').length===ds)set=G}
     if(!set)continue;U.forEach((sp,i)=>found.set(sp,set[i]));n+=U.length;const r2=dxCntDex(found,inDex,d);t.caught=t.hc=r2.c;t.seen=t.hs=r2.s}
   return n}
+// SV：画面の上の数で、棚で印が読めなかった本（不明）を決める。登録はポケモンごとで、ほかの図鑑の印がまざるので、
+//   ポケモンごとの数（dxCntDex）ではなく、その図鑑の棚で読んだ数（dxDexTally の hc・hs）とくらべる。決め方は dxHdrResolve と同じ
+function dxHdrResolveSv(found){if(!dxNoSeq()||!dxDexTally||!dxShelf)return 0;let n=0;const g=dxGame(),HP=dxHP(),R={unknown:0,none:1,seen:2,caught:3};
+  for(const [d,t] of dxDexTally){if(!t.hdr)continue;const m=dxShelf.get(d);if(!m)continue;const lim=HP&&HP.cnt&&HP.cnt[d];let E;try{E=new Map(dxEntriesOf(g,d))}catch(e){continue}
+    const U=[];m.forEach((st,no)=>{if(st==='unknown'&&(!lim||no<=lim)&&E.has(no))U.push([no,E.get(no)])});if(!U.length)continue;
+    const dc=t.hdr[0]-t.hc,ds=t.hdr[1]-t.hc-t.hs;let v=null;
+    if(dc===0&&ds===0)v='none';else if(dc===U.length&&ds===U.length)v='caught';else if(dc===0&&ds===U.length)v='seen';
+    if(!v)continue;U.forEach(([no,sp])=>{m.set(no,v);const p=found.get(sp);if(p&&(p==='unknown'||R[v]>R[p]))found.set(sp,v)});
+    if(v==='caught'){t.hc+=U.length;t.caught+=U.length}else if(v==='seen'){t.hs+=U.length;t.seen+=U.length}n+=U.length}
+  return n}
+// SV の結果の画面：選んでいる図鑑のタブの、ゲームの画面の数とのくらべ（くわしくを開かなくても見えるように）。
+//   合わないときは、印が読めなかった本・写っていない本の番号を出す。タブの数が多いときは、そのわけ（ほかの図鑑で捕まえた・数にかぞえない番号）
+function dxSvCmp(g,vk){if(!dxNoSeq()||!dxDexTally||!dxShelf||!dxScan)return '';const t=dxDexTally.get(vk),m=dxShelf.get(vk);if(!t||!t.hdr||!m)return '';
+  let E;try{E=dxEntriesOf(g,vk)}catch(e){return ''}const HP=dxHP(),lim=HP&&HP.cnt&&HP.cnt[vk],M=new Map(dxScan.items),nm=sp=>SPK[sp-1]||'';
+  const ok=t.hdr[0]===t.hc&&t.hdr[1]===t.hc+t.hs,L=[];
+  L.push(`<p class="h"><span>ゲームの画面 <b>${t.hdr[0]}</b>・<b>${t.hdr[1]}</b></span><span>読み取り <b>${t.hc}</b>・<b>${t.hc+t.hs}</b></span><span class="${ok?'ok':'ng'}">${ok?'同じ ✓':'ちがいます'}</span></p>`);
+  if(!ok){const U=[],N=[];E.forEach(([no])=>{if(lim&&no>lim)return;const st=m.get(no);if(st==='unknown')U.push(no);else if(st==null)N.push(no)});
+    const ls=A=>A.slice(0,10).map(pad3).join('・')+(A.length>10?` ほか${A.length-10}`:'');
+    if(U.length)L.push(`<p>印が読めなかった本：No.${ls(U)}（下の「不明」で選べます）</p>`);
+    const miss=t.hdr[1]-(t.hc+t.hs)-U.length;
+    if(miss>0&&N.length)L.push(`<p>録画に写っていない本が ${miss}冊あります。No.${ls(N)} のどれかです（見ていないポケモンの本は、棚にありません）。そのあたりを、ゆっくり送って録画し直してください</p>`)}
+  const X=[];let ex=0;E.forEach(([no,sp])=>{if(M.get(sp)!=='caught')return;if(lim&&no>lim){ex++;return}if(m.get(no)!=='caught')X.push(sp)});
+  const tc=E.filter(([no,sp])=>M.get(sp)==='caught').length;
+  if(X.length||ex)L.push(`<p>このタブの「捕まえた」は ${tc}匹です。${X.length?`${X.slice(0,4).map(nm).join('・')}${X.length>4?` ほか${X.length-4}匹`:''}は、ほかの図鑑で（ちがう姿で）捕まえたので「捕まえた」になります。`:''}${ex?`No.${pad3(lim+1)}〜${pad3(E[E.length-1][0])}は、ゲームの画面の数にかぞえられません。`:''}</p>`);
+  return `<div class="dxs-cmp${ok?'':' ng'}" role="note">${L.join('')}</div>`}
 // 結果の数が、どれかの図鑑でゲームの画面の数より多いか（AIの答えのまちがいを見つける）
 function dxHdrOver(found,inDex){if(dxNoSeq()||!dxDexTally)return false;for(const [d,t] of dxDexTally){if(!t.hdr)continue;const r=dxCntDex(found,inDex,d);if(r&&(t.hdr[0]<r.c||t.hdr[1]<r.c+r.s))return true}return false}
 async function dxReadLocal(files,byNo,inDex,found,st,signal){
@@ -5903,12 +5929,14 @@ async function dxReadLocal(files,byNo,inDex,found,st,signal){
     // （画面の上の数（型紙の hdr：SV の「捕まえた・見つけた」）が読めた作品は、図鑑ごとに、いちばん多く読めた数を「ゲームの画面の数」として、読んだ数とくらべる。
     //   hdr.cnt：画面の数にかぞえる番号の上限（ブルーベリーの 241〜243 はかぞえられない））
     const HP=dxHP();
+    // （SV：図鑑ごとの棚の印（番号→印）。結果の画面で、ゲームの画面の数とくらべる・読めなかった本を出すのに使う）
+    dxShelf=new Map();out.forEach(r=>{if(!r.dex)return;let m=dxShelf.get(r.dex);if(!m)dxShelf.set(r.dex,m=new Map());m.set(r.num,r.status)});
     dxDexTally=new Map();out.forEach(r=>{if(!r.dex)return;let t=dxDexTally.get(r.dex);if(!t)dxDexTally.set(r.dex,t={caught:0,seen:0,hc:0,hs:0});const inC=!HP||!HP.cnt||!HP.cnt[r.dex]||r.num<=HP.cnt[r.dex];
       if(r.status==='caught'){t.caught++;if(inC)t.hc++}else if(r.status==='seen'){t.seen++;if(inC)t.hs++}})}
   // 止まった画面で読めなかった番号を、動いている途中のコマ・動画を細かく読み直したコマで埋める。
   // 動いている途中のコマは印（捕まえた・見ただけ）を読みまちがえやすいので、何枚かで読んだ印の多数決にする（同じ数なら「不明」）
   await dxLocalFill(files,put,signal,st);
-  dxHdrTally(files,found,inDex);dxHdrN=dxHdrResolve(found,inDex);
+  dxHdrTally(files,found,inDex);dxHdrN=dxHdrResolve(found,inDex)+dxHdrResolveSv(found);
   const nT=files.length-nMov;
   dxStage('local','done',`${nT-failed-dxSkipped} / ${nT-dxSkipped}枚`);
   return failed;
@@ -6224,7 +6252,7 @@ async function dxOnFiles(e){
   const st=document.getElementById('dxShotStatus'),btns=[...document.querySelectorAll('#dxCamBtn,#dxPickBtn,#dxGmLink')];
   btns.forEach(b=>b.disabled=true);dxScanCtl=new AbortController();st.textContent='準備しています…';dxBusy(true);
   dxStages({vid:files.some(dxIsVideo),local:DX_LOCAL_GAMES.includes(g.id),gm:mode==='gm'});await dxPaint();
-  const found=new Map(),tStart=performance.now();let failed=0,vinfo=null;dxSkipped=0;dxGapN=0;dxTm={};dxDexTally=null;if(!dxCarry){dxReadNums=new Map();dxReadSt=new Map()}const vids0=files.filter(dxIsVideo);
+  const found=new Map(),tStart=performance.now();let failed=0,vinfo=null;dxSkipped=0;dxGapN=0;dxTm={};dxDexTally=null;dxShelf=null;if(!dxCarry){dxReadNums=new Map();dxReadSt=new Map()}const vids0=files.filter(dxIsVideo);
   try{
     if(files.some(dxIsVideo)){dxRange(0,.5);{const t1=performance.now();vinfo=await dxExpandVideos(files,st,dxScanCtl.signal);dxTm.vid=performance.now()-t1}files=mode==='ai'?vinfo.files.filter(f=>!f.dxMov):vinfo.files;dxRange(.5,1);
       if(!files.length)throw {msg:'動画の中に、止まっている画面が見つかりませんでした。図鑑の一覧で、1ページごとに少し（0.5秒くらい）止めながら録画してください。'}}
@@ -6328,7 +6356,7 @@ function renderDxScan(){
     <div class="dxs-sum"><p class="dxs-big"><b>${tot}</b><span>匹を読み取りました</span></p><div class="dxs-bar">${bar}</div><div class="dxs-leg">${leg}</div></div>
     <div class="dxs-chg"><div class="add${c.add?'':' zero'}"><small>新しく登録</small><b>+${c.add}</b>${c.mod?`<small>種類を変える ${c.mod}</small>`:''}</div><div class="rem${c.rem?'':' zero'}"><small>登録を外す</small><b>−${c.rem}</b></div><div><small>変わらない</small><b>${c.same}</b></div></div>
     ${dxScan.tip?`<button type="button" class="dxs-src" data-dxssrc="1" aria-expanded="${open}">${dxScan.src}・くわしく${DXS_ICON.chev}</button><p class="dxs-detail"${open?'':' hidden'}>${dxScan.tip}</p>`:''}
-    ${per}
+    ${per}${V?dxSvCmp(g,vk):''}
     <div class="dxs-tabs" role="group" aria-label="表示する範囲"><button type="button" data-dxstab="all" aria-pressed="${tab==='all'}">すべて<b>${nV.all}</b></button><button type="button" data-dxstab="chg" aria-pressed="${tab==='chg'}">変わるもの<b>${nV.chg}</b></button><button type="button" data-dxstab="unk" aria-pressed="${tab==='unk'}">不明<b>${nV.unk}</b></button></div>
     <div class="dxs-list">${list.length?list.map(([sp,v])=>dxsRow(sp,v,reg,num)).join(''):`<div class="dxs-empty">${tab==='unk'?'不明のポケモンはいません':tab==='all'?'この図鑑のポケモンは読み取れませんでした':'変わるポケモンはいません'}</div>`}</div>
     <div class="dxapply dxs-foot"><button class="btn primary" type="button" data-dxsapply="1"${c.add+c.rem+c.mod?'':' disabled'}>${btn}</button><small>${c.unk&&dxScan.items.some(([sp,v])=>v==='unknown'&&!dxScan.fix[sp])?'「不明」は、選ぶまで変わりません':'チェックを外したポケモンは変わりません'}</small></div></div>`;
@@ -8056,7 +8084,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.29a';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.10.31a';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
