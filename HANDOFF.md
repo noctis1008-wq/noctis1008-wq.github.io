@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.10.29a(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-29(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.10.29a(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-10-31(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
