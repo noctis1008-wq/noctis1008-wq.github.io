@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.02a(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-11-02(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.02b(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-11-02(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -32,7 +32,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド など) | 2026.11.02a(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド など) | 2026.11.02b(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
@@ -73,6 +73,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-02 — Claude(https://claude.ai/code/session_01NCVwVxD4vZFMwGRFAdun3o)
+- やったこと: 孵化・遺伝ガイド「しくみ」のカードで、iPhone(幅 393px など)だと「ボール」「すがた」の見出しが「ボ…」「す…」と切れていたのを直した。「できる/条件つき/なし」のバッジを、画面の幅ではなくカードの幅で見て(`@container`、200px 以下)、せまいときはアイコンだけ(✓ / ! / ×)にする。Poke tools 2026.11.02b
+- 確かめたこと: Playwright で幅 360・393・430px を表示し、8 枚すべての見出しが切れていないことを確かめた
+- 次の人へ: なし
 
 ### 2026-11-02 — Claude(https://claude.ai/code/session_01NCVwVxLoksgMbQ6gVNELrx)
 
