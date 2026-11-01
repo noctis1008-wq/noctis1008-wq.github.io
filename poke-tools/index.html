@@ -2501,6 +2501,144 @@ body:not(.app) .obsapp{display:none!important}
 #vType .tyreq[aria-expanded=true] .tyrchev::before{transform:translateY(2px) rotate(-135deg)}
 #vType .tyreqcs{padding:0 0 8px 52px}
 #vType .tyrnone{font-size:12px;color:var(--muted);font-weight:700;padding:8px 0}
+/* ===== 孵化・遺伝ガイド（egx-） ===== */
+:root{--egx:#4b55d8;--egx-ink:#fff;--egx-hero:linear-gradient(135deg,#6a74ee 0%,#4b55d8 55%,#3238a8 100%);--egx-okb:#e3e6fb;--egx-okf:#2f39b0;--egx-cdb:#fff0dc;--egx-cdf:#8f4600;--egx-nob:#eceef3;--egx-nof:#5b6482;--egx-good:#1f7a3d;--egx-goodb:#e2f4e7;--egx-bad:#b3261e;--egx-badb:#fde7e5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--egx:#8d95ff;--egx-ink:#0c0f2e;--egx-hero:linear-gradient(135deg,#5a64e0 0%,#3f48c4 55%,#2a2f8a 100%);--egx-okb:#262c63;--egx-okf:#c6cbff;--egx-cdb:#3a2a14;--egx-cdf:#ffc27a;--egx-nob:#232a45;--egx-nof:#a9b0c9;--egx-good:#8fe0a8;--egx-goodb:#173322;--egx-bad:#ffb4ab;--egx-badb:#3d1a1a}}
+:root[data-theme="dark"]{--egx:#8d95ff;--egx-ink:#0c0f2e;--egx-hero:linear-gradient(135deg,#5a64e0 0%,#3f48c4 55%,#2a2f8a 100%);--egx-okb:#262c63;--egx-okf:#c6cbff;--egx-cdb:#3a2a14;--egx-cdf:#ffc27a;--egx-nob:#232a45;--egx-nof:#a9b0c9;--egx-good:#8fe0a8;--egx-goodb:#173322;--egx-bad:#ffb4ab;--egx-badb:#3d1a1a}
+#vEgg.wrap{gap:12px}
+#egBody{display:flex;flex-direction:column;gap:12px}
+.egx-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--sunken);height:46px;box-sizing:border-box;flex:none}
+.egx-tabs button{border:none;border-radius:9px;background:none;font-size:14px;font-weight:700;color:var(--muted);padding:0;white-space:nowrap}
+.egx-tabs button[aria-pressed=true]{background:var(--egx);color:var(--egx-ink)}
+.egx-games{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;flex:none;height:40px;align-items:center}
+.egx-games::-webkit-scrollbar{display:none}
+.egx-games button{flex:none;height:36px;padding:0 13px;border-radius:18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:700;white-space:nowrap}
+.egx-games button[aria-pressed=true]{background:var(--egx);border-color:var(--egx);color:var(--egx-ink)}
+.egx-hero{position:relative;overflow:hidden;border-radius:16px;height:148px;box-sizing:border-box;flex:none;padding:14px 12px 12px 16px;display:flex;gap:6px;color:#fff;background:var(--egx-hero);box-shadow:0 6px 18px -8px rgb(50 56 168 / .6)}
+.egx-hero .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.egx-hero small{font-size:12.5px;font-weight:700;opacity:.88}
+.egx-hero b{font-size:18px;font-weight:800;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.egx-hero .tx>span{font-size:12.5px;margin-top:4px;opacity:.93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-hero .cnt{margin-top:auto;display:flex;gap:5px}
+.egx-hero .cnt i{font-style:normal;height:26px;padding:0 8px;border-radius:13px;background:rgb(255 255 255 / .2);font-size:12px;font-weight:700;display:flex;align-items:center;white-space:nowrap}
+.egx-art{flex:none;width:112px;height:112px;align-self:center}
+.egx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.egx-tile{height:100px;box-sizing:border-box;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 11px;display:flex;flex-direction:column;gap:6px;text-align:left;color:var(--ink);min-width:0}
+.egx-tile .hd{display:flex;align-items:center;gap:7px;min-width:0}
+.egx-tile .ic,.egx-sht .ic{width:32px;height:32px;border-radius:10px;flex:none;display:grid;place-items:center;color:color-mix(in srgb,var(--c) 82%,var(--ink));background:color-mix(in srgb,var(--c) 17%,var(--surface))}
+.egx-tile b{font-size:15px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:380px){.egx-tile .egx-st{width:22px;padding:0;justify-content:center;font-size:0;gap:0}.egx-tile .egx-st svg{width:14px;height:14px}}
+.egx-tile .tx{font-size:12.5px;line-height:1.45;color:var(--muted);height:36px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.egx-tile:active{background:var(--sunken)}
+.egx-st{flex:none;height:22px;padding:0 6px 0 4px;border-radius:6px;font-size:11.5px;font-weight:700;display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
+.egx-st svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.egx-st.ok{background:var(--egx-okb);color:var(--egx-okf)}
+.egx-st.cond{background:var(--egx-cdb);color:var(--egx-cdf)}
+.egx-st.no{background:var(--egx-nob);color:var(--egx-nof)}
+.egx-st.big{height:28px;font-size:13px;padding:0 9px 0 6px}
+.egx-st.big svg{width:15px;height:15px}
+/* くわしく */
+.egx-sht{display:flex;align-items:center;gap:8px;margin:0;font-size:17px}
+.egx-sht .gm{font-size:12px;font-weight:700;height:24px;padding:0 9px;border-radius:12px;background:var(--egx);color:var(--egx-ink);display:flex;align-items:center}
+.egx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;flex:none}
+.egx-card h4{margin:0;font-size:14px}
+.egx-big{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.egx-big b{font-size:17px;line-height:1.45}
+.egx-ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.7}
+.egx-seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}
+.egx-seg button{height:40px;border-radius:10px;border:1px solid var(--line);background:var(--sunken);color:var(--ink);font-size:13px;font-weight:700;padding:0}
+.egx-seg button[aria-pressed=true]{background:var(--egx);border-color:var(--egx);color:var(--egx-ink)}
+.egx-ivf{display:flex;flex-direction:column;gap:6px}
+.egx-ivf .msg{margin:2px 0 4px;font-size:14.5px;font-weight:700;min-height:42px;line-height:1.45}
+.egx-ivf .row{display:grid;grid-template-columns:58px repeat(6,minmax(0,1fr));gap:5px;align-items:center}
+.egx-ivf .sn{text-align:center;font-size:12px;font-weight:700;color:color-mix(in srgb,var(--c) 80%,var(--ink))}
+.egx-ivf .who{display:flex;flex-direction:column;font-size:13px;font-weight:700;line-height:1.2}
+.egx-ivf .who small{font-size:10.5px;font-weight:500;color:var(--muted);height:13px;white-space:nowrap}
+.egx-ivf .pc{height:32px;border-radius:8px;background:color-mix(in srgb,var(--c) 85%,#000 0%);color:#fff;display:grid;place-items:center;font-family:var(--f-num);font-weight:700;font-size:13px}
+.egx-ivf .ar svg{width:100%;height:16px;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.egx-ivf .kc{height:32px;box-sizing:border-box;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;background:var(--c);color:#fff}
+.egx-ivf .kc.fix{outline:3px solid var(--ink);outline-offset:1px}
+.egx-ivf .kc.rnd{background:none;border:1.5px dashed var(--line);color:var(--muted)}
+.egx-ivf .lg{display:flex;flex-wrap:wrap;gap:4px 12px;margin:4px 0 0;font-size:11.5px;color:var(--muted)}
+.egx-flow{display:grid;grid-template-columns:44px 1fr 44px 1fr 44px;align-items:center;gap:4px}
+.egx-flow .pa{width:44px;height:44px;border-radius:22px;display:grid;place-items:center;font-size:18px;font-weight:700;border:2px solid var(--line);color:var(--muted);box-sizing:border-box}
+.egx-flow .pa.on{border-color:var(--egx);background:var(--egx);color:var(--egx-ink)}
+.egx-flow svg{width:100%;height:20px;fill:none;stroke:var(--line);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.egx-flow .eggi{width:44px;height:44px;display:grid;place-items:center;color:var(--accent)}
+.egx-flow small{grid-column:1/-1;text-align:center;font-size:12.5px;color:var(--muted)}
+.egx-oth{display:flex;flex-direction:column}
+.egx-oth .r{display:flex;align-items:center;gap:10px;min-height:42px;border-top:1px solid var(--line);padding:4px 6px}
+.egx-oth .r:first-child{border-top:none}
+.egx-oth .r.cur{background:var(--sunken);border-radius:8px}
+.egx-oth .g{width:84px;flex:none;font-size:13px;font-weight:700;display:flex;flex-direction:column;line-height:1.25}
+.egx-oth .g small{font-size:10.5px;font-weight:500;color:var(--muted)}
+.egx-oth .v{font-size:13px;font-weight:700;padding:3px 8px;border-radius:6px}
+.egx-oth .v.o{background:var(--egx-okb);color:var(--egx-okf)}.egx-oth .v.c{background:var(--egx-cdb);color:var(--egx-cdf)}.egx-oth .v.n{background:var(--egx-nob);color:var(--egx-nof);font-weight:500}
+/* 世代くらべ */
+.egx-lg{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:12px;color:var(--muted)}
+.egx-lg span{display:flex;align-items:center;gap:5px}
+.egx-lg i{width:14px;height:14px;border-radius:4px;box-sizing:border-box}
+.egx-lg i.o{background:var(--egx-okb);border:1px solid var(--egx-okf)}.egx-lg i.c{background:var(--egx-cdb);border:1px dashed var(--egx-cdf)}.egx-lg i.n{background:var(--egx-nob);border:1px solid var(--line)}
+.egx-lg .r{margin-left:auto}
+.egx-mx{overflow-x:auto;scrollbar-width:none;flex:none}
+.egx-mx::-webkit-scrollbar{display:none}
+.egx-mx .in{display:inline-flex;flex-direction:column;gap:6px;min-width:max-content}
+.egx-mx .mr{display:flex;gap:6px}
+.egx-mx .mk{position:sticky;left:0;z-index:2;width:74px;flex:none;background:var(--bg);display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700}
+.egx-mx .mk i{width:6px;height:26px;border-radius:3px;flex:none}
+.egx-mx .mh{width:88px;flex:none;height:46px;border-radius:10px;background:var(--surface);border:1px solid var(--line);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.egx-mx .mh.cur{background:var(--egx);border-color:var(--egx);color:var(--egx-ink)}
+.egx-mx .mh b{font-size:13px}.egx-mx .mh small{font-size:10.5px;opacity:.85}
+.egx-mx .mc{width:88px;flex:none;min-height:52px;box-sizing:border-box;border-radius:10px;padding:5px 4px;display:flex;align-items:center;justify-content:center;text-align:center;white-space:pre-line;font-size:11.5px;line-height:1.35;font-weight:700;border:1px solid transparent}
+.egx-mx .mc.o{background:var(--egx-okb);color:var(--egx-okf)}
+.egx-mx .mc.c{background:var(--egx-cdb);color:var(--egx-cdf);border:1px dashed var(--egx-cdf)}
+.egx-mx .mc.n{background:var(--egx-nob);color:var(--egx-nof);border-color:var(--line);font-weight:500}
+/* 親チェック */
+.egx-pair{display:grid;grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr);align-items:center;gap:2px}
+.egx-pair .x{text-align:center;font-size:17px;font-weight:700;color:var(--muted)}
+.egx-slot{height:214px;box-sizing:border-box;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:9px 9px 10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.egx-slot .lb{font-size:11.5px;font-weight:700;color:var(--muted)}
+.egx-slot .nm{display:flex;align-items:center;gap:4px;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);padding:0 6px 0 10px;color:var(--ink);min-width:0}
+.egx-slot .nm b{flex:1;min-width:0;font-size:15px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-slot .nm svg{flex:none;width:16px;height:16px;fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.egx-slot .gr{font-size:11.5px;color:var(--muted);height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-slot .gr.bad{color:var(--egx-bad);font-weight:700}
+.egx-slot .sx{display:grid;grid-template-columns:1fr 1fr;gap:4px;height:34px}
+.egx-slot .sx button{border:1px solid var(--line);border-radius:8px;background:var(--sunken);color:var(--ink);font-size:15px;font-weight:700;padding:0}
+.egx-slot .sx button[aria-pressed=true]{background:var(--egx);border-color:var(--egx);color:var(--egx-ink)}
+.egx-slot .sx.fixed{display:flex;align-items:center;justify-content:center;border-radius:8px;background:var(--sunken);font-size:12.5px;font-weight:700;color:var(--muted)}
+.egx-slot .it select{width:100%;height:36px;font-size:13px;font-weight:700}
+.egx-slot .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.egx-slot .ha{display:flex;align-items:center;gap:6px;height:22px;font-size:12.5px;font-weight:700}
+.egx-slot .ha input{width:18px;height:18px;margin:0}
+.egx-slot.empty{align-items:stretch}
+.egx-slot .pick{flex:1;border:1.5px dashed var(--line);border-radius:10px;background:none;color:var(--muted);font-size:13.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.egx-slot .pick .plus{width:40px;height:40px;border-radius:20px;background:var(--sunken);display:grid;place-items:center;font-size:22px}
+.egx-res{display:flex;align-items:center;gap:12px;border-radius:14px;padding:12px 14px;min-height:76px;box-sizing:border-box;flex:none}
+.egx-res .eggi{width:40px;height:40px;border-radius:20px;background:var(--surface);display:grid;place-items:center;flex:none}
+.egx-res div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.egx-res b{font-size:16px}
+.egx-res span{font-size:13px;line-height:1.5}
+.egx-res .kn{font-size:12px;color:var(--muted)}
+.egx-res.ok{background:var(--egx-goodb)}.egx-res.ok b,.egx-res.ok .eggi{color:var(--egx-good)}
+.egx-res.no{background:var(--egx-badb)}.egx-res.no b,.egx-res.no .eggi{color:var(--egx-bad)}
+.egx-res.wait{background:var(--sunken)}.egx-res.wait .eggi{color:var(--muted)}
+.egx-rows{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:2px 12px;flex:none}
+.egx-rows .r{display:flex;align-items:center;gap:10px;min-height:58px;border-top:1px solid var(--line)}
+.egx-rows .r:first-child{border-top:none}
+.egx-rows .cb{width:6px;height:30px;border-radius:3px;flex:none}
+.egx-rows .tx{flex:1;min-width:0;display:flex;flex-direction:column;font-size:13.5px;line-height:1.45;padding:7px 0}
+.egx-rows .tx small{font-size:11.5px;font-weight:700;color:var(--muted)}
+.egx-rows .fr{flex:none;max-width:84px;text-align:center;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:12px;background:var(--egx-okb);color:var(--egx-okf);line-height:1.3}
+.egx-pl{display:flex;flex-direction:column;overflow-y:auto;min-height:0;flex:1}
+.egx-pl .hd{margin:10px 2px 4px;font-size:12px;font-weight:700;color:var(--muted)}
+.egx-pl button{display:flex;align-items:center;gap:10px;min-height:52px;border:none;border-bottom:1px solid var(--line);background:none;color:var(--ink);text-align:left;padding:6px 4px}
+.egx-pl .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.egx-pl .tx b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-pl .tx small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-pl .no{flex:none;font-family:var(--f-num);font-size:12px;color:var(--muted)}
+.egx-pl .empty{padding:16px 6px;color:var(--muted);font-size:13px}
+#egSheet .sheet-in{gap:10px}
 </style>
 
 <header class="appbar"><div class="appbar-in">
@@ -2726,6 +2864,12 @@ body:not(.app) .obsapp{display:none!important}
     <p class="note">レベル・せいかく・すばやさの努力値を「じぶん」に読み込みます。個体値ジャッジで調べた個体値があれば、それも使います（幅があるときは高いほう）。</p>
     <div class="spx-pl" id="spPickList"></div>
   </div></div>
+</div>
+
+<div class="wrap view" id="vEgg" hidden>
+  <div class="egx-tabs" role="group" aria-label="表示の切り替え"><button type="button" data-egtab="how" aria-pressed="true">しくみ</button><button type="button" data-egtab="pair" aria-pressed="false">親チェック</button><button type="button" data-egtab="cmp" aria-pressed="false">世代くらべ</button></div>
+  <div id="egBody"></div>
+  <div id="egSheet" class="sheet stx-sheet" hidden role="dialog" aria-modal="true" aria-label="孵化・遺伝ガイド"><div class="sheet-in" id="egSheetIn"></div></div>
 </div>
 
 <div class="wrap view" id="vType" hidden>
@@ -3801,7 +3945,7 @@ function bkImportTo(text,act,box,done,focus=true){
     try{d=decode(text.value);if(!Array.isArray(d.members)||d.members.length!==6||!Array.isArray(d.targets))throw 0}
     catch(err){toast('読み込めませんでした。書き出した文字列を最後まで貼り付けてください');return}
     armed(e.currentTarget,'この内容で復元','今のデータを置き換える？',()=>{
-      S.members=d.members;S.targets=d.targets.slice(0,MAX_T);S.presets=d.presets||[];S.gen=d.gen||9;S.lm=d.lm||'kana';S.sound=d.sound;S.count=d.count||0;S.history=[];if(d.sh)S.sh=Object.assign(S.sh,d.sh);if(d.rb)S.rb=Object.assign(S.rb,d.rb);if(d.dx)S.dx=Object.assign(S.dx,d.dx);if(d.pb)S.pb=Object.assign(S.pb,d.pb);if(d.mon)S.mon=Object.assign(S.mon,d.mon);if(d.ty)S.ty=Object.assign(S.ty,d.ty);if(d.iv){S.iv=Object.assign(S.iv,d.iv);ivNorm()}if(d.spd&&typeof d.spd==='object'){S.spd=Object.assign(S.spd,d.spd);spdNorm();if(S.view==='spd')renderSpd()}
+      S.members=d.members;S.targets=d.targets.slice(0,MAX_T);S.presets=d.presets||[];S.gen=d.gen||9;S.lm=d.lm||'kana';S.sound=d.sound;S.count=d.count||0;S.history=[];if(d.sh)S.sh=Object.assign(S.sh,d.sh);if(d.rb)S.rb=Object.assign(S.rb,d.rb);if(d.dx)S.dx=Object.assign(S.dx,d.dx);if(d.pb)S.pb=Object.assign(S.pb,d.pb);if(d.mon)S.mon=Object.assign(S.mon,d.mon);if(d.ty)S.ty=Object.assign(S.ty,d.ty);if(d.iv){S.iv=Object.assign(S.iv,d.iv);ivNorm()}if(d.spd&&typeof d.spd==='object'){S.spd=Object.assign(S.spd,d.spd);spdNorm();if(S.view==='spd')renderSpd()}if(d.egg&&typeof d.egg==='object'){S.egg=d.egg;egNorm();if(S.view==='egg')renderEgg()}
       normalize();applyLabels();editId=null;pick=null;save();renderAll();renderLabelSeg();renderSound();
       done();toast('バックアップから復元しました');
     });
@@ -8064,16 +8208,371 @@ spdEl.addEventListener('change',e=>{const t=e.target,k=t.dataset.spin;if(!k)retu
   q.addEventListener('blur',()=>setTimeout(()=>{if(document.activeElement!==q)document.getElementById('spRes').innerHTML=''},250));
   q.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=document.querySelector('#spRes [data-spmon]');if(b){e.preventDefault();spdPick(b.dataset.spmon)}}});}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')spdPickClose()});
-const VIEWS={ev:{t:'努力値カウンター',el:'vEv'},shiny:{t:'色違い厳選カウンター',el:'vShiny'},ribbon:{t:'リボン管理',el:'vRibbon'},dex:{t:'図鑑埋め支援',el:'vDex'},pb:{t:'ポロック・ポフィン',el:'vPb'},mon:{t:'個体管理',el:'vMon'},iv:{t:'個体値ジャッジ',el:'vIv'},type:{t:'タイプ相性',el:'vType'},spd:{t:'すばやさ比べ',el:'vSpd'},settings:{t:'設定',el:'vSettings'}};
+// ===== 孵化・遺伝ガイド（egx…・eg…）=====
+// タマゴグループ・性別：PokeAPI のデータ（最新の作品のもの）。1匹3文字：グループ1・グループ2（16進、0=なし）・性別（x=不明、0=♂だけ、8=♀だけ、ほかは♀の割合/8）
+const EG_DAT='1711711711e11e11e11211211213043043043043043044044044045045044044045e45e4564564504504158f08f08150150150606606506506606606404404704704704374374304304504504504504254254504504502502204204204802802802802802802704704704904904a04a04a04504504124124a0xa0x454404404254254b04b04904904b04b04b04a04804804904904a0xa0x704704104104800800104b04b041541546087041082e42e4c04c0490x90x804304808802802304500ce4ce4124d0x501501501501a0x291291291291401101f0xf0xf0x2e42e42e4f0xf0x171171171501501501121121121504504404404304304304304404c04c04f04f06f06f01461404404154154154704264264a04204674674674504704704304254254501501404124b04f0xb04504304304504304a04566566c04304304304504504504b04b045045042962c42c42542044045045042e4504504a0x504504f00800f08f02f02508608f0xf0xf0x104104104f0xf0xf0x1e11e11e15015015011211211215045045045043043043043043042742742745745745744044042442448b48b48b4234234674674504504504304304a0x154154154802802f06a04566566804564104104104804804504504604604380388674b04b04c04c045c45c45045045045045045843e43e43e47847844e44e45045e4a0xa0xc04c04294294a0xa0x9019019019012e42e46b4504b04b04b04b04174b04504f046a46a42542542542042042042c1c06e04e04e04a0xa0xa0xf0xf0xf0xf08f00f0xf0xf0xf0xf0x171171171581581581251251251404404404254254304304504504504f046741011011011013043083003013085642542546746742b42b4504b04b04584584b04404506506f04504504a0xa0xf04f04f08404b041e41e41e4f01f01581504504394394804804704c04c04f04174174504a0x104154704802802461304501501304504a0x8b0a04b046a8b0xf0xf0xf0xf0xf0xf04f0xf0xf0826x26xf0xf0xf0xf0x571571571501501501501501501504504504504504504504501501501501501501504504404404404504504a04a04a04454454504504604802802802204204204800800304304304304304304674674708708c045045045045045047043a43a45e45e4404ab4ab4291291491491a04a04501501506506806806806b04b04b04244244a04a04a04504504504304304704704b04b042c43043047a47a4a0xa0xa0xb04b04b04804804b04b04b041e41e41e4504504a0x3043042b45845841e4a0xa0x804804504400400408408504304e04e04e04304304f0xf0xf0xf00f00f0xf0xf00f0xf0xf0xf0x501501501501501501201201201504504404404404304304304507507608608608504504584584504504504a04a04a046046046046042c42c49049042e42e42942941e41e41e11e11011015014845646axe04e04e04a047b47b4b04b041a41a44e44e4f0xf0xf0xf0xf0xf0x401401401501501501251251251404404404504504304304304904904406364364504504c042042045045042342347047047047041e11e8504504708708708706504504394394b04b04204f0xf0xa0x5041e4564b04c041e4a0xe04e04e04f0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0x571571571581581581251251251504504404404404304304304504504704704504504124124504504a04a04a047e47e47e45e45e4244c04c04f04804304304284284abxabx608608608680680680504504296454804ab46b86b86ax2b4304304a042546045645a45a4f0xf0xf0xf0xae4be4be4be4f0xf0xf0xf01f01f0xf0xf0xf0xf0xf0x504304504c04504c04f0857157157150150150124124124150450030430430430450450450456x56x5a45a4704704704404a04a04a048048048042042042442445045045045047047047047049047047043043044044046086086089049044045c45c4a04a04504504a04a04504504404504504c04c04c04504254504504804f0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xae4ae4ae4f0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0xf0x7e4abxabxf00f00f00f08ae47e4f0xf0xf0xf0xf04f0x';
+const EG_GN=['','怪獣','水中1','虫','飛行','陸上','妖精','植物','人型','水中3','鉱物','不定形','水中2','メタモン','ドラゴン','タマゴ未発見'];
+const EG_DITTO=132;
+const EG_PRE={862:264,863:52,864:222,865:83,866:122,867:562,902:550,903:215,904:211,980:194}; // すがた違いから進化するもの（SPDB では 0）
+const EG_INC={298:['うしおのおこう',183],360:['のんきのおこう',202],406:['はなのおこう',315],433:['きよめのおこう',358],438:['がんせきおこう',185],439:['あやしいおこう',122],440:['こううんのおこう',113],446:['まんぷくおこう',143],458:['さざなみのおこう',226]};
+const egGrp=sp=>{const i=(sp-1)*3;return [parseInt(EG_DAT[i],16),parseInt(EG_DAT[i+1],16)].filter(Boolean)};
+const egGr=sp=>EG_DAT[(sp-1)*3+2]; // x/0..8
+const egFixSex=sp=>{const r=egGr(sp);return sp===EG_DITTO||r==='x'?'x':r==='0'?'m':r==='8'?'f':''};
+const egNm=sp=>sp?SPDB[sp-1][0]:'';
+const egPrev=sp=>SPDB[sp-1][5]||EG_PRE[sp]||0;
+// 作品
+const EG_GAMES=[
+  {k:'gsc',n:'金銀クリスタル',f:'金・銀・クリスタル',g:2,loc:'育て屋（34番道路）',rep:2},
+  {k:'rs',n:'RS・FRLG',f:'ルビー・サファイア・FRLG',g:3,loc:'育て屋（117番道路・4のしま）'},
+  {k:'e',n:'エメラルド',f:'エメラルド',g:3,loc:'育て屋（117番道路）',rep:3},
+  {k:'dp',n:'DPt',f:'ダイヤモンド・パール・Pt',g:4,loc:'ズイタウンの育て屋'},
+  {k:'hgss',n:'HGSS',f:'ハートゴールド・ソウルシルバー',g:4,loc:'育て屋（34番道路）',rep:4},
+  {k:'bw',n:'BW',f:'ブラック・ホワイト',g:5,loc:'育て屋（3番道路）'},
+  {k:'b2w2',n:'BW2',f:'ブラック2・ホワイト2',g:5,loc:'育て屋（3番道路）',rep:5},
+  {k:'xy',n:'XY・ORAS',f:'XY・ORAS',g:6,loc:'育て屋（7番道路・117番道路）',rep:6},
+  {k:'sm',n:'SM・USUM',f:'サン・ムーン・USUM',g:7,loc:'オハナ牧場の育て屋',rep:7},
+  {k:'swsh',n:'剣盾',f:'ソード・シールド',g:8,loc:'預かり屋（5番道路・ワイルドエリア）',rep:8},
+  {k:'bdsp',n:'BDSP',f:'ブリリアントダイヤモンド・SP',g:8,loc:'ズイタウンの育て屋'},
+  {k:'sv',n:'SV',f:'スカーレット・バイオレット',g:9,loc:'ピクニックのバスケット',rep:9}
+];
+const egGame=k=>EG_GAMES.find(x=>x.k===k)||EG_GAMES[EG_GAMES.length-1];
+// 作品ごとのしくみ
+function egRule(k){const G=egGame(k),g=G.g;return {
+  g,k,
+  iv:g===2?'g2':g>=6?'knot':(k==='hgss'||g===5)?'pow':'3',ivLow:k==='e'||k==='dp',
+  nat:g===2?'none':k==='rs'?'rand':(k==='e'||k==='dp')?'fm50':(k==='hgss'||k==='bw')?'any50':'any100',natIntl:g===4,mint:g>=8,
+  abl:g===2?'none':g<=4?'rand':k==='bw'?'bw':k==='b2w2'?'b2':'g6',patch:g>=8,
+  mv:g<=5?'male':'both',swap:k==='swsh',herb:k==='sv',
+  ball:g<=5?'none':g===6?'f':'g7',
+  shiny:g===2?'g2':g===3?'none':g===4?'5':k==='bw'?'6':k==='b2w2'?'6c':'g6',
+  hatch:(g===2||k==='rs')?'none':'fb',oval:['b2w2','xy','sm','swsh','bdsp'].includes(k),opow:k==='xy',epow:k==='sv',steam:k==='swsh'||k==='sv',
+  form:g===2?'none':(g>=7&&k!=='bdsp')?'reg':'inc',region:{sm:'アローラ',swsh:'ガラル',sv:'パルデア'}[k]||'',
+  inc:g>=3&&g<=8,power:k==='hgss'||g>=5,knot:g>=6,ever:g>=3
+}}
+// 8つの項目：[状態, ひとこと, くわしい説明]
+const EG_CATS=[['iv','個体値','--hp'],['nat','性格','--atk'],['abl','特性','--b3'],['mv','技','--def'],['ball','ボール','--spd'],['shiny','色違い','--spe'],['hatch','孵化','--accent'],['form','すがた','--spa']];
+const EG_IC={
+  iv:'<path d="M5 20v-8M10 20V5M15 20v-9M20 20V8"/>',
+  nat:'<path d="M7 19V5M3.5 8.5 7 5l3.5 3.5M17 5v14M13.5 15.5 17 19l3.5-3.5"/>',
+  abl:'<path d="M12 3l2.4 5.6L20 11l-5.6 2.4L12 19l-2.4-5.6L4 11l5.6-2.4z"/>',
+  mv:'<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>',
+  ball:'<circle cx="12" cy="12" r="8"/><path d="M8.3 9.2a4.6 4.6 0 0 1 3.4-2.6"/>',
+  shiny:'<path d="M9 4l1.6 4.4L15 10l-4.4 1.6L9 16l-1.6-4.4L3 10l4.4-1.6z"/><path d="M18 13.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/>',
+  hatch:'<path d="M12 3c3.6 0 6.5 5.2 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8.2 8.4 3 12 3z"/><path d="M6 12.5l2.6 1.8 2.2-2.3 2.4 2.3 2.4-1.8 2.2 1"/>',
+  form:'<path d="M12 21s-6.5-5.6-6.5-10.5a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.3"/>'
+};
+const egIc=(c,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${EG_IC[c]}</svg>`;
+function egCat(R,c){
+  const L=[];
+  if(c==='iv'){
+    if(R.iv==='g2')return ['cond','ぼうぎょ・とくしゅが親に似る',['こうげき・すばやさは、ランダムに決まります。','ぼうぎょ・とくしゅは、子と性別がちがうほうの親（メタモンがいればメタモン）から受けつぎます。とくしゅは少し変わることがあります。','HP は、ほかの個体値から決まります。']];
+    if(R.iv==='3'){L.push('6つの能力のうち 3つを、両親のどちらかから受けつぎます。残りはランダムです。','道具で決めることはできません。');if(R.ivLow)L.push('この作品では、HP・ぼうぎょが選ばれにくいです。');return ['ok','両親から3つ受けつぐ',L]}
+    if(R.iv==='pow')return ['ok','3つ。パワー系で1つを決められる',['6つの能力のうち 3つを、両親のどちらかから受けつぎます。','パワー系の道具（パワーウエイト など）を持たせると、その能力を必ずその親から受けつぎます。']];
+    L.push('ふだんは 3つ、どちらかの親に「あかいいと」を持たせると 5つを受けつぎます。','パワー系の道具を持たせると、その能力を必ずその親から受けつぎます（5つのうちの1つになります）。');
+    if(R.g>=7)L.push('すごいとっくんで、あとから個体値を最高にすることもできます（条件あり）。');
+    return ['ok','3つ。あかいいとで5つ',L];
+  }
+  if(c==='nat'){
+    if(R.nat==='none')return ['no','性格はまだない',['第2世代には、性格がありません。']];
+    if(R.nat==='rand')return ['no','親からは受けつがない',['性格は、ランダムに決まります。','かわらずのいしの効果は、エメラルドからです。']];
+    if(R.nat==='fm50'){L.push('♀かメタモンに「かわらずのいし」を持たせると、50%でその性格になります。','♂に持たせても、効果はありません。');if(R.natIntl)L.push('ちがう言語のソフトの親どうし（国際孵化）だと、受けつぎません。');return ['cond','♀かメタモンにかわらずのいし（50%）',L]}
+    if(R.nat==='any50'){L.push('「かわらずのいし」を持たせた親の性格に、50%でなります。♂・♀・メタモンのだれに持たせてもよいです。');if(R.natIntl)L.push('ちがう言語のソフトの親どうし（国際孵化）だと、受けつぎません。');return ['cond','だれに持たせても 50%',L]}
+    L.push('「かわらずのいし」を持たせた親の性格に、必ずなります。','両親に持たせると、どちらかの性格になります。');if(R.mint)L.push('ミントで変えた親からは、ミントの前の性格を受けつぎます。');
+    return ['ok','かわらずのいしで 100%',L];
+  }
+  if(c==='abl'){
+    if(R.abl==='none')return ['no','特性はまだない',['第2世代には、特性がありません。']];
+    if(R.abl==='rand')return ['no','2つのうちランダム',['特性は、その種類が持てる 2つのうちから、ランダムに決まります（親の特性は関係ありません）。']];
+    if(R.abl==='bw')return ['cond','隠れ特性は♀から 60%',['ふつうの特性は、2つのうちからランダムです。','隠れ特性の♀と、♂（メタモンはだめ）の組み合わせだと、60%で隠れ特性になります。','♂しかいない種類・性別不明の種類の隠れ特性は、受けつげません。']];
+    if(R.abl==='b2')return ['cond','同じ種類なら♀の特性 80%',['同じ種類の♂♀なら、80%で♀と同じ特性になります（メタモンや別の種類が相手だと、ランダム）。','隠れ特性の♀と、♂（メタモンはだめ）の組み合わせだと、60%で隠れ特性になります。']];
+    L.push('♀（メタモンが相手のときは、メタモンでないほう）と同じ特性に、80%でなります。','隠れ特性の親からは、60%で隠れ特性になります。♂や性別不明でも、相手がメタモンなら受けつげます。','♀と♂の組み合わせで、♀が隠れ特性でないときは、♂の隠れ特性は受けつぎません。');
+    if(R.patch)L.push('とくせいパッチで隠れ特性にした親からも、60%で受けつぎます。');
+    return ['ok','♀の特性 80%・隠れ特性 60%',L];
+  }
+  if(c==='mv'){
+    if(R.mv==='male')return ['ok','♂のタマゴ技・技マシン技、両親のレベル技',['タマゴ技は、♂から受けつぎます（メタモンからは来ません）。','♂が覚えている技マシン・ひでんマシンの技も、子が覚えられるなら受けつぎます。','両親とも覚えているレベル技を、受けつぎます。']];
+    L.push('タマゴ技は、♂からも♀からも受けつぎます（メタモンからは来ません）。','技マシンの技は、受けつがなくなりました。','両親とも覚えているレベル技を、受けつぎます。');
+    if(R.swap){L.push('預かり屋に同じ種類の2匹を預けると、片方のタマゴ技がもう片方にうつります（技の空きが必要）。');return ['ok','両親のタマゴ技。預けると同じ種類にうつる',L]}
+    if(R.herb){L.push('「ものまねハーブ」を持たせたポケモンは、ピクニックでいっしょにいるポケモンからタマゴ技を覚えられます（技の空きが必要）。');return ['ok','両親のタマゴ技。ものまねハーブでも',L]}
+    return ['ok','両親のタマゴ技（技マシン技はなし）',L];
+  }
+  if(c==='ball'){
+    if(R.ball==='none')return ['no','いつもモンスターボール',['生まれたポケモンは、いつもモンスターボールに入っています。']];
+    if(R.ball==='f')return ['cond','♀のボールだけ受けつぐ',['♀が入っていたボールを受けつぎます。','♂とメタモン・性別不明とメタモンの組み合わせでは、モンスターボールになります。','マスターボール・プレシャスボールは受けつぎません。']];
+    return ['ok','♀のボール。同じ種類なら♂のも',['ふつうは、♀のボールを受けつぎます。','両親が同じ種類なら、50%で♂のボールになります。','メタモンが相手のときは、メタモンでないほうのボールを受けつぎます（♂・性別不明でも）。','マスターボール・プレシャスボール・ストレンジボールは受けつぎません。']];
+  }
+  if(c==='shiny'){
+    if(R.shiny==='g2')return ['cond','色違いの親からは 約1/64',['ふだんは 1/8192 です。','色違いの親（子と性別がちがうほう、またはメタモン）からは、約 1/64 で色違いが生まれます。']];
+    if(R.shiny==='none')return ['no','野生と同じ 1/8192',['親が色違いでも、色違いになりやすくはなりません。']];
+    if(R.shiny==='5')return ['cond','国際孵化で 5/8192',['ふだんは 1/8192 です。','ちがう言語のソフトの親どうしだと、5/8192 になります（国際孵化）。']];
+    if(R.shiny==='6')return ['cond','国際孵化で 6/8192',['ふだんは 1/8192 です。','ちがう言語のソフトの親どうしだと、6/8192 になります（国際孵化）。']];
+    if(R.shiny==='6c')return ['ok','国際孵化・ひかるおまもり',['ふだんは 1/8192、国際孵化で 6/8192 です。','ひかるおまもりがあると、ふだん 3/8192、国際孵化と合わせて 8/8192 になります。']];
+    return ['ok','国際孵化・ひかるおまもり',['ふだんは 1/4096、国際孵化（ちがう言語のソフトの親どうし）で 6/4096 です。','ひかるおまもりがあると、ふだん 3/4096、国際孵化と合わせて 8/4096（約 1/512）になります。']];
+  }
+  if(c==='hatch'){
+    if(R.hatch==='none')return ['no','早くする方法はない',['タマゴは、歩いた歩数でかえります。歩数を減らす方法はありません。']];
+    L.push(`手持ちに特性「ほのおのからだ」「マグマのよろい」${R.steam?'「じょうききかん」':''}のポケモンがいると、かえるまでの歩数が半分になります。`);
+    if(R.oval)L.push('まるいおまもりがあると、タマゴが見つかりやすくなります。');
+    if(R.opow){L.push('O パワー「タマゴふかパワー」でも、早くかえります。');return ['ok','ほのおのからだ・Oパワー',L]}
+    if(R.epow){L.push('サンドイッチなどの「タマゴパワー」で、見つかりやすく・かえりやすくなります。');return ['ok','ほのおのからだ・タマゴパワー',L]}
+    return ['ok','ほのおのからだ等で歩数が半分',L];
+  }
+  // form
+  if(R.form==='none')return ['no','すがたの受けつぎはない',['ピチュー・ピィ・ププリンなどのベビーポケモンは、親が進化していても、タマゴからはベビーで生まれます。']];
+  const inc=R.g===3?'ルリリ・ソーナノは、親に決まった「おこう」を持たせたときだけ生まれます（持たせないと、マリル・ソーナンス）。':'ルリリ・ソーナノ・ピンプク・ゴンベ などは、親に決まった「おこう」を持たせたときだけ生まれます（持たせないと、1つ進化したすがた）。';
+  if(R.form==='inc')return ['cond','おこうを持たせるとベビーが生まれる',[inc]];
+  L.push(`${R.region}のすがたがある種類は、${R.region}のすがたで生まれます。`,'もとのすがた・ほかの地方のすがたにしたいときは、その親に「かわらずのいし」を持たせます。');
+  L.push(R.inc?inc:'ベビーポケモンは、「おこう」がなくても生まれます。');
+  return ['ok',`${R.region}のすがたで生まれる`,L];
+}
+const EG_ST={ok:'できる',cond:'条件つき',no:'なし'};
+const EG_ST_IC={ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',cond:'<path d="M12 6v8M12 18.5v.5"/>',no:'<path d="M6 12h12"/>'};
+const egSt=(s,big)=>`<span class="egx-st ${s}${big?' big':''}"><svg viewBox="0 0 24 24" aria-hidden="true">${EG_ST_IC[s]}</svg>${EG_ST[s]}</span>`;
+// 世代くらべの表（世代ごとの代表）
+const EG_CMP_GENS=[[2,'金銀C','gsc'],[3,'RSE FRLG','e'],[4,'DPt HGSS','hgss'],[5,'BW BW2','b2w2'],[6,'XY ORAS','xy'],[7,'SM USUM','sm'],[8,'剣盾 BDSP','swsh'],[9,'SV','sv']];
+const EG_CMP={
+  egg:[['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','預かり屋\nBDSP 育て屋'],['o','ピクニック']],
+  iv:[['c','ぼうぎょ\nとくしゅ'],['o','3つ'],['o','3つ\nHGSS パワー系'],['o','3つ\nパワー系'],['o','あかいいと\nで5つ'],['o','あかいいと\nで5つ'],['o','あかいいと\nで5つ'],['o','あかいいと\nで5つ']],
+  nat:[['n','—'],['c','E だけ\n50%'],['c','いし\n50%'],['c','BW 50%\nBW2 100%'],['o','いし\n100%'],['o','いし\n100%'],['o','いし\n100%'],['o','いし\n100%']],
+  abl:[['n','—'],['n','ランダム'],['n','ランダム'],['c','隠れ特性\n♀から'],['o','80%\n隠れ 60%'],['o','80%\n隠れ 60%'],['o','80%\n隠れ 60%'],['o','80%\n隠れ 60%']],
+  mv:[['o','♂の技'],['o','♂の技'],['o','♂の技'],['o','♂の技'],['o','両親の\nタマゴ技'],['o','両親の\nタマゴ技'],['o','剣盾\n預けてうつす'],['o','ものまね\nハーブ']],
+  ball:[['n','—'],['n','—'],['n','—'],['n','—'],['c','♀だけ'],['o','♀・同種♂'],['o','♀・同種♂'],['o','♀・同種♂']],
+  shiny:[['c','色違いの親\n約1/64'],['n','—'],['c','国際孵化\n5倍'],['c','国際孵化\nBW2 おまもり'],['o','国際孵化\nおまもり'],['o','国際孵化\nおまもり'],['o','国際孵化\nおまもり'],['o','国際孵化\nおまもり']],
+  hatch:[['n','—'],['c','E だけ\nほのおのからだ'],['o','ほのおの\nからだ'],['o','ほのおの\nからだ'],['o','＋Oパワー'],['o','ほのおの\nからだ'],['o','ほのおの\nからだ'],['o','＋タマゴ\nパワー']],
+  form:[['n','—'],['c','おこう'],['c','おこう'],['c','おこう'],['c','おこう'],['o','アローラ'],['o','剣盾 ガラル'],['o','パルデア']]
+};
+// 保存データ
+function egNorm(){
+  const d={tab:'how',g:'',p:[{sp:133,sex:'f',it:'',ha:false,ball:'',mid:0},{sp:EG_DITTO,sex:'x',it:'',ha:false,ball:'',mid:0}],ivIt:'knot'};
+  S.egg=Object.assign(d,S.egg&&typeof S.egg==='object'?S.egg:{});
+  if(!['how','pair','cmp'].includes(S.egg.tab))S.egg.tab='how';
+  if(!EG_GAMES.some(x=>x.k===S.egg.g))S.egg.g=({2:'gsc',3:'e',4:'hgss',5:'b2w2',6:'xy',7:'sm',8:'swsh',9:'sv'})[S.gen]||'sv';
+  if(!Array.isArray(S.egg.p)||S.egg.p.length!==2)S.egg.p=d.p;
+  S.egg.p=S.egg.p.map(x=>{const o=Object.assign({sp:0,sex:'',it:'',ha:false,ball:'',mid:0},x||{});o.sp=+o.sp||0;if(o.sp<1||o.sp>SPDB.length)o.sp=0;return o});
+}
+// この作品にいるか
+function egHas(k,sp){if(!sp)return false;const r=SPDB[sp-1],g=egGame(k).g;if(r[2]>g)return false;
+  if(k==='swsh')return !!(r[3]&1);if(k==='sv')return !!(r[3]&4);if(k==='bdsp')return sp<=493;return true}
+// 親の性別（決まっている種類はそれ）
+function egSex(p){const f=egFixSex(p.sp);return f||(p.sex==='m'?'m':'f')}
+const EG_SEXL={f:'♀',m:'♂',x:'不明'};
+const egWho=p=>p.sp===EG_DITTO?'メタモン':`${egNm(p.sp)}（${EG_SEXL[egSex(p)]}）`;
+// 生まれるポケモン
+function egKid(k,mom,P){const R=egRule(k);let s=mom.sp,last=s;
+  while(true){const pv=egPrev(s);if(!pv||!egHas(k,pv))break;last=s;s=pv}
+  const out={sp:s,alt:0,note:''};
+  if(EG_INC[s]&&R.inc&&s!==mom.sp){const [inc,next]=EG_INC[s];
+    if(P.some(p=>p.it==='inc'))out.note=`親が「${inc}」を持っているので、${egNm(s)}が生まれます。`;
+    else{out.sp=egHas(k,next)?next:last;out.note=`${egNm(s)}にするには、親に「${inc}」を持たせます。`}}
+  if(s===29||s===32){out.sp=29;out.alt=32}
+  if(s===313||s===314){out.sp=314;out.alt=313}
+  if(s===490){out.sp=489;out.note='マナフィからは、フィオネが生まれます。'}
+  return out}
+// 2匹からタマゴができるか・何を受けつぐか
+function egPairEval(k){
+  const R=egRule(k),P=S.egg.p,[a,b]=P;
+  if(!a.sp||!b.sp)return {st:'wait',msg:'2匹をえらんでください'};
+  for(const p of P)if(!egHas(k,p.sp))return {st:'no',msg:`${egNm(p.sp)}は、この作品にいません`};
+  for(const p of P)if(egGrp(p.sp).includes(15))return {st:'no',msg:`${egNm(p.sp)}は「タマゴ未発見」グループなので、タマゴができません`};
+  const da=a.sp===EG_DITTO,db=b.sp===EG_DITTO;
+  if(da&&db)return {st:'no',msg:'メタモンどうしでは、タマゴができません'};
+  let mom,dad,ditto=da||db;
+  if(ditto){mom=da?b:a;dad=da?a:b}
+  else{const sa=egSex(a),sb=egSex(b);
+    if(sa==='x'||sb==='x')return {st:'no',msg:'性別不明のポケモンは、メタモンとだけタマゴができます',hint:1};
+    if(sa===sb)return {st:'no',msg:'♂と♀の組み合わせにしてください',hint:1};
+    const ga=egGrp(a.sp),gb=egGrp(b.sp);
+    if(!ga.some(x=>gb.includes(x)))return {st:'no',msg:`タマゴグループがちがいます（${ga.map(x=>EG_GN[x]).join('・')} と ${gb.map(x=>EG_GN[x]).join('・')}）`,hint:1};
+    mom=sa==='f'?a:b;dad=sa==='f'?b:a}
+  const kid=egKid(k,mom,P),rows=[],same=!ditto&&a.sp===b.sp;
+  const nm=p=>egWho(p),fo=p=>p.sp===EG_DITTO?'メタモン':EG_SEXL[egSex(p)];
+  // 個体値
+  {let v,from='両方';const pw=R.power&&P.some(p=>p.it==='pow'),kn=R.knot&&P.some(p=>p.it==='knot');
+    if(R.iv==='g2'){v='ぼうぎょ・とくしゅが、子と性別がちがうほうの親に似ます';from='片方'}
+    else{v=(kn?'両親から 5つ（あかいいと）':'両親から 3つ')+(pw?'。パワー系の能力は必ずその親から':'')}
+    rows.push({c:'iv',k:'個体値',v,from})}
+  // 性格
+  {let v='ランダム',from='—';const ev=P.filter(p=>p.it==='ever');
+    if(R.nat==='none')v='性格はまだありません';
+    else if(R.nat==='rand')v='ランダム（かわらずのいしは効果なし）';
+    else{let h=ev;
+      if(R.nat==='fm50'){const dt=ev.find(p=>p.sp===EG_DITTO),fm=ev.find(p=>p===mom&&egSex(p)==='f');h=dt?[dt]:fm?[fm]:[]}
+      const pct=R.nat==='any100'?'':'（50%）';
+      if(h.length===2){v=`どちらかの親の性格${pct}`;from='両方'}
+      else if(h.length===1){v=`${nm(h[0])}の性格${R.nat==='any100'?'（必ず）':pct}`;from=fo(h[0])}
+      else if(ev.length)v='ランダム（この持たせ方では効果なし）';
+      else v='ランダム（かわらずのいしで受けつげる）';
+      if(h.length&&R.natIntl)v+='。国際孵化では受けつがない'}
+    rows.push({c:'nat',k:'性格',v,from})}
+  // 特性
+  {let v,from='—';
+    if(R.abl==='none')v='特性はまだありません';
+    else if(R.abl==='rand')v='2つのうちランダム';
+    else if(R.abl==='bw'||R.abl==='b2'){
+      if(!ditto&&mom.ha){v='隠れ特性 60%';from='♀'}
+      else if(R.abl==='b2'&&same){v=`${nm(mom)}と同じ特性 80%`;from='♀'}
+      else v='2つのうちランダム'+(ditto&&mom.ha?'（メタモンが相手だと隠れ特性は受けつがない）':'')}
+    else{const src=mom;from=fo(src);
+      if(src.ha){v='隠れ特性 60%'}else{v=`${nm(src)}と同じ特性 80%`;if(!ditto&&dad.ha)v+='（♂の隠れ特性は受けつがない）'}}
+    rows.push({c:'abl',k:'特性',v,from})}
+  // 技
+  {let v,from;const nd=P.filter(p=>p.sp!==EG_DITTO);
+    if(R.mv==='male'){if(!ditto){v=`${nm(dad)}のタマゴ技・技マシン技`;from='♂'}else{v='タマゴ技は来ません（メタモンは技を渡しません）';from='—'}}
+    else{v=nd.length===2?`${nm(nd[0])}と${nm(nd[1])}のタマゴ技`:`${nm(nd[0])}のタマゴ技（メタモンからは来ない）`;from=nd.length===2?'両方':fo(nd[0])}
+    if(R.herb)v+='。ものまねハーブでも覚えられる';
+    rows.push({c:'mv',k:'タマゴ技',v,from})}
+  // ボール
+  {let v,from='—';const bn=p=>p.ball?`${esc(p.ball)}`:`${nm(p)}のボール`;
+    if(R.ball==='none')v='モンスターボール';
+    else if(R.ball==='f'){if(ditto&&egSex(mom)!=='f')v='モンスターボール（♂・性別不明とメタモンなので）';else{v=bn(mom);from='♀'}}
+    else{v=bn(mom)+(same?`（50%で${bn(dad)}）`:'');from=fo(mom)}
+    if(/マスターボール|プレシャスボール|ストレンジボール/.test(v)&&R.ball!=='none')v+='→ 受けつがないのでモンスターボール';
+    rows.push({c:'ball',k:'ボール',v,from})}
+  // 色違い
+  {const t={g2:'ふだん 1/8192。色違いの親からは 約1/64',none:'1/8192（親は関係ない）','5':'1/8192。国際孵化で 5/8192','6':'1/8192。国際孵化で 6/8192','6c':'1/8192。国際孵化・おまもりで 最大 8/8192',g6:'1/4096。国際孵化・おまもりで 最大 8/4096'}[R.shiny];
+    rows.push({c:'shiny',k:'色違い',v:t,from:'—'})}
+  // すがた
+  if(R.form==='reg')rows.push({c:'form',k:'すがた',v:`${R.region}のすがたがあれば、そのすがた（かわらずのいしで親のすがた）`,from:'—'});
+  return {st:'ok',mom,dad,ditto,kid,rows}
+}
+// ===== 画面 =====
+const egEl=()=>document.getElementById('egBody');
+function egGamesHTML(){const cur=S.egg.g;return `<div class="egx-games" id="egGames" role="group" aria-label="作品をえらぶ">${EG_GAMES.map(x=>`<button type="button" data-egg="${x.k}" aria-pressed="${x.k===cur}">${x.n}</button>`).join('')}</div>`}
+const EG_HERO_ART=`<svg class="egx-art" viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="26" cy="34" r="18" fill="rgb(255 255 255 / .18)" stroke="#fff" stroke-width="2.5"/><circle cx="94" cy="34" r="18" fill="rgb(255 255 255 / .18)" stroke="#fff" stroke-width="2.5"/><circle cx="26" cy="31" r="5.5" stroke="#fff" stroke-width="2.2"/><path d="M26 36.5v8M22 41h8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="92" cy="37" r="5.5" stroke="#fff" stroke-width="2.2"/><path d="M96 33l5-5M97 28h4v4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50c8 14 16 20 24 24" stroke="#9fe0b0" stroke-width="3" stroke-linecap="round"/><path d="M30 52c4 18 14 26 26 30" stroke="#ffc58a" stroke-width="3" stroke-linecap="round"/><path d="M86 50c-8 14-16 20-24 24" stroke="#ffb3d1" stroke-width="3" stroke-linecap="round"/><path d="M90 52c-4 18-14 26-26 30" stroke="#a9c8ff" stroke-width="3" stroke-linecap="round"/><path d="M60 70c9 0 16 11 16 21a16 16 0 0 1-32 0c0-10 7-21 16-21z" fill="#fff"/><path d="M45.5 92l5-4 4.5 4 5-4 5 4 4.5-4 5 4" stroke="#ff5533" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function renderEgg(){
+  egNorm();const t=S.egg.tab;
+  document.querySelectorAll('#vEgg [data-egtab]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.egtab===t));
+  const box=egEl(),gs=document.getElementById('egGames'),sl=gs?gs.scrollLeft:null;
+  box.innerHTML=t==='how'?egHowHTML():t==='pair'?egPairHTML():egCmpHTML();
+  const ng=document.getElementById('egGames');
+  if(ng){if(sl!=null)ng.scrollLeft=sl;else{const b=ng.querySelector('[aria-pressed=true]');if(b)ng.scrollLeft=Math.max(0,b.offsetLeft-ng.clientWidth/2+b.offsetWidth/2)}}
+}
+function egHowHTML(){
+  const G=egGame(S.egg.g),R=egRule(G.k),n={ok:0,cond:0,no:0};
+  const tiles=EG_CATS.map(([c,l,col])=>{const [s,t]=egCat(R,c);n[s]++;
+    return `<button type="button" class="egx-tile" data-egcat="${c}" style="--c:var(${col})"><span class="hd"><span class="ic">${egIc(c)}</span><b>${l}</b>${egSt(s)}</span><span class="tx">${t}</span></button>`}).join('');
+  return `${egGamesHTML()}
+  <div class="egx-hero"><div class="tx"><small>第${G.g}世代</small><b>${G.f}</b><span>タマゴ：${G.loc}</span>
+  <div class="cnt"><i>できる ${n.ok}</i><i>条件つき ${n.cond}</i><i>なし ${n.no}</i></div></div>${EG_HERO_ART}</div>
+  <div class="egx-grid">${tiles}</div>
+  <p class="note">タマゴがない作品：赤緑青ピカ・Let's Go・LEGENDS アルセウス・Z-A。カードを押すと、くわしい説明が開きます。</p>`;
+}
+// 個体値の図（くわしく）
+const EG_IVS=[['H','--hp'],['A','--atk'],['B','--def'],['C','--spa'],['D','--spd'],['S','--spe']];
+function egIvFig(R){
+  const opts=[['none','なし']];if(R.knot)opts.push(['knot','あかいいと']);if(R.power)opts.push(['pow','パワー系']);if(R.knot&&R.power)opts.push(['both','両方']);
+  let it=S.egg.ivIt;if(!opts.some(o=>o[0]===it))it='none';
+  const plan=R.iv==='g2'?['','','m','','m','']:{none:['f','','m','','','f'],knot:['f','m','m','','f','f'],pow:['f','M','','','','f'],both:['f','M','m','','f','f']}[it];
+  const msg=R.iv==='g2'?'ぼうぎょ・とくしゅが、子と性別がちがうほうの親（ここでは♂）に似ます':{none:'両親の個体値のうち 3つ を受けつぎます',knot:'あかいいとで、受けつぐ数が 5つ になります',pow:'3つ を受けつぎ、こうげき は必ず ♂ から',both:'5つ を受けつぎ、こうげき は必ず ♂ から'}[it];
+  const FV=[31,8,25,31,31,31],MV=[12,31,31,4,20,31];
+  const cell=(i,v)=>`<span class="pc" style="--c:var(${EG_IVS[i][1]})">${v}</span>`;
+  const kn=it==='knot'||it==='both',pw=it==='pow'||it==='both';
+  return `<div class="egx-ivf">${opts.length>1?`<div class="egx-seg" role="group" aria-label="親に持たせる道具">${opts.map(o=>`<button type="button" data-egivit="${o[0]}" aria-pressed="${o[0]===it}">${o[1]}</button>`).join('')}</div>`:''}
+  <p class="msg">${msg}</p>
+  <div class="row hd"><span></span>${EG_IVS.map(x=>`<span class="sn" style="--c:var(${x[1]})">${x[0]}</span>`).join('')}</div>
+  <div class="row"><span class="who">♀ 親<small>${kn?'あかいいと':''}</small></span>${FV.map((v,i)=>cell(i,v)).join('')}</div>
+  <div class="row"><span class="who">♂ 親<small>${pw?'パワー系':''}</small></span>${MV.map((v,i)=>cell(i,v)).join('')}</div>
+  <div class="row ar"><span></span>${plan.map((p,i)=>`<svg viewBox="0 0 40 18" aria-hidden="true"><path d="M20 2v12M15 9l5 5 5-5" style="stroke:${p?`var(${EG_IVS[i][1]})`:'var(--line)'}"/></svg>`).join('')}</div>
+  <div class="row"><span class="who">子</span>${plan.map((p,i)=>p?`<span class="kc${p==='M'?' fix':''}" style="--c:var(${EG_IVS[i][1]})">${p==='f'?'♀':'♂'}</span>`:'<span class="kc rnd">？</span>').join('')}</div>
+  <p class="lg"><span>♀・♂＝その親から</span><span>？＝ランダム</span>${R.power?'<span>太いわく＝道具で決まる</span>':''}</p></div>`;
+}
+function egFlowFig(c,R){
+  let f=0,m=0,lab='';
+  if(c==='nat'){if(R.nat==='none'||R.nat==='rand')return '';f=1;m=R.nat!=='fm50';lab=R.nat==='fm50'?'かわらずのいしを持った ♀（かメタモン）から':'かわらずのいしを持った親から'}
+  else if(c==='abl'){if(R.abl==='none'||R.abl==='rand')return '';f=1;lab=R.abl==='g6'?'♀（メタモンが相手なら、もう片方）から':'♀から'}
+  else if(c==='mv'){f=R.mv!=='male';m=1;lab=R.mv==='male'?'♂から':'両方の親から'}
+  else if(c==='ball'){if(R.ball==='none')return '';f=1;m=R.ball==='g7';lab=R.ball==='g7'?'♀から（同じ種類なら♂からも）':'♀から'}
+  else return '';
+  return `<div class="egx-flow" aria-label="${lab}"><span class="pa${f?' on':''}">♀</span><svg viewBox="0 0 40 20" aria-hidden="true"><path d="M4 10h30M28 4l6 6-6 6"/></svg><span class="eggi">${egIc('hatch',26)}</span><svg viewBox="0 0 40 20" aria-hidden="true"><path d="M36 10H6M12 4l-6 6 6 6"/></svg><span class="pa${m?' on':''}">♂</span><small>${lab}</small></div>`;
+}
+let egSheetMode='',egCatCur='',egPickI=0;
+function egSheetOpen(mode){const sh=document.getElementById('egSheet');egSheetMode=mode;sh.hidden=false;document.body.classList.add('modal')}
+function egSheetClose(){const sh=document.getElementById('egSheet');if(sh.hidden)return;sh.hidden=true;document.body.classList.remove('modal');egSheetMode=''}
+function egOpenCat(c){egCatCur=c;egSheetOpen('cat');renderEgCat();document.querySelector('#egSheet [data-egclose]')?.focus()}
+function renderEgCat(){
+  const c=egCatCur,G=egGame(S.egg.g),R=egRule(G.k),[s,t,L]=egCat(R,c),cat=EG_CATS.find(x=>x[0]===c),ci=EG_CMP_GENS.findIndex(x=>x[0]===G.g);
+  document.getElementById('egSheetIn').innerHTML=`<div class="sh-head"><h3 class="egx-sht"><span class="ic" style="--c:var(${cat[2]})">${egIc(c)}</span>${cat[1]}の受けつぎ<span class="gm">${G.n}</span></h3><button class="btn" type="button" data-egclose="1">閉じる</button></div>
+  <div class="egx-card"><div class="egx-big">${egSt(s,1)}<b>${t}</b></div>${c==='iv'?egIvFig(R):egFlowFig(c,R)}</div>
+  <div class="egx-card"><h4>くわしく</h4><ul class="egx-ul">${L.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+  <div class="egx-card"><h4>ほかの作品では</h4><div class="egx-oth">${EG_CMP_GENS.map((x,i)=>{const v=EG_CMP[c][i];return `<div class="r${i===ci?' cur':''}"><span class="g">第${x[0]}世代<small>${x[1]}</small></span><span class="v ${v[0]}">${v[1].replace(/\n/g,' ')}</span></div>`}).join('')}</div></div>`;
+}
+function egCmpHTML(){
+  const rows=[['egg','タマゴ','--accent'],...EG_CATS];
+  return `<div class="egx-lg"><span><i class="o"></i>できる</span><span><i class="c"></i>条件つき</span><span><i class="n"></i>なし</span><span class="r">左右にすべらせる</span></div>
+  <div class="egx-mx"><div class="in"><div class="mr"><span class="mk"></span>${EG_CMP_GENS.map(x=>`<span class="mh${egGame(S.egg.g).g===x[0]?' cur':''}"><b>第${x[0]}世代</b><small>${x[1]}</small></span>`).join('')}</div>
+  ${rows.map(([c,l,col])=>`<div class="mr"><span class="mk"><i style="background:var(${col})"></i>${l}</span>${EG_CMP[c].map((v,i)=>c==='egg'?`<span class="mc ${v[0]}">${v[1]}</span>`:`<button type="button" class="mc ${v[0]}" data-egcmp="${c}" data-eggen="${i}" aria-label="第${EG_CMP_GENS[i][0]}世代の${l}：${v[1].replace(/\n/g,' ')}">${v[1]}</button>`).join('')}</div>`).join('')}</div></div>
+  <p class="note">同じ世代でも作品で変わるところは、セルに作品名を書いています（E＝エメラルド）。セルを押すと、その世代の作品のくわしい説明が開きます。</p>`;
+}
+// 親チェック
+function egSlotHTML(i){
+  const p=S.egg.p[i],k=S.egg.g,R=egRule(k);
+  if(!p.sp)return `<div class="egx-slot empty"><span class="lb">親${i+1}</span><button type="button" class="pick" data-egpick="${i}"><span class="plus" aria-hidden="true">＋</span>ポケモンをえらぶ</button></div>`;
+  const fx=egFixSex(p.sp),sx=egSex(p),gr=egGrp(p.sp),has=egHas(k,p.sp);
+  const its=[['','もちものなし']];if(R.ever)its.push(['ever','かわらずのいし']);if(R.knot)its.push(['knot','あかいいと']);if(R.power)its.push(['pow','パワー系']);if(R.inc)its.push(['inc','おこう']);
+  const it=its.some(x=>x[0]===p.it)?p.it:'';
+  return `<div class="egx-slot"><span class="lb">親${i+1}</span>
+  <button type="button" class="nm" data-egpick="${i}" aria-label="親${i+1}：${egNm(p.sp)}（変える）"><b>${egNm(p.sp)}</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  <span class="gr${has?'':' bad'}">${has?gr.map(x=>EG_GN[x]).join('・')+(p.ball?'・'+esc(p.ball):''):'この作品にいない'}</span>
+  ${fx?`<span class="sx fixed">${p.sp===EG_DITTO?'メタモン':fx==='x'?'性別不明':fx==='m'?'♂だけの種類':'♀だけの種類'}</span>`:`<span class="sx" role="group" aria-label="親${i+1}の性別"><button type="button" data-egsex="${i}" data-v="f" aria-pressed="${sx==='f'}">♀</button><button type="button" data-egsex="${i}" data-v="m" aria-pressed="${sx==='m'}">♂</button></span>`}
+  <label class="it"><span class="sr">親${i+1}の持ち物</span><select data-egit="${i}">${its.map(x=>`<option value="${x[0]}"${x[0]===it?' selected':''}>${x[1]}</option>`).join('')}</select></label>
+  ${R.g>=5&&p.sp!==EG_DITTO?`<label class="ha"><input type="checkbox" data-egha="${i}"${p.ha?' checked':''}>隠れ特性</label>`:'<span class="ha off"></span>'}
+  </div>`;
+}
+function egPairHTML(){
+  const E=egPairEval(S.egg.g);
+  let res;
+  if(E.st==='wait')res=`<div class="egx-res wait"><span class="eggi">${egIc('hatch',30)}</span><div><b>${E.msg}</b><span>「＋」から、親にする2匹をえらびます</span></div></div>`;
+  else if(E.st==='no')res=`<div class="egx-res no"><span class="eggi">${egIc('hatch',30)}</span><div><b>タマゴはできません</b><span>${E.msg}${E.hint?'。メタモンが相手なら、タマゴができます':''}</span></div></div>`;
+  else{const K=E.kid;res=`<div class="egx-res ok"><span class="eggi">${egIc('hatch',30)}</span><div><b>タマゴができます</b><span>生まれるのは <strong>${egNm(K.sp)}</strong>${K.alt?` か <strong>${egNm(K.alt)}</strong>`:''}${E.ditto?'（メタモンの相手のほう）':'（♀のほう）'}</span>${K.note?`<span class="kn">${K.note}</span>`:''}</div></div>`}
+  const rows=E.st==='ok'?`<div class="egx-rows">${E.rows.map(r=>{const cat=EG_CATS.find(x=>x[0]===r.c);return `<div class="r"><span class="cb" style="background:var(${cat[2]})"></span><span class="tx"><small>${r.k}</small>${r.v}</span>${r.from==='—'?'':`<span class="fr">${r.from}</span>`}</div>`}).join('')}</div>`:'';
+  return `${egGamesHTML()}<div class="egx-pair">${egSlotHTML(0)}<span class="x" aria-hidden="true">×</span>${egSlotHTML(1)}</div>${res}${rows}
+  <p class="note">タマゴグループ・性別は最新の作品のものです。親は、個体管理に登録した個体からもえらべます。</p>`;
+}
+function egOpenPick(i){egPickI=i;egSheetOpen('pick');
+  document.getElementById('egSheetIn').innerHTML=`<div class="sh-head"><h3>親${i+1}をえらぶ</h3><button class="btn" type="button" data-egclose="1">閉じる</button></div>
+  <div class="ivx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="egQ" type="text" placeholder="ポケモン名で探す（ひらがなでも）" autocomplete="off" enterkeyhint="search" aria-label="ポケモンの名前で探す"></div>
+  <div id="egPickRes" class="egx-pl"></div>`;
+  renderEgPickRes();setTimeout(()=>document.getElementById('egQ')?.focus(),50)}
+function renderEgPickRes(){
+  const box=document.getElementById('egPickRes');if(!box)return;const q=kata((document.getElementById('egQ')?.value||'').trim()),k=S.egg.g;
+  const btn=(sp,sub,mid)=>`<button type="button" data-egsp="${sp}"${mid?` data-egmid="${mid}"`:''}><span class="tx"><b>${esc(sub?sub.t:egNm(sp))}</b><small>${sub?sub.s:egGrp(sp).map(x=>EG_GN[x]).join('・')}${egHas(k,sp)?'':'・この作品にいない'}</small></span><span class="no">No.${pad3(sp)}</span></button>`;
+  if(q){const L=SPDB.map((r,i)=>[kata(r[0]),i+1]).filter(x=>x[0].includes(q)).sort((a,b)=>(a[0].startsWith(q)?0:1)-(b[0].startsWith(q)?0:1)||a[1]-b[1]).slice(0,40);
+    box.innerHTML=L.length?L.map(x=>btn(x[1])).join(''):'<div class="empty">見つかりません</div>';return}
+  const mons=(S.mon&&Array.isArray(S.mon.list)?S.mon.list:[]).filter(x=>x.sp);
+  box.innerHTML=`<p class="hd">よく使う</p>${btn(EG_DITTO)}${mons.length?`<p class="hd">個体管理から</p>${mons.slice(0,60).map(x=>btn(x.sp,{t:monLabel(x),s:[x.gender,x.ability,x.ball].filter(Boolean).map(esc).join('・')||egNm(x.sp)},x.id)).join('')}`:'<p class="hd">個体管理に登録した個体は、ここに出ます</p>'}`;
+}
+function egPickSp(sp,mid){const p=S.egg.p[egPickI];p.sp=sp;p.mid=0;p.ball='';p.ha=false;
+  if(mid){const m=(S.mon.list||[]).find(x=>String(x.id)===String(mid));if(m){p.mid=m.id;p.ball=m.ball||'';if(m.gender==='♀')p.sex='f';else if(m.gender==='♂')p.sex='m'}}
+  if(!egFixSex(sp)&&!p.sex)p.sex=egPickI===0?'f':'m';
+  save();egSheetClose();renderEgg()}
+document.getElementById('vEgg').addEventListener('click',e=>{const t=e.target;
+  const b=t.closest('button');if(!b)return;const d=b.dataset;
+  if(d.egtab){S.egg.tab=d.egtab;save();renderEgg();window.scrollTo(0,0);return}
+  if(d.egg){S.egg.g=d.egg;save();renderEgg();return}
+  if(d.egcat){egOpenCat(d.egcat);return}
+  if(d.egcmp){S.egg.g=EG_CMP_GENS[+d.eggen][2];save();renderEgg();egOpenCat(d.egcmp);return}
+  if(d.egivit){S.egg.ivIt=d.egivit;save();renderEgCat();return}
+  if(d.egclose){egSheetClose();return}
+  if(d.egpick){egOpenPick(+d.egpick);return}
+  if(d.egsp){egPickSp(+d.egsp,d.egmid);return}
+  if(d.egsex){S.egg.p[+d.egsex].sex=d.v;save();renderEgg();return}
+});
+document.getElementById('vEgg').addEventListener('change',e=>{const t=e.target;
+  if(t.dataset.egit){S.egg.p[+t.dataset.egit].it=t.value;save();renderEgg();return}
+  if(t.dataset.egha){S.egg.p[+t.dataset.egha].ha=t.checked;save();renderEgg();return}
+});
+document.getElementById('vEgg').addEventListener('input',e=>{if(e.target.id==='egQ')renderEgPickRes()});
+document.getElementById('egSheet').addEventListener('click',e=>{if(e.target.id==='egSheet')egSheetClose()});
+const VIEWS={ev:{t:'努力値カウンター',el:'vEv'},shiny:{t:'色違い厳選カウンター',el:'vShiny'},ribbon:{t:'リボン管理',el:'vRibbon'},dex:{t:'図鑑埋め支援',el:'vDex'},pb:{t:'ポロック・ポフィン',el:'vPb'},mon:{t:'個体管理',el:'vMon'},iv:{t:'個体値ジャッジ',el:'vIv'},type:{t:'タイプ相性',el:'vType'},spd:{t:'すばやさ比べ',el:'vSpd'},egg:{t:'孵化・遺伝ガイド',el:'vEgg'},settings:{t:'設定',el:'vSettings'}};
 const drawer=document.getElementById('drawer'),menuBtn=document.getElementById('menuBtn');
 /* ---------- 下のタブバー・メニューの並び ---------- */
-const TOOL_KEYS=['ev','shiny','ribbon','dex','pb','mon','iv','type','spd'];
-const TOOL_META={ev:{ab:'EV',c:'--b1',s:'努力値'},shiny:{ab:'色',c:'--sh',s:'色違い'},ribbon:{ab:'リ',c:'--rib',s:'リボン'},dex:{ab:'図',c:'--dx',s:'図鑑'},pb:{ab:'ポ',c:'--pb',s:'ポロック'},mon:{ab:'個',c:'--mon',s:'個体管理'},iv:{ab:'IV',c:'--iv',s:'個体値'},type:{ab:'相',c:'--ty',s:'タイプ相性'},spd:{ab:'速',c:'--spx',s:'すばやさ'}};
+const TOOL_KEYS=['ev','shiny','ribbon','dex','pb','mon','iv','type','spd','egg'];
+const TOOL_META={ev:{ab:'EV',c:'--b1',s:'努力値'},shiny:{ab:'色',c:'--sh',s:'色違い'},ribbon:{ab:'リ',c:'--rib',s:'リボン'},dex:{ab:'図',c:'--dx',s:'図鑑'},pb:{ab:'ポ',c:'--pb',s:'ポロック'},mon:{ab:'個',c:'--mon',s:'個体管理'},iv:{ab:'IV',c:'--iv',s:'個体値'},type:{ab:'相',c:'--ty',s:'タイプ相性'},spd:{ab:'速',c:'--spx',s:'すばやさ'},egg:{ab:'卵',c:'--egx',s:'孵化・遺伝'}};
 const TAB_DEF=['ev','shiny','mon','iv','type'];
 
 function uiFix(a,def,n){const r=[];(Array.isArray(a)?a:[]).forEach(k=>{if(TOOL_KEYS.includes(k)&&!r.includes(k))r.push(k)});[...def,...TOOL_KEYS].forEach(k=>{if(r.length<n&&!r.includes(k))r.push(k)});return r.slice(0,n)}
 function uiNorm(){S.tabs=uiFix(S.tabs,TAB_DEF,5);S.navOrder=uiFix(S.navOrder,TOOL_KEYS,TOOL_KEYS.length)}
-const TOOL_IC={ev:'<path class="f" d="M5 8.5h2.5v7H5z"/><path class="f" d="M16.5 8.5H19v7h-2.5z"/><path d="M2.5 10.5v3M21.5 10.5v3M7.5 12h9"/><rect x="5" y="7" width="2.5" height="10" rx="1"/><rect x="16.5" y="7" width="2.5" height="10" rx="1"/>',shiny:'<path class="ff" d="M10 3.5c.6 3.6 2 5 5.5 5.6-3.5.6-4.9 2-5.5 5.6-.6-3.6-2-5-5.5-5.6 3.5-.6 4.9-2 5.5-5.6z"/><path class="ff" d="M17.5 13.5c.3 1.9 1.1 2.7 3 3-1.9.3-2.7 1.1-3 3-.3-1.9-1.1-2.7-3-3 1.9-.3 2.7-1.1 3-3z"/><path d="M5 18.5v2M4 19.5h2"/>',ribbon:'<path class="f" d="M9.3 12.6 7.2 21l2.5-1.4 1.4 2.2 1-7.4z"/><path class="f" d="m14.7 12.6 2.1 8.4-2.5-1.4-1.4 2.2-1-7.4z"/><circle class="f" cx="12" cy="8.6" r="5.6"/><circle cx="12" cy="8.6" r="2.2" class="hole"/>',dex:'<path class="f" d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5z"/><path d="M12 6.5c2-1.5 5-2 8.5-1.5v13.5c-3.5-.5-6.5 0-8.5 1.5z"/><path d="m14.6 12.2 1.7 1.7 2.7-3.3" class="chk"/>',pb:'<path class="f" d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9" class="in"/>',mon:'<path d="M7 4.5h11.5A1.5 1.5 0 0 1 20 6v9.5"/><rect class="f" x="4" y="7.5" width="13" height="12.5" rx="2"/><circle cx="8.6" cy="12" r="1.7" class="in"/><path d="M12 11.3h2.5M7 16.5h7.5" class="in"/>',iv:'<path class="o" d="M12 3 19.8 7.5v9L12 21l-7.8-4.5v-9z"/><path class="f iw" d="M12.0 5.1 15.7 9.9 18.0 15.4 12.0 15.4 7.1 14.8 9.3 10.5z"/><path class="sp" d="M12 12V4.5M12 12l6.5-3.75M12 12l6.5 3.75M12 12v7.5M12 12l-6.5 3.75M12 12 5.5 8.25"/>',type:'<path d="M14.53 5.05A7.4 7.4 0 0 1 19.33 13.03M16.76 17.67A7.4 7.4 0 0 1 7.44 17.83M4.71 13.28A7.4 7.4 0 0 1 9.23 5.14"/><path class="ar" d="M18.34 15.81L22.15 14.13L18.04 11.66zM5.53 15.59L5.08 19.72L9.28 17.40zM12.13 4.60L8.77 2.14L8.69 6.94z"/>',spd:'<circle class="f" cx="13.5" cy="13.5" r="7"/><path d="M11.5 3.5h4M13.5 3.5v3"/><path d="M13.5 10v3.5l2.3 1.6" class="in"/><path d="M2 10.5h3M1.5 14h3M2.5 17.5h3"/>',settings:'<path class="f" d="M10.3 3h3.4l.5 2.4 1.6.9 2.3-.8 1.7 2.9-1.8 1.6v1.9l1.8 1.6-1.7 2.9-2.3-.8-1.6.9-.5 2.4h-3.4l-.5-2.4-1.6-.9-2.3.8-1.7-2.9 1.8-1.6v-1.9L4.2 8.4l1.7-2.9 2.3.8 1.6-.9z"/><circle cx="12" cy="12" r="2.6" class="hole"/>',web:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.6 5.2 3.6 8.5s-1.1 6.1-3.6 8.5c-2.5-2.4-3.6-5.2-3.6-8.5S9.5 5.9 12 3.5z"/>'};
+const TOOL_IC={egg:'<path class="f" d="M12 3c3.6 0 6.5 5.2 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8.2 8.4 3 12 3z"/><path d="M6.2 12.6l2.5 1.7 2.2-2.2 2.3 2.2 2.4-1.7 2.2 1"/>',ev:'<path class="f" d="M5 8.5h2.5v7H5z"/><path class="f" d="M16.5 8.5H19v7h-2.5z"/><path d="M2.5 10.5v3M21.5 10.5v3M7.5 12h9"/><rect x="5" y="7" width="2.5" height="10" rx="1"/><rect x="16.5" y="7" width="2.5" height="10" rx="1"/>',shiny:'<path class="ff" d="M10 3.5c.6 3.6 2 5 5.5 5.6-3.5.6-4.9 2-5.5 5.6-.6-3.6-2-5-5.5-5.6 3.5-.6 4.9-2 5.5-5.6z"/><path class="ff" d="M17.5 13.5c.3 1.9 1.1 2.7 3 3-1.9.3-2.7 1.1-3 3-.3-1.9-1.1-2.7-3-3 1.9-.3 2.7-1.1 3-3z"/><path d="M5 18.5v2M4 19.5h2"/>',ribbon:'<path class="f" d="M9.3 12.6 7.2 21l2.5-1.4 1.4 2.2 1-7.4z"/><path class="f" d="m14.7 12.6 2.1 8.4-2.5-1.4-1.4 2.2-1-7.4z"/><circle class="f" cx="12" cy="8.6" r="5.6"/><circle cx="12" cy="8.6" r="2.2" class="hole"/>',dex:'<path class="f" d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5z"/><path d="M12 6.5c2-1.5 5-2 8.5-1.5v13.5c-3.5-.5-6.5 0-8.5 1.5z"/><path d="m14.6 12.2 1.7 1.7 2.7-3.3" class="chk"/>',pb:'<path class="f" d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9" class="in"/>',mon:'<path d="M7 4.5h11.5A1.5 1.5 0 0 1 20 6v9.5"/><rect class="f" x="4" y="7.5" width="13" height="12.5" rx="2"/><circle cx="8.6" cy="12" r="1.7" class="in"/><path d="M12 11.3h2.5M7 16.5h7.5" class="in"/>',iv:'<path class="o" d="M12 3 19.8 7.5v9L12 21l-7.8-4.5v-9z"/><path class="f iw" d="M12.0 5.1 15.7 9.9 18.0 15.4 12.0 15.4 7.1 14.8 9.3 10.5z"/><path class="sp" d="M12 12V4.5M12 12l6.5-3.75M12 12l6.5 3.75M12 12v7.5M12 12l-6.5 3.75M12 12 5.5 8.25"/>',type:'<path d="M14.53 5.05A7.4 7.4 0 0 1 19.33 13.03M16.76 17.67A7.4 7.4 0 0 1 7.44 17.83M4.71 13.28A7.4 7.4 0 0 1 9.23 5.14"/><path class="ar" d="M18.34 15.81L22.15 14.13L18.04 11.66zM5.53 15.59L5.08 19.72L9.28 17.40zM12.13 4.60L8.77 2.14L8.69 6.94z"/>',spd:'<circle class="f" cx="13.5" cy="13.5" r="7"/><path d="M11.5 3.5h4M13.5 3.5v3"/><path d="M13.5 10v3.5l2.3 1.6" class="in"/><path d="M2 10.5h3M1.5 14h3M2.5 17.5h3"/>',settings:'<path class="f" d="M10.3 3h3.4l.5 2.4 1.6.9 2.3-.8 1.7 2.9-1.8 1.6v1.9l1.8 1.6-1.7 2.9-2.3-.8-1.6.9-.5 2.4h-3.4l-.5-2.4-1.6-.9-2.3.8-1.7-2.9 1.8-1.6v-1.9L4.2 8.4l1.7-2.9 2.3.8 1.6-.9z"/><circle cx="12" cy="12" r="2.6" class="hole"/>',web:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.6 5.2 3.6 8.5s-1.1 6.1-3.6 8.5c-2.5-2.4-3.6-5.2-3.6-8.5S9.5 5.9 12 3.5z"/>'};
 const niSvg=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${TOOL_IC[k]||''}</svg>`;
 const toolNi=k=>`<span class="ni" style="--c:var(${TOOL_META[k].c})" aria-hidden="true">${niSvg(k)}</span>`;
 const UP_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',DN_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
@@ -8102,7 +8601,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.10.31b';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02a';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
@@ -8261,6 +8760,7 @@ function setView(v){
   if(v==='type')renderTy();
   if(v==='iv')renderIv();
   if(v==='spd')renderSpd();else spdPickClose();
+  if(v==='egg')renderEgg();else egSheetClose();
   if(v==='ribbon')renderRb();else document.getElementById('rbInfo').hidden=true;
   if(v==='settings')renderUiSet();else stClose();
   markTabs();
@@ -8272,7 +8772,7 @@ drawer.addEventListener('click',e=>{
   const b=e.target.closest('[data-view]');if(!b)return;
   closeMenu();setView(b.dataset.view);
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(stOpenEl)stClose();closeMenu()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(stOpenEl)stClose();egSheetClose();closeMenu()}});
 
 if(window.NER_APP)document.body.classList.add('app');
 if(OBS_APP)document.body.classList.add('appobs');
