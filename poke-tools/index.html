@@ -2547,9 +2547,8 @@ body:not(.app) .obsapp{display:none!important}
 .egx-sht .gm{flex:none;white-space:nowrap;font-size:11.5px;font-weight:700;height:21px;padding:0 9px;border-radius:12px;background:var(--egx);color:var(--egx-ink);display:flex;align-items:center}
 .egx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;flex:none}
 .egx-card h4{margin:0;font-size:14px}
-.egx-big{display:flex;align-items:flex-start;gap:10px}
-.egx-big b{flex:1;min-width:0;font-size:17px;line-height:1.45}
-.egx-big .egx-st{width:26px;height:26px;padding:0;justify-content:center;font-size:0;gap:0;margin-top:-1px}.egx-big .egx-st svg{width:16px;height:16px}
+.egx-big{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.egx-big b{font-size:17px;line-height:1.45}
 .egx-ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.7}
 .egx-seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px}
 .egx-seg button{height:40px;border-radius:10px;border:1px solid var(--line);background:var(--sunken);color:var(--ink);font-size:13px;font-weight:700;padding:0}
@@ -8604,7 +8603,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02i';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02j';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
