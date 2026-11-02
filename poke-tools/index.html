@@ -2514,14 +2514,13 @@ body:not(.app) .obsapp{display:none!important}
 .egx-games::-webkit-scrollbar{display:none}
 .egx-games button{flex:none;height:36px;padding:0 13px;border-radius:18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:700;white-space:nowrap}
 .egx-games button[aria-pressed=true]{background:var(--egx);border-color:var(--egx);color:var(--egx-ink)}
-.egx-hero{position:relative;overflow:hidden;border-radius:16px;height:148px;box-sizing:border-box;flex:none;padding:14px 12px 12px 16px;display:flex;gap:6px;color:#fff;background:var(--egx-hero);box-shadow:0 6px 18px -8px rgb(50 56 168 / .6)}
-.egx-hero .tx{flex:1;min-width:0;display:flex;flex-direction:column}
-.egx-hero small{font-size:12.5px;font-weight:700;opacity:.88}
-.egx-hero b{font-size:18px;font-weight:800;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.egx-hero .tx>span{font-size:12.5px;margin-top:4px;opacity:.93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.egx-hero .cnt{margin-top:auto;display:flex;gap:5px}
-.egx-hero .cnt i{font-style:normal;height:26px;padding:0 8px;border-radius:13px;background:rgb(255 255 255 / .2);font-size:12px;font-weight:700;display:flex;align-items:center;white-space:nowrap}
-.egx-art{flex:none;width:112px;height:112px;align-self:center}
+.egx-hero{border-radius:14px;box-sizing:border-box;flex:none;padding:10px 14px 11px;display:flex;flex-direction:column;gap:5px;color:#fff;background:var(--egx-hero)}
+.egx-hero .r1{display:flex;align-items:baseline;gap:8px;min-width:0}
+.egx-hero small{flex:none;font-size:12px;font-weight:700;opacity:.88}
+.egx-hero b{min-width:0;font-size:16.5px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-hero .loc{font-size:12.5px;opacity:.93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-hero .cnt{display:flex;gap:5px;margin-top:2px}
+.egx-hero .cnt i{font-style:normal;height:22px;padding:0 8px;border-radius:11px;background:rgb(255 255 255 / .2);font-size:11.5px;font-weight:700;display:flex;align-items:center;white-space:nowrap}
 .egx-grp{display:flex;flex-direction:column;gap:8px}
 .egx-gh{display:flex;align-items:center;gap:8px;padding:6px 4px 0;font-size:15px;font-weight:800}
 .egx-gh .m{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;flex:none}
@@ -8447,7 +8446,6 @@ function egPairEval(k){
 // ===== 画面 =====
 const egEl=()=>document.getElementById('egBody');
 function egGamesHTML(){const cur=S.egg.g;return `<div class="egx-games" id="egGames" role="group" aria-label="作品をえらぶ">${EG_GAMES.map(x=>`<button type="button" data-egg="${x.k}" aria-pressed="${x.k===cur}">${x.n}</button>`).join('')}</div>`}
-const EG_HERO_ART=`<svg class="egx-art" viewBox="0 0 120 120" fill="none" aria-hidden="true"><circle cx="26" cy="34" r="18" fill="rgb(255 255 255 / .18)" stroke="#fff" stroke-width="2.5"/><circle cx="94" cy="34" r="18" fill="rgb(255 255 255 / .18)" stroke="#fff" stroke-width="2.5"/><circle cx="26" cy="31" r="5.5" stroke="#fff" stroke-width="2.2"/><path d="M26 36.5v8M22 41h8" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="92" cy="37" r="5.5" stroke="#fff" stroke-width="2.2"/><path d="M96 33l5-5M97 28h4v4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50c8 14 16 20 24 24" stroke="#9fe0b0" stroke-width="3" stroke-linecap="round"/><path d="M30 52c4 18 14 26 26 30" stroke="#ffc58a" stroke-width="3" stroke-linecap="round"/><path d="M86 50c-8 14-16 20-24 24" stroke="#ffb3d1" stroke-width="3" stroke-linecap="round"/><path d="M90 52c-4 18-14 26-26 30" stroke="#a9c8ff" stroke-width="3" stroke-linecap="round"/><path d="M60 70c9 0 16 11 16 21a16 16 0 0 1-32 0c0-10 7-21 16-21z" fill="#fff"/><path d="M45.5 92l5-4 4.5 4 5-4 5 4 4.5-4 5 4" stroke="#ff5533" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 function renderEgg(){
   egNorm();const t=S.egg.tab;
   document.querySelectorAll('#vEgg [data-egtab]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.egtab===t));
@@ -8461,8 +8459,8 @@ function egHowHTML(){
   const tiles=EG_CATS.map(([c,l,col])=>{const [s,t]=egCat(R,c);n[s]++;
     return `<button type="button" class="egx-tile ${s}" data-egcat="${c}" style="--c:var(${col})"><span class="ic">${egIc(c,22)}</span><span class="bd"><b>${l}</b><span class="tx">${t}</span></span>${egSt(s)}<svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`}).join('');
   return `${egGamesHTML()}
-  <div class="egx-hero"><div class="tx"><small>第${G.g}世代</small><b>${G.f}</b><span>タマゴ：${G.loc}</span>
-  <div class="cnt"><i>できる ${n.ok}</i><i>条件つき ${n.cond}</i><i>なし ${n.no}</i></div></div>${EG_HERO_ART}</div>
+  <div class="egx-hero"><div class="r1"><small>第${G.g}世代</small><b>${G.f}</b></div><span class="loc">タマゴ：${G.loc}</span>
+  <div class="cnt"><i>できる ${n.ok}</i><i>条件つき ${n.cond}</i><i>なし ${n.no}</i></div></div>
   <div class="egx-grp">${tiles}</div>
   <p class="note">タマゴがない作品：赤緑青ピカ・Let's Go・LEGENDS アルセウス・Z-A。カードを押すと、くわしい説明が開きます。</p>`;
 }
@@ -8610,7 +8608,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02e';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02f';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
