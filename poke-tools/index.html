@@ -2538,7 +2538,7 @@ body:not(.app) .obsapp{display:none!important}
 .egx-tile .bd{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .egx-tile b{font-size:15px;font-weight:700}
 .egx-tile .tx{font-size:12.5px;line-height:1.45;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.egx-tile .chv{width:20px;height:20px;flex:none;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
+.egx-tile .egx-st{margin-left:-4px}.egx-tile .chv{margin-left:-6px;width:20px;height:20px;flex:none;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
 .egx-tile:active{background:var(--sunken)}
 .egx-st{flex:none;height:22px;padding:0 6px 0 4px;border-radius:6px;font-size:11.5px;font-weight:700;display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
 .egx-st svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
@@ -8260,7 +8260,8 @@ function egRule(k){const G=egGame(k),g=G.g;return {
   inc:g>=3&&g<=8,power:k==='hgss'||g>=5,knot:g>=6,ever:g>=3
 }}
 // 8つの項目：[状態, ひとこと, くわしい説明]
-const EG_CATS=[['iv','個体値','--hp'],['nat','性格','--atk'],['abl','特性','--b3'],['mv','技','--def'],['ball','ボール','--spd'],['shiny','色違い','--spe'],['hatch','効率化','--accent'],['form','リージョンフォーム','--spa']];
+// 並び順：どの作品でも「できる」が多い順（条件つき・なしが下に来やすい）。全作品で同じ順
+const EG_CATS=[['mv','技','--def'],['iv','個体値','--hp'],['hatch','効率化','--accent'],['nat','性格','--atk'],['shiny','色違い','--spe'],['abl','特性','--b3'],['ball','ボール','--spd'],['form','リージョンフォーム','--spa']];
 const EG_IC={
   iv:'<path d="M5 20v-8M10 20V5M15 20v-9M20 20V8"/>',
   nat:'<path d="M7 19V5M3.5 8.5 7 5l3.5 3.5M17 5v14M13.5 15.5 17 19l3.5-3.5"/>',
@@ -8456,15 +8457,14 @@ function renderEgg(){
   if(ng){if(sl!=null)ng.scrollLeft=sl;else{const b=ng.querySelector('[aria-pressed=true]');if(b)ng.scrollLeft=Math.max(0,b.offsetLeft-ng.clientWidth/2+b.offsetWidth/2)}}
 }
 function egHowHTML(){
-  const G=egGame(S.egg.g),R=egRule(G.k),n={ok:0,cond:0,no:0},grp={ok:[],cond:[],no:[]};
-  EG_CATS.forEach(([c,l,col])=>{const [s,t]=egCat(R,c);n[s]++;
-    grp[s].push(`<button type="button" class="egx-tile ${s}" data-egcat="${c}" style="--c:var(${col})"><span class="ic">${egIc(c,22)}</span><span class="bd"><b>${l}</b><span class="tx">${t}</span></span><svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`)});
-  const groups=['ok','cond','no'].filter(k=>grp[k].length).map(k=>`<div class="egx-gh ${k}"><span class="m"><svg viewBox="0 0 24 24" aria-hidden="true">${EG_ST_IC[k]}</svg></span>${EG_ST[k]}<small>${n[k]}</small></div><div class="egx-grp">${grp[k].join('')}</div>`).join('');
+  const G=egGame(S.egg.g),R=egRule(G.k),n={ok:0,cond:0,no:0};
+  const tiles=EG_CATS.map(([c,l,col])=>{const [s,t]=egCat(R,c);n[s]++;
+    return `<button type="button" class="egx-tile ${s}" data-egcat="${c}" style="--c:var(${col})"><span class="ic">${egIc(c,22)}</span><span class="bd"><b>${l}</b><span class="tx">${t}</span></span>${egSt(s)}<svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`}).join('');
   return `${egGamesHTML()}
   <div class="egx-hero"><div class="tx"><small>第${G.g}世代</small><b>${G.f}</b><span>タマゴ：${G.loc}</span>
   <div class="cnt"><i>できる ${n.ok}</i><i>条件つき ${n.cond}</i><i>なし ${n.no}</i></div></div>${EG_HERO_ART}</div>
-  ${groups}
-  <p class="note">${n.no?'':'「なし」の項目はこの作品にはありません。'}タマゴがない作品：赤緑青ピカ・Let's Go・LEGENDS アルセウス・Z-A。カードを押すと、くわしい説明が開きます。</p>`;
+  <div class="egx-grp">${tiles}</div>
+  <p class="note">タマゴがない作品：赤緑青ピカ・Let's Go・LEGENDS アルセウス・Z-A。カードを押すと、くわしい説明が開きます。</p>`;
 }
 // 個体値の図（くわしく）
 const EG_IVS=[['H','--hp'],['A','--atk'],['B','--def'],['C','--spa'],['D','--spd'],['S','--spe']];
@@ -8610,7 +8610,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02d';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02e';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
