@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.02l(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-11-02(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.02m(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-11-02(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -66,7 +66,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド など) | 2026.11.02l(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド など) | 2026.11.02m(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
@@ -107,6 +107,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-02 — Claude(https://claude.ai/code/session_01NCVwVxD4vZFMwGRFAdun3o)
+- やったこと: 努力値カウンターの目標編集画面で、個体管理とリンク中にポケモン名の ✕ を押すと、リンクを外し、努力値・目標をリセットし、名前を「N匹目」にもどすようにした(「戻す」で取り消せる)。リンクしていないときは今までどおり文字を消すだけ。Poke tools 2026.11.02m
+- 確かめたこと: Playwright で、リンク中のメンバーで ✕ を押し、リンク・努力値・目標が消えることを確かめた。エラーなし
+- 次の人へ: 第6世代の「群れ×5」ボタンを「群れ/単体」の切りかえにする件は、運営者にイラスト案を見せて選んでもらっている途中
 
 ### 2026-11-02 — Claude(https://claude.ai/code/session_01NCVwVxD4vZFMwGRFAdun3o)
 - やったこと: 孵化・遺伝ガイドの作品名の略し方「金銀C」を「金銀ク」に変えた(作品えらびのボタン・説明シートのバッジ・世代くらべの表)。Poke tools 2026.11.02l

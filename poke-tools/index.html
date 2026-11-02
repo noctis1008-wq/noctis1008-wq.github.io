@@ -3688,7 +3688,9 @@ sheetEl.addEventListener('click',e=>{
   const act=b.dataset.act,m=S.members[sheetI],k=b.dataset.k,G=gen(),C=CAP();
   if(act==='sclose'){closeSheet();return}
   if(act==='stab'){sheetI=+b.dataset.i;renderSheet();return}
-  if(act==='nameclr'){const n=document.getElementById('sname');n.value='';n.focus();return}
+  if(act==='nameclr'){
+    if(evMonOf(m)){pushHist('edit',`${m.name}：個体管理とのリンクを解除`);delete m.mon;m.ev=zero();m.goal=null;m.name=`${sheetI+1}匹目`;save();renderSheet();renderParty();renderTaps();renderCount();renderLog();toast('個体管理とのリンクを外し、努力値と目標をリセットしました',3500)}
+    const n=document.getElementById('sname');n.value='';n.focus();return}
   if(act==='smon'){evMonPicker();return}
   if(act==='mreset'){armed(b,'リセット','もう一度で実行',()=>{if(m.mon){delete m.mon}pushHist('edit',`${m.name}：努力値と目標をリセット`);m.ev=zero();m.goal=null;save();renderSheet();renderParty();renderTaps();renderCount();renderLog();toast(`${m.name}の努力値と目標をリセットしました`)});return}
   if(act==='lv'){m.lv100=!m.lv100}
@@ -8603,7 +8605,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02l';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02m';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
