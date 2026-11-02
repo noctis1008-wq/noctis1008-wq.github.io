@@ -2548,8 +2548,8 @@ body:not(.app) .obsapp{display:none!important}
 .egx-st.big{height:28px;font-size:13px;padding:0 9px 0 6px}
 .egx-st.big svg{width:15px;height:15px}
 /* くわしく */
-.egx-sht{display:flex;align-items:center;gap:8px;margin:0;font-size:17px}
-.egx-sht .gm{font-size:12px;font-weight:700;height:24px;padding:0 9px;border-radius:12px;background:var(--egx);color:var(--egx-ink);display:flex;align-items:center}
+.egx-sht{display:flex;align-items:center;gap:8px;margin:0;font-size:17px;min-width:0}.egx-sht .egt{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}.egx-sht+.btn{flex:none;white-space:nowrap}.egx-sht .tt{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-sht .gm{flex:none;white-space:nowrap;font-size:11.5px;font-weight:700;height:21px;padding:0 9px;border-radius:12px;background:var(--egx);color:var(--egx-ink);display:flex;align-items:center}
 .egx-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;flex:none}
 .egx-card h4{margin:0;font-size:14px}
 .egx-big{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
@@ -8232,7 +8232,7 @@ const egNm=sp=>sp?SPDB[sp-1][0]:'';
 const egPrev=sp=>SPDB[sp-1][5]||EG_PRE[sp]||0;
 // 作品
 const EG_GAMES=[
-  {k:'gsc',n:'金銀クリスタル',f:'金・銀・クリスタル',g:2,loc:'育て屋（34番道路）',rep:2},
+  {k:'gsc',n:'金銀C',f:'金・銀・クリスタル',g:2,loc:'育て屋（34番道路）',rep:2},
   {k:'rs',n:'RS・FRLG',f:'ルビー・サファイア・FRLG',g:3,loc:'育て屋（117番道路・4のしま）'},
   {k:'e',n:'エメラルド',f:'エメラルド',g:3,loc:'育て屋（117番道路）',rep:3},
   {k:'dp',n:'DPt',f:'ダイヤモンド・パール・Pt',g:4,loc:'ズイタウンの育て屋'},
@@ -8255,12 +8255,12 @@ function egRule(k){const G=egGame(k),g=G.g;return {
   mv:g<=5?'male':'both',swap:k==='swsh',herb:k==='sv',
   ball:g<=5?'none':g===6?'f':'g7',
   shiny:g===2?'g2':g===3?'none':g===4?'5':k==='bw'?'6':k==='b2w2'?'6c':'g6',
-  hatch:(g===2||k==='rs')?'none':'fb',oval:['b2w2','xy','sm','swsh','bdsp'].includes(k),opow:k==='xy',epow:k==='sv',steam:k==='swsh'||k==='sv',
-  form:g===2?'none':(g>=7&&k!=='bdsp')?'reg':'inc',region:{sm:'アローラ',swsh:'ガラル',sv:'パルデア'}[k]||'',
+  hatch:(g===2||k==='rs')?'none':'fb',oval:['b2w2','xy','sm','swsh','bdsp'].includes(k),opow:k==='xy',roto:k==='sm',epow:k==='sv',steam:k==='swsh'||k==='sv',
+  form:(g>=7&&k!=='bdsp')?'reg':'none',region:{sm:'アローラ',swsh:'ガラル',sv:'パルデア'}[k]||'',
   inc:g>=3&&g<=8,power:k==='hgss'||g>=5,knot:g>=6,ever:g>=3
 }}
 // 8つの項目：[状態, ひとこと, くわしい説明]
-const EG_CATS=[['iv','個体値','--hp'],['nat','性格','--atk'],['abl','特性','--b3'],['mv','技','--def'],['ball','ボール','--spd'],['shiny','色違い','--spe'],['hatch','効率化','--accent'],['form','すがた','--spa']];
+const EG_CATS=[['iv','個体値','--hp'],['nat','性格','--atk'],['abl','特性','--b3'],['mv','技','--def'],['ball','ボール','--spd'],['shiny','色違い','--spe'],['hatch','効率化','--accent'],['form','リージョンフォーム','--spa']];
 const EG_IC={
   iv:'<path d="M5 20v-8M10 20V5M15 20v-9M20 20V8"/>',
   nat:'<path d="M7 19V5M3.5 8.5 7 5l3.5 3.5M17 5v14M13.5 15.5 17 19l3.5-3.5"/>',
@@ -8324,15 +8324,13 @@ function egCat(R,c){
     L.push(`手持ちに特性「ほのおのからだ」「マグマのよろい」${R.steam?'「じょうききかん」':''}のポケモンがいると、かえるまでの歩数が半分になります。`);
     if(R.oval)L.push('まるいおまもりがあると、タマゴが見つかりやすくなります。');
     if(R.opow){L.push('O パワー「タマゴふかパワー」でも、早くかえります。');return ['ok','ほのおのからだ・Oパワー',L]}
+    if(R.roto){L.push('USUM では、ロトポン「タマゴふかポン」でも、しばらくのあいだ早くかえります（SM にはありません）。');return ['ok','ほのおのからだ・ロトポン',L]}
     if(R.epow){L.push('サンドイッチなどの「タマゴパワー」で、見つかりやすく・かえりやすくなります。');return ['ok','ほのおのからだ・タマゴパワー',L]}
     return ['ok','ほのおのからだ等で歩数が半分',L];
   }
   // form
-  if(R.form==='none')return ['no','すがたの受けつぎはない',['ピチュー・ピィ・ププリンなどのベビーポケモンは、親が進化していても、タマゴからはベビーで生まれます。']];
-  const inc=R.g===3?'ルリリ・ソーナノは、親に決まった「おこう」を持たせたときだけ生まれます（持たせないと、マリル・ソーナンス）。':'ルリリ・ソーナノ・ピンプク・ゴンベ などは、親に決まった「おこう」を持たせたときだけ生まれます（持たせないと、1つ進化したすがた）。';
-  if(R.form==='inc')return ['cond','おこうを持たせるとベビーが生まれる',[inc]];
+  if(R.form==='none')return ['no','リージョンフォームはありません',['この作品には、リージョンフォーム（地方のすがた）がありません。']];
   L.push(`${R.region}のすがたがある種類は、${R.region}のすがたで生まれます。`,'もとのすがた・ほかの地方のすがたにしたいときは、その親に「かわらずのいし」を持たせます。');
-  L.push(R.inc?inc:'ベビーポケモンは、「おこう」がなくても生まれます。');
   return ['ok',`${R.region}のすがたで生まれる`,L];
 }
 const EG_ST={ok:'できる',cond:'条件つき',no:'なし'};
@@ -8348,8 +8346,8 @@ const EG_CMP={
   mv:[['o','♂の技'],['o','♂の技'],['o','♂の技'],['o','♂の技'],['o','両親の\nタマゴ技'],['o','両親の\nタマゴ技'],['o','剣盾\n預けてうつす'],['o','ものまね\nハーブ']],
   ball:[['n','—'],['n','—'],['n','—'],['n','—'],['c','♀だけ'],['o','♀・同種♂'],['o','♀・同種♂'],['o','♀・同種♂']],
   shiny:[['c','色違いの親\n約1/64'],['n','—'],['c','国際孵化\n5倍'],['c','国際孵化\nBW2 おまもり'],['o','国際孵化\nおまもり'],['o','国際孵化\nおまもり'],['o','国際孵化\nおまもり'],['o','国際孵化\nおまもり']],
-  hatch:[['n','—'],['c','E だけ\nほのおのからだ'],['o','ほのおの\nからだ'],['o','ほのおの\nからだ'],['o','＋Oパワー'],['o','ほのおの\nからだ'],['o','ほのおの\nからだ'],['o','＋タマゴ\nパワー']],
-  form:[['n','—'],['c','おこう'],['c','おこう'],['c','おこう'],['c','おこう'],['o','アローラ'],['o','剣盾 ガラル'],['o','パルデア']]
+  hatch:[['n','—'],['c','E だけ\nほのおのからだ'],['o','ほのおの\nからだ'],['o','ほのおの\nからだ'],['o','ほのおのからだ\nOパワー'],['o','ほのおのからだ\nロトポン'],['o','ほのおの\nからだ'],['o','ほのおのからだ\nタマゴパワー']],
+  form:[['n','—'],['n','—'],['n','—'],['n','—'],['n','—'],['o','アローラ'],['o','剣盾 ガラル'],['o','パルデア']]
 };
 // 保存データ
 function egNorm(){
@@ -8442,7 +8440,7 @@ function egPairEval(k){
   {const t={g2:'ふだん 1/8192。色違いの親からは 約1/64',none:'1/8192（親は関係ない）','5':'1/8192。国際孵化で 5/8192','6':'1/8192。国際孵化で 6/8192','6c':'1/8192。国際孵化・おまもりで 最大 8/8192',g6:'1/4096。国際孵化・おまもりで 最大 8/4096'}[R.shiny];
     rows.push({c:'shiny',k:'色違い',v:t,from:'—'})}
   // すがた
-  if(R.form==='reg')rows.push({c:'form',k:'すがた',v:`${R.region}のすがたがあれば、そのすがた（かわらずのいしで親のすがた）`,from:'—'});
+  if(R.form==='reg')rows.push({c:'form',k:'リージョンフォーム',v:`${R.region}のすがたがあれば、そのすがた（かわらずのいしで親のすがた）`,from:'—'});
   return {st:'ok',mom,dad,ditto,kid,rows}
 }
 // ===== 画面 =====
@@ -8502,7 +8500,7 @@ function egSheetClose(){const sh=document.getElementById('egSheet');if(sh.hidden
 function egOpenCat(c){egCatCur=c;egSheetOpen('cat');renderEgCat();document.querySelector('#egSheet [data-egclose]')?.focus()}
 function renderEgCat(){
   const c=egCatCur,G=egGame(S.egg.g),R=egRule(G.k),[s,t,L]=egCat(R,c),cat=EG_CATS.find(x=>x[0]===c),ci=EG_CMP_GENS.findIndex(x=>x[0]===G.g);
-  document.getElementById('egSheetIn').innerHTML=`<div class="sh-head"><h3 class="egx-sht"><span class="ic" style="--c:var(${cat[2]})">${egIc(c)}</span>${c==='hatch'?'孵化の効率化':cat[1]+'の受けつぎ'}<span class="gm">${G.n}</span></h3><button class="btn" type="button" data-egclose="1">閉じる</button></div>
+  document.getElementById('egSheetIn').innerHTML=`<div class="sh-head"><h3 class="egx-sht"><span class="ic" style="--c:var(${cat[2]})">${egIc(c)}</span><span class="egt"><span class="tt">${c==='hatch'?'孵化の効率化':cat[1]}</span><span class="gm">${G.n}</span></span></h3><button class="btn" type="button" data-egclose="1">閉じる</button></div>
   <div class="egx-card"><div class="egx-big">${egSt(s,1)}<b>${t}</b></div>${c==='iv'?egIvFig(R):egFlowFig(c,R)}</div>
   <div class="egx-card"><h4>くわしく</h4><ul class="egx-ul">${L.map(x=>`<li>${x}</li>`).join('')}</ul></div>
   <div class="egx-card"><h4>ほかの作品では</h4><div class="egx-oth">${EG_CMP_GENS.map((x,i)=>{const v=EG_CMP[c][i];return `<div class="r${i===ci?' cur':''}"><span class="g">第${x[0]}世代<small>${x[1]}</small></span><span class="v ${v[0]}">${v[1].replace(/\n/g,' ')}</span></div>`}).join('')}</div></div>`;
@@ -8612,7 +8610,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02c';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02d';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
