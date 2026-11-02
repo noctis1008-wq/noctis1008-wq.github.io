@@ -4716,7 +4716,7 @@ const DEXN={"2":[1,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,
 const DX_FK={1:'アローラのすがた',2:'ガラルのすがた',3:'ヒスイのすがた',4:'パルデアのすがた',5:'しろすじのすがた',6:'アカツキ'};
 const DX_SVF={'31':{53:40194,223:40128},'32':{194:50550,196:60901},'33':{66:10050,67:10051,68:10088,69:10089,75:20079,76:20080,77:20199,96:10074,97:10075,98:10076,146:30211,155:10027,156:10028,157:10037,158:10038}};
 for(const k in DX_SVF){const d=DEXN[k];for(const n in DX_SVF[k]){const i=n-d[0],f=DX_SVF[k][n];if(d[1][i]===f%10000)d[1][i]=f}}
-const DX_SVFL=[...new Set(Object.values(DX_SVF).flatMap(o=>Object.values(o)))].sort((a,b)=>a%10000-b%10000||a-b); // 全国（連れて行けるポケモン）のタブでは、もとのすがたのすぐ後に並べる
+const DX_SVFL=[...new Set(Object.values(DX_SVF).flatMap(o=>Object.values(o)))].sort((a,b)=>a%10000-b%10000||a-b); // 古い登録の移行（dxSvMig）で使う
 const dxB=s=>s>9999?s%10000:s; // すがた違いの番号 → 全国番号（名前・進化・タグなどは、もとのポケモンのものを使う）
 const dxNm=s=>s>9999?`${SPDB[s%10000-1][0]}（${DX_FK[Math.floor(s/10000)]}）`:SPDB[s-1][0];
 const DX_FKS={1:'アローラ',2:'ガラル',3:'ヒスイ',4:'パルデア',5:'しろすじ',6:'アカツキ'};
@@ -4746,7 +4746,7 @@ function dxEvoInfo(s){
 }
 function dxEvoChip(s){const i=dxEvoInfo(s);if(!i.s)return '';return `<span class="dxlv${/^Lv\.\d+$/.test(i.s)?'':' dxcd'}"${i.f?` title="${esc(i.f)}"`:''}>${esc(i.s)}</span>`}
 /* ---------- 図鑑埋め支援 ---------- */
-// 作品ごとに登録を分けて保存する。dex: [図鑑id, 名前]、nat: 全国図鑑（数字＝No.1からその番号まで、'swsh'/'sv'＝その作品に連れて行けるポケモン）
+// 作品ごとに登録を分けて保存する。dex: [図鑑id, 名前]、nat: 全国図鑑（数字＝No.1からその番号まで、'swsh'/'sv'＝その作品の図鑑を合わせて重なりを除いたもの）
 const DX_GAMES=[
   {g:1,id:'rgby',n:'赤・緑・青・ピカチュウ',dex:[[2,'カントー図鑑']]},
   {g:2,id:'gsc',n:'金・銀・クリスタル',dex:[[3,'ジョウト図鑑']],nat:251},
@@ -4785,8 +4785,9 @@ const dxMulti=(g=dxGame())=>dxViews(g).length>1;
 function dxAllSp(g=dxGame()){const S0=new Set();dxViews(g).forEach(([k])=>dxEntriesOf(g,k).forEach(x=>S0.add(x[1])));return S0}
 function dxEntriesOf(g,k){
   if(k==='nat'){
-    if(g.nat==='swsh'||g.nat==='sv'){const f=g.nat==='swsh'?1:4,L=SPDB.filter(r=>r[3]&f).map(r=>[r[1],r[1]]);if(g.nat!=='sv')return L;
-      const F=new Map();DX_SVFL.forEach(x=>{const b=x%10000;if(!F.has(b))F.set(b,[]);F.get(b).push([b,x])});return L.flatMap(e=>[e,...(F.get(e[1])||[])])}
+    // 剣盾・SV の「全国」：その作品の図鑑（ガラル・ヨロイ島・カンムリ雪原／パルデア・キタカミ・ブルーベリー）に載っているポケモンを合わせ、重なりを除いたもの（2026.11.03a）。
+    //   連れて行けても、どの図鑑にも載らないポケモン（伝説の多く・HOME からだけのポケモン）は出さない（図鑑埋めに関係ないため）。すがた違いは、もとのすがたのすぐ後に並べる
+    if(g.nat==='swsh'||g.nat==='sv'){const U=new Set(g.dex.flatMap(d=>DEXN[d[0]][1]));return [...U].sort((a,b)=>a%10000-b%10000||a-b).map(x=>[x%10000,x])}
     return Array.from({length:g.nat},(_,i)=>[i+1,i+1]);
   }
   const [st,l]=DEXN[k];return l.map((s,i)=>[st+i,s]);
@@ -4831,7 +4832,7 @@ function renderDxSetup(){
   document.getElementById('dxGen').innerHTML=DX_GENS.map(x=>`<button type="button" data-dxgen="${x}"${x==='home'?' class="home"':''} aria-pressed="${g.g===x}">${x==='home'?'HOME':x}</button>`).join('');
   const games=DX_GAMES.filter(x=>x.g===g.g);
   document.getElementById('dxGame').innerHTML=games.map(x=>`<button type="button" data-dxgame="${x.id}" aria-pressed="${x.id===g.id}">${x.n}</button>`).join('');
-  const sv=g.nat==='swsh'||g.nat==='sv',opts=g.dex.map(d=>[String(d[0]),d[1]]);if(g.nat)opts.push(['nat',sv?'全国（連れて行けるポケモン）':'全国図鑑']);
+  const sv=g.nat==='swsh'||g.nat==='sv',opts=g.dex.map(d=>[String(d[0]),d[1]]);if(g.nat)opts.push(['nat',sv?'全国（図鑑を合わせたもの）':'全国図鑑']);
   document.getElementById('dxDex').innerHTML=opts.map(([v,t])=>`<button type="button" data-dxdex="${v}" aria-pressed="${v===k}">${t}</button>`).join('');
   const all=dxEntries(),reg=dxReg(),got=all.filter(([n,s])=>reg[s]).length,tot=all.length,left=tot-got;
   // 図鑑のタブ（図鑑が2つ以上ある作品だけ）。それぞれの登録済みの数を出す。登録はポケモンごとなので、どのタブで登録しても、ほかの図鑑にも入る
@@ -4839,7 +4840,7 @@ function renderDxSetup(){
   if(V.length>1)tabs.innerHTML=V.map(([v,t])=>{const E=dxEntriesOf(g,v),n=E.filter(([x,s])=>reg[s]).length;return `<button type="button" role="tab" data-dxdex="${v}" aria-selected="${v===k}"><b>${t}</b><small>${n}/${E.length}</small></button>`}).join('');
   document.getElementById('dxProg').innerHTML=`<div class="lab"><span class="gl">${DXX_IC.check}登録済み</span><span class="left">${dxOwn()&&got?(()=>{const c1=all.filter(([n,s])=>reg[s]===1).length;return `捕まえた <b>${c1}</b>・登録だけ <b>${got-c1}</b>`})():tot&&!left?'コンプリート！':`あと <b>${left}</b>匹`}</span></div><div class="num"><b>${got}</b><span>/ ${tot}匹</span><span class="rt">${tot?Math.floor(got/tot*100):0}%</span></div><div class="dxx-hbar" role="progressbar" aria-label="登録済みの割合" aria-valuemin="0" aria-valuemax="${tot}" aria-valuenow="${got}"><span style="width:${tot?got/tot*100:0}%"></span></div>`;
   const dn=(opts.find(o=>o[0]===k)||['',''])[1];
-  document.getElementById('dxCondT').textContent=k==='nat'&&sv?`${dxAb(g.n)}・全国（連れて行ける${tot}匹）`:`${dxAb(g.n)}・${dn}（${tot}匹）`;
+  document.getElementById('dxCondT').textContent=k==='nat'&&sv?`${dxAb(g.n)}・全国（図鑑を合わせた${tot}匹）`:`${dxAb(g.n)}・${dn}（${tot}匹）`;
   document.getElementById('dxChips').innerHTML=`<span class="dxx-chip on">${g.g==='home'?'HOME':`第${g.g}世代`}</span><span class="dxx-chip">${esc(g.n)}</span><span class="dxx-chip">作品ごとに保存</span>`;
   dxSegCounts();
 }
@@ -8613,7 +8614,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02n';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.03a';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
