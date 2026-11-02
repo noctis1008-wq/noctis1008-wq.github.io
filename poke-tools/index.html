@@ -8227,7 +8227,7 @@ const egNm=sp=>sp?SPDB[sp-1][0]:'';
 const egPrev=sp=>SPDB[sp-1][5]||EG_PRE[sp]||0;
 // 作品
 const EG_GAMES=[
-  {k:'gsc',n:'金銀C',f:'金・銀・クリスタル',g:2,loc:'育て屋（34番道路）',rep:2},
+  {k:'gsc',n:'金銀ク',f:'金・銀・クリスタル',g:2,loc:'育て屋（34番道路）',rep:2},
   {k:'rs',n:'RS・FRLG',f:'ルビー・サファイア・FRLG',g:3,loc:'育て屋（117番道路・4のしま）'},
   {k:'e',n:'エメラルド',f:'エメラルド',g:3,loc:'育て屋（117番道路）',rep:3},
   {k:'dp',n:'DPt',f:'ダイヤモンド・パール・Pt',g:4,loc:'ズイタウンの育て屋'},
@@ -8333,7 +8333,7 @@ const EG_ST={ok:'できる',cond:'条件つき',no:'なし'};
 const EG_ST_IC={ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',cond:'<path d="M12 6v8M12 18.5v.5"/>',no:'<path d="M6 12h12"/>'};
 const egSt=(s,big)=>`<span class="egx-st ${s}${big?' big':''}"><svg viewBox="0 0 24 24" aria-hidden="true">${EG_ST_IC[s]}</svg>${EG_ST[s]}</span>`;
 // 世代くらべの表（世代ごとの代表）
-const EG_CMP_GENS=[[2,'金銀C','gsc'],[3,'RSE FRLG','e'],[4,'DPt HGSS','hgss'],[5,'BW BW2','b2w2'],[6,'XY ORAS','xy'],[7,'SM USUM','sm'],[8,'剣盾 BDSP','swsh'],[9,'SV','sv']];
+const EG_CMP_GENS=[[2,'金銀ク','gsc'],[3,'RSE FRLG','e'],[4,'DPt HGSS','hgss'],[5,'BW BW2','b2w2'],[6,'XY ORAS','xy'],[7,'SM USUM','sm'],[8,'剣盾 BDSP','swsh'],[9,'SV','sv']];
 const EG_CMP={
   egg:[['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','育て屋'],['o','預かり屋\nBDSP 育て屋'],['o','ピクニック']],
   iv:[['c','ぼうぎょ\nとくしゅ'],['o','3つ'],['o','3つ\nHGSS パワー系'],['o','3つ\nパワー系'],['o','あかいいと\nで5つ'],['o','あかいいと\nで5つ'],['o','あかいいと\nで5つ'],['o','あかいいと\nで5つ']],
@@ -8603,7 +8603,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02k';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02l';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
