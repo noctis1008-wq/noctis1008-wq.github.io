@@ -216,11 +216,14 @@ body.fs{overflow:hidden}
 .tapw{position:relative;min-width:0;display:flex}
 .tapw .tap{flex:1}
 .tw{font-size:10px;font-weight:700;background:#fff;color:#b3261e;border-radius:999px;padding:0 7px;line-height:1.6}
-.t5,.p5{position:absolute;border:2px solid #fff;background:var(--ink);color:var(--bg);font-family:var(--f-num);font-weight:600;border-radius:999px;box-shadow:0 2px 6px rgb(0 0 0 / .3);touch-action:manipulation}
-.t5{top:-10px;right:-4px;font-size:12px;padding:2px 9px}
+.p5{position:absolute;border:2px solid #fff;background:var(--ink);color:var(--bg);font-family:var(--f-num);font-weight:600;border-radius:999px;box-shadow:0 2px 6px rgb(0 0 0 / .3);touch-action:manipulation;top:10px;right:10px;font-size:18px;padding:8px 18px;z-index:1}
+.t5,#pad .p5{position:absolute;display:flex;padding:0;border:2px solid #fff;background:var(--surface);border-radius:999px;overflow:hidden;box-shadow:0 2px 6px rgb(0 0 0 / .3);font-weight:700;touch-action:manipulation}
+.t5 span,#pad .p5 span{color:var(--muted);line-height:1.5}
+.t5 span.on,#pad .p5 span.on{background:var(--ink);color:var(--bg)}
+.t5{top:-11px;right:-4px;font-size:11.5px}.t5 span{padding:1px 8px}
 .prow{flex:1;min-height:0;position:relative;display:flex}
 .prow .pbtn{flex:1}
-.p5{top:10px;right:10px;font-size:18px;padding:8px 18px;z-index:1}
+#pad .p5{top:10px;right:10px;font-size:17px;z-index:1}#pad .p5 span{padding:6px 14px}
 .pbtn .tw{font-size:12px;padding:1px 10px}
 body.modal{overflow:hidden}
 .sheet{position:fixed;inset:0;z-index:30;background:rgb(8 12 28 / .5);display:flex;align-items:flex-end;justify-content:center}
@@ -3236,7 +3239,7 @@ const GENS=[
   {id:3,n:'第3世代（RSE・FRLG）',cap:255,pw:0,rus:1,fea:0,vit100:1,ber4:0,horde:0,lv100:1,note:'パワー系アイテムとハネはありません。戦闘に出たポケモンと「がくしゅうそうち」を持たせたポケモンだけを参加にしてください。'},
   {id:4,n:'第4世代（DPt・HGSS）',cap:255,pw:4,rus:1,fea:0,vit100:1,ber4:1,horde:0,lv100:1,note:'パワー系アイテムは+4です。ハネはありません。戦闘に出たポケモンと「がくしゅうそうち」を持たせたポケモンだけを参加にしてください。'},
   {id:5,n:'第5世代（BW・BW2）',cap:255,pw:4,rus:1,fea:1,vit100:1,ber4:0,horde:0,lv100:0,note:'パワー系アイテムは+4です。戦闘に出たポケモンと「がくしゅうそうち」を持たせたポケモンだけを参加にしてください。'},
-  {id:6,n:'第6世代（XY・ORAS）',cap:252,pw:4,rus:1,fea:1,vit100:1,ber4:0,horde:1,lv100:0,note:'パワー系アイテムは+4です。群れバトルは撃破ボタンの「×5」で5体分まとめて数えられます。'},
+  {id:6,n:'第6世代（XY・ORAS）',cap:252,pw:4,rus:1,fea:1,vit100:1,ber4:0,horde:1,lv100:0,note:'パワー系アイテムは+4です。群れバトルは、撃破ボタンの「単体｜群れ」で切りかえます（群れのときは1回押すと5体分）。'},
   {id:7,n:'第7世代（SM・USUM）',cap:252,pw:8,rus:1,fea:1,vit100:1,ber4:0,horde:0,lv100:0,note:'パワー系アイテムは+8です。'},
   {id:8,n:'第8世代（剣盾・BDSP）',cap:252,pw:8,rus:1,fea:1,vit100:0,ber4:0,horde:0,lv100:0,note:'パワー系アイテムは+8です。'},
   {id:9,n:'第9世代（SV）',cap:252,pw:8,rus:0,fea:1,vit100:0,ber4:0,horde:0,lv100:0,note:'パワー系アイテムは+8です。ポケルスはありません。'}];
@@ -3758,13 +3761,15 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheetEl.hidden)clo
 /* ---------- 画面下のバー ---------- */
 const tapsEl=document.getElementById('taps'),countEl=document.getElementById('count'),undoBtn=document.getElementById('undo');
 const warnFor=t=>S.members.some(m=>overs(m,t).length);
+const hordeOn=t=>gen().horde&&t.horde!==false;
+const hordeSeg=(t,cls)=>`<button class="${cls}" type="button" data-id="${t.id}" aria-pressed="${t.horde!==false}" aria-label="${esc(t.name||'未選択')}：群れバトル（5体）と単体を切りかえ。いまは${t.horde!==false?'群れ':'単体'}"><span class="${t.horde!==false?'':'on'}">単体</span><span class="${t.horde!==false?'on':''}">群れ</span></button>`;
 function renderTaps(){
   const n=S.targets.length,H=gen().horde;
   tapsEl.style.setProperty('--n',Math.max(1,n));
   tapsEl.innerHTML=n?S.targets.map((t,i)=>`<div class="tapw" style="--bc:${bc(i)}">
     <button class="tap" type="button" data-id="${t.id}" aria-label="${esc(t.name||'未選択')}を倒した">
-      <span class="tn">${esc(t.name||'未選択')}</span><span class="ty">${yText(t.y)}</span>${warnFor(t)?'<span class="tw">目標超過あり</span>':''}
-    </button>${H?`<button class="t5" type="button" data-id="${t.id}" aria-label="${esc(t.name||'未選択')}を5体倒した">群れ×5</button>`:''}</div>`).join('')
+      <span class="tn">${esc(t.name||'未選択')}</span><span class="ty">${yText(t.y)}${hordeOn(t)?' ×5体':''}</span>${warnFor(t)?'<span class="tw">目標超過あり</span>':''}
+    </button>${H?hordeSeg(t,'t5'):''}</div>`).join('')
     :'<div class="empty">撃破対象を追加するとボタンが出ます</div>';
   renderPad();setBarH();fitNames();
 }
@@ -3813,11 +3818,14 @@ function defeat(id,x,y,times=1){
   fx(t,i,x,y,times);
   if(done.length){setTimeout(playGoal,700);toast(`${done.join('、')}が目標に届きました。参加をオフにしました`,4500)}
 }
+// 群れ（5体）⇔単体の切りかえ。撃破対象ごと。はじめは群れ
+function hordeToggle(id){const t=S.targets.find(x=>x.id===id);if(!t)return;t.horde=t.horde===false;save();renderTaps()}
 tapsEl.addEventListener('click',e=>{
   const b5=e.target.closest('.t5');
-  const b=b5||e.target.closest('.tap');if(!b)return;
-  const r=b.closest('.tapw').getBoundingClientRect();
-  defeat(+b.dataset.id,r.left+r.width/2,r.top+r.height/2,b5?5:1);
+  if(b5){hordeToggle(+b5.dataset.id);return}
+  const b=e.target.closest('.tap');if(!b)return;
+  const r=b.closest('.tapw').getBoundingClientRect(),t=S.targets.find(x=>x.id===+b.dataset.id);
+  defeat(+b.dataset.id,r.left+r.width/2,r.top+r.height/2,t&&hordeOn(t)?5:1);
 });
 undoBtn.addEventListener('click',()=>{
   const h=S.history.pop();if(!h)return;
@@ -3851,8 +3859,8 @@ function renderPad(){
   const H=gen().horde;
   pad.innerHTML=S.targets.length?S.targets.map((t,i)=>`<div class="prow" style="--bc:${bc(i)}">
     <button class="pbtn" type="button" data-id="${t.id}" aria-label="${esc(t.name||'未選択')}を倒した">
-      <span class="pno">${i+1}</span><span class="pnm">${esc(t.name||'未選択')}</span><span class="pys">${yText(t.y)}</span>${warnFor(t)?'<span class="tw">目標超過あり</span>':''}
-    </button>${H?`<button class="p5" type="button" data-id="${t.id}" aria-label="${esc(t.name||'未選択')}を5体倒した">群れ×5</button>`:''}</div>`).join('')
+      <span class="pno">${i+1}</span><span class="pnm">${esc(t.name||'未選択')}</span><span class="pys">${yText(t.y)}${hordeOn(t)?' ×5体':''}</span>${warnFor(t)?'<span class="tw">目標超過あり</span>':''}
+    </button>${H?hordeSeg(t,'p5'):''}</div>`).join('')
     :'<div class="empty">撃破対象を追加するとボタンが出ます</div>';
 }
 function setFs(on){
@@ -3865,8 +3873,8 @@ function setFs(on){
 fsBtn.addEventListener('click',()=>setFs(!fsOn));
 pad.addEventListener('click',e=>{
   const b5=e.target.closest('.p5');
-  if(b5){const r=b5.getBoundingClientRect();defeat(+b5.dataset.id,r.left+r.width/2,r.top+r.height/2,5);return}
-  const b=e.target.closest('.pbtn');if(b)defeat(+b.dataset.id,e.clientX,e.clientY);
+  if(b5){hordeToggle(+b5.dataset.id);return}
+  const b=e.target.closest('.pbtn');if(!b)return;const t=S.targets.find(x=>x.id===+b.dataset.id);defeat(+b.dataset.id,e.clientX,e.clientY,t&&hordeOn(t)?5:1);
 });
 window.addEventListener('resize',setBarH);
 
@@ -8605,7 +8613,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02m';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02n';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
