@@ -2517,7 +2517,7 @@ body:not(.app) .obsapp{display:none!important}
 .egx-hero{border-radius:14px;box-sizing:border-box;flex:none;padding:10px 14px 11px;display:flex;flex-direction:column;gap:5px;color:#fff;background:var(--egx-hero)}
 .egx-hero .r1{display:flex;align-items:baseline;gap:8px;min-width:0}
 .egx-hero small{flex:none;font-size:12px;font-weight:700;opacity:.88}
-.egx-hero b{min-width:0;font-size:16.5px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egx-hero b{min-width:0;font-size:16px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .egx-hero .loc{font-size:12.5px;opacity:.93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .egx-hero .cnt{display:flex;gap:5px;margin-top:2px}
 .egx-hero .cnt i{font-style:normal;height:22px;padding:0 8px;border-radius:11px;background:rgb(255 255 255 / .2);font-size:11.5px;font-weight:700;display:flex;align-items:center;white-space:nowrap}
@@ -2529,15 +2529,13 @@ body:not(.app) .obsapp{display:none!important}
 .egx-gh.ok{color:var(--egx-okf)}.egx-gh.ok .m{background:var(--egx-okb)}
 .egx-gh.cond{color:var(--egx-cdf)}.egx-gh.cond .m{background:var(--egx-cdb)}
 .egx-gh.no{color:var(--egx-nof)}.egx-gh.no .m{background:var(--egx-nob)}
-.egx-tile{min-height:70px;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 10px 10px 12px;display:flex;align-items:center;gap:12px;text-align:left;color:var(--ink);font:inherit}
-.egx-tile.cond{border-style:dashed;border-color:color-mix(in srgb,var(--egx-cdf) 50%,var(--line))}
-.egx-tile.no{background:var(--sunken)}
+.egx-tile{height:76px;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px 10px 10px 12px;display:flex;align-items:center;gap:12px;text-align:left;color:var(--ink);font:inherit}
 .egx-tile .ic,.egx-sht .ic{width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;color:color-mix(in srgb,var(--c) 82%,var(--ink));background:color-mix(in srgb,var(--c) 17%,var(--surface))}
 .egx-sht .ic{width:32px;height:32px;border-radius:10px}
 .egx-tile .bd{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .egx-tile b{font-size:15px;font-weight:700}
-.egx-tile .tx{font-size:12.5px;line-height:1.45;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.egx-tile .egx-st{margin-left:-4px}.egx-tile .chv{margin-left:-6px;width:20px;height:20px;flex:none;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
+.egx-tile .tx{font-size:12.5px;line-height:1.4;color:var(--muted)}
+.egx-tile .chv{width:20px;height:20px;flex:none;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
 .egx-tile:active{background:var(--sunken)}
 .egx-st{flex:none;height:22px;padding:0 6px 0 4px;border-radius:6px;font-size:11.5px;font-weight:700;display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
 .egx-st svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
@@ -8457,7 +8455,7 @@ function renderEgg(){
 function egHowHTML(){
   const G=egGame(S.egg.g),R=egRule(G.k),n={ok:0,cond:0,no:0};
   const tiles=EG_CATS.map(([c,l,col])=>{const [s,t]=egCat(R,c);n[s]++;
-    return `<button type="button" class="egx-tile ${s}" data-egcat="${c}" style="--c:var(${col})"><span class="ic">${egIc(c,22)}</span><span class="bd"><b>${l}</b><span class="tx">${t}</span></span>${egSt(s)}<svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`}).join('');
+    return `<button type="button" class="egx-tile" data-egcat="${c}" style="--c:var(${col})"><span class="ic">${egIc(c,22)}</span><span class="bd"><b>${l}</b><span class="tx">${t}</span></span><svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`}).join('');
   return `${egGamesHTML()}
   <div class="egx-hero"><div class="r1"><small>第${G.g}世代</small><b>${G.f}</b></div><span class="loc">タマゴ：${G.loc}</span>
   <div class="cnt"><i>できる ${n.ok}</i><i>条件つき ${n.cond}</i><i>なし ${n.no}</i></div></div>
@@ -8608,7 +8606,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02f';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02g';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
