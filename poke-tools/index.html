@@ -2531,7 +2531,7 @@ body:not(.app) .obsapp{display:none!important}
 .egx-tile .ic,.egx-sht .ic{width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;color:color-mix(in srgb,var(--c) 82%,var(--ink));background:color-mix(in srgb,var(--c) 17%,var(--surface))}
 .egx-sht .ic{width:32px;height:32px;border-radius:10px}
 .egx-tile .bd{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.egx-tile .hd{display:flex;align-items:center;gap:6px;min-width:0}.egx-tile b{font-size:15px;font-weight:700}.egx-tile .egx-st{width:20px;height:20px;padding:0;justify-content:center;font-size:0;gap:0;border-radius:6px}.egx-tile .egx-st svg{width:13px;height:13px}
+.egx-tile b{font-size:15px;font-weight:700}.egx-tile .chv{margin-left:-6px}
 .egx-tile .tx{font-size:12.5px;line-height:1.4;color:var(--muted)}
 .egx-tile .chv{width:20px;height:20px;flex:none;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
 .egx-tile:active{background:var(--sunken)}
@@ -8453,7 +8453,7 @@ function renderEgg(){
 function egHowHTML(){
   const G=egGame(S.egg.g),R=egRule(G.k),n={ok:0,cond:0,no:0};
   const tiles=EG_CATS.map(([c,l,col])=>{const [s,t]=egCat(R,c);n[s]++;
-    return `<button type="button" class="egx-tile" data-egcat="${c}" style="--c:var(${col})"><span class="ic">${egIc(c,22)}</span><span class="bd"><span class="hd"><b>${l}</b>${egSt(s)}</span><span class="tx">${t}</span></span><svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`}).join('');
+    return `<button type="button" class="egx-tile" data-egcat="${c}" style="--c:var(${col})"><span class="ic">${egIc(c,22)}</span><span class="bd"><b>${l}</b><span class="tx">${t}</span></span>${egSt(s)}<svg class="chv" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`}).join('');
   return `${egGamesHTML()}
   <div class="egx-hero"><div class="r1"><small>第${G.g}世代</small><b>${G.f}</b></div><span class="loc">タマゴ：${G.loc}</span></div>
   <div class="egx-grp">${tiles}</div>
@@ -8603,7 +8603,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.02j';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.02k';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
