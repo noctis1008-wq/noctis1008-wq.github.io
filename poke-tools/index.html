@@ -2657,7 +2657,13 @@ body:not(.app) .obsapp{display:none!important}
 #vNer .nex-save .tx{gap:2px}
 #vNer .nex-save .t1{font-size:14px}
 #vNer .nex-save .t2{font-size:12px;line-height:16px;height:16px;color:var(--muted);white-space:nowrap}
-#vNer .dxx-tabs button{flex:1 1 0}
+#vNer .dxx-tabs button{flex:1 1 0;min-width:0;padding:0 6px}
+.nex-sum{display:flex;flex-wrap:wrap;gap:2px 12px;padding:0 2px;font-size:12px;color:var(--muted)}
+.nex-sum b{color:var(--ink);font-family:var(--f-num)}
+.nex-gd{font-size:12px;color:var(--muted);line-height:1.6;padding:0 0 8px}
+.nex-tag{flex:none;font-size:10.5px;font-weight:700;color:var(--muted);background:var(--sunken);border:1px solid var(--line);border-radius:999px;padding:0 6px;line-height:16px;white-space:nowrap}
+.nex-l small.ev{color:color-mix(in srgb,var(--nex) 75%,var(--ink));font-weight:700}
+.nex-r .egx-st{flex:none}
 #vNer .dxx-search input{flex:1;min-width:0;width:auto;height:100%;border:none;border-radius:0;background:none;padding:0;margin:0;font:inherit;font-size:16px;font-weight:700;color:var(--ink);outline:none;box-shadow:none;-webkit-appearance:none;appearance:none}
 #vNer .dxx-search input::placeholder{color:var(--muted);font-weight:500;font-size:14px}
 #vNer .dxx-search input::-webkit-search-cancel-button{display:none;-webkit-appearance:none}
@@ -2917,13 +2923,13 @@ body:not(.app) .obsapp{display:none!important}
 <div class="wrap view" id="vNer" hidden>
   <button id="nerLoad" class="dxx-card dxx-cond nex-save" type="button" aria-label="NERversion のセーブを読みこむ"><span class="dxx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg></span><span class="tx"><span class="t1">NERversion のセーブ</span><span class="t2" id="nerSub1"></span><span class="t2" id="nerSub2"></span></span><span class="dxx-edit">読みこむ<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
   <input id="nerFile" type="file" accept=".sav,.srm,.sa1,.bin,application/octet-stream" hidden>
-  <div id="nerTabs" class="dxx-tabs" role="tablist" aria-label="さがしかた"><button type="button" role="tab" data-nertab="mon"><b>ポケモンから</b><small id="nerTMon"></small></button><button type="button" role="tab" data-nertab="pl"><b>ばしょから</b><small id="nerTPl"></small></button></div>
+  <div id="nerTabs" class="dxx-tabs" role="tablist" aria-label="さがしかた"><button type="button" role="tab" data-nertab="mon"><b>ポケモンから</b><small id="nerTMon"></small></button><button type="button" role="tab" data-nertab="pl"><b>ばしょから</b><small id="nerTPl"></small></button><button type="button" role="tab" data-nertab="miss"><b>出ないポケモン</b><small id="nerTMiss"></small></button></div>
   <div class="dxx-tb"><div class="dxx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="nerQ" type="search" placeholder="名前・ばしょで探す（ひらがなOK）" autocomplete="off" enterkeyhint="search" aria-label="名前・ばしょで探す"><button type="button" class="dxx-qx" id="nerQx" aria-label="検索を消す" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div>
   <div class="dxx-seg" role="group" aria-label="表示するポケモン"><button type="button" data-nerf="all">すべて<small id="nerNAll"></small></button><button type="button" data-nerf="todo">未捕獲<small id="nerNTodo"></small></button><button type="button" data-nerf="unseen">未発見<small id="nerNUnseen"></small></button></div>
   <section class="dxx-lsec">
     <div class="dxx-lh"><span id="nerCount" class="dxcount"></span></div>
     <div id="nerList" class="nex-list"></div>
-    <p class="note">NERversion（改造ROM）の .sav を読みこむと、ランダマイザで入れかわった野生のポケモンが、どこで・どの方法で・何Lvで・何%で出るかを計算します。読みこんだ内容（入れかえの番号・つかまえた/みたポケモン）はこの端末に保存し、設定のバックアップにも入ります。セーブそのものは保存しません。</p>
+    <p class="note">NERversion（改造ROM）の .sav を読みこむと、ランダマイザで入れかわった野生のポケモンが、どこで・どの方法で・何Lvで・何%で出るかを計算します。読みこんだ内容（入れかえの番号・つかまえた/みたポケモン）はこの端末に保存し、設定のバックアップにも入ります。セーブそのものは保存しません。「出ないポケモン」は、野生で出ず、野生で出るポケモンの進化・タマゴでも手に入らないポケモンです（交換・配布は考えていません）。</p>
   </section>
 </div>
 
@@ -8750,7 +8756,7 @@ const nerUnhex=h=>{const s=new Set();if(typeof h!=='string')return s;for(let i=0
 function nerNorm(){
   const n=S.ner&&typeof S.ner==='object'?S.ner:{};
   S.ner=Object.assign({tab:'mon',f:'all'},n);
-  if(!['mon','pl'].includes(S.ner.tab))S.ner.tab='mon';
+  if(!['mon','pl','miss'].includes(S.ner.tab))S.ner.tab='mon';
   if(!['all','todo','unseen'].includes(S.ner.f))S.ner.f='all';
 }
 nerNorm();
@@ -8780,6 +8786,21 @@ function nerCalc(){
   const ml=[...mons.values()].sort((a,b)=>a.d-b.d||a.x-b.x);
   return nerCache={key,places,mons:ml};
 }
+// 出ないポケモン：野生で出ず、野生で出るポケモンの進化・タマゴ（同じ進化のなかま）でも手に入らないもの。交換・配布は考えない
+const NER_UB=new Set([793,794,795,796,797,798,799,803,804,805,806]);
+const NER_PDX=new Set([984,985,986,987,988,989,990,991,992,993,994,995,1005,1006,1009,1010,1020,1021,1022,1023]);
+const NER_MNOTE={151:'配布チケットがいる',249:'配布チケットがいる',250:'配布チケットがいる',386:'配布チケットがいる',377:'イベントで1回だけ会える',378:'イベントで1回だけ会える',379:'イベントで1回だけ会える',382:'イベントで1回だけ会える',383:'イベントで1回だけ会える',384:'イベントで1回だけ会える',380:'殿堂入りの後、どちらか1匹',381:'殿堂入りの後、どちらか1匹',345:'化石からどちらか1匹',346:'化石からどちらか1匹',347:'化石からどちらか1匹',348:'化石からどちらか1匹'};
+[252,253,254,255,256,257,258,259,260].forEach(d=>NER_MNOTE[d]='さいしょの1匹のなかまだけ');
+[152,153,154,155,156,157,158,159,160].forEach(d=>NER_MNOTE[d]='全国図鑑の後、博士から1匹');
+const nerRoot=d=>{let r=d,k=0;while(SPDB[r-1]&&SPDB[r-1][5]&&k++<5)r=SPDB[r-1][5];return r};
+function nerMiss(C){
+  if(C.miss)return C.miss;
+  const wild=new Set(C.mons.map(e=>e.d)),roots=new Set([...wild].map(nerRoot));
+  let evo=0;const leg=[],norm=[];
+  SPDB.forEach((r,i)=>{const d=i+1;if(wild.has(d))return;if(roots.has(nerRoot(d))){evo++;return}
+    const o={d,n:r[0],tag:NER_UB.has(d)?'UB':NER_PDX.has(d)?'パラドックス':'',note:NER_MNOTE[d]||''};(r[4]&7?leg:norm).push(o)});
+  return C.miss={wild:wild.size,evo,leg,norm,total:SPDB.length};
+}
 const nerPlName=pl=>pl.name+(pl.sub?' '+pl.sub:'');
 const NER_ST={ok:'つかまえた',cond:'みた',no:'みていない'};
 const nerStOf=d=>{const sv=S.ner.sv;return sv._c.has(d)?'ok':sv._s.has(d)?'cond':'no'};
@@ -8806,10 +8827,12 @@ function renderNer(){
   const q=kata(nerQ.trim()),hit=t=>!q||kata(t).includes(q);
   document.getElementById('nerTMon').textContent=`${C.mons.length}しゅるい`;
   document.getElementById('nerTPl').textContent=`${C.places.length}か所`;
+  const MS=nerMiss(C);document.getElementById('nerTMiss').textContent=`${MS.leg.length+MS.norm.length}しゅるい`;
   // 件数：検索に合うポケモンの数（つかまえた・みた で分ける）
   const n={all:0,todo:0,unseen:0};
   const monRows=C.mons.map(e=>{const st=nerStOf(e.d),byName=hit(e.n);const rows=byName?e.list:e.list.filter(r=>hit(nerPlName(r.pl)));return {e,st,rows}}).filter(o=>o.rows.length);
-  monRows.forEach(o=>{n.all++;if(o.st!=='ok')n.todo++;if(o.st==='no')n.unseen++});
+  const missRows=S.ner.tab==='miss'?[...MS.leg,...MS.norm].filter(o=>hit(o.n)).map(o=>({o,st:nerStOf(o.d)})):null;
+  (missRows||monRows).forEach(o=>{n.all++;if(o.st!=='ok')n.todo++;if(o.st==='no')n.unseen++});
   document.getElementById('nerNAll').textContent=n.all;document.getElementById('nerNTodo').textContent=n.todo;document.getElementById('nerNUnseen').textContent=n.unseen;
   const f=S.ner.f;let h='',shown=0;
   if(S.ner.tab==='mon'){
@@ -8818,7 +8841,7 @@ function renderNer(){
         rows.map(r=>`<div class="nex-r"><span class="nex-l"><b>${esc(r.pl.name)}</b><small>${r.pl.sub?esc(r.pl.sub)+'・':''}${NER_M[r.m]}</small></span><span class="nex-v"><b>${r.p}%</b><small>${nerLv(r.lo,r.hi)}</small></span></div>`).join('')+'</div>';
     });
     cnt.textContent=`${shown}しゅるいを表示`;
-  }else{
+  }else if(S.ner.tab==='pl'){
     C.places.forEach(pl=>{
       const byPl=hit(nerPlName(pl));let body='',rowsN=0;
       pl.groups.forEach(g=>{
@@ -8830,6 +8853,15 @@ function renderNer(){
       h+=`<div class="nex-card"><div class="nex-hd"><span class="nex-pn">${esc(nerPlName(pl))}</span></div>${body}</div>`;
     });
     cnt.textContent=`${shown}か所を表示`;
+  }else{
+    const show=new Set(missRows.filter(o=>nerPass(o.st,f)).map(o=>o.o));
+    h+=`<div class="nex-sum"><span>全国図鑑 <b>${MS.total}</b></span><span>野生で出る <b>${MS.wild}</b></span><span>進化・タマゴで手に入る <b>${MS.evo}</b></span><span>出ない <b>${MS.leg.length+MS.norm.length}</b></span></div>`;
+    const sec=(t,desc,arr)=>{const rs=arr.filter(o=>show.has(o));if(!rs.length)return;shown+=rs.length;
+      h+=`<div class="nex-card"><div class="nex-hd"><span class="nex-pn">${t}</span><span class="nex-no">${rs.length}しゅるい</span></div><div class="nex-gd">${desc}</div>`+
+        rs.map(o=>`<div class="nex-r"><span class="nex-l"><span class="nm"><b>${esc(o.n)}</b>${o.tag?`<span class="nex-tag">${o.tag}</span>`:''}</span><small${o.note?' class="ev"':''}>No.${String(o.d).padStart(3,'0')}${o.note?'・'+esc(o.note):''}</small></span>${nerSt(nerStOf(o.d))}</div>`).join('')+'</div>'};
+    sec('伝説・幻','準伝説もふくみます。緑の字があるものは、ゲームのイベントなどで手に入ります。',MS.leg);
+    sec('ふつうのポケモン','UB・パラドックスポケモンもここに入れて、印をつけています。',MS.norm);
+    cnt.textContent=`${shown}しゅるいを表示`;
   }
   list.innerHTML=h||'<div class="nex-empty"><b>見つかりません</b>検索のことばや、「すべて / 未捕獲 / 未発見」を変えてみてください。</div>';
 }
@@ -8886,7 +8918,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.06a';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.06b';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
