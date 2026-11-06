@@ -8918,7 +8918,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.06b';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.06c';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
@@ -9097,7 +9097,7 @@ if(OBS_APP)document.body.classList.add('appobs');
 renderLabelSeg();renderSound();renderTheme();renderAll();
 if(location.hash.startsWith('#obs'))obsView();
 else{setView(S.view||'ev');obsLast=JSON.stringify(obsPayload());renderObsCtl()}
-bkRenderLast();if(!onbBoot())bkCheck();
+bkRenderLast();bkCheck(); // 2026.11.06c：はじめて開いたときの使いかたの案内（onbBoot）は自動で出さない。設定の「使いかたの案内」からは見られる
 
 /* ---------- 横向きにしても縦画面のまま（アプリ全体を回して表示） ---------- */
 const ROT={on:0,a:90,W:0,H:0,sc:null,undo:[]};
