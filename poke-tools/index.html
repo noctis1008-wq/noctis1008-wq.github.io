@@ -8885,7 +8885,7 @@ const drawer=document.getElementById('drawer'),menuBtn=document.getElementById('
 /* ---------- 下のタブバー・メニューの並び ---------- */
 const TOOL_KEYS=['ev','shiny','ribbon','dex','pb','mon','iv','type','spd','egg','ner'];
 const TOOL_META={ev:{ab:'EV',c:'--b1',s:'努力値'},shiny:{ab:'色',c:'--sh',s:'色違い'},ribbon:{ab:'リ',c:'--rib',s:'リボン'},dex:{ab:'図',c:'--dx',s:'図鑑'},pb:{ab:'ポ',c:'--pb',s:'ポロック'},mon:{ab:'個',c:'--mon',s:'個体管理'},iv:{ab:'IV',c:'--iv',s:'個体値'},type:{ab:'相',c:'--ty',s:'タイプ相性'},spd:{ab:'速',c:'--spx',s:'すばやさ'},egg:{ab:'卵',c:'--egx',s:'孵化・遺伝'},ner:{ab:'出',c:'--nex',s:'出現'}};
-const TAB_DEF=['ev','shiny','mon','iv','type'];
+const TAB_DEF=['dex','ribbon','mon','iv','type'];
 
 function uiFix(a,def,n){const r=[];(Array.isArray(a)?a:[]).forEach(k=>{if(TOOL_KEYS.includes(k)&&!r.includes(k))r.push(k)});[...def,...TOOL_KEYS].forEach(k=>{if(r.length<n&&!r.includes(k))r.push(k)});return r.slice(0,n)}
 function uiNorm(){S.tabs=uiFix(S.tabs,TAB_DEF,5);S.navOrder=uiFix(S.navOrder,TOOL_KEYS,TOOL_KEYS.length)}
@@ -8918,7 +8918,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.06c';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.07a';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
