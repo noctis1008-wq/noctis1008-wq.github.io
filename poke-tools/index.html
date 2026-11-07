@@ -8707,7 +8707,7 @@ document.getElementById('egSheet').addEventListener('click',e=>{if(e.target.id==
     st.c = u32(result + u32((st.c << 21) | (st.c >>> 11)));
     return result;
   }
-  const LENIENCY = [50, 100, 200, 1000], TRIES = 400;
+  const LENIENCY = [100, 200, 1000], TRIES = 400; // NERversion Ver.32 から ±100 で はじめる
   function pickSpecies(original, salt, seed, SP) {
     const n = SP.length; // NUM_SPECIES
     if (original === 0 || original >= n || !SP[original].e) return original;
@@ -8918,7 +8918,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.07a';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.07b';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();

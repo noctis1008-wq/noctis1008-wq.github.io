@@ -26,7 +26,7 @@
     st.c = u32(result + u32((st.c << 21) | (st.c >>> 11)));
     return result;
   }
-  const LENIENCY = [50, 100, 200, 1000], TRIES = 400;
+  const LENIENCY = [100, 200, 1000], TRIES = 400; // NERversion Ver.32 から ±100 で はじめる
   function pickSpecies(original, salt, seed, SP) {
     const n = SP.length; // NUM_SPECIES
     if (original === 0 || original >= n || !SP[original].e) return original;

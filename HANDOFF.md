@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.07a(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-11-07(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.07b(`APP_VER`)· ポータル 2026-10-21 刷新 — 最後の記録 2026-11-07(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -67,7 +67,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド・出現ずかん など) | 2026.11.07a(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド・出現ずかん など) | 2026.11.07b(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
@@ -108,6 +108,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-07 — Claude(https://claude.ai/code/session_01HNiHMN1DC648sFAtRhjrmj)
+- やったこと: 出現ずかん(NERversion)の ランダマイザの計算を ROM の Ver.32 に合わせた。種族値の幅を「±50 → ±100 → ±200 → ±1000」から「±100 → ±200 → ±1000」に(`poke-tools/index.html` と `dev/ner-enc/ner_randomizer.js` の `LENIENCY`)。テストの答え `dev/ner-enc/test_vector_seed777.json` も Ver.32 のゲームで出しなおした。Poke tools 2026.11.07b。
+- 確かめたこと: `node poke-tools/dev/ner-enc/test.js` → 1976 件すべて一致(ゲームの答えは エミュレータで Ver.32 の ROM から出した)。
+- 次の人へ: Ver.31 以前の ROM で遊んでいるセーブには 合わなくなる(運営者は Ver.32 に上げる前提)。ROM 側の ランダマイザを また変えたら、ここも 同じように 合わせる。
 
 ### 2026-11-07 — Claude(https://claude.ai/code/session_01NCVwVxD4vZFMwGRFAdun3o)
 - やったこと: 下のバーのはじめのツール(`TAB_DEF`)を「図鑑・リボン・個体管理・個体値・タイプ相性」に変えた(運営者の画面に合わせた)。前から使っている人の並びは変えない(設定の「元に戻す」でこの並びになる)。Poke tools 2026.11.07a
