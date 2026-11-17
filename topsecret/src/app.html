@@ -56,14 +56,14 @@
     <div class="tb-seg tb-four" id="tbBox" role="group" aria-label="窓">
       <button type="button" data-v="1" aria-pressed="true">RS 会話</button><button type="button" data-v="0" aria-pressed="false">E 会話</button><button type="button" data-v="3" aria-pressed="false">RS バトル</button><button type="button" data-v="2" aria-pressed="false">E バトル</button>
     </div>
-    <div class="tb-lbl">文（2行ずつ ページに なる。空の 行でも 区切れる）</div>
+    <div class="tb-lbl"><span>文（2行で 1ページ）</span><button type="button" class="tb-clear" id="tbClear">文を けす</button></div>
     <div class="tb-ed">
       <div class="tb-wrap"><div class="tb-mir" id="tbMir" aria-hidden="true"></div><textarea id="tbText" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="文">ながいあいだ トラックに ゆられて
 たいへん だったでしょ？
 ここが ミシロタウンよ！</textarea></div>
       <div class="tb-gut" id="tbGut" aria-hidden="true"></div>
     </div>
-    <div class="tb-hint">漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
+    <div class="tb-hint">空の 行でも ページを 区切れます。漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
     <div class="tb-row">
       <div class="tb-seg tb-two" id="tbFmt" role="group" aria-label="形式"><button type="button" data-v="png" aria-pressed="true">PNG</button><button type="button" data-v="gif" aria-pressed="false">GIF</button></div>
       <label class="tb-scale">大きさ <select id="tbScale"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>6</option><option>8</option></select> 倍</label>
@@ -71,6 +71,13 @@
     <div class="tb-acts">
       <button class="tb-btn" type="button" id="tbSaveOne">この ページ</button>
       <button class="tb-btn tb-main" type="button" id="tbSaveAll">ぜんぶ（ZIP）</button>
+    </div>
+    <div class="tb-dbx">
+      <div class="tb-dbx-h"><span class="tb-dbx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3 2 6.3l5 3.3 5-3.3zM17 3l-5 3.3 5 3.3 5-3.3zM2 12.9l5 3.3 5-3.3-5-3.3zM17 9.6l-5 3.3 5 3.3 5-3.3zM7 17.3l5 3.3 5-3.3-5-3.3z"/></svg></span><span><b>Dropbox の「動画用素材」に 保存</b><small id="tbDbxSt">つながって いません</small></span></div>
+      <div class="tb-acts">
+        <button class="tb-btn" type="button" id="tbDbxOne">この ページ</button>
+        <button class="tb-btn tb-dbxmain" type="button" id="tbDbxAll">ぜんぶ</button>
+      </div>
     </div>
     <div class="tb-msg" id="tbMsg"></div>
     <details class="tb-more">
@@ -97,6 +104,11 @@
       <p>@style= は rs-field・rs-battle・e-field・e-battle・all、@font= は rs・e、@name= は ファイル名、@arrow-frame= は PNG の ▼の 位置（0〜3）。</p>
       <h3>使える 字</h3>
       <p>ひらがな・カタカナ・0〜9・A〜Z・a〜z・！？。ー・…『』「」♂♀円.×/:▶ と スペース。字・枠・色・▼の 形と 動きは 本物の ゲームと 同じ です（バトルの 窓の 外がわの 暗い 灰色は 透明）。</p>
+      <h3>Dropbox</h3>
+      <p>画像を Dropbox の「動画用素材」フォルダ（いちばん上）に 保存します。フォルダが なければ 作ります。同じ 名前が あれば 名前を かえて 保存します（上書きしません）。</p>
+      <label class="tb-key">App key <input type="text" id="tbDbxKey" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Dropbox の アプリの App key"></label>
+      <p>はじめに 1回だけ、Dropbox の 開発者ページで アプリを 作って App key を 入れます（作りかたは topsecret/src/README_dropbox.md）。つなぐ ときは Dropbox の 画面に 移り、「許可」を 押すと もどって きます。</p>
+      <button class="tb-btn" type="button" id="tbDbxOff">Dropbox との つながりを 切る</button>
       <h3>ROM</h3>
       <button class="tb-btn" type="button" id="tbReset">ROM を えらびなおす</button>
     </details>

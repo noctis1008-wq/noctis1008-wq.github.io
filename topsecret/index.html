@@ -2724,7 +2724,9 @@ body{--barh:0px;--tbc:#1f56c9;--tbon:#fff;--lkc:#9a5b00}
 .tb-seg button{height:44px;border:0;border-left:1px solid var(--line);background:none;font-size:14px;font-weight:700;color:var(--muted);padding:0 4px;line-height:1.2}
 .tb-seg button:first-child{border-left:0}
 .tb-seg button[aria-pressed=true]{background:color-mix(in srgb,var(--tbc) 14%,var(--surface));color:var(--tbc)}
-.tb-lbl{margin-top:16px;font-size:13px;color:var(--muted);font-weight:700}
+.tb-lbl{margin-top:16px;font-size:13px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.tb-clear{flex:none;width:7.5em;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:13px;font-weight:700;color:var(--muted)}
+.tb-clear.warn{border-color:#d23a3a;color:#d23a3a}
 .tb-ed{position:relative;margin-top:6px;display:grid;grid-template-columns:minmax(0,1fr) auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
 .tb-ed:focus-within{outline:2px solid var(--tbc);outline-offset:1px}
 .tb-wrap{position:relative;overflow:hidden}
@@ -2767,6 +2769,18 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
 .lk-tag.warn{background:color-mix(in srgb,var(--lkc) 16%,var(--surface));color:var(--lkc)}
 .lk-go{margin-left:auto;color:var(--muted);flex:none;font-size:13px}
 
+/* Dropbox に 保存 */
+.tb-dbx{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.tb-dbx .tb-acts{margin-top:10px}
+.tb-dbx-h{display:flex;align-items:center;gap:10px}
+.tb-dbx-h b{display:block;font-size:14px}
+.tb-dbx-h small{display:block;font-size:12px;color:var(--muted)}
+.tb-dbx-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,#0061fe 14%,var(--surface))}
+.tb-dbx-ic svg{width:22px;height:22px;fill:#0061fe}
+.tb-dbxmain{background:#0061fe;border-color:#0061fe;color:#fff}
+.tb-key{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted)}
+.tb-key input{flex:1;height:44px;font-family:var(--f-num)}
+
 </style>
 </head>
 <body>
@@ -2806,14 +2820,14 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
     <div class="tb-seg tb-four" id="tbBox" role="group" aria-label="窓">
       <button type="button" data-v="1" aria-pressed="true">RS 会話</button><button type="button" data-v="0" aria-pressed="false">E 会話</button><button type="button" data-v="3" aria-pressed="false">RS バトル</button><button type="button" data-v="2" aria-pressed="false">E バトル</button>
     </div>
-    <div class="tb-lbl">文（2行ずつ ページに なる。空の 行でも 区切れる）</div>
+    <div class="tb-lbl"><span>文（2行で 1ページ）</span><button type="button" class="tb-clear" id="tbClear">文を けす</button></div>
     <div class="tb-ed">
       <div class="tb-wrap"><div class="tb-mir" id="tbMir" aria-hidden="true"></div><textarea id="tbText" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="文">ながいあいだ トラックに ゆられて
 たいへん だったでしょ？
 ここが ミシロタウンよ！</textarea></div>
       <div class="tb-gut" id="tbGut" aria-hidden="true"></div>
     </div>
-    <div class="tb-hint">漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
+    <div class="tb-hint">空の 行でも ページを 区切れます。漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
     <div class="tb-row">
       <div class="tb-seg tb-two" id="tbFmt" role="group" aria-label="形式"><button type="button" data-v="png" aria-pressed="true">PNG</button><button type="button" data-v="gif" aria-pressed="false">GIF</button></div>
       <label class="tb-scale">大きさ <select id="tbScale"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>6</option><option>8</option></select> 倍</label>
@@ -2821,6 +2835,13 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
     <div class="tb-acts">
       <button class="tb-btn" type="button" id="tbSaveOne">この ページ</button>
       <button class="tb-btn tb-main" type="button" id="tbSaveAll">ぜんぶ（ZIP）</button>
+    </div>
+    <div class="tb-dbx">
+      <div class="tb-dbx-h"><span class="tb-dbx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3 2 6.3l5 3.3 5-3.3zM17 3l-5 3.3 5 3.3 5-3.3zM2 12.9l5 3.3 5-3.3-5-3.3zM17 9.6l-5 3.3 5 3.3 5-3.3zM7 17.3l5 3.3 5-3.3-5-3.3z"/></svg></span><span><b>Dropbox の「動画用素材」に 保存</b><small id="tbDbxSt">つながって いません</small></span></div>
+      <div class="tb-acts">
+        <button class="tb-btn" type="button" id="tbDbxOne">この ページ</button>
+        <button class="tb-btn tb-dbxmain" type="button" id="tbDbxAll">ぜんぶ</button>
+      </div>
     </div>
     <div class="tb-msg" id="tbMsg"></div>
     <details class="tb-more">
@@ -2847,6 +2868,11 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
       <p>@style= は rs-field・rs-battle・e-field・e-battle・all、@font= は rs・e、@name= は ファイル名、@arrow-frame= は PNG の ▼の 位置（0〜3）。</p>
       <h3>使える 字</h3>
       <p>ひらがな・カタカナ・0〜9・A〜Z・a〜z・！？。ー・…『』「」♂♀円.×/:▶ と スペース。字・枠・色・▼の 形と 動きは 本物の ゲームと 同じ です（バトルの 窓の 外がわの 暗い 灰色は 透明）。</p>
+      <h3>Dropbox</h3>
+      <p>画像を Dropbox の「動画用素材」フォルダ（いちばん上）に 保存します。フォルダが なければ 作ります。同じ 名前が あれば 名前を かえて 保存します（上書きしません）。</p>
+      <label class="tb-key">App key <input type="text" id="tbDbxKey" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Dropbox の アプリの App key"></label>
+      <p>はじめに 1回だけ、Dropbox の 開発者ページで アプリを 作って App key を 入れます（作りかたは topsecret/src/README_dropbox.md）。つなぐ ときは Dropbox の 画面に 移り、「許可」を 押すと もどって きます。</p>
+      <button class="tb-btn" type="button" id="tbDbxOff">Dropbox との つながりを 切る</button>
       <h3>ROM</h3>
       <button class="tb-btn" type="button" id="tbReset">ROM を えらびなおす</button>
     </details>
@@ -3549,6 +3575,69 @@ document.getElementById('vNer').addEventListener('click',e=>{
 document.getElementById('nerQ').addEventListener('input',e=>{nerQ=e.target.value;renderNer()});
 
 
+
+/* ---------- Dropbox（テキストボックス メーカーの 画像を「動画用素材」に 保存） ----------
+   Dropbox の アプリ（App key）で つなぐ（OAuth の PKCE。秘密の 鍵は いらない）。
+   鍵（トークン）は この 端末の 保存（ner-topsecret-v1 の dbx）に だけ 置く。作りかたは src/README_dropbox.md */
+const DBX = (() => {
+  const FOLDER = '/動画用素材';
+  const APP_KEY = '';  // ここに App key を 書けば、画面で 入れなくて よい（App key は 公開されても よい 値）
+  const REDIRECT = location.origin + location.pathname;
+  const key = () => ((S.dbx && S.dbx.key) || APP_KEY).trim();
+  const tok = () => S.dbx && S.dbx.tok;
+  const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const rand = n => b64url(crypto.getRandomValues(new Uint8Array(n)));
+  // Dropbox-API-Arg の ヘッダーには ASCII しか 書けないので、日本語は \uXXXX に する
+  const argHeader = o => JSON.stringify(o).replace(/[\u007f-￿]/g, c => '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4));
+  async function connect() {
+    if (!key()) throw new Error('くわしい 設定で Dropbox の App key を 入れて ください');
+    const verifier = rand(48), state = rand(16);
+    const challenge = b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)));
+    try { sessionStorage.setItem('tbDbx', JSON.stringify({ verifier, state })); } catch (e) {}
+    const q = new URLSearchParams({ client_id: key(), response_type: 'code', code_challenge: challenge, code_challenge_method: 'S256',
+      redirect_uri: REDIRECT, token_access_type: 'offline', state });
+    location.href = 'https://www.dropbox.com/oauth2/authorize?' + q;
+  }
+  async function tokenReq(params) {
+    const r = await fetch('https://api.dropboxapi.com/oauth2/token', { method: 'POST', body: new URLSearchParams(Object.assign({ client_id: key() }, params)) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.access_token) throw new Error('Dropbox に つなげませんでした（' + (j.error_description || j.error || r.status) + '）');
+    S.dbx = S.dbx || {};
+    S.dbx.tok = { a: j.access_token, r: j.refresh_token || (S.dbx.tok && S.dbx.tok.r), exp: Date.now() + (j.expires_in || 14400) * 1000 };
+    save();
+  }
+  // Dropbox の 画面から もどって きた とき（?code=…）
+  async function handleReturn() {
+    const q = new URLSearchParams(location.search);
+    if (!q.has('code') && !q.has('error')) return null;
+    let pend = {}; try { pend = JSON.parse(sessionStorage.getItem('tbDbx') || '{}'); sessionStorage.removeItem('tbDbx'); } catch (e) {}
+    try { history.replaceState(null, '', location.pathname + '#tb'); } catch (e) {}
+    if (q.has('error')) return 'Dropbox に つなぐのを やめました';
+    if (!pend.verifier || q.get('state') !== pend.state) return 'Dropbox に つなげませんでした（もう一度 ためして ください）';
+    await tokenReq({ code: q.get('code'), grant_type: 'authorization_code', code_verifier: pend.verifier, redirect_uri: REDIRECT });
+    return 'Dropbox に つながりました';
+  }
+  async function access() {
+    const t = tok(); if (!t) return null;
+    if (t.exp > Date.now() + 60000) return t.a;
+    if (!t.r) return null;
+    await tokenReq({ grant_type: 'refresh_token', refresh_token: t.r });
+    return tok().a;
+  }
+  async function upload(name, bytes) {
+    const a = await access(); if (!a) throw new Error('need-connect');
+    const r = await fetch('https://content.dropboxapi.com/2/files/upload', { method: 'POST',
+      headers: { Authorization: 'Bearer ' + a, 'Content-Type': 'application/octet-stream', 'Dropbox-API-Arg': argHeader({ path: FOLDER + '/' + name, mode: 'add', autorename: true, mute: true }) },
+      body: new Blob([bytes]) });
+    if (r.status === 401) { S.dbx.tok = null; save(); throw new Error('need-connect'); }
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error('Dropbox に 保存 できませんでした（' + (j.error_summary || r.status) + '）');
+    return j.name || name;
+  }
+  function off() { if (S.dbx) { S.dbx.tok = null; save(); } }
+  return { FOLDER, key, connected: () => !!tok(), connect, handleReturn, upload, off };
+})();
+
 /* ---------- テキストボックス メーカー ---------- */
 const TBX = (() => {
   const $ = id => document.getElementById(id);
@@ -3672,7 +3761,7 @@ const TBX = (() => {
       else frames = hasArrow(cur) ? [1, 2, 3, 4].map(a => TB.render(data, box(), font(), a, r.codes)) : [TB.render(data, box(), font(), 0, r.codes)];
     }
     $('tbPmsg').textContent = err || (bads.length ? `ほかの ページ: ${bads[0]}` : '');
-    $('tbSaveOne').disabled = !frames.length; $('tbSaveAll').disabled = !n || bads.length > 0;
+    $('tbSaveOne').disabled = $('tbDbxOne').disabled = !frames.length; $('tbSaveAll').disabled = $('tbDbxAll').disabled = !n || bads.length > 0;
     draw();
     if (frames.length > 1 && !$('vTb').hidden) timer = setInterval(() => { fidx = (fidx + 1) % frames.length; draw(); }, TB.arrowDelay(box(), font()) * 10);
   }
@@ -3749,6 +3838,74 @@ const TBX = (() => {
     if (!out.length) { m.className = 'tb-msg err'; m.textContent = '文が ありません'; return; }
     m.textContent = `${out.length} まい 作りました。` + await saveFile(f.name.replace(/\.[^.]*$/, '') + (g ? '_gif' : '_png') + '.zip', TB.writeZIP(out));
   });
+
+  // 文を けす（まちがえて 押さない ように 2回 押す。Poke tools と 同じ）
+  $('tbClear').addEventListener('click', () => {
+    const b = $('tbClear');
+    if (b.dataset.armed) {
+      delete b.dataset.armed; clearTimeout(b._tm); b.classList.remove('warn'); b.textContent = '文を けす';
+      $('tbText').value = ''; cur = 0; keep(); refresh(); $('tbText').focus(); return;
+    }
+    b.dataset.armed = '1'; b.classList.add('warn'); b.textContent = 'もう1回で けす';
+    b._tm = setTimeout(() => { delete b.dataset.armed; b.classList.remove('warn'); b.textContent = '文を けす'; }, 3000);
+  });
+
+  // 入力・えらんだ ものを この 端末に おぼえる（Dropbox の 画面から もどって きても 消えない）
+  const pressed = (id, v) => { for (const x of $(id).children) x.setAttribute('aria-pressed', x.dataset.v === String(v) ? 'true' : 'false'); };
+  function keep() {
+    S.tb = { text: $('tbText').value, box: box(), font: font(), fmt: fmt(), scale: $('tbScale').value, last: $('tbLastArrow').checked, af: $('tbAframe').value };
+    save();
+  }
+  function restore() {
+    const t = S.tb; if (!t) return;
+    if (typeof t.text === 'string') $('tbText').value = t.text;
+    if (t.box != null) pressed('tbBox', t.box);
+    if (t.font != null) pressed('tbFont', t.font);
+    if (t.fmt) pressed('tbFmt', t.fmt);
+    if (t.scale) $('tbScale').value = t.scale;
+    $('tbLastArrow').checked = !!t.last;
+    if (t.af) $('tbAframe').value = t.af;
+  }
+  restore();
+  for (const id of ['tbText', 'tbScale', 'tbLastArrow', 'tbAframe']) $(id).addEventListener('change', keep);
+  $('tbText').addEventListener('input', keep);
+  for (const id of ['tbBox', 'tbFont', 'tbFmt']) $(id).addEventListener('click', keep);
+
+  // Dropbox の「動画用素材」に 保存
+  const stamp = () => { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`; };
+  function dbxStatus() {
+    $('tbDbxSt').textContent = DBX.connected() ? `つながって います（${DBX.FOLDER.slice(1)} フォルダ）` : DBX.key() ? 'まだ つながって いません（押すと つなぎます）' : 'くわしい 設定で App key を 入れて ください';
+    $('tbDbxKey').value = (S.dbx && S.dbx.key) || '';
+    $('tbDbxOff').disabled = !DBX.connected();
+  }
+  async function toDropbox(pages) {
+    const m = $('tbMsg'); m.className = 'tb-msg';
+    if (!DBX.connected()) {
+      if (!DBX.key()) { m.className = 'tb-msg err'; m.textContent = 'くわしい 設定で Dropbox の App key を 入れて ください'; $('tbDbxKey').closest('details').open = true; return; }
+      m.textContent = 'Dropbox の 画面に 移ります。「許可」を 押して もどったら、もう一度 押して ください';
+      keep(); try { await DBX.connect(); } catch (e) { m.className = 'tb-msg err'; m.textContent = e.message; } return;
+    }
+    const ext = fmt(), st = stamp(), many = pages.length > 1;
+    for (const k of pages) { const r = pageCodes(k); if (r.error) { m.className = 'tb-msg err'; m.textContent = `${k + 1}ページめ: ${r.error}`; return; } }
+    try {
+      let n = 0;
+      for (const k of pages) {
+        m.textContent = `Dropbox に 保存して います…（${n + 1} / ${pages.length}）`;
+        await DBX.upload(`${base()}_${st}${many || P.pages.length > 1 ? '_' + String(k + 1).padStart(2, '0') : ''}.${ext}`, pageFile(k, pageCodes(k).codes));
+        n++;
+      }
+      m.textContent = `Dropbox の「${DBX.FOLDER.slice(1)}」に ${n} まい 保存しました`;
+    } catch (e) {
+      if (e.message === 'need-connect') { dbxStatus(); m.className = 'tb-msg err'; m.textContent = 'Dropbox に つなぎなおして ください（もう一度 押すと つなぎます）'; }
+      else { m.className = 'tb-msg err'; m.textContent = e.message || String(e); }
+    }
+  }
+  $('tbDbxOne').addEventListener('click', () => { if (P.pages.length) toDropbox([cur]); });
+  $('tbDbxAll').addEventListener('click', () => { if (P.pages.length) toDropbox(P.pages.map((_, k) => k)); });
+  $('tbDbxKey').addEventListener('change', e => { S.dbx = S.dbx || {}; const v = e.target.value.trim(); if (v !== S.dbx.key) { S.dbx.key = v; S.dbx.tok = null; } save(); dbxStatus(); });
+  $('tbDbxOff').addEventListener('click', () => { DBX.off(); dbxStatus(); toast('Dropbox との つながりを 切りました'); });
+  dbxStatus();
+  DBX.handleReturn().then(msg => { if (msg) { toast(msg, 4000); dbxStatus(); } }).catch(e => { toast(e.message || String(e), 5000); dbxStatus(); });
 
   let booted = false;
   return {

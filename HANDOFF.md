@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-17(1ページの アプリ。出現ずかんを Poke tools から 移した) — 最後の記録 2026-11-17(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-17b(テキストボックス メーカーに 文を けす・Dropbox「動画用素材」へ 保存) — 最後の記録 2026-11-17(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -77,6 +77,8 @@
 | `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-17 |
 | `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
 
+- テキストボックス メーカーの Dropbox 保存: ブラウザから 直接 Dropbox(OAuth PKCE。App key だけ、秘密の 鍵は 使わない)。Dropbox の アプリの 作りかたは `topsecret/src/README_dropbox.md`。トークンは 端末の `ner-topsecret-v1` の `dbx` に だけ。入力・えらんだ 窓なども `tb` に 保存(Dropbox の 画面から もどっても 消えない)。
+
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
 - ポータルのフッターに © マークは付けない(運営者の希望)。
 - 最新動画は youtube-nocookie の埋め込み。「エラー 153」対策で referrer を送る設定(`<meta name="referrer">` と iframe の `referrerpolicy`)を消さないこと。
@@ -87,6 +89,7 @@
 
 ## 進行中・やり残し
 
+- **テキストボックス メーカーの Dropbox 保存(2026-11-17b)**:本物の Dropbox では まだ ためして いない(Playwright で Dropbox を まねて 確かめた だけ)。運営者が Dropbox の アプリを 作り、App key を「くわしい 設定」に 入れる 必要が ある(`topsecret/src/README_dropbox.md`)。App key を `app.js` の `APP_KEY` に 書けば 入力は いらなく なる。
 - **NER's topSecret(2026-11-17)**:運営者の iPhone で まだ 見て いない(とくに テキストボックス メーカーの 保存の 共有メニュー)。テキストボックス メーカーは ROM(textbox.gba か 未改変の 日本版エメラルド＋サファイア)を 端末の 中で 読む。ROM の データは サイトに 置かない。ROM・説明書は 運営者の Dropbox・GitHub を ひらく だけ(共有リンクに しない)。出現ずかんの 保存は `ner-topsecret-v1`(はじめて ひらいた とき Poke tools の `ev-counter-v2` の `ner` を 引きつぐ)。Poke tools の バックアップには もう 入らない。Poke tools の CSS の `#vNer`・`.nex-*` は 残って いる(使って いない)。topsecret/src/poke.css は Poke tools の CSS を 写した もの なので、Poke tools の 見た目を 大きく かえたら 写しなおす。
 
 - **孵化・遺伝ガイド(2026.11.02a、新しいツール)**:運営者の iPhone でまだ見ていない。デザインは運営者が「案A(線のアイコン)＋案B(図解)」「しくみ・親チェック・世代くらべの3つ」を選んだ(デザイン案は claude.ai のキャンバス「孵化・遺伝ガイド デザイン案」)。遺伝の中身はポケモンWiki・攻略サイトで調べたもの。タマゴグループ・性別は PokeAPI の最新のデータ(世代ごとのちがいは見ていない)。次の案:親チェックのタマゴ技の一覧(技データがいる)、パワー系の能力をえらぶ、すがた違い(リージョンフォーム)を親にえらぶ。
@@ -117,6 +120,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-17 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
+- やったこと: テキストボックス メーカーに「文を けす」(2回 押す。Poke tools と 同じ)と「Dropbox の『動画用素材』に 保存」(この ページ / ぜんぶ。ページごとに 1ファイル、`<窓>_<日時>_<ページ>.png|gif`、同じ 名前は Dropbox が 番号を つける)を 足した。くわしい 設定に App key の 入力と「つながりを 切る」。入力・えらんだ ものを 端末に 保存する ように した。文の 見出しを 短く(「空の 行でも 区切れる」は 下の 説明へ。375px で 変な 折りかえしに なったため)。
+- 確かめたこと: Playwright(375px・タッチ・ライト/ダーク)で Dropbox の 3つの 窓口を まねて: App key なし → 案内、つなぐ → 認可 URL(PKCE S256・offline)→ もどる → トークン 取得・入力が のこる → ぜんぶ(GIF 2まい)・この ページ(PNG)、ヘッダーの 日本語の パスは \u で 送る、中身は GIF89a/PNG。文を けす 2回で 空に。横に はみ出さない、エラーなし。
+- 次の人へ: 本物の Dropbox では 未確認。トークンが 切れたら refresh_token で 取りなおす、401 なら つなぎなおしを 出す。
 
 ### 2026-11-17 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: NER's topSecret(`/topsecret/`)を Poke tools と 同じ 1ページの アプリに 作りなおした(運営者が A案を えらんだ)。☰メニュー・下のバーで テキストボックス メーカー・出現ずかん・ROM・説明書を 切りかえる(`#tb`・`#ner`・`#links`)。見た目は Poke tools の CSS(`topsecret/src/poke.css`)を そのまま 使う。出現ずかんを Poke tools から 移した(画面・しくみ・表・`dev/ner-enc/`。Poke tools の メニュー・下のバーからは 外した。保存は はじめて ひらいた とき Poke tools から 引きつぐ)。`/textbox-maker/` は `/topsecret/#tb` への 転送に。Poke tools 2026.11.17a。

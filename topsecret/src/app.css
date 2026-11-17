@@ -29,7 +29,9 @@ body{--barh:0px;--tbc:#1f56c9;--tbon:#fff;--lkc:#9a5b00}
 .tb-seg button{height:44px;border:0;border-left:1px solid var(--line);background:none;font-size:14px;font-weight:700;color:var(--muted);padding:0 4px;line-height:1.2}
 .tb-seg button:first-child{border-left:0}
 .tb-seg button[aria-pressed=true]{background:color-mix(in srgb,var(--tbc) 14%,var(--surface));color:var(--tbc)}
-.tb-lbl{margin-top:16px;font-size:13px;color:var(--muted);font-weight:700}
+.tb-lbl{margin-top:16px;font-size:13px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.tb-clear{flex:none;width:7.5em;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:13px;font-weight:700;color:var(--muted)}
+.tb-clear.warn{border-color:#d23a3a;color:#d23a3a}
 .tb-ed{position:relative;margin-top:6px;display:grid;grid-template-columns:minmax(0,1fr) auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
 .tb-ed:focus-within{outline:2px solid var(--tbc);outline-offset:1px}
 .tb-wrap{position:relative;overflow:hidden}
@@ -71,3 +73,15 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
 .lk-tag{font-size:12px;line-height:1;padding:4px 8px;border-radius:999px;background:var(--sunken);color:var(--muted);white-space:nowrap;font-weight:700}
 .lk-tag.warn{background:color-mix(in srgb,var(--lkc) 16%,var(--surface));color:var(--lkc)}
 .lk-go{margin-left:auto;color:var(--muted);flex:none;font-size:13px}
+
+/* Dropbox に 保存 */
+.tb-dbx{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.tb-dbx .tb-acts{margin-top:10px}
+.tb-dbx-h{display:flex;align-items:center;gap:10px}
+.tb-dbx-h b{display:block;font-size:14px}
+.tb-dbx-h small{display:block;font-size:12px;color:var(--muted)}
+.tb-dbx-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,#0061fe 14%,var(--surface))}
+.tb-dbx-ic svg{width:22px;height:22px;fill:#0061fe}
+.tb-dbxmain{background:#0061fe;border-color:#0061fe;color:#fff}
+.tb-key{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted)}
+.tb-key input{flex:1;height:44px;font-family:var(--f-num)}

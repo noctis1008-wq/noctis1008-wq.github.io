@@ -16,6 +16,69 @@ if (!S.ner || !S.ner.sv) {
 
 /*NERJS*/
 
+
+/* ---------- Dropbox（テキストボックス メーカーの 画像を「動画用素材」に 保存） ----------
+   Dropbox の アプリ（App key）で つなぐ（OAuth の PKCE。秘密の 鍵は いらない）。
+   鍵（トークン）は この 端末の 保存（ner-topsecret-v1 の dbx）に だけ 置く。作りかたは src/README_dropbox.md */
+const DBX = (() => {
+  const FOLDER = '/動画用素材';
+  const APP_KEY = '';  // ここに App key を 書けば、画面で 入れなくて よい（App key は 公開されても よい 値）
+  const REDIRECT = location.origin + location.pathname;
+  const key = () => ((S.dbx && S.dbx.key) || APP_KEY).trim();
+  const tok = () => S.dbx && S.dbx.tok;
+  const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const rand = n => b64url(crypto.getRandomValues(new Uint8Array(n)));
+  // Dropbox-API-Arg の ヘッダーには ASCII しか 書けないので、日本語は \uXXXX に する
+  const argHeader = o => JSON.stringify(o).replace(/[\u007f-￿]/g, c => '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4));
+  async function connect() {
+    if (!key()) throw new Error('くわしい 設定で Dropbox の App key を 入れて ください');
+    const verifier = rand(48), state = rand(16);
+    const challenge = b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)));
+    try { sessionStorage.setItem('tbDbx', JSON.stringify({ verifier, state })); } catch (e) {}
+    const q = new URLSearchParams({ client_id: key(), response_type: 'code', code_challenge: challenge, code_challenge_method: 'S256',
+      redirect_uri: REDIRECT, token_access_type: 'offline', state });
+    location.href = 'https://www.dropbox.com/oauth2/authorize?' + q;
+  }
+  async function tokenReq(params) {
+    const r = await fetch('https://api.dropboxapi.com/oauth2/token', { method: 'POST', body: new URLSearchParams(Object.assign({ client_id: key() }, params)) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.access_token) throw new Error('Dropbox に つなげませんでした（' + (j.error_description || j.error || r.status) + '）');
+    S.dbx = S.dbx || {};
+    S.dbx.tok = { a: j.access_token, r: j.refresh_token || (S.dbx.tok && S.dbx.tok.r), exp: Date.now() + (j.expires_in || 14400) * 1000 };
+    save();
+  }
+  // Dropbox の 画面から もどって きた とき（?code=…）
+  async function handleReturn() {
+    const q = new URLSearchParams(location.search);
+    if (!q.has('code') && !q.has('error')) return null;
+    let pend = {}; try { pend = JSON.parse(sessionStorage.getItem('tbDbx') || '{}'); sessionStorage.removeItem('tbDbx'); } catch (e) {}
+    try { history.replaceState(null, '', location.pathname + '#tb'); } catch (e) {}
+    if (q.has('error')) return 'Dropbox に つなぐのを やめました';
+    if (!pend.verifier || q.get('state') !== pend.state) return 'Dropbox に つなげませんでした（もう一度 ためして ください）';
+    await tokenReq({ code: q.get('code'), grant_type: 'authorization_code', code_verifier: pend.verifier, redirect_uri: REDIRECT });
+    return 'Dropbox に つながりました';
+  }
+  async function access() {
+    const t = tok(); if (!t) return null;
+    if (t.exp > Date.now() + 60000) return t.a;
+    if (!t.r) return null;
+    await tokenReq({ grant_type: 'refresh_token', refresh_token: t.r });
+    return tok().a;
+  }
+  async function upload(name, bytes) {
+    const a = await access(); if (!a) throw new Error('need-connect');
+    const r = await fetch('https://content.dropboxapi.com/2/files/upload', { method: 'POST',
+      headers: { Authorization: 'Bearer ' + a, 'Content-Type': 'application/octet-stream', 'Dropbox-API-Arg': argHeader({ path: FOLDER + '/' + name, mode: 'add', autorename: true, mute: true }) },
+      body: new Blob([bytes]) });
+    if (r.status === 401) { S.dbx.tok = null; save(); throw new Error('need-connect'); }
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error('Dropbox に 保存 できませんでした（' + (j.error_summary || r.status) + '）');
+    return j.name || name;
+  }
+  function off() { if (S.dbx) { S.dbx.tok = null; save(); } }
+  return { FOLDER, key, connected: () => !!tok(), connect, handleReturn, upload, off };
+})();
+
 /* ---------- テキストボックス メーカー ---------- */
 const TBX = (() => {
   const $ = id => document.getElementById(id);
@@ -139,7 +202,7 @@ const TBX = (() => {
       else frames = hasArrow(cur) ? [1, 2, 3, 4].map(a => TB.render(data, box(), font(), a, r.codes)) : [TB.render(data, box(), font(), 0, r.codes)];
     }
     $('tbPmsg').textContent = err || (bads.length ? `ほかの ページ: ${bads[0]}` : '');
-    $('tbSaveOne').disabled = !frames.length; $('tbSaveAll').disabled = !n || bads.length > 0;
+    $('tbSaveOne').disabled = $('tbDbxOne').disabled = !frames.length; $('tbSaveAll').disabled = $('tbDbxAll').disabled = !n || bads.length > 0;
     draw();
     if (frames.length > 1 && !$('vTb').hidden) timer = setInterval(() => { fidx = (fidx + 1) % frames.length; draw(); }, TB.arrowDelay(box(), font()) * 10);
   }
@@ -216,6 +279,74 @@ const TBX = (() => {
     if (!out.length) { m.className = 'tb-msg err'; m.textContent = '文が ありません'; return; }
     m.textContent = `${out.length} まい 作りました。` + await saveFile(f.name.replace(/\.[^.]*$/, '') + (g ? '_gif' : '_png') + '.zip', TB.writeZIP(out));
   });
+
+  // 文を けす（まちがえて 押さない ように 2回 押す。Poke tools と 同じ）
+  $('tbClear').addEventListener('click', () => {
+    const b = $('tbClear');
+    if (b.dataset.armed) {
+      delete b.dataset.armed; clearTimeout(b._tm); b.classList.remove('warn'); b.textContent = '文を けす';
+      $('tbText').value = ''; cur = 0; keep(); refresh(); $('tbText').focus(); return;
+    }
+    b.dataset.armed = '1'; b.classList.add('warn'); b.textContent = 'もう1回で けす';
+    b._tm = setTimeout(() => { delete b.dataset.armed; b.classList.remove('warn'); b.textContent = '文を けす'; }, 3000);
+  });
+
+  // 入力・えらんだ ものを この 端末に おぼえる（Dropbox の 画面から もどって きても 消えない）
+  const pressed = (id, v) => { for (const x of $(id).children) x.setAttribute('aria-pressed', x.dataset.v === String(v) ? 'true' : 'false'); };
+  function keep() {
+    S.tb = { text: $('tbText').value, box: box(), font: font(), fmt: fmt(), scale: $('tbScale').value, last: $('tbLastArrow').checked, af: $('tbAframe').value };
+    save();
+  }
+  function restore() {
+    const t = S.tb; if (!t) return;
+    if (typeof t.text === 'string') $('tbText').value = t.text;
+    if (t.box != null) pressed('tbBox', t.box);
+    if (t.font != null) pressed('tbFont', t.font);
+    if (t.fmt) pressed('tbFmt', t.fmt);
+    if (t.scale) $('tbScale').value = t.scale;
+    $('tbLastArrow').checked = !!t.last;
+    if (t.af) $('tbAframe').value = t.af;
+  }
+  restore();
+  for (const id of ['tbText', 'tbScale', 'tbLastArrow', 'tbAframe']) $(id).addEventListener('change', keep);
+  $('tbText').addEventListener('input', keep);
+  for (const id of ['tbBox', 'tbFont', 'tbFmt']) $(id).addEventListener('click', keep);
+
+  // Dropbox の「動画用素材」に 保存
+  const stamp = () => { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`; };
+  function dbxStatus() {
+    $('tbDbxSt').textContent = DBX.connected() ? `つながって います（${DBX.FOLDER.slice(1)} フォルダ）` : DBX.key() ? 'まだ つながって いません（押すと つなぎます）' : 'くわしい 設定で App key を 入れて ください';
+    $('tbDbxKey').value = (S.dbx && S.dbx.key) || '';
+    $('tbDbxOff').disabled = !DBX.connected();
+  }
+  async function toDropbox(pages) {
+    const m = $('tbMsg'); m.className = 'tb-msg';
+    if (!DBX.connected()) {
+      if (!DBX.key()) { m.className = 'tb-msg err'; m.textContent = 'くわしい 設定で Dropbox の App key を 入れて ください'; $('tbDbxKey').closest('details').open = true; return; }
+      m.textContent = 'Dropbox の 画面に 移ります。「許可」を 押して もどったら、もう一度 押して ください';
+      keep(); try { await DBX.connect(); } catch (e) { m.className = 'tb-msg err'; m.textContent = e.message; } return;
+    }
+    const ext = fmt(), st = stamp(), many = pages.length > 1;
+    for (const k of pages) { const r = pageCodes(k); if (r.error) { m.className = 'tb-msg err'; m.textContent = `${k + 1}ページめ: ${r.error}`; return; } }
+    try {
+      let n = 0;
+      for (const k of pages) {
+        m.textContent = `Dropbox に 保存して います…（${n + 1} / ${pages.length}）`;
+        await DBX.upload(`${base()}_${st}${many || P.pages.length > 1 ? '_' + String(k + 1).padStart(2, '0') : ''}.${ext}`, pageFile(k, pageCodes(k).codes));
+        n++;
+      }
+      m.textContent = `Dropbox の「${DBX.FOLDER.slice(1)}」に ${n} まい 保存しました`;
+    } catch (e) {
+      if (e.message === 'need-connect') { dbxStatus(); m.className = 'tb-msg err'; m.textContent = 'Dropbox に つなぎなおして ください（もう一度 押すと つなぎます）'; }
+      else { m.className = 'tb-msg err'; m.textContent = e.message || String(e); }
+    }
+  }
+  $('tbDbxOne').addEventListener('click', () => { if (P.pages.length) toDropbox([cur]); });
+  $('tbDbxAll').addEventListener('click', () => { if (P.pages.length) toDropbox(P.pages.map((_, k) => k)); });
+  $('tbDbxKey').addEventListener('change', e => { S.dbx = S.dbx || {}; const v = e.target.value.trim(); if (v !== S.dbx.key) { S.dbx.key = v; S.dbx.tok = null; } save(); dbxStatus(); });
+  $('tbDbxOff').addEventListener('click', () => { DBX.off(); dbxStatus(); toast('Dropbox との つながりを 切りました'); });
+  dbxStatus();
+  DBX.handleReturn().then(msg => { if (msg) { toast(msg, 4000); dbxStatus(); } }).catch(e => { toast(e.message || String(e), 5000); dbxStatus(); });
 
   let booted = false;
   return {
