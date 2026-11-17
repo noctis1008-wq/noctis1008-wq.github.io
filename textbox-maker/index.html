@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1f56c9">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<title>テキストボックス メーカー</title>
+<style>
+/* VOICE: 道具。しずかで はっきり。ゲームの 窓が 主役
+   IDEA: ゲームの セリフを 1ページずつ おくる 台本エディタ（C案: 長い 文を 2行ずつ ページに わける）
+   PICTURE: 上に くっつく プレビュー（本物と 同じ ドット、▼が 動く）と ページおくり
+   COLOUR and TYPE: 白い 地・こい 紺の 字・青 1色。端末の 日本語フォント。入力欄は 等幅
+   LAYOUT: 1列。プレビュー（上に 固定）→ 窓 → 文 → 形式・大きさ → この ページ／ぜんぶ → くわしい 設定 */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#10141c);--ink:light-dark(#141a26,#e8ecf4);--sub:light-dark(#5a6372,#9aa3b2);
+  --line:light-dark(#d9dee7,#2a3242);--field:light-dark(#f5f7fa,#171d29);--accent:light-dark(#1f56c9,#6f9cff);--on:light-dark(#fff,#0b1020);
+  --accbg:light-dark(#e6eefc,#1c2a48);--err:light-dark(#c0262d,#ff7b80);--errbg:light-dark(#fde2e3,#4a1d22);
+  --chk1:light-dark(#e9edf2,#1b2230);--chk2:light-dark(#ffffff,#141a25)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Hiragino Sans","Hiragino Kaku Gothic ProN","Meiryo UI",Meiryo,sans-serif;overflow-x:clip}
+main{max-width:640px;margin:0 auto;padding:0 max(4vw,12px) 40px}
+h1{font-size:20px;font-weight:600;margin:16px 0 10px}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 4px;border-bottom:1px solid var(--line)}
+.stage{border:1px solid var(--line);border-radius:12px;padding:8px;background:repeating-conic-gradient(var(--chk1) 0 25%,var(--chk2) 0 50%) 0 0/16px 16px;min-height:72px;display:grid;place-items:center}
+.stage canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+.pager{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px;font-size:15px}
+.pager button{width:48px;height:40px;padding:0;border:0;background:none;font-size:24px;color:var(--accent);cursor:pointer;border-radius:8px}
+.pager button:disabled{color:var(--line);cursor:default}
+.pager b{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+.pmsg{min-height:1.5em;text-align:center;font-size:13px;color:var(--err)}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:14px}
+.seg.two{grid-template-columns:repeat(2,minmax(0,1fr))}.seg.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seg button{height:44px;border:0;border-left:1px solid var(--line);background:var(--field);font:inherit;font-size:14px;color:var(--ink);cursor:pointer;padding:0 4px;line-height:1.2}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed=true]{background:var(--accbg);color:var(--accent);font-weight:600}
+.lbl{margin-top:16px;font-size:14px;color:var(--sub)}
+.ed{position:relative;margin-top:4px;display:grid;grid-template-columns:minmax(0,1fr) auto;border:1px solid var(--line);border-radius:10px;background:var(--field);overflow:hidden}
+.ed:focus-within{outline:3px solid var(--accent);outline-offset:1px}
+.wrap{position:relative;overflow:hidden}
+.mir,textarea{font:16px/28px "MS Gothic","Osaka-Mono","Noto Sans Mono CJK JP",ui-monospace,monospace;padding:8px 10px;margin:0;white-space:pre;letter-spacing:0}
+.mir{position:absolute;inset:0;color:transparent;pointer-events:none;min-width:100%;width:max-content}
+.mir mark{background:var(--errbg);color:transparent;border-radius:2px;box-shadow:0 2px 0 var(--err)}
+.mir .pg{display:block;background:var(--accbg);margin:0 -10px;padding:0 10px}
+textarea{position:relative;display:block;width:100%;min-height:76px;border:0;background:transparent;color:var(--ink);resize:none;overflow-x:auto;overflow-y:hidden;outline:0}
+.gut{border-left:1px solid var(--line);padding:8px 8px;font:12px/28px system-ui,sans-serif;color:var(--sub);text-align:right;font-variant-numeric:tabular-nums;white-space:pre;min-width:58px}
+.gut .bad{color:var(--err);font-weight:600}
+.gut .blank{color:transparent}
+.hint{font-size:13px;color:var(--sub);margin-top:6px}
+.row{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.row .seg{margin:0;flex:1 1 170px}
+select{height:44px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--field);font:inherit;font-size:16px;color:var(--ink)}
+.acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:10px;margin-top:12px}
+.btn{height:50px;border-radius:12px;border:1px solid var(--line);background:var(--field);font:inherit;font-size:16px;color:var(--ink);cursor:pointer;padding:0 12px}
+.btn.main{background:var(--accent);border-color:var(--accent);color:var(--on);font-weight:600}
+.btn:disabled{opacity:.45;cursor:default}
+button:focus-visible,select:focus-visible,.file:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+.msg{min-height:1.6em;margin-top:8px;font-size:14px;color:var(--sub)}
+.msg.err{color:var(--err)}
+details.more{margin-top:20px;border-top:1px solid var(--line);padding-top:6px}
+details.more>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:15px;color:var(--sub)}
+.set{padding:4px 0 8px}
+.set h3{font-size:14px;font-weight:600;margin:14px 0 4px}
+.set p{margin:4px 0 8px;font-size:13px;color:var(--sub)}
+.chk{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--accent)}
+.file{position:relative;display:inline-flex;align-items:center;height:44px;padding:0 16px;border:1px solid var(--line);border-radius:10px;background:var(--field);cursor:pointer;font-size:15px}
+.file input{position:absolute;opacity:0;width:1px;height:1px}
+pre{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto;font-size:13px}
+#setup{border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:8px}
+#setup p{margin:0 0 10px}
+.hide{display:none!important}
+@media(max-width:400px){.seg button{font-size:13px}}
+</style>
+</head>
+<body>
+<main>
+<h1>テキストボックス メーカー</h1>
+
+<section id="setup" class="hide">
+  <p>はじめに ROM を えらんで ください。字や 窓の 絵を ROM から 読みます。ROM は どこにも 送らず、読んだ 絵だけを この 端末に 保存します。</p>
+  <p class="hint">えらぶ もの: <b>textbox.gba</b> を 1つ、または 未改変の <b>日本版エメラルド</b>と<b>日本版サファイア</b>の 2つ（いっしょに えらぶ）</p>
+  <label class="file">ROM を えらぶ<input type="file" id="romfile" multiple></label>
+  <div class="msg" id="setupmsg"></div>
+</section>
+
+<section id="app" class="hide">
+  <div class="top">
+    <div class="stage"><canvas id="view" width="224" height="48" aria-label="プレビュー"></canvas></div>
+    <div class="pager">
+      <button id="prev" aria-label="前の ページ">‹</button><b id="pno">1 / 1</b><button id="next" aria-label="つぎの ページ">›</button>
+    </div>
+    <div class="pmsg" id="pmsg"></div>
+  </div>
+
+  <div class="seg" id="box" role="group" aria-label="窓">
+    <button data-v="1" aria-pressed="true">RS 会話</button><button data-v="0" aria-pressed="false">E 会話</button><button data-v="3" aria-pressed="false">RS バトル</button><button data-v="2" aria-pressed="false">E バトル</button>
+  </div>
+
+  <div class="lbl">文（2行ずつ ページに なる。空の 行でも 区切れる）</div>
+  <div class="ed">
+    <div class="wrap"><div class="mir" id="mir" aria-hidden="true"></div><textarea id="text" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="文">ながいあいだ トラックに ゆられて
+たいへん だったでしょ？
+ここが ミシロタウンよ！</textarea></div>
+    <div class="gut" id="gut" aria-hidden="true"></div>
+  </div>
+  <div class="hint">漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます。</div>
+
+  <div class="row">
+    <div class="seg two" id="fmt" role="group" aria-label="形式"><button data-v="png" aria-pressed="true">PNG</button><button data-v="gif" aria-pressed="false">GIF（▼が 動く）</button></div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:var(--sub)">大きさ
+      <select id="scale"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>6</option><option>8</option></select>倍</label>
+  </div>
+  <div class="acts">
+    <button class="btn" id="saveOne">この ページ</button>
+    <button class="btn main" id="saveAll">ぜんぶ（ZIP）</button>
+  </div>
+  <div class="msg" id="msg"></div>
+
+  <details class="more">
+    <summary>くわしい 設定</summary>
+    <div class="set">
+      <h3>文字（フォント）</h3>
+      <div class="seg three" id="font" role="group" aria-label="文字" style="margin-top:4px">
+        <button data-v="255" aria-pressed="true">窓に あわせる</button><button data-v="1" aria-pressed="false">ルビサファ</button><button data-v="0" aria-pressed="false">エメラルド</button>
+      </div>
+      <p>窓と べつの ゲームの 字に すると、字の 形・位置・字と 影の 色・▼は 字の ほうの ゲームに なります。</p>
+      <h3>▼</h3>
+      <label class="chk"><input type="checkbox" id="lastArrow">さいごの ページにも ▼を 出す</label>
+      <label class="chk" style="gap:8px">PNG の ▼の 位置
+        <select id="aframe"><option value="0">0（さいしょ）</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+      <h3>テキストファイルで まとめて 作る</h3>
+      <p>@style・@font・@name などを 書いた テキストファイル（UTF-8）を えらぶと、ぜんぶ 作って ZIP に します。形式と 大きさは 上で えらんで いる もの です。</p>
+      <label class="file">テキストファイルを えらぶ<input type="file" id="batch" accept=".txt,text/plain"></label>
+      <div class="msg" id="batchmsg"></div>
+      <pre># 「#」の 行は メモ
+ながいあいだ トラックに ゆられて
+たいへん だったでしょ？▼
+
+@style=e-battle font=rs name=wild
+やせいの ジグザグマが
+とびだしてきた！▼</pre>
+      <p>@style= は rs-field・rs-battle・e-field・e-battle・all、@font= は rs・e、@name= は ファイル名、@arrow-frame= は PNG の ▼の 位置（0〜3）。</p>
+      <h3>使える 字</h3>
+      <p>ひらがな・カタカナ・0〜9・A〜Z・a〜z・！？。ー・…『』「」♂♀円.×/:▶ と スペース。字・枠・色・▼の 形と 動きは 本物の ゲームと 同じ です（バトルの 窓の 外がわの 暗い 灰色は 透明）。</p>
+      <h3>ROM</h3>
+      <button class="btn" id="reset" style="height:44px;font-size:14px">ROM を えらびなおす</button>
+    </div>
+  </details>
+</section>
+</main>
+<script>// テキストボックス メーカー（ウェブ版）の 中身。
+// textbox.gba（テキストボックス用の ROM）と 同じ 描きかたを JavaScript で する。
+// ROM の 中の 字・枠・色・▼の 絵を 使い、ROM の src/tb.c と 1ドットも ちがわない 絵を 作る（test/web_check.js で 確かめる）。
+// ROM の データは ブラウザの 中だけで 読む（どこにも 送らない）。
+(function (root) {
+  'use strict';
+  const BOX_NAMES = ['e-field', 'rs-field', 'e-battle', 'rs-battle'];
+  const BOX_WIDTH = [22, 22, 26, 26];
+  const FONT_E = 0, FONT_RS = 1, FONT_SAME = 255;
+  const CHARMAP = {" ":0,"!":171,"-":174,".":184,"/":186,"0":161,"1":162,"2":163,"3":164,"4":165,"5":166,"6":167,"7":168,"8":169,"9":170,":":240,"?":172,"A":187,"B":188,"C":189,"D":190,"E":191,"F":192,"G":193,"H":194,"I":195,"J":196,"K":197,"L":198,"M":199,"N":200,"O":201,"P":202,"Q":203,"R":204,"S":205,"T":206,"U":207,"V":208,"W":209,"X":210,"Y":211,"Z":212,"a":213,"b":214,"c":215,"d":216,"e":217,"f":218,"g":219,"h":220,"i":221,"j":222,"k":223,"l":224,"m":225,"n":226,"o":227,"p":228,"q":229,"r":230,"s":231,"t":232,"u":233,"v":234,"w":235,"x":236,"y":237,"z":238,"Ä":241,"Ö":242,"×":185,"Ü":243,"ä":244,"ö":245,"ü":246,"…":176,"▶":239,"♀":182,"♂":181,"　":0,"。":173,"「":179,"」":180,"『":177,"』":178,"ぁ":47,"あ":1,"ぃ":48,"い":2,"ぅ":49,"う":3,"ぇ":50,"え":4,"ぉ":51,"お":5,"か":6,"が":55,"き":7,"ぎ":56,"く":8,"ぐ":57,"け":9,"げ":58,"こ":10,"ご":59,"さ":11,"ざ":60,"し":12,"じ":61,"す":13,"ず":62,"せ":14,"ぜ":63,"そ":15,"ぞ":64,"た":16,"だ":65,"ち":17,"ぢ":66,"っ":80,"つ":18,"づ":67,"て":19,"で":68,"と":20,"ど":69,"な":21,"に":22,"ぬ":23,"ね":24,"の":25,"は":26,"ば":70,"ぱ":75,"ひ":27,"び":71,"ぴ":76,"ふ":28,"ぶ":72,"ぷ":77,"へ":29,"べ":73,"ぺ":78,"ほ":30,"ぼ":74,"ぽ":79,"ま":31,"み":32,"む":33,"め":34,"も":35,"ゃ":52,"や":36,"ゅ":53,"ゆ":37,"ょ":54,"よ":38,"ら":39,"り":40,"る":41,"れ":42,"ろ":43,"わ":44,"を":45,"ん":46,"ァ":127,"ア":81,"ィ":128,"イ":82,"ゥ":129,"ウ":83,"ェ":130,"エ":84,"ォ":131,"オ":85,"カ":86,"ガ":135,"キ":87,"ギ":136,"ク":88,"グ":137,"ケ":89,"ゲ":138,"コ":90,"ゴ":139,"サ":91,"ザ":140,"シ":92,"ジ":141,"ス":93,"ズ":142,"セ":94,"ゼ":143,"ソ":95,"ゾ":144,"タ":96,"ダ":145,"チ":97,"ヂ":146,"ッ":160,"ツ":98,"ヅ":147,"テ":99,"デ":148,"ト":100,"ド":149,"ナ":101,"ニ":102,"ヌ":103,"ネ":104,"ノ":105,"ハ":106,"バ":150,"パ":155,"ヒ":107,"ビ":151,"ピ":156,"フ":108,"ブ":152,"プ":157,"ヘ":109,"ベ":153,"ペ":158,"ホ":110,"ボ":154,"ポ":159,"マ":111,"ミ":112,"ム":113,"メ":114,"モ":115,"ャ":132,"ヤ":116,"ュ":133,"ユ":117,"ョ":134,"ヨ":118,"ラ":119,"リ":120,"ル":121,"レ":122,"ロ":123,"ワ":124,"ヲ":125,"ン":126,"・":175,"ー":174,"円":183,"！":171,"－":174,"．":184,"／":186,"０":161,"１":162,"２":163,"３":164,"４":165,"５":166,"６":167,"７":168,"８":169,"９":170,"：":240,"？":172,"Ａ":187,"Ｂ":188,"Ｃ":189,"Ｄ":190,"Ｅ":191,"Ｆ":192,"Ｇ":193,"Ｈ":194,"Ｉ":195,"Ｊ":196,"Ｋ":197,"Ｌ":198,"Ｍ":199,"Ｎ":200,"Ｏ":201,"Ｐ":202,"Ｑ":203,"Ｒ":204,"Ｓ":205,"Ｔ":206,"Ｕ":207,"Ｖ":208,"Ｗ":209,"Ｘ":210,"Ｙ":211,"Ｚ":212,"ａ":213,"ｂ":214,"ｃ":215,"ｄ":216,"ｅ":217,"ｆ":218,"ｇ":219,"ｈ":220,"ｉ":221,"ｊ":222,"ｋ":223,"ｌ":224,"ｍ":225,"ｎ":226,"ｏ":227,"ｐ":228,"ｑ":229,"ｒ":230,"ｓ":231,"ｔ":232,"ｕ":233,"ｖ":234,"ｗ":235,"ｘ":236,"ｙ":237,"ｚ":238,"｡":173,"｢":179,"｣":180,"･":175};
+
+  // ---------- ROM から データを 取りだす ----------
+  // データの ならび（この 順で 1つの Uint8Array に して 保存する）
+  const PARTS = [
+    ['eFont', 0x2000], ['eMsgGfx', 0x1C0], ['eMsgPal', 0x20], ['eArrow', 0xC0], ['eArrowAlt', 0xC0],
+    ['battleGfx', 0x2000], ['battlePal', 0x40], ['battleMap', 0x1000],
+    ['rsFont', 0x4000], ['rsArrow', 0x100], ['rsMsgPal', 0x20],
+  ];
+  const E_ADDR = { eFont: 0x2A0F14, eMsgGfx: 0x4E85E0, eMsgPal: 0x4E87A0, eArrow: 0x29BFB8, eArrowAlt: 0x29C078 };
+  const E_LZ = { battleGfx: 0xC00000, battlePal: 0xC004EC, battleMap: 0xC00530 };
+  const RS_ADDR = { rsFont: 0x1B6CBC, rsArrow: 0x1BB23C, rsMsgPal: 0x1B3A1C };  // 日本版サファイア
+  const SHA1_E = 'd7cf8f156ba9c455d164e1ea780a6bf1945465c2';
+  const SHA1_S = '3233342c2f3087e6ffe6c1791cd5867db07df842';
+
+  function lz77(rom, off) {
+    if (rom[off] !== 0x10) throw new Error('LZ');
+    const size = rom[off + 1] | rom[off + 2] << 8 | rom[off + 3] << 16;
+    const out = new Uint8Array(size); let o = 0, i = off + 4;
+    while (o < size) {
+      const flags = rom[i++];
+      for (let b = 0; b < 8 && o < size; b++) {
+        if (flags & (0x80 >> b)) {
+          const n = (rom[i] >> 4) + 3, disp = ((rom[i] & 15) << 8 | rom[i + 1]) + 1; i += 2;
+          for (let k = 0; k < n && o < size; k++) { out[o] = out[o - disp]; o++; }
+        } else out[o++] = rom[i++];
+      }
+    }
+    return out;
+  }
+  function code4(rom) { return String.fromCharCode(rom[0xAC], rom[0xAD], rom[0xAE], rom[0xAF]); }
+  function u32(rom, o) { return (rom[o] | rom[o + 1] << 8 | rom[o + 2] << 16 | rom[o + 3] << 24) >>> 0; }
+
+  // roms: [{bytes: Uint8Array, sha1: '...'}]。textbox.gba 1つ、または 日本版エメラルドと 日本版サファイアの 2つ。
+  function extract(roms) {
+    let e = null, s = null, tb = null;
+    for (const r of roms) {
+      const b = r.bytes;
+      if (b.length >= 0xF40020 && String.fromCharCode(...b.subarray(0xF40000, 0xF40008)) === 'TBOXDATA' && code4(b) === 'BPEJ') tb = b;
+      else if (r.sha1 === SHA1_E) e = b;
+      else if (r.sha1 === SHA1_S) s = b;
+    }
+    const src = {};
+    if (tb) {
+      e = tb;
+      src.rsFont = u32(tb, 0xF4000C) - 0x08000000;
+      src.rsArrow = u32(tb, 0xF40010) - 0x08000000;
+      src.rsMsgPal = u32(tb, 0xF40014) - 0x08000000;
+    } else if (e && s) {
+      Object.assign(src, RS_ADDR);
+    } else {
+      throw new Error('textbox.gba（テキストボックス用の ROM）か、未改変の 日本版エメラルドと 日本版サファイアの 2つを えらんで ください');
+    }
+    const parts = {};
+    for (const k in E_ADDR) parts[k] = e.subarray(E_ADDR[k], E_ADDR[k] + PARTS.find(p => p[0] === k)[1]);
+    for (const k in E_LZ) parts[k] = lz77(e, E_LZ[k]);
+    const rsRom = tb || s;
+    for (const k of ['rsFont', 'rsArrow', 'rsMsgPal']) parts[k] = rsRom.subarray(src[k], src[k] + PARTS.find(p => p[0] === k)[1]);
+    return pack(parts);
+  }
+  function pack(parts) {
+    const total = PARTS.reduce((a, p) => a + p[1], 0);
+    const out = new Uint8Array(total); let o = 0;
+    for (const [k, n] of PARTS) { out.set(parts[k].subarray(0, n), o); o += n; }
+    return out;
+  }
+  function unpack(blob) {
+    const d = {}; let o = 0;
+    for (const [k, n] of PARTS) { d[k] = blob.subarray(o, o + n); o += n; }
+    d.eMsgPal16 = new Uint16Array(16); d.rsMsgPal16 = new Uint16Array(16); d.battlePal16 = new Uint16Array(32);
+    for (let i = 0; i < 16; i++) { d.eMsgPal16[i] = d.eMsgPal[2 * i] | d.eMsgPal[2 * i + 1] << 8; d.rsMsgPal16[i] = d.rsMsgPal[2 * i] | d.rsMsgPal[2 * i + 1] << 8; }
+    for (let i = 0; i < 32; i++) d.battlePal16[i] = d.battlePal[2 * i] | d.battlePal[2 * i + 1] << 8;
+    return d;
+  }
+
+  // ---------- 描く（ROM の src/tb.c と 同じ）----------
+  const W = 0xFFFF, H = 0x400, V = 0x800;
+  function row(l, m, r) { return [...l, ...Array(22).fill(m), ...r]; }
+  const FIELD_LAYOUT = [
+    [ // エメラルド
+      row([0, 1, 2, 3], 4, [5, 2, 6, 0]),
+      row([0, 7, 0xd, 0xb], W, [0xb | H, 0xd, 0xa, 0]),
+      row([0, 7, 8, 9], W, [9, 8, 0xa, 0]),
+      row([0, 7, 8, 9], W, [9, 8, 0xa, 0]),
+      row([0, 7 | V, 0xd | V, 0xb | V], W, [0xb | H | V, 0xd | V, 0xa | V, 0]),
+      row([0, 1 | V, 2 | V, 3 | V], 4 | V, [5 | V, 2 | V, 6 | V, 0]),
+    ],
+    [ // ルビサファ
+      row([0, 1, 2, 3], 4, [5, 2, 6, 0]),
+      row([0, 7, 0xd, 0xb], W, [0xb | H, 0xd | H, 0xa, 0]),
+      row([0, 7, 8, 0xc], W, [0xc | H, 8 | H, 0xa, 0]),
+      row([0, 7, 8, 0xc], W, [0xc | H, 8 | H, 0xa, 0]),
+      row([0, 7 | V, 0xd | V, 0xb | V], W, [0xb | H | V, 0xd | H | V, 0xa | V, 0]),
+      row([0, 1 | V, 2 | V, 3 | V], 4 | V, [5 | V, 2 | V, 6 | V, 0]),
+    ],
+  ];
+  const BOXES = [
+    { battle: 0, rs: 0, winX: 4, winW: 22 }, { battle: 0, rs: 1, winX: 4, winW: 22 },
+    { battle: 1, rs: 0, winX: 2, winW: 26 }, { battle: 1, rs: 1, winX: 2, winW: 26 },
+  ];
+  const TILE_WINDOW = 0x100, TILE_FRAME = 0x200, TILE_BLANK = 0x3FF, TEXT_PAL = 14;
+  const C_BG = 1, C_FG = 2, C_SHADOW = 3, C_RED = 4;
+
+  function fontOf(box, font) { return font === FONT_SAME ? BOXES[box].rs : font; }
+  // ▼の 1こまの 長さ（1/100 びょう）。ルビサファ 6フレーム、エメラルド 9フレーム
+  function arrowDelay(box, font) { return fontOf(box, font) ? 10 : 15; }
+
+  function render(d, box, font, arrow, codes) {
+    const bx = BOXES[box];
+    const rsFont = fontOf(box, font);
+    const yoff = rsFont ? 0 : 2;
+    const winW = bx.winW, ww = winW * 8, wh = 32;
+    const win = new Uint8Array(ww * wh).fill(C_BG);  // 文字の 窓（色の 番号）
+    const put = (x, y, c) => { if (x >= 0 && y >= 0 && x < ww && y < wh) win[y * ww + x] = c; };
+    function glyph(code, x0, y0) {
+      for (let y = 0; y < 16; y++)
+        for (let x = 0; x < 8; x++) {
+          let v;
+          if (rsFont) {
+            const o = ((code >> 4) << 10) + ((code & 15) << 5) + (y >= 8 ? 512 : 0) + ((y & 7) << 2) + (x >> 1);
+            v = (d.rsFont[o] >> ((x & 1) * 4)) & 15;
+            v = v === 15 ? C_FG : v === 14 ? C_SHADOW : 0;
+          } else {
+            const o = (code >> 4) * 0x200 + ((code & 15) << 4) + (y >= 8 ? 0x100 : 0) + ((y & 7) << 1);
+            const w = d.eFont[o] | d.eFont[o + 1] << 8;
+            v = (w >> (14 - 2 * x)) & 3;
+            v = v === 1 ? C_FG : v === 2 ? C_SHADOW : 0;
+          }
+          if (v) put(x0 + x, y0 + y, v);
+        }
+    }
+    const bmpPx = (bmp, x, y) => { const b = bmp[((y >> 3) << 5) + ((y & 7) << 2) + (x >> 1)]; return (x & 1) ? b >> 4 : b & 15; };
+    function drawArrow(phase, x0, top) {
+      let bmp, edge, fill, src = 0;
+      if (rsFont) { bmp = d.rsArrow.subarray(phase * 64); edge = 1; fill = 2; }
+      else if (bx.battle) { bmp = d.eArrowAlt; edge = 1; fill = 2; src = [0, 1, 2, 1][phase]; }
+      else { bmp = d.eArrow; edge = 2; fill = 4; src = [0, 1, 2, 1][phase]; }
+      for (let y = 0; y < 16; y++)
+        for (let x = 0; x < 8; x++) {
+          const v = bmpPx(bmp, x, src + y);
+          if (v === edge) put(x0 + x, top + y, C_FG); else if (v === fill) put(x0 + x, top + y, C_RED);
+        }
+    }
+    // 色
+    const pal = Array.from({ length: 16 }, () => new Uint16Array(16));
+    const textPal = pal[TEXT_PAL];
+    const map = [];  // 行 14〜19
+    if (!bx.battle) {
+      const boxPal = bx.rs ? d.rsMsgPal16 : d.eMsgPal16;
+      pal[15].set(boxPal);
+      textPal[C_BG] = bx.rs ? d.rsMsgPal16[15] : d.eMsgPal16[1];
+      if (rsFont) { textPal[C_FG] = d.rsMsgPal16[1]; textPal[C_SHADOW] = d.rsMsgPal16[8]; textPal[C_RED] = d.rsMsgPal16[2]; }
+      else { textPal[C_FG] = d.eMsgPal16[2]; textPal[C_SHADOW] = d.eMsgPal16[3]; textPal[C_RED] = d.eMsgPal16[4]; }
+      const layout = FIELD_LAYOUT[bx.rs];
+      for (let y = 0; y < 6; y++) {
+        map.push([]);
+        for (let x = 0; x < 30; x++) {
+          const e = layout[y][x];
+          map[y].push(e === W ? (TILE_WINDOW + (y - 1) * winW + (x - bx.winX)) | (TEXT_PAL << 12)
+            : e === 0 ? TILE_BLANK : (TILE_FRAME + (e & 0x3FF)) | (e & 0xC00) | (15 << 12));
+        }
+      }
+    } else {
+      pal[0].set(d.battlePal16.subarray(0, 16)); pal[1].set(d.battlePal16.subarray(16, 32));
+      textPal[C_BG] = d.battlePal16[15]; textPal[C_FG] = d.battlePal16[1];
+      textPal[C_SHADOW] = d.battlePal16[rsFont ? 8 : 6]; textPal[C_RED] = d.battlePal16[2];
+      for (let y = 14; y < 20; y++) {
+        map.push([]);
+        for (let x = 0; x < 30; x++) {
+          let v = d.battleMap[(y * 32 + x) * 2] | d.battleMap[(y * 32 + x) * 2 + 1] << 8;
+          if (y >= 15 && y < 19 && x >= bx.winX && x < bx.winX + winW) v = (TILE_WINDOW + (y - 15) * winW + (x - bx.winX)) | (TEXT_PAL << 12);
+          map[y - 14].push(v);
+        }
+      }
+    }
+    // 文字
+    let line = 0, cx = 0;
+    for (const c of codes) {
+      if (c === 0xFF) break;
+      if (c === 0xFE) { line++; cx = 0; continue; }
+      if (c >= 0xF7) continue;
+      glyph(c, cx, line * 16 + yoff); cx += 8;
+    }
+    if (arrow >= 1 && arrow <= 4) drawArrow(arrow - 1, cx, line * 16 + yoff);
+    // タイルの 1点（色の 番号）
+    function tilePx(t, x, y) {
+      if (t >= TILE_WINDOW && t < TILE_WINDOW + winW * 4) {
+        const k = t - TILE_WINDOW; return win[((k / winW | 0) * 8 + y) * ww + (k % winW) * 8 + x];
+      }
+      let src, base;
+      if (t >= TILE_FRAME && t < TILE_FRAME + 14) { src = d.eMsgGfx; base = (t - TILE_FRAME) * 32; }
+      else if (bx.battle && t < 256) { src = d.battleGfx; base = t * 32; }
+      else return 0;
+      const b = src[base + y * 4 + (x >> 1)], v = (x & 1) ? b >> 4 : b & 15;
+      return bx.battle && src === d.battleGfx && v === 9 ? 0 : v;  // 赤い 枠の 外の 暗い 灰色（9番）は 透明（ROM と 同じ）
+    }
+    const x0 = bx.battle ? 0 : 1, cols = bx.battle ? 30 : 28;
+    const w = cols * 8, h = 48, rgba = new Uint8Array(w * h * 4);
+    for (let ty = 0; ty < 6; ty++)
+      for (let tx = 0; tx < cols; tx++) {
+        const e = map[ty][x0 + tx], t = e & 0x3FF, hf = e & 0x400, vf = e & 0x800, p = e >> 12;
+        for (let y = 0; y < 8; y++)
+          for (let x = 0; x < 8; x++) {
+            const ci = tilePx(t, hf ? 7 - x : x, vf ? 7 - y : y);
+            if (!ci) continue;
+            const c = pal[p][ci], o = ((ty * 8 + y) * w + tx * 8 + x) * 4;
+            const r = c & 31, g = (c >> 5) & 31, b = (c >> 10) & 31;
+            rgba[o] = r << 3 | r >> 2; rgba[o + 1] = g << 3 | g >> 2; rgba[o + 2] = b << 3 | b >> 2; rgba[o + 3] = 255;
+          }
+      }
+    return { w, h, rgba };
+  }
+
+  // ---------- 文字 ----------
+  // 1行を ゲームの 文字コードに。だめな 字が あれば {bad}
+  function encodeLine(s) {
+    const codes = [];
+    for (const ch of s) {
+      if (!(ch in CHARMAP)) return { bad: ch };
+      codes.push(CHARMAP[ch]);
+    }
+    return { codes };
+  }
+  // 1まいぶんの 行（2行まで）→ { codes, arrow } か { error }
+  function encodePage(lines, box, arrowFromText) {
+    const out = []; let arrow = false;
+    lines = lines.slice();
+    if (arrowFromText && lines.length && lines[lines.length - 1].endsWith('▼')) { arrow = true; lines[lines.length - 1] = lines[lines.length - 1].slice(0, -1); }
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i];
+      if (l.includes('▼')) return { error: arrowFromText ? '▼ は 行の さいごに だけ 書けます' : '▼ は「▼を出す」で 出します（文には 書かないで ください）' };
+      const n = [...l].length;
+      if (n > BOX_WIDTH[box]) return { error: `${i + 1}行めが ${n}文字です。この 窓は 1行 ${BOX_WIDTH[box]}文字まで です` };
+      const r = encodeLine(l);
+      if (r.bad) return { error: `「${r.bad}」は ゲームの 字に ない ので 使えません` };
+      if (i) out.push(0xFE);
+      out.push(...r.codes);
+    }
+    out.push(0xFF);
+    return { codes: out, arrow };
+  }
+
+  // テキストファイル → [{ name, box, font, lines, frame }] か { error }
+  function parseBatch(text, defBox, defFont) {
+    const lines = text.replace(/^﻿/, '').split('\n').map(l => l.replace(/[\s　]+$/u, ''));
+    lines.push('');
+    const pages = []; let cur = [], opts = {}, start = 0, count = 0;
+    const isBlank = l => !l.replace(/[\s　]/gu, '');
+    for (let n = 0; n < lines.length; n++) {
+      const l = lines[n];
+      if (l.startsWith('#')) continue;
+      if (isBlank(l)) {
+        if (cur.length || Object.keys(opts).length) {
+          const style = opts.style || BOX_NAMES[defBox];
+          const boxes = style === 'all' ? [0, 1, 2, 3] : [BOX_NAMES.indexOf(style)];
+          if (boxes[0] < 0) return { error: `${start}行め: 窓「${style}」は ありません（${BOX_NAMES.join('・')}・all）` };
+          let font = defFont;
+          if (opts.font) { if (opts.font === 'rs') font = FONT_RS; else if (opts.font === 'e') font = FONT_E; else return { error: `${start}行め: 文字「${opts.font}」は ありません（rs・e）` }; }
+          const frame = Math.min(3, Math.max(0, parseInt(opts['arrow-frame'] || '0', 10) || 0));
+          const np = Math.max(1, Math.ceil(cur.length / 2));
+          for (let p = 0; p < np; p++) {
+            count++;
+            let name = opts.name ? (np > 1 ? `${opts.name}_${p + 1}` : opts.name) : String(count).padStart(3, '0');
+            for (const b of boxes)
+              pages.push({ name: style === 'all' ? `${name}_${BOX_NAMES[b]}` : name, box: b, font, lines: cur.slice(p * 2, p * 2 + 2), frame, line: start });
+          }
+        }
+        cur = []; opts = {}; start = 0;
+        continue;
+      }
+      if (!start) start = n + 1;
+      if (l.startsWith('@') && !cur.length) {
+        for (const kv of l.slice(1).split(/\s+/)) { const i = kv.indexOf('='); if (i > 0) opts[kv.slice(0, i)] = kv.slice(i + 1); }
+        continue;
+      }
+      cur.push(l);
+    }
+    return { pages };
+  }
+
+  // ---------- GIF（透明 1色・くりかえし）----------
+  function writeGIF(frames, delayCs, scale) {
+    const pal = [0], key = new Map();
+    for (const f of frames)
+      for (let i = 0; i < f.w * f.h; i++) {
+        if (!f.rgba[i * 4 + 3]) continue;
+        const c = f.rgba[i * 4] << 16 | f.rgba[i * 4 + 1] << 8 | f.rgba[i * 4 + 2];
+        if (!key.has(c)) { key.set(c, pal.length); pal.push(c); }
+      }
+    let bits = 1; while ((1 << bits) < pal.length) bits++;
+    const w = frames[0].w * scale, h = frames[0].h * scale;
+    const out = [];
+    const bytes = (...a) => { for (const v of a) out.push(v & 0xFF); };
+    for (const c of 'GIF89a') out.push(c.charCodeAt(0));
+    bytes(w, w >> 8, h, h >> 8, 0x80 | 0x70 | (bits - 1), 0, 0);
+    for (let k = 0; k < (1 << bits); k++) { const c = pal[k] || 0; bytes(c >> 16, c >> 8, c); }
+    if (frames.length > 1) { bytes(0x21, 0xFF, 0x0B); for (const c of 'NETSCAPE2.0') out.push(c.charCodeAt(0)); bytes(3, 1, 0, 0, 0); }
+    const idx = new Uint8Array(w * h);
+    for (const f of frames) {
+      bytes(0x21, 0xF9, 4, (2 << 2) | 1, delayCs, delayCs >> 8, 0, 0);
+      bytes(0x2C, 0, 0, 0, 0, w, w >> 8, h, h >> 8, 0);
+      for (let y = 0; y < h; y++)
+        for (let x = 0; x < w; x++) {
+          const o = ((y / scale | 0) * f.w + (x / scale | 0)) * 4;
+          idx[y * w + x] = f.rgba[o + 3] ? key.get(f.rgba[o] << 16 | f.rgba[o + 1] << 8 | f.rgba[o + 2]) : 0;
+        }
+      lzw(idx, Math.max(2, bits), out);
+    }
+    out.push(0x3B);
+    return new Uint8Array(out);
+  }
+  function lzw(idx, minSize, out) {
+    out.push(minSize);
+    const clear = 1 << minSize; let size = minSize + 1, maxCode = clear + 1;
+    let dict = new Map(), bitBuf = 0, nBits = 0, block = [];
+    const flushByte = b => { block.push(b); if (block.length === 255) { out.push(255, ...block); block = []; } };
+    const code = (c, s) => { bitBuf |= c << nBits; nBits += s; while (nBits >= 8) { flushByte(bitBuf & 0xFF); bitBuf >>>= 8; nBits -= 8; } };
+    code(clear, size);
+    let cur = -1;
+    for (let i = 0; i < idx.length; i++) {
+      const v = idx[i];
+      if (cur < 0) { cur = v; continue; }
+      const k = cur << 8 | v, nx = dict.get(k);
+      if (nx !== undefined) { cur = nx; continue; }
+      code(cur, size);
+      ++maxCode; dict.set(k, maxCode);
+      if (maxCode >= (1 << size)) size++;
+      if (maxCode === 4095) { code(clear, size); dict = new Map(); size = minSize + 1; maxCode = clear + 1; }
+      cur = v;
+    }
+    code(cur, size); code(clear + 1, size);
+    if (nBits) flushByte(bitBuf & 0xFF);
+    if (block.length) out.push(block.length, ...block);
+    out.push(0);
+  }
+
+  // ---------- PNG（圧縮なし）・ZIP（圧縮なし）----------
+  const CRC = new Uint32Array(256).map((_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
+  function crc32(buf, c = 0xFFFFFFFF) { for (let i = 0; i < buf.length; i++) c = CRC[(c ^ buf[i]) & 0xFF] ^ (c >>> 8); return c; }
+  function writePNG(img, scale) {
+    const w = img.w * scale, h = img.h * scale, stride = 1 + w * 4, raw = new Uint8Array(h * stride);
+    for (let y = 0; y < h; y++)
+      for (let x = 0; x < w; x++) raw.set(img.rgba.subarray(((y / scale | 0) * img.w + (x / scale | 0)) * 4, ((y / scale | 0) * img.w + (x / scale | 0)) * 4 + 4), y * stride + 1 + x * 4);
+    const z = [0x78, 0x01]; let a = 1, b = 0;
+    for (let i = 0; i < raw.length; i++) { a = (a + raw[i]) % 65521; b = (b + a) % 65521; }
+    for (let p = 0; p < raw.length; p += 65535) {
+      const n = Math.min(65535, raw.length - p);
+      z.push(p + n >= raw.length ? 1 : 0, n & 0xFF, n >> 8, ~n & 0xFF, (~n >> 8) & 0xFF);
+      for (let i = 0; i < n; i++) z.push(raw[p + i]);
+    }
+    z.push(b >> 8, b & 0xFF, a >> 8, a & 0xFF);
+    const chunks = [];
+    const chunk = (type, data) => {
+      const t = [...type].map(c => c.charCodeAt(0)), len = data.length;
+      const crc = (crc32(data, crc32(t)) ^ 0xFFFFFFFF) >>> 0;
+      chunks.push([len >>> 24, len >> 16 & 255, len >> 8 & 255, len & 255], t, data, [crc >>> 24, crc >> 16 & 255, crc >> 8 & 255, crc & 255]);
+    };
+    chunk('IHDR', [w >>> 24, w >> 16 & 255, w >> 8 & 255, w & 255, h >>> 24, h >> 16 & 255, h >> 8 & 255, h & 255, 8, 6, 0, 0, 0]);
+    chunk('IDAT', z); chunk('IEND', []);
+    const total = 8 + chunks.reduce((s, c) => s + c.length, 0), out = new Uint8Array(total);
+    out.set([137, 80, 78, 71, 13, 10, 26, 10]); let o = 8;
+    for (const c of chunks) { out.set(c, o); o += c.length; }
+    return out;
+  }
+  function writeZIP(files) {
+    const enc = new TextEncoder(), parts = [], central = []; let off = 0;
+    const le = (v, n) => Array.from({ length: n }, (_, i) => (v >>> (8 * i)) & 0xFF);
+    for (const f of files) {
+      const name = enc.encode(f.name), crc = (crc32(f.data) ^ 0xFFFFFFFF) >>> 0;
+      const head = [...le(0x04034b50, 4), 20, 0, 0, 8, 0, 0, 0, 0, 0, 0, ...le(crc, 4), ...le(f.data.length, 4), ...le(f.data.length, 4), ...le(name.length, 2), 0, 0];
+      parts.push(new Uint8Array(head), name, f.data);
+      central.push(new Uint8Array([...le(0x02014b50, 4), 20, 0, 20, 0, 0, 8, 0, 0, 0, 0, 0, 0, ...le(crc, 4), ...le(f.data.length, 4), ...le(f.data.length, 4), ...le(name.length, 2), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...le(off, 4)]), name);
+      off += head.length + name.length + f.data.length;
+    }
+    const cenSize = central.reduce((s, c) => s + c.length, 0);
+    const end = new Uint8Array([...le(0x06054b50, 4), 0, 0, 0, 0, ...le(files.length, 2), ...le(files.length, 2), ...le(cenSize, 4), ...le(off, 4), 0, 0]);
+    const all = [...parts, ...central, end], out = new Uint8Array(all.reduce((s, c) => s + c.length, 0)); let o = 0;
+    for (const c of all) { out.set(c, o); o += c.length; }
+    return out;
+  }
+
+  const api = { BOX_NAMES, BOX_WIDTH, FONT_E, FONT_RS, FONT_SAME, extract, unpack, render, encodePage, parseBatch, fontOf, arrowDelay, writeGIF, writePNG, writeZIP };
+  if (typeof module !== 'undefined') module.exports = api; else root.TB = api;
+})(this);
+</script>
+<script>
+{
+  const $ = id => document.getElementById(id);
+  let data = null, cur = 0, frames = [], fidx = 0, timer = 0, saveCap = null;
+  let P = { info: [], pages: [], w: 22 };
+
+  // ---- 保存（claude.ai の 中では downloads、ほかでは ふつうの ダウンロード）----
+  try { if (window.claude && window.claude.use) window.claude.use('downloads').then(d => { saveCap = d; }).catch(() => {}); } catch (e) {}
+  async function saveFile(name, bytes) {
+    if (saveCap) {
+      try { await saveCap.save({ filename: name, data: new Blob([bytes]) }); return '保存しました: ' + name; }
+      catch (e) {
+        if (e && e.code === 'declined') return '保存を やめました';
+        if (e && e.code === 'rate_limited') return 'すこし まってから もう一度 おして ください';
+      }
+    }
+    // スマホ（iPhone など）: 共有メニューから「画像を保存」「ファイルに保存」できる
+    try {
+      const type = name.endsWith('.png') ? 'image/png' : name.endsWith('.gif') ? 'image/gif' : 'application/zip';
+      const file = new File([bytes], name, { type });
+      if (matchMedia('(pointer:coarse)').matches && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return '保存しました: ' + name;
+      }
+    } catch (e) { if (e && e.name === 'AbortError') return '保存を やめました'; }
+    try {
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([bytes])); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      return '保存しました: ' + name;
+    } catch (e) { return '保存 できませんでした'; }
+  }
+
+  // ---- ROM の データを この 端末に おぼえる ----
+  function idb(mode, fn) {
+    return new Promise((res, rej) => {
+      try {
+        const r = indexedDB.open('textbox-maker', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('data');
+        r.onsuccess = () => { const tx = r.result.transaction('data', mode); const q = fn(tx.objectStore('data')); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); };
+        r.onerror = () => rej(r.error);
+      } catch (e) { rej(e); }
+    });
+  }
+  async function sha1(buf) { const h = await crypto.subtle.digest('SHA-1', buf); return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, '0')).join(''); }
+  $('romfile').addEventListener('change', async ev => {
+    const m = $('setupmsg'); m.className = 'msg'; m.textContent = '読んで います…';
+    try {
+      const roms = [];
+      for (const f of ev.target.files) { const b = new Uint8Array(await f.arrayBuffer()); roms.push({ bytes: b, sha1: await sha1(b) }); }
+      const blob = TB.extract(roms);
+      try { await idb('readwrite', s => s.put(blob, 'blob')); } catch (e) {}
+      start(blob);
+    } catch (e) { m.className = 'msg err'; m.textContent = e.message || String(e); }
+    ev.target.value = '';
+  });
+  $('reset').addEventListener('click', async () => {
+    try { await idb('readwrite', s => s.delete('blob')); } catch (e) {}
+    data = null; clearInterval(timer); $('app').classList.add('hide'); $('setup').classList.remove('hide');
+  });
+  function start(blob) { data = TB.unpack(blob); $('setup').classList.add('hide'); $('app').classList.remove('hide'); refresh(); fit(); }
+
+  // ---- ボタンの くみ（ひとつ えらぶ）----
+  function seg(id, onChange) {
+    const g = $(id);
+    g.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      for (const x of g.children) x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      onChange();
+    });
+    return () => g.querySelector('[aria-pressed=true]').dataset.v;
+  }
+  const boxV = seg('box', refresh), fontV = seg('font', refresh), fmt = seg('fmt', () => {});
+  const box = () => +boxV(), font = () => +fontV();
+
+  // ---- 文 → ページ（2行ずつ。空の 行でも 区切る）----
+  function paginate(text) {
+    const lines = text.replace(/\r/g, '').split('\n');
+    const w = TB.BOX_WIDTH[box()];
+    const info = lines.map(l => {
+      const chars = [...l], bad = new Set();
+      chars.forEach((c, i) => { if (c === '▼' || !TB.encodePage([c], box(), false).codes) bad.add(i); });
+      return { text: l, n: chars.length, chars, bad, over: chars.length > w };
+    });
+    const pages = []; let grp = [];
+    const flush = () => { for (let i = 0; i < grp.length; i += 2) pages.push(grp.slice(i, i + 2)); grp = []; };
+    info.forEach((l, i) => { if (!l.text.replace(/[\s　]/gu, '')) flush(); else grp.push(i); });
+    flush();
+    return { info, pages, w };
+  }
+  function pageOfLine(li) {
+    const k = P.pages.findIndex(p => p.includes(li)); if (k >= 0) return k;
+    const after = P.pages.findIndex(p => p[0] > li); return after >= 0 ? after : Math.max(0, P.pages.length - 1);
+  }
+  const pageCodes = k => TB.encodePage(P.pages[k].map(i => P.info[i].text), box(), false);
+  const hasArrow = k => k < P.pages.length - 1 || $('lastArrow').checked;
+
+  // ---- 入力欄の しるし（だめな 字・長すぎる 行・いまの ページ）----
+  const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  function decorate() {
+    const curSet = new Set(P.pages[cur] || []);
+    $('mir').innerHTML = P.info.map((l, i) => {
+      const body = l.chars.map((c, j) => l.bad.has(j) || j >= P.w ? `<mark>${esc(c)}</mark>` : esc(c)).join('');
+      return curSet.has(i) ? `<span class="pg">${body || ' '}</span>` : body + '\n';
+    }).join('');
+    $('gut').innerHTML = P.info.map(l => !l.n ? '<span class="blank">0</span>' : `<span class="${l.over || l.bad.size ? 'bad' : ''}">${l.n}/${P.w}</span>`).join('\n');
+    const t = $('text'); t.style.height = (P.info.length * 28 + 16 + (t.offsetHeight - t.clientHeight)) + 'px';
+  }
+
+  // ---- プレビュー ----
+  function refresh() {
+    if (!data) return;
+    P = paginate($('text').value);
+    if (document.activeElement === $('text')) cur = pageOfLine(caretLine());
+    cur = Math.min(cur, Math.max(0, P.pages.length - 1));
+    show();
+  }
+  function show() {
+    clearInterval(timer); frames = []; fidx = 0;
+    decorate();
+    const n = P.pages.length;
+    $('pno').textContent = n ? `${cur + 1} / ${n}` : '0 / 0';
+    $('prev').disabled = cur <= 0; $('next').disabled = cur >= n - 1;
+    const bads = P.info.map((l, i) => l.over ? `${i + 1}行めが ${l.n}文字（${P.w}文字まで）` : l.bad.size ? `${i + 1}行めの「${[...l.bad].map(j => l.chars[j]).join('')}」は 使えません` : '').filter(Boolean);
+    let err = '';
+    if (!n) err = '文を 入力して ください';
+    else {
+      const r = pageCodes(cur);
+      if (r.error) { const ln = P.pages[cur].map(i => i + 1); err = bads.find(b => ln.some(x => b.startsWith(x + '行め'))) || r.error; }
+      else frames = hasArrow(cur) ? [1, 2, 3, 4].map(a => TB.render(data, box(), font(), a, r.codes)) : [TB.render(data, box(), font(), 0, r.codes)];
+    }
+    $('pmsg').textContent = err || (bads.length ? `ほかの ページ: ${bads[0]}` : '');
+    $('saveOne').disabled = !frames.length; $('saveAll').disabled = !n || bads.length > 0;
+    draw();
+    if (frames.length > 1) timer = setInterval(() => { fidx = (fidx + 1) % frames.length; draw(); }, TB.arrowDelay(box(), font()) * 10);
+  }
+  function draw() {
+    const c = $('view'), ctx = c.getContext('2d');
+    if (!frames.length) { ctx.clearRect(0, 0, c.width, c.height); c.style.opacity = .2; return; }
+    const f = frames[fidx]; c.style.opacity = 1;
+    if (c.width !== f.w) { c.width = f.w; c.height = f.h; fit(); }
+    ctx.putImageData(new ImageData(new Uint8ClampedArray(f.rgba), f.w, f.h), 0, 0);
+  }
+  // ドットが にじまない ように、画面の 画素の 整数倍で 大きく する（小さすぎる ときは 幅いっぱい）
+  function fit() {
+    const c = $('view'), st = c.parentElement, dpr = window.devicePixelRatio || 1;
+    const room = Math.min(st.clientWidth - 16, 720);
+    if (room <= 0) return;
+    let k = Math.max(1, Math.floor(room * dpr / c.width)) / dpr;
+    if (c.width * k < room * 0.8) k = room / c.width;
+    c.style.width = (c.width * k) + 'px'; c.style.height = (c.height * k) + 'px';
+  }
+  new ResizeObserver(fit).observe($('view').parentElement);
+
+  // カーソルの ある 行の ページを 出す
+  function caretLine() { const t = $('text'); return t.value.slice(0, t.selectionStart).split('\n').length - 1; }
+  function followCaret() {
+    if (!data || document.activeElement !== $('text')) return;
+    const k = pageOfLine(caretLine());
+    if (k !== cur) { cur = k; show(); }
+  }
+  $('text').addEventListener('input', refresh);
+  $('text').addEventListener('scroll', () => { $('mir').style.transform = `translate(${-$('text').scrollLeft}px,0)`; });
+  for (const ev of ['keyup', 'click', 'focus']) $('text').addEventListener(ev, followCaret);
+  document.addEventListener('selectionchange', followCaret);
+  $('prev').addEventListener('click', () => { if (cur > 0) { cur--; show(); } });
+  $('next').addEventListener('click', () => { if (cur < P.pages.length - 1) { cur++; show(); } });
+  for (const id of ['lastArrow', 'aframe']) $(id).addEventListener('change', show);
+
+  // ---- 保存 ----
+  const scale = () => +$('scale').value;
+  function pageFile(k, codes) {
+    const g = fmt() === 'gif', ar = hasArrow(k), sc = scale();
+    if (g && ar) return TB.writeGIF([1, 2, 3, 4].map(a => TB.render(data, box(), font(), a, codes)), TB.arrowDelay(box(), font()), sc);
+    const im = TB.render(data, box(), font(), ar ? +$('aframe').value + 1 : 0, codes);
+    return g ? TB.writeGIF([im], 0, sc) : TB.writePNG(im, sc);
+  }
+  const base = () => TB.BOX_NAMES[box()];
+  $('saveOne').addEventListener('click', async () => {
+    const r = pageCodes(cur); if (r.error) return;
+    $('msg').className = 'msg';
+    $('msg').textContent = await saveFile(`${base()}_${String(cur + 1).padStart(2, '0')}.${fmt()}`, pageFile(cur, r.codes));
+  });
+  $('saveAll').addEventListener('click', async () => {
+    const files = [], ext = fmt();
+    for (let k = 0; k < P.pages.length; k++) {
+      const r = pageCodes(k);
+      if (r.error) { $('msg').className = 'msg err'; $('msg').textContent = `${k + 1}ページめ: ${r.error}`; return; }
+      files.push({ name: `${base()}_${String(k + 1).padStart(2, '0')}.${ext}`, data: pageFile(k, r.codes) });
+    }
+    $('msg').className = 'msg';
+    $('msg').textContent = `${files.length} まい 作りました。` + await saveFile(`${base()}_${ext}.zip`, TB.writeZIP(files));
+  });
+
+  // ---- テキストファイルで まとめて ----
+  $('batch').addEventListener('change', async ev => {
+    const f = ev.target.files[0]; ev.target.value = '';
+    if (!f || !data) return;
+    const m = $('batchmsg'); m.className = 'msg'; m.textContent = '作って います…';
+    const r = TB.parseBatch(await f.text(), box(), font());
+    if (r.error) { m.className = 'msg err'; m.textContent = r.error; return; }
+    const out = [], sc = scale(), g = fmt() === 'gif';
+    for (const p of r.pages) {
+      const pg = TB.encodePage(p.lines, p.box, true);
+      if (pg.error) { m.className = 'msg err'; m.textContent = `${p.line}行め: ${pg.error}`; return; }
+      let bytes;
+      if (g && pg.arrow) bytes = TB.writeGIF([1, 2, 3, 4].map(a => TB.render(data, p.box, p.font, a, pg.codes)), TB.arrowDelay(p.box, p.font), sc);
+      else { const im = TB.render(data, p.box, p.font, pg.arrow ? p.frame + 1 : 0, pg.codes); bytes = g ? TB.writeGIF([im], 0, sc) : TB.writePNG(im, sc); }
+      out.push({ name: `${p.name}.${g ? 'gif' : 'png'}`, data: bytes });
+    }
+    if (!out.length) { m.className = 'msg err'; m.textContent = '文が ありません'; return; }
+    m.textContent = `${out.length} まい 作りました。` + await saveFile(f.name.replace(/\.[^.]*$/, '') + (g ? '_gif' : '_png') + '.zip', TB.writeZIP(out));
+  });
+
+  // ---- はじめ ----
+  idb('readonly', s => s.get('blob')).then(b => { if (b) start(new Uint8Array(b)); else $('setup').classList.remove('hide'); })
+    .catch(() => $('setup').classList.remove('hide'));
+}
+</script>
+</body>
+</html>
