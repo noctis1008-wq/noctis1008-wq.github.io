@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="apple-touch-icon" sizes="180x180" href="../textbox-maker/apple-touch-icon.png">
+<title>NER's topSecret</title>
+<style>
+/* VOICE: 身内の 道具箱の 入口。しずかで さがしやすい
+   IDEA: ゲームの「たいせつなもの」ポケット — 分類ごとに 道具が ならぶ
+   PICTURE: 分類ごとの カード（アイコン・名前・ひとこと・しるし）
+   COLOUR and TYPE: 白い 地・こい 紺の 字・青 1色。分類ごとに アイコンの 色だけ かえる
+   LAYOUT: 1列（スマホ）、広い 画面は 2列。見出し → 分類 → カード。項目は 下の ITEMS に 足すだけ */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#10141c);--ink:light-dark(#141a26,#e8ecf4);--sub:light-dark(#5a6372,#9aa3b2);
+  --line:light-dark(#dfe3ea,#2a3242);--card:light-dark(#ffffff,#151b26);--hover:light-dark(#f5f7fa,#1a2130);
+  --blue:light-dark(#1f56c9,#6f9cff);--blueBg:light-dark(#e6eefc,#1c2a48);--green:light-dark(#18794e,#5fd39b);--greenBg:light-dark(#e3f4ea,#173326);
+  --amber:light-dark(#9a5b00,#f5b74d);--amberBg:light-dark(#fdf0d8,#3a2a10);--gray:light-dark(#4c5566,#a7b0c0);--grayBg:light-dark(#eef1f5,#1e2532)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Hiragino Sans","Hiragino Kaku Gothic ProN","Meiryo UI",Meiryo,sans-serif;overflow-x:clip}
+main{max-width:880px;margin:0 auto;padding:28px max(4vw,14px) 48px}
+header{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.logo{width:48px;height:48px;flex:none}
+h1{font-size:30px;line-height:1.1;margin:0;letter-spacing:.01em}
+.lead{margin:6px 0 0;color:var(--sub);font-size:15px}
+section{margin-top:26px}
+h2{font-size:14px;font-weight:600;color:var(--sub);margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:10px}
+a.card{display:flex;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:inherit;text-decoration:none;min-height:72px}
+a.card:hover{background:var(--hover)}
+a.card:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.blue{background:var(--blueBg);color:var(--blue)}.green{background:var(--greenBg);color:var(--green)}
+.amber{background:var(--amberBg);color:var(--amber)}.gray{background:var(--grayBg);color:var(--gray)}
+.t{font-weight:600;font-size:16px;line-height:1.35}
+.d{font-size:13px;color:var(--sub);margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:12px;line-height:1;padding:4px 8px;border-radius:999px;background:var(--grayBg);color:var(--gray);white-space:nowrap}
+.tag.warn{background:var(--amberBg);color:var(--amber)}
+.go{margin-left:auto;color:var(--sub);flex:none}
+.go svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--sub)}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
+      <rect x="2" y="2" width="44" height="44" rx="12" fill="#1f56c9"/>
+      <rect x="9" y="14" width="30" height="20" rx="4" fill="#fff"/>
+      <rect x="13" y="19" width="14" height="3" fill="#4a4a4a"/><rect x="13" y="25" width="10" height="3" fill="#4a4a4a"/>
+      <path d="M30 25h6l-3 4z" fill="#e00"/>
+    </svg>
+    <div>
+      <h1>NER's topSecret</h1>
+      <p class="lead">Pokemerald NERversion と なかまの 道具の 入口</p>
+    </div>
+  </header>
+  <div id="list"></div>
+  <footer>項目を ふやす ときは この ページの <code>ITEMS</code> に 1行 足します。ROM・説明書の リンクは 自分の Dropbox・GitHub を ひらく だけで、共有 リンクでは ありません。</footer>
+</main>
+<script>
+{
+  // ---- ここに 足すだけで ふえる ----
+  // group: 分類（下の GROUPS の 名前）、icon: ICONS の 名前、color: blue / green / amber / gray
+  // tags: 小さい しるし（"!" で はじめると 注意の 色）
+  const GROUPS = ['ツール', 'ROM', '説明書'];
+  const ITEMS = [
+    { group: 'ツール', title: 'テキストボックス メーカー', desc: 'ルビサファ・エメラルドの 会話と バトルの 窓を 透明 PNG・▼が 動く GIF に', icon: 'message', color: 'blue',
+      url: '../textbox-maker/', tags: ['スマホ OK'] },
+    { group: 'ツール', title: 'NERversion 出現ずかん', desc: '野生の ポケモンが 出る 場所を さがす（Poke tools の 中）', icon: 'map', color: 'blue',
+      url: '../poke-tools/', tags: [] },
+    { group: 'ROM', title: 'EmeraldForVideo', desc: '動画用の エメラルド（Dropbox の GBA フォルダ）', icon: 'film', color: 'amber',
+      url: 'https://www.dropbox.com/preview/GBA/EmeraldForVideo.gba', tags: ['!Dropbox に ログイン', '公開しない'] },
+    { group: '説明書', title: 'Pokemerald NERversion 説明書', desc: '足した 機能と ボタンの 早見表', icon: 'book', color: 'green',
+      url: 'https://github.com/noctis1008-wq/topSecret/blob/randomizer/docs/ner_manual.md', tags: ['!GitHub に ログイン'] },
+  ];
+  const ICONS = {
+    message: '<path d="M4 6h16v10H9l-5 4z"/><path d="M8 10h8M8 13h5"/>',
+    map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+    film: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M3 15h18M8 5v4M16 5v4M8 15v4M16 15v4"/>',
+    book: '<path d="M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4z"/><path d="M5 16a4 4 0 0 1 4-4h10"/>',
+    game: '<rect x="3" y="7" width="18" height="10" rx="4"/><path d="M8 10v4M6 12h4M15 11h.01M17 13h.01"/>',
+    code: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13 6l-2 12"/>',
+    tool: '<path d="M14 6a4 4 0 0 0 5 5l-8 8a2 2 0 0 1-3-3z"/>',
+  };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const go = '<span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span>';
+  const groups = [...GROUPS, ...new Set(ITEMS.map(i => i.group).filter(g => !GROUPS.includes(g)))];
+  document.getElementById('list').innerHTML = groups.map(g => {
+    const items = ITEMS.filter(i => i.group === g);
+    if (!items.length) return '';
+    return `<section><h2>${esc(g)}</h2><div class="grid">${items.map(i => `
+      <a class="card" href="${esc(i.url)}">
+        <span class="ic ${esc(i.color || 'gray')}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[i.icon] || ICONS.tool}</svg></span>
+        <span><span class="t">${esc(i.title)}</span><span class="d" style="display:block">${esc(i.desc || '')}</span>
+        ${(i.tags || []).length ? `<span class="tags">${i.tags.map(t => t[0] === '!' ? `<span class="tag warn">${esc(t.slice(1))}</span>` : `<span class="tag">${esc(t)}</span>`).join('')}</span>` : ''}</span>
+        ${go}</a>`).join('')}</div></section>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
