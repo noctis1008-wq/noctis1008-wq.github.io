@@ -1,0 +1,13 @@
+<!-- 出現ずかん（Poke tools から 移した。2026-11-17） -->
+<div class="wrap view" id="vNer" hidden>
+  <button id="nerLoad" class="dxx-card dxx-cond nex-save" type="button" aria-label="NERversion のセーブを読みこむ"><span class="dxx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></svg></span><span class="tx"><span class="t1">NERversion のセーブ</span><span class="t2" id="nerSub1"></span><span class="t2" id="nerSub2"></span></span><span class="dxx-edit">読みこむ<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <input id="nerFile" type="file" accept=".sav,.srm,.sa1,.bin,application/octet-stream" hidden>
+  <div id="nerTabs" class="dxx-tabs" role="tablist" aria-label="さがしかた"><button type="button" role="tab" data-nertab="mon"><b>ポケモンから</b><small id="nerTMon"></small></button><button type="button" role="tab" data-nertab="pl"><b>ばしょから</b><small id="nerTPl"></small></button><button type="button" role="tab" data-nertab="miss"><b>出ないポケモン</b><small id="nerTMiss"></small></button></div>
+  <div class="dxx-tb"><div class="dxx-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="nerQ" type="search" placeholder="名前・ばしょで探す（ひらがなOK）" autocomplete="off" enterkeyhint="search" aria-label="名前・ばしょで探す"><button type="button" class="dxx-qx" id="nerQx" aria-label="検索を消す" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></div>
+  <div class="dxx-seg" role="group" aria-label="表示するポケモン"><button type="button" data-nerf="all">すべて<small id="nerNAll"></small></button><button type="button" data-nerf="todo">未捕獲<small id="nerNTodo"></small></button><button type="button" data-nerf="unseen">未発見<small id="nerNUnseen"></small></button></div>
+  <section class="dxx-lsec">
+    <div class="dxx-lh"><span id="nerCount" class="dxcount"></span></div>
+    <div id="nerList" class="nex-list"></div>
+    <p class="note">NERversion（改造ROM）の .sav を読みこむと、ランダマイザで入れかわった野生のポケモンが、どこで・どの方法で・何Lvで・何%で出るかを計算します。読みこんだ内容（入れかえの番号・つかまえた/みたポケモン）はこの端末に保存し、セーブそのものは保存しません。「出ないポケモン」は、野生で出ず、野生で出るポケモンの進化・タマゴでも手に入らないポケモンです（交換・配布は考えていません）。</p>
+  </section>
+</div>

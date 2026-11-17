@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.07b(`APP_VER`)· ポータル 2026-10-21 刷新 · テキストボックス メーカー・NER's topSecret 2026-11-17 追加 — 最後の記録 2026-11-17(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-17(1ページの アプリ。出現ずかんを Poke tools から 移した) — 最後の記録 2026-11-17(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -48,6 +48,7 @@
 - テキストボックスの バトルの 窓は、赤い 枠の 外の 暗い 灰色を いつも 透明に(2026-11-17)。
 - NER's topSecret は A案(分類ごとに 説明つきの カード)。あとから 項目を 足せる 形に(2026-11-17)。
 - claude.ai の ページでは なく、Poke tools のような ふつうの ウェブアプリとして このサイトに 置く(2026-11-17)。
+- NER's topSecret は Poke tools と 同じ 1ページの アプリ(A案: ☰メニュー＋下のバー)。ツールを ひらく とき 新しい ページ・リンクに 移らない。NERversion 専用の ツールは Poke tools では なく topSecret に 置く(出現ずかんを 移した。2026-11-17)。
 
 ### 図鑑埋め支援などの設計
 - まちがって登録するより「わからない」と出して運営者に選んでもらうほうがよい。読めなかった所は、どこかをはっきり見せる(「読めなかったページ」「不明」)。
@@ -71,10 +72,10 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド・出現ずかん など) | 2026.11.07b(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド など。出現ずかんは 2026-11-17 に NER's topSecret へ 移した) | 2026.11.17a(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
-| `/textbox-maker/` | テキストボックス メーカー(ルビサファ・エメラルドの テキストボックスの 透明 PNG・▼が 動く GIF)。もとの ソースは 非公開の topSecret の `tools/textbox_maker/`(`web/build.py` で 作った `web/index.html` を ここに コピーする) | 2026-11-17 |
-| `/topsecret/` | NER's topSecret(運営者 むけの 入口。`noindex`。項目は `ITEMS` に 1行 足す) | 2026-11-17 |
+| `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-17 |
+| `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
 - ポータルのフッターに © マークは付けない(運営者の希望)。
@@ -86,7 +87,7 @@
 
 ## 進行中・やり残し
 
-- **テキストボックス メーカー・NER's topSecret(2026-11-17)**:運営者の iPhone で まだ 見て いない(とくに 保存の 共有メニュー)。テキストボックス メーカーは ROM(textbox.gba か 未改変の 日本版エメラルド＋サファイア)を 端末の 中で 読む。ROM の データは サイトに 置かない。ポータルの ROM・説明書の リンクは 運営者の Dropbox・GitHub を ひらく だけ(共有リンクに しない)。
+- **NER's topSecret(2026-11-17)**:運営者の iPhone で まだ 見て いない(とくに テキストボックス メーカーの 保存の 共有メニュー)。テキストボックス メーカーは ROM(textbox.gba か 未改変の 日本版エメラルド＋サファイア)を 端末の 中で 読む。ROM の データは サイトに 置かない。ROM・説明書は 運営者の Dropbox・GitHub を ひらく だけ(共有リンクに しない)。出現ずかんの 保存は `ner-topsecret-v1`(はじめて ひらいた とき Poke tools の `ev-counter-v2` の `ner` を 引きつぐ)。Poke tools の バックアップには もう 入らない。Poke tools の CSS の `#vNer`・`.nex-*` は 残って いる(使って いない)。topsecret/src/poke.css は Poke tools の CSS を 写した もの なので、Poke tools の 見た目を 大きく かえたら 写しなおす。
 
 - **孵化・遺伝ガイド(2026.11.02a、新しいツール)**:運営者の iPhone でまだ見ていない。デザインは運営者が「案A(線のアイコン)＋案B(図解)」「しくみ・親チェック・世代くらべの3つ」を選んだ(デザイン案は claude.ai のキャンバス「孵化・遺伝ガイド デザイン案」)。遺伝の中身はポケモンWiki・攻略サイトで調べたもの。タマゴグループ・性別は PokeAPI の最新のデータ(世代ごとのちがいは見ていない)。次の案:親チェックのタマゴ技の一覧(技データがいる)、パワー系の能力をえらぶ、すがた違い(リージョンフォーム)を親にえらぶ。
 - 図鑑埋め支援 SV のすがた違い(2026.10.31b):運営者「リージョンフォームは別種」を受けて、SV の図鑑(パルデア・キタカミ・ブルーベリー)に載っているすがた違い 19 種類を、もとのポケモンとは別に登録するようにした。録画3本で、図鑑のタブの数がゲームの画面と同じ(ブルーベリーは 241〜243 の 3 匹だけ多い。これはゲームの画面がかぞえない)。前の登録は消さずに、もとのポケモンが登録済みなら、すがた違いも登録済みにして始める(読み直すと、捕まえていないすがたは「登録を外す」に出る)。運営者の iPhone でまだ確かめていない。剣盾(ガラルのすがた など)は、まだポケモンごと。
@@ -116,6 +117,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-17 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
+- やったこと: NER's topSecret(`/topsecret/`)を Poke tools と 同じ 1ページの アプリに 作りなおした(運営者が A案を えらんだ)。☰メニュー・下のバーで テキストボックス メーカー・出現ずかん・ROM・説明書を 切りかえる(`#tb`・`#ner`・`#links`)。見た目は Poke tools の CSS(`topsecret/src/poke.css`)を そのまま 使う。出現ずかんを Poke tools から 移した(画面・しくみ・表・`dev/ner-enc/`。Poke tools の メニュー・下のバーからは 外した。保存は はじめて ひらいた とき Poke tools から 引きつぐ)。`/textbox-maker/` は `/topsecret/#tb` への 転送に。Poke tools 2026.11.17a。
+- 確かめたこと: Playwright(375px・タッチ・ライト/ダーク): 転送 → テキストボックス(未改変の ROM 2つで 読みこみ・ZIP 保存)→ 下のバーで 出現ずかん(Poke tools の 保存を 引きついで 411しゅるい)→ ROM・説明書 → ☰メニュー、エラーなし。Poke tools: 前に 出現ずかんを 下のバー・ひらいた 画面に して いても 努力値カウンター・ほかの ツールに なり、エラーなし。`node topsecret/dev/ner-enc/test.js` → 1976 件 一致。embed.py で 作りなおした 表が 前と 同じ。
+- 次の人へ: topsecret/index.html は build.py で 作る(src を なおす)。テキストボックスの 描きかた(src/textbox_core.js)は 非公開の topSecret の tools/textbox_maker/web/ で 作って 写す(ROM と 同じか その リポジトリで 確かめる)。
 
 ### 2026-11-17 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: `/textbox-maker/`(テキストボックス メーカー)と `/topsecret/`(NER's topSecret)を 追加。claude.ai の ページに 置いて いた ものを ふつうの ウェブアプリに 移した。テキストボックス メーカーは アイコン・manifest つき、スマホでは 共有メニューで 保存(できない ときは ふつうの ダウンロード)。ソースは topSecret の `tools/textbox_maker/`・`tools/portal/`。

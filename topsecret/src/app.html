@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1f56c9">
+<title>NER's topSecret</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<!-- この ファイルは topsecret/src/ から build.py が 作る。直接 書きかえない -->
+<script>try{const t=(JSON.parse(localStorage.getItem("ev-counter-v2"))||{}).theme;if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@400;500;700&family=Roboto:wght@500;700&display=swap">
+<style>
+/*POKECSS*/
+</style>
+<style>
+/*APPCSS*/
+</style>
+</head>
+<body>
+<header class="appbar"><div class="appbar-in">
+  <button id="menuBtn" class="menubtn" type="button" aria-label="メニュー" aria-expanded="false" aria-controls="drawer"></button>
+  <h1 id="appTitle" class="apptitle">NER's topSecret</h1>
+</div></header>
+<div id="drawer" class="drawer" hidden>
+  <div class="scrim"></div>
+  <nav aria-label="メニュー">
+    <p class="navhead">NER's topSecret</p>
+    <p class="navlabel">ツール</p>
+    <div class="navtools" id="navTools"></div>
+    <div class="navbottom">
+      <a class="navitem navlink" href="https://noctis1008-wq.github.io/poke-tools/"><span class="ni" style="--c:var(--muted)" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="f" d="M12 3 20 7.5v9L12 21l-7.8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9" class="in"/></svg></span><span class="nt">Poke tools</span><span class="navext" aria-hidden="true">↗</span></a>
+      <a class="navitem navlink" href="https://noctis1008-wq.github.io/"><span class="ni" style="--c:var(--muted)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.6 5.2 3.6 8.5s-1.1 6.1-3.6 8.5c-2.5-2.4-3.6-5.2-3.6-8.5S9.5 5.9 12 3.5z"/></svg></span><span class="nt">開発者ポータルサイト</span><span class="navext" aria-hidden="true">↗</span></a>
+    </div>
+  </nav>
+</div>
+
+<!-- テキストボックス メーカー -->
+<div class="wrap view" id="vTb" hidden>
+  <section id="tbSetup" class="tb-card" hidden>
+    <p class="tb-p">はじめに ROM を えらんで ください。字や 窓の 絵を ROM から 読みます。ROM は どこにも 送らず、読んだ 絵だけを この 端末に 保存します。</p>
+    <p class="tb-hint">えらぶ もの: <b>textbox.gba</b> を 1つ、または 未改変の <b>日本版エメラルド</b>と<b>日本版サファイア</b>の 2つ（いっしょに えらぶ）</p>
+    <label class="tb-file">ROM を えらぶ<input type="file" id="tbRom" multiple></label>
+    <div class="tb-msg" id="tbSetupMsg"></div>
+  </section>
+  <div id="tbApp" hidden>
+    <div class="tb-top">
+      <div class="tb-stage"><canvas id="tbView" width="224" height="48" aria-label="プレビュー"></canvas></div>
+      <div class="tb-pager">
+        <button id="tbPrev" type="button" aria-label="前の ページ">‹</button><b id="tbPno">1 / 1</b><button id="tbNext" type="button" aria-label="つぎの ページ">›</button>
+      </div>
+      <div class="tb-pmsg" id="tbPmsg"></div>
+    </div>
+    <div class="tb-seg tb-four" id="tbBox" role="group" aria-label="窓">
+      <button type="button" data-v="1" aria-pressed="true">RS 会話</button><button type="button" data-v="0" aria-pressed="false">E 会話</button><button type="button" data-v="3" aria-pressed="false">RS バトル</button><button type="button" data-v="2" aria-pressed="false">E バトル</button>
+    </div>
+    <div class="tb-lbl">文（2行ずつ ページに なる。空の 行でも 区切れる）</div>
+    <div class="tb-ed">
+      <div class="tb-wrap"><div class="tb-mir" id="tbMir" aria-hidden="true"></div><textarea id="tbText" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="文">ながいあいだ トラックに ゆられて
+たいへん だったでしょ？
+ここが ミシロタウンよ！</textarea></div>
+      <div class="tb-gut" id="tbGut" aria-hidden="true"></div>
+    </div>
+    <div class="tb-hint">漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
+    <div class="tb-row">
+      <div class="tb-seg tb-two" id="tbFmt" role="group" aria-label="形式"><button type="button" data-v="png" aria-pressed="true">PNG</button><button type="button" data-v="gif" aria-pressed="false">GIF</button></div>
+      <label class="tb-scale">大きさ <select id="tbScale"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>6</option><option>8</option></select> 倍</label>
+    </div>
+    <div class="tb-acts">
+      <button class="tb-btn" type="button" id="tbSaveOne">この ページ</button>
+      <button class="tb-btn tb-main" type="button" id="tbSaveAll">ぜんぶ（ZIP）</button>
+    </div>
+    <div class="tb-msg" id="tbMsg"></div>
+    <details class="tb-more">
+      <summary>くわしい 設定</summary>
+      <h3>文字（フォント）</h3>
+      <div class="tb-seg tb-three" id="tbFont" role="group" aria-label="文字">
+        <button type="button" data-v="255" aria-pressed="true">窓に あわせる</button><button type="button" data-v="1" aria-pressed="false">ルビサファ</button><button type="button" data-v="0" aria-pressed="false">エメラルド</button>
+      </div>
+      <p>窓と べつの ゲームの 字に すると、字の 形・位置・字と 影の 色・▼は 字の ほうの ゲームに なります。</p>
+      <h3>▼</h3>
+      <label class="tb-chk"><input type="checkbox" id="tbLastArrow">さいごの ページにも ▼を 出す</label>
+      <label class="tb-chk">PNG の ▼の 位置 <select id="tbAframe"><option value="0">0（さいしょ）</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+      <h3>テキストファイルで まとめて 作る</h3>
+      <p>@style・@font・@name などを 書いた テキストファイル（UTF-8）を えらぶと、ぜんぶ 作って ZIP に します。形式と 大きさは 上で えらんで いる もの です。</p>
+      <label class="tb-file">テキストファイルを えらぶ<input type="file" id="tbBatch" accept=".txt,text/plain"></label>
+      <div class="tb-msg" id="tbBatchMsg"></div>
+      <pre># 「#」の 行は メモ
+ながいあいだ トラックに ゆられて
+たいへん だったでしょ？▼
+
+@style=e-battle font=rs name=wild
+やせいの ジグザグマが
+とびだしてきた！▼</pre>
+      <p>@style= は rs-field・rs-battle・e-field・e-battle・all、@font= は rs・e、@name= は ファイル名、@arrow-frame= は PNG の ▼の 位置（0〜3）。</p>
+      <h3>使える 字</h3>
+      <p>ひらがな・カタカナ・0〜9・A〜Z・a〜z・！？。ー・…『』「」♂♀円.×/:▶ と スペース。字・枠・色・▼の 形と 動きは 本物の ゲームと 同じ です（バトルの 窓の 外がわの 暗い 灰色は 透明）。</p>
+      <h3>ROM</h3>
+      <button class="tb-btn" type="button" id="tbReset">ROM を えらびなおす</button>
+    </details>
+  </div>
+</div>
+
+<!--VNER-->
+
+<!-- ROM・説明書（押すと 自分の Dropbox・GitHub が ひらく） -->
+<div class="wrap view" id="vLinks" hidden>
+  <div id="lkList"></div>
+  <p class="note">ROM と 説明書は、自分の Dropbox・GitHub の ページを ひらきます（ログインした 本人だけ 見られます）。共有リンクでは ありません。項目を ふやす ときは topsecret/src/app.js の LINKS に 1行 足します。</p>
+</div>
+
+<nav id="tabBar" class="tabbar" aria-label="ツール"><div class="tabbar-in tb3" id="tabBarIn"></div></nav>
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="application/json" id="nerData">/*NERDATA*/</script>
+<script>
+/*SHARED*/
+</script>
+<script>
+/*TBCORE*/
+</script>
+<script>
+/*APPJS*/
+</script>
+</body>
+</html>

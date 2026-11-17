@@ -50,9 +50,9 @@
 - NERversion のセーブの形を変えたら(今のところ変えない約束)、`ner_save.js` のオフセットを直す必要がある。
 
 ## 組みこみ済み(2026-11-06, Poke tools 2026.11.06a)
-- `poke-tools/index.html` の「出現ずかん（NERversion）」の所(`vNer`・`renderNer`・`nerCalc`)。メニューのいちばん下(`TOOL_KEYS` の `ner`)。
-- 表のデータは `#nerData`(`<script type="application/json">`)に入れてある。JSON を書き出しなおしたら `python3 poke-tools/dev/ner-enc/embed.py` で入れなおす。
-- `ner_save.js`・`ner_randomizer.js` は index.html にそのまま入れてある。直したら index.html の同じ所も直す。
+- 2026-11-17 に Poke tools から NER's topSecret(`/topsecret/`)へ移した。画面は `topsecret/src/ner_view.html`、しくみは `topsecret/src/ner.js`(`renderNer`・`nerCalc`)。`python3 topsecret/src/build.py` で `topsecret/index.html` を作る。
+- 表のデータは `topsecret/src/ner_data.json`(できた index.html では `#nerData`)。JSON を書き出しなおしたら `python3 topsecret/dev/ner-enc/embed.py` で入れなおす。
+- `ner_save.js`・`ner_randomizer.js` は `topsecret/src/ner.js` にそのまま入れてある。直したら ner.js の同じ所も直す。
 - 保存:`S.ner.sv = {seed, rw, badges, c, s, at}`(c・s は つかまえた/みた の全国図鑑番号のビット列を 16 進にしたもの)。設定のバックアップにも入る。
 - 名前のないフォルムの ID(ビビヨンのもようなど)は、そのフォルムを持つ元のポケモンの番号・名前で出す。フォルム名のデータが無いので、すがた違いは「すがた違い」とだけ出す。
 - 2026.11.06b:「出ないポケモン」タブを追加(参考:運営者の出現ずかんページ)。野生で出る全国図鑑番号の「進化のなかま」(SPDB の進化前をたどった根が同じもの)は、進化・タマゴで手に入るとみなす。残りを SPDB の区分で「伝説・幻」(準伝説・禁止級・幻)と「ふつう」に分け、UB・パラドックスに印。イベントなどで手に入るものは緑の字の注意(`NER_MNOTE`)。おこうがいるベビーや、交換・配布は考えていない。
