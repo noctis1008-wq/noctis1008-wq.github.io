@@ -64,19 +64,18 @@
       <div class="tb-gut" id="tbGut" aria-hidden="true"></div>
     </div>
     <div class="tb-hint">空の 行でも ページを 区切れます。漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
-    <div class="tb-row">
-      <div class="tb-seg tb-two" id="tbFmt" role="group" aria-label="形式"><button type="button" data-v="png" aria-pressed="true">PNG</button><button type="button" data-v="gif" aria-pressed="false">GIF</button></div>
-      <label class="tb-scale">大きさ <select id="tbScale"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>6</option><option>8</option></select> 倍</label>
-    </div>
-    <div class="tb-acts">
-      <button class="tb-btn" type="button" id="tbSaveOne">この ページ</button>
-      <button class="tb-btn tb-main" type="button" id="tbSaveAll">ぜんぶ（ZIP）</button>
-    </div>
-    <div class="tb-dbx">
-      <div class="tb-dbx-h"><span class="tb-dbx-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3 2 6.3l5 3.3 5-3.3zM17 3l-5 3.3 5 3.3 5-3.3zM2 12.9l5 3.3 5-3.3-5-3.3zM17 9.6l-5 3.3 5 3.3 5-3.3zM7 17.3l5 3.3 5-3.3-5-3.3z"/></svg></span><span><b>Dropbox の「動画用素材」に 保存</b><small id="tbDbxSt">つながって いません</small></span></div>
+    <div class="tb-save">
+      <div class="tb-srow"><span class="tb-slbl">保存先</span>
+        <div class="tb-seg tb-two tb-dest" id="tbDest" role="group" aria-label="保存先"><button type="button" data-v="dev" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 18h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>この 端末</button><button type="button" data-v="dbx" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3 2 6.3l5 3.3 5-3.3zM17 3l-5 3.3 5 3.3 5-3.3zM2 12.9l5 3.3 5-3.3-5-3.3zM17 9.6l-5 3.3 5 3.3 5-3.3zM7 17.3l5 3.3 5-3.3-5-3.3z"/></svg>Dropbox</button></div>
+      </div>
+      <div class="tb-srow"><span class="tb-slbl">形式</span>
+        <div class="tb-seg tb-two" id="tbFmt" role="group" aria-label="形式"><button type="button" data-v="png" aria-pressed="true">PNG</button><button type="button" data-v="gif" aria-pressed="false">GIF</button></div>
+        <label class="tb-scale"><select id="tbScale" aria-label="大きさ"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>6</option><option>8</option></select> 倍</label>
+      </div>
+      <div class="tb-sst" id="tbDbxSt">この 端末に 保存します（ぜんぶは ZIP）</div>
       <div class="tb-acts">
-        <button class="tb-btn" type="button" id="tbDbxOne">この ページ</button>
-        <button class="tb-btn tb-dbxmain" type="button" id="tbDbxAll">ぜんぶ</button>
+        <button class="tb-btn" type="button" id="tbSaveOne">この ページ</button>
+        <button class="tb-btn tb-main" type="button" id="tbSaveAll">ぜんぶ（ZIP）</button>
       </div>
     </div>
     <div class="tb-msg" id="tbMsg"></div>

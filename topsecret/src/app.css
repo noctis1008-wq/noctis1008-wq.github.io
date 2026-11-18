@@ -75,13 +75,16 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
 .lk-go{margin-left:auto;color:var(--muted);flex:none;font-size:13px}
 
 /* Dropbox に 保存 */
-.tb-dbx{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
-.tb-dbx .tb-acts{margin-top:10px}
-.tb-dbx-h{display:flex;align-items:center;gap:10px}
-.tb-dbx-h b{display:block;font-size:14px}
-.tb-dbx-h small{display:block;font-size:12px;color:var(--muted)}
-.tb-dbx-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,#0061fe 14%,var(--surface))}
-.tb-dbx-ic svg{width:22px;height:22px;fill:#0061fe}
-.tb-dbxmain{background:#0061fe;border-color:#0061fe;color:#fff}
 .tb-key{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--muted)}
 .tb-key input{flex:1;height:44px;font-family:var(--f-num)}
+/* 保存（A案: 保存先を えらんで ボタンは 2つ） */
+.tb-save{margin-top:14px}
+.tb-srow{display:flex;gap:10px;align-items:center;margin-top:10px}
+.tb-srow:first-child{margin-top:0}
+.tb-slbl{flex:none;width:3.6em;font-size:13px;font-weight:700;color:var(--muted)}
+.tb-srow .tb-seg{margin:0;flex:1 1 0;min-width:0}
+.tb-dest button{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.tb-dest svg{width:18px;height:18px;flex:none;fill:currentColor}
+.tb-dest button[data-v=dbx][aria-pressed=true]{background:color-mix(in srgb,#0061fe 14%,var(--surface));color:color-mix(in srgb,#0061fe 72%,var(--ink))}
+.tb-sst{margin-top:8px;font-size:12px;color:var(--muted);min-height:1.5em;line-height:1.5}
+.tb-save.dbx .tb-main{background:#0061fe;border-color:#0061fe;color:#fff}

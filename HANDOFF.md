@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-17b(テキストボックス メーカーに 文を けす・Dropbox「動画用素材」へ 保存) — 最後の記録 2026-11-17(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-18(テキストボックス メーカーの 保存を A案に: 保存先を えらんで ボタン 2つ) — 最後の記録 2026-11-17(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -48,6 +48,7 @@
 - テキストボックスの バトルの 窓は、赤い 枠の 外の 暗い 灰色を いつも 透明に(2026-11-17)。
 - NER's topSecret は A案(分類ごとに 説明つきの カード)。あとから 項目を 足せる 形に(2026-11-17)。
 - claude.ai の ページでは なく、Poke tools のような ふつうの ウェブアプリとして このサイトに 置く(2026-11-17)。
+- テキストボックス メーカーの 保存は A案(保存先「この 端末 / Dropbox」を えらんで、ボタンは「この ページ」「ぜんぶ」の 2つ)。えらんだ 設定は 保存する(2026-11-18)。ボタンが ふえて ごちゃごちゃ するのは 嫌い。
 - NER's topSecret は Poke tools と 同じ 1ページの アプリ(A案: ☰メニュー＋下のバー)。ツールを ひらく とき 新しい ページ・リンクに 移らない。NERversion 専用の ツールは Poke tools では なく topSecret に 置く(出現ずかんを 移した。2026-11-17)。
 
 ### 図鑑埋め支援などの設計
@@ -77,7 +78,7 @@
 | `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-17 |
 | `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
 
-- テキストボックス メーカーの Dropbox 保存: ブラウザから 直接 Dropbox(OAuth PKCE。App key だけ、秘密の 鍵は 使わない)。Dropbox の アプリの 作りかたは `topsecret/src/README_dropbox.md`。トークンは 端末の `ner-topsecret-v1` の `dbx` に だけ。入力・えらんだ 窓なども `tb` に 保存(Dropbox の 画面から もどっても 消えない)。
+- テキストボックス メーカーの Dropbox 保存: ブラウザから 直接 Dropbox(OAuth PKCE。App key だけ、秘密の 鍵は 使わない)。Dropbox の アプリの 作りかたは `topsecret/src/README_dropbox.md`。トークンは 端末の `ner-topsecret-v1` の `dbx` に だけ。入力・えらんだ 窓・保存先・形式・大きさなども `tb` に 保存(Dropbox の 画面から もどっても、ひらき なおしても 消えない)。保存の 画面は A案(保存先「この 端末 / Dropbox」→ 形式・大きさ → 1行の 説明 → この ページ / ぜんぶ)。
 
 - ポータルの NER Pokémon Recovery の欄は、**Recovery がまだ非公開のため「近日公開」**で、修復依頼ページ(`repair-request/`)へつないでいる。Recovery を公開するときの戻し方は `index.html` のコメントにある。
 - ポータルのフッターに © マークは付けない(運営者の希望)。
@@ -120,6 +121,10 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-18 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
+- やったこと: テキストボックス メーカーの 保存の まわりが ごちゃごちゃして きたので 作りなおした(運営者に 絵で 3案 見せて A案)。保存先「この 端末 / Dropbox」を えらび、ボタンは「この ページ」「ぜんぶ」の 2つだけ(端末なら ぜんぶは ZIP、Dropbox なら 1まいずつ)。保存先・形式・大きさは 端末に 保存(運営者「設定は 保存されるように」)。下に 1行で 保存先の 説明(高さは かわらない)。Dropbox の ときは「ぜんぶ」を Dropbox の 青に。
+- 確かめたこと: Playwright(375px・ライト/ダーク): Dropbox を えらぶ → つなぐ → もどって 保存先が Dropbox の まま → ぜんぶ 2まい・この ページ 1まい。この 端末に もどして ひらき なおすと この 端末 の まま。横に はみ出さない、エラーなし。
 
 ### 2026-11-18 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: テキストボックス メーカーの Dropbox 保存で、失敗の ときに Dropbox が 返した 文も 出す ように した(運営者の iPhone で「400」だけ 出て 原因が わからなかった)。

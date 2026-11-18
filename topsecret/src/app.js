@@ -146,7 +146,7 @@ const TBX = (() => {
     });
     return () => g.querySelector('[aria-pressed=true]').dataset.v;
   }
-  const boxV = seg('tbBox', refresh), fontV = seg('tbFont', refresh), fmt = seg('tbFmt', () => {});
+  const boxV = seg('tbBox', refresh), fontV = seg('tbFont', refresh), fmt = seg('tbFmt', () => {}), dest = seg('tbDest', () => dbxStatus());
   const box = () => +boxV(), font = () => +fontV();
 
   // 文 → ページ（2行ずつ。空の 行でも 区切る）
@@ -203,7 +203,7 @@ const TBX = (() => {
       else frames = hasArrow(cur) ? [1, 2, 3, 4].map(a => TB.render(data, box(), font(), a, r.codes)) : [TB.render(data, box(), font(), 0, r.codes)];
     }
     $('tbPmsg').textContent = err || (bads.length ? `ほかの ページ: ${bads[0]}` : '');
-    $('tbSaveOne').disabled = $('tbDbxOne').disabled = !frames.length; $('tbSaveAll').disabled = $('tbDbxAll').disabled = !n || bads.length > 0;
+    $('tbSaveOne').disabled = !frames.length; $('tbSaveAll').disabled = !n || bads.length > 0;
     draw();
     if (frames.length > 1 && !$('vTb').hidden) timer = setInterval(() => { fidx = (fidx + 1) % frames.length; draw(); }, TB.arrowDelay(box(), font()) * 10);
   }
@@ -248,11 +248,13 @@ const TBX = (() => {
   }
   const base = () => TB.BOX_NAMES[box()];
   $('tbSaveOne').addEventListener('click', async () => {
+    if (dest() === 'dbx') { if (P.pages.length) toDropbox([cur]); return; }
     const r = pageCodes(cur); if (r.error) return;
     $('tbMsg').className = 'tb-msg';
     $('tbMsg').textContent = await saveFile(`${base()}_${String(cur + 1).padStart(2, '0')}.${fmt()}`, pageFile(cur, r.codes));
   });
   $('tbSaveAll').addEventListener('click', async () => {
+    if (dest() === 'dbx') { if (P.pages.length) toDropbox(P.pages.map((_, k) => k)); return; }
     const files = [], ext = fmt();
     for (let k = 0; k < P.pages.length; k++) {
       const r = pageCodes(k);
@@ -295,7 +297,7 @@ const TBX = (() => {
   // 入力・えらんだ ものを この 端末に おぼえる（Dropbox の 画面から もどって きても 消えない）
   const pressed = (id, v) => { for (const x of $(id).children) x.setAttribute('aria-pressed', x.dataset.v === String(v) ? 'true' : 'false'); };
   function keep() {
-    S.tb = { text: $('tbText').value, box: box(), font: font(), fmt: fmt(), scale: $('tbScale').value, last: $('tbLastArrow').checked, af: $('tbAframe').value };
+    S.tb = { text: $('tbText').value, box: box(), font: font(), fmt: fmt(), dest: dest(), scale: $('tbScale').value, last: $('tbLastArrow').checked, af: $('tbAframe').value };
     save();
   }
   function restore() {
@@ -304,6 +306,7 @@ const TBX = (() => {
     if (t.box != null) pressed('tbBox', t.box);
     if (t.font != null) pressed('tbFont', t.font);
     if (t.fmt) pressed('tbFmt', t.fmt);
+    if (t.dest) pressed('tbDest', t.dest);
     if (t.scale) $('tbScale').value = t.scale;
     $('tbLastArrow').checked = !!t.last;
     if (t.af) $('tbAframe').value = t.af;
@@ -311,12 +314,16 @@ const TBX = (() => {
   restore();
   for (const id of ['tbText', 'tbScale', 'tbLastArrow', 'tbAframe']) $(id).addEventListener('change', keep);
   $('tbText').addEventListener('input', keep);
-  for (const id of ['tbBox', 'tbFont', 'tbFmt']) $(id).addEventListener('click', keep);
+  for (const id of ['tbBox', 'tbFont', 'tbFmt', 'tbDest']) $(id).addEventListener('click', keep);
 
   // Dropbox の「動画用素材」に 保存
   const stamp = () => { const d = new Date(), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`; };
   function dbxStatus() {
-    $('tbDbxSt').textContent = DBX.connected() ? `つながって います（${DBX.FOLDER.slice(1)} フォルダ）` : DBX.key() ? 'まだ つながって いません（押すと つなぎます）' : 'くわしい 設定で App key を 入れて ください';
+    const d = dest() === 'dbx';
+    $('tbDbxSt').closest('.tb-save').classList.toggle('dbx', d);
+    $('tbSaveAll').textContent = d ? 'ぜんぶ' : 'ぜんぶ（ZIP）';
+    $('tbDbxSt').textContent = !d ? 'この 端末に 保存します（ぜんぶは ZIP）'
+      : DBX.connected() ? `Dropbox の「${DBX.FOLDER.slice(1)}」に 保存します` : DBX.key() ? '押すと Dropbox に つなぎます（はじめの 1回）' : 'くわしい 設定で App key を 入れて ください';
     $('tbDbxKey').value = (S.dbx && S.dbx.key) || '';
     $('tbDbxOff').disabled = !DBX.connected();
   }
@@ -342,8 +349,6 @@ const TBX = (() => {
       else { m.className = 'tb-msg err'; m.textContent = e.message || String(e); }
     }
   }
-  $('tbDbxOne').addEventListener('click', () => { if (P.pages.length) toDropbox([cur]); });
-  $('tbDbxAll').addEventListener('click', () => { if (P.pages.length) toDropbox(P.pages.map((_, k) => k)); });
   $('tbDbxKey').addEventListener('change', e => { S.dbx = S.dbx || {}; const v = e.target.value.trim(); if (v !== S.dbx.key) { S.dbx.key = v; S.dbx.tok = null; } save(); dbxStatus(); });
   $('tbDbxOff').addEventListener('click', () => { DBX.off(); dbxStatus(); toast('Dropbox との つながりを 切りました'); });
   dbxStatus();
