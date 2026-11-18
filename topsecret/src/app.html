@@ -57,13 +57,13 @@
       <button type="button" data-v="1" aria-pressed="true">RS 会話</button><button type="button" data-v="0" aria-pressed="false">E 会話</button><button type="button" data-v="3" aria-pressed="false">RS バトル</button><button type="button" data-v="2" aria-pressed="false">E バトル</button>
     </div>
     <div class="tb-lbl"><span>文（2行で 1ページ）</span><button type="button" class="tb-clear" id="tbClear">文を けす</button></div>
-    <div class="tb-ed">
+    <div class="tb-ed" id="tbEd">
       <div class="tb-wrap"><div class="tb-mir" id="tbMir" aria-hidden="true"></div><textarea id="tbText" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="文">ながいあいだ トラックに ゆられて
 たいへん だったでしょ？
 ここが ミシロタウンよ！</textarea></div>
       <div class="tb-gut" id="tbGut" aria-hidden="true"></div>
     </div>
-    <div class="tb-hint">空の 行でも ページを 区切れます。漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
+    <div class="tb-hint">空の 行でも 区切れます。漢字・「、」は 使えません。▼は 自動で つきます（GIF では 動きます）。</div>
     <div class="tb-save">
       <div class="tb-srow"><span class="tb-slbl">保存先</span>
         <div class="tb-seg tb-two tb-dest" id="tbDest" role="group" aria-label="保存先"><button type="button" data-v="dev" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 18h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>この 端末</button><button type="button" data-v="dbx" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3 2 6.3l5 3.3 5-3.3zM17 3l-5 3.3 5 3.3 5-3.3zM2 12.9l5 3.3 5-3.3-5-3.3zM17 9.6l-5 3.3 5 3.3 5-3.3zM7 17.3l5 3.3 5-3.3-5-3.3z"/></svg>Dropbox</button></div>

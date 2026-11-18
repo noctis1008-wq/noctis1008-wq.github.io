@@ -188,11 +188,18 @@ const TBX = (() => {
     cur = Math.min(cur, Math.max(0, P.pages.length - 1));
     show();
   }
+  let shown = -1;
   function show() {
     clearInterval(timer); frames = []; fidx = 0;
     decorate();
     const n = P.pages.length;
     $('tbPno').textContent = n ? `${cur + 1} / ${n}` : '0 / 0';
+    // 文の 欄の 中で、いまの ページの 行が 見える ように
+    if (n && shown !== cur) {
+      const ed = $('tbEd'), top = P.pages[cur][0] * 28;
+      if (top < ed.scrollTop || top + 56 > ed.scrollTop + ed.clientHeight) ed.scrollTop = Math.max(0, top - 8);
+    }
+    shown = cur;
     $('tbPrev').disabled = cur <= 0; $('tbNext').disabled = cur >= n - 1;
     const bads = P.info.map((l, i) => l.over ? `${i + 1}行めが ${l.n}文字（${P.w}文字まで）` : l.bad.size ? `${i + 1}行めの「${[...l.bad].map(j => l.chars[j]).join('')}」は 使えません` : '').filter(Boolean);
     let err = '';
@@ -204,7 +211,7 @@ const TBX = (() => {
     }
     $('tbPmsg').textContent = err || (bads.length ? `ほかの ページ: ${bads[0]}` : '');
     $('tbSaveOne').disabled = !frames.length; $('tbSaveAll').disabled = !n || bads.length > 0;
-    draw();
+    draw(); sizeEd();
     if (frames.length > 1 && !$('vTb').hidden) timer = setInterval(() => { fidx = (fidx + 1) % frames.length; draw(); }, TB.arrowDelay(box(), font()) * 10);
   }
   function draw() {
@@ -224,6 +231,18 @@ const TBX = (() => {
     c.style.width = (c.width * k) + 'px'; c.style.height = (c.height * k) + 'px';
   }
   new ResizeObserver(fit).observe($('tbView').parentElement);
+
+  // スクロール しなくても 保存の ボタンまで 見える ように、文の 欄の 高さを おさえる（あふれたら 欄の 中で スクロール）
+  function sizeEd() {
+    const ed = $('tbEd'), btn = $('tbSaveAll');
+    if ($('vTb').hidden || $('tbApp').hidden || document.activeElement === $('tbText')) return;
+    const re = ed.getBoundingClientRect(), rb = btn.getBoundingClientRect();
+    const bar = document.querySelector('.tabbar'), barH = bar && getComputedStyle(bar).display !== 'none' ? bar.offsetHeight : 0;
+    const room = window.innerHeight - barH - 10 - (re.top + window.scrollY) - (rb.bottom - re.bottom);
+    ed.style.maxHeight = Math.max(2 * 28 + 18, Math.floor(room)) + 'px';
+  }
+  window.addEventListener('resize', () => requestAnimationFrame(sizeEd));
+  $('tbText').addEventListener('blur', () => requestAnimationFrame(sizeEd));
 
   function caretLine() { const t = $('tbText'); return t.value.slice(0, t.selectionStart).split('\n').length - 1; }
   function followCaret() {
@@ -326,6 +345,7 @@ const TBX = (() => {
       : DBX.connected() ? `Dropbox の「${DBX.FOLDER.slice(1)}」に 保存します` : DBX.key() ? '押すと Dropbox に つなぎます（はじめの 1回）' : 'くわしい 設定で App key を 入れて ください';
     $('tbDbxKey').value = (S.dbx && S.dbx.key) || '';
     $('tbDbxOff').disabled = !DBX.connected();
+    sizeEd();
   }
   async function toDropbox(pages) {
     const m = $('tbMsg'); m.className = 'tb-msg';

@@ -2718,7 +2718,10 @@ body{--barh:0px;--tbc:#1f56c9;--tbon:#fff;--lkc:#9a5b00}
 .tb-pager button{width:48px;height:40px;padding:0;border:0;background:none;font-size:26px;line-height:1;color:var(--tbc);border-radius:10px}
 .tb-pager button:disabled{color:var(--line);cursor:default}
 .tb-pager b{min-width:64px;text-align:center;font-family:var(--f-num)}
-.tb-pmsg{min-height:1.5em;text-align:center;font-size:13px;color:#d23a3a;font-weight:700}
+/* まちがいの 知らせは プレビューの 下に かさねる（場所を とらない・ずれない） */
+.tb-pmsg{position:absolute;left:12px;right:12px;bottom:46px;text-align:center;font-size:13px;color:#fff;font-weight:700;background:#d23a3a;border-radius:8px;padding:3px 8px;line-height:1.4;pointer-events:none}
+.tb-pmsg:empty{display:none}
+#tbBox{margin-top:4px}
 .tb-seg{display:grid;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:12px;background:var(--surface)}
 .tb-four{grid-template-columns:repeat(4,minmax(0,1fr))}.tb-two{grid-template-columns:repeat(2,minmax(0,1fr))}.tb-three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .tb-seg button{height:44px;border:0;border-left:1px solid var(--line);background:none;font-size:14px;font-weight:700;color:var(--muted);padding:0 4px;line-height:1.2}
@@ -2727,7 +2730,7 @@ body{--barh:0px;--tbc:#1f56c9;--tbon:#fff;--lkc:#9a5b00}
 .tb-lbl{margin-top:16px;font-size:13px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:8px;justify-content:space-between}
 .tb-clear{flex:none;width:7.5em;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:13px;font-weight:700;color:var(--muted)}
 .tb-clear.warn{border-color:#d23a3a;color:#d23a3a}
-.tb-ed{position:relative;margin-top:6px;display:grid;grid-template-columns:minmax(0,1fr) auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.tb-ed{position:relative;overflow-y:auto;overscroll-behavior:contain;margin-top:6px;display:grid;grid-template-columns:minmax(0,1fr) auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
 .tb-ed:focus-within{outline:2px solid var(--tbc);outline-offset:1px}
 .tb-wrap{position:relative;overflow:hidden}
 .tb-mir,#tbText{font:16px/28px "MS Gothic","Osaka-Mono","Noto Sans Mono CJK JP",ui-monospace,monospace;padding:8px 10px;margin:0;white-space:pre;letter-spacing:0}
@@ -2824,13 +2827,13 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
       <button type="button" data-v="1" aria-pressed="true">RS 会話</button><button type="button" data-v="0" aria-pressed="false">E 会話</button><button type="button" data-v="3" aria-pressed="false">RS バトル</button><button type="button" data-v="2" aria-pressed="false">E バトル</button>
     </div>
     <div class="tb-lbl"><span>文（2行で 1ページ）</span><button type="button" class="tb-clear" id="tbClear">文を けす</button></div>
-    <div class="tb-ed">
+    <div class="tb-ed" id="tbEd">
       <div class="tb-wrap"><div class="tb-mir" id="tbMir" aria-hidden="true"></div><textarea id="tbText" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" aria-label="文">ながいあいだ トラックに ゆられて
 たいへん だったでしょ？
 ここが ミシロタウンよ！</textarea></div>
       <div class="tb-gut" id="tbGut" aria-hidden="true"></div>
     </div>
-    <div class="tb-hint">空の 行でも ページを 区切れます。漢字・「、」は ゲームに ない ので 使えません。▼ は さいごの ページ いがいに 自動で つきます（GIF では ▼が 動きます）。</div>
+    <div class="tb-hint">空の 行でも 区切れます。漢字・「、」は 使えません。▼は 自動で つきます（GIF では 動きます）。</div>
     <div class="tb-save">
       <div class="tb-srow"><span class="tb-slbl">保存先</span>
         <div class="tb-seg tb-two tb-dest" id="tbDest" role="group" aria-label="保存先"><button type="button" data-v="dev" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 18h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>この 端末</button><button type="button" data-v="dbx" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3 2 6.3l5 3.3 5-3.3zM17 3l-5 3.3 5 3.3 5-3.3zM2 12.9l5 3.3 5-3.3-5-3.3zM17 9.6l-5 3.3 5 3.3 5-3.3zM7 17.3l5 3.3 5-3.3-5-3.3z"/></svg>Dropbox</button></div>
@@ -3749,11 +3752,18 @@ const TBX = (() => {
     cur = Math.min(cur, Math.max(0, P.pages.length - 1));
     show();
   }
+  let shown = -1;
   function show() {
     clearInterval(timer); frames = []; fidx = 0;
     decorate();
     const n = P.pages.length;
     $('tbPno').textContent = n ? `${cur + 1} / ${n}` : '0 / 0';
+    // 文の 欄の 中で、いまの ページの 行が 見える ように
+    if (n && shown !== cur) {
+      const ed = $('tbEd'), top = P.pages[cur][0] * 28;
+      if (top < ed.scrollTop || top + 56 > ed.scrollTop + ed.clientHeight) ed.scrollTop = Math.max(0, top - 8);
+    }
+    shown = cur;
     $('tbPrev').disabled = cur <= 0; $('tbNext').disabled = cur >= n - 1;
     const bads = P.info.map((l, i) => l.over ? `${i + 1}行めが ${l.n}文字（${P.w}文字まで）` : l.bad.size ? `${i + 1}行めの「${[...l.bad].map(j => l.chars[j]).join('')}」は 使えません` : '').filter(Boolean);
     let err = '';
@@ -3765,7 +3775,7 @@ const TBX = (() => {
     }
     $('tbPmsg').textContent = err || (bads.length ? `ほかの ページ: ${bads[0]}` : '');
     $('tbSaveOne').disabled = !frames.length; $('tbSaveAll').disabled = !n || bads.length > 0;
-    draw();
+    draw(); sizeEd();
     if (frames.length > 1 && !$('vTb').hidden) timer = setInterval(() => { fidx = (fidx + 1) % frames.length; draw(); }, TB.arrowDelay(box(), font()) * 10);
   }
   function draw() {
@@ -3785,6 +3795,18 @@ const TBX = (() => {
     c.style.width = (c.width * k) + 'px'; c.style.height = (c.height * k) + 'px';
   }
   new ResizeObserver(fit).observe($('tbView').parentElement);
+
+  // スクロール しなくても 保存の ボタンまで 見える ように、文の 欄の 高さを おさえる（あふれたら 欄の 中で スクロール）
+  function sizeEd() {
+    const ed = $('tbEd'), btn = $('tbSaveAll');
+    if ($('vTb').hidden || $('tbApp').hidden || document.activeElement === $('tbText')) return;
+    const re = ed.getBoundingClientRect(), rb = btn.getBoundingClientRect();
+    const bar = document.querySelector('.tabbar'), barH = bar && getComputedStyle(bar).display !== 'none' ? bar.offsetHeight : 0;
+    const room = window.innerHeight - barH - 10 - (re.top + window.scrollY) - (rb.bottom - re.bottom);
+    ed.style.maxHeight = Math.max(2 * 28 + 18, Math.floor(room)) + 'px';
+  }
+  window.addEventListener('resize', () => requestAnimationFrame(sizeEd));
+  $('tbText').addEventListener('blur', () => requestAnimationFrame(sizeEd));
 
   function caretLine() { const t = $('tbText'); return t.value.slice(0, t.selectionStart).split('\n').length - 1; }
   function followCaret() {
@@ -3887,6 +3909,7 @@ const TBX = (() => {
       : DBX.connected() ? `Dropbox の「${DBX.FOLDER.slice(1)}」に 保存します` : DBX.key() ? '押すと Dropbox に つなぎます（はじめの 1回）' : 'くわしい 設定で App key を 入れて ください';
     $('tbDbxKey').value = (S.dbx && S.dbx.key) || '';
     $('tbDbxOff').disabled = !DBX.connected();
+    sizeEd();
   }
   async function toDropbox(pages) {
     const m = $('tbMsg'); m.className = 'tb-msg';
