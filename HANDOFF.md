@@ -76,7 +76,7 @@
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
 | `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド など。出現ずかんは 2026-11-17 に NER's topSecret へ 移した) | 2026.11.17a(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
-| `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・図鑑登録メーカー(`#zk`、中身は `topsecret/zukan/index.html` を iframe で ひらく)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-22a |
+| `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・図鑑登録メーカー(`#zk`、中身は `topsecret/zukan/index.html` を iframe で ひらく)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-22b |
 | `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
 
 - テキストボックス メーカーの Dropbox 保存: ブラウザから 直接 Dropbox(OAuth PKCE。App key だけ、秘密の 鍵は 使わない)。Dropbox の アプリの 作りかたは `topsecret/src/README_dropbox.md`。トークンは 端末の `ner-topsecret-v1` の `dbx` に だけ。入力・えらんだ 窓・保存先・形式・大きさなども `tb` に 保存(Dropbox の 画面から もどっても、ひらき なおしても 消えない)。保存の 画面は A案(保存先「この 端末 / Dropbox」→ 形式・大きさ → 1行の 説明 → この ページ / ぜんぶ)。
@@ -123,6 +123,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
+- やったこと: 図鑑登録メーカーで、レア・スーパーレアの ときに 鳴らして いた ロトムの 鳴き声(PV479)を 消した(運営者「鳴き声を 消して」)。文字が 流れる 音・ほかの 効果音は そのまま。素材パックは そのまま 使える。topSecret 2026-11-22b。
+- 確かめたこと: `zukan/index.html` に 鳴き声を 鳴らす 行が ない こと。
+- 次の人へ: なし。
 
 ### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: (1) 運営者の スマホ(ホーム画面の アプリ)で 図鑑登録メーカーが まだ 出ない → 古い 版が 残って いた。topSecret に「新しい 版の おしらせ」を 足した: `build.py` が 中身の ハッシュを `TS_BUILD` に 入れ、ひらいた とき・アプリに もどった とき(30秒に 1回まで)に サイトの index.html を no-store で 読んで くらべ、ちがえば 下の バーの 上に「新しい 版が あります(押すと 更新)」。押すと `?v=<版>` つきで ひらき なおす(`?v` は すぐ 消す)。図鑑登録メーカーの iframe も `zukan/?v=<版>` で 読む(build.py の ハッシュに zukan/index.html も ふくむ)。(2) 図鑑登録メーカーの ファイルを えらぶ 所を 日本語の ボタンに(「素材パックを えらぶ」「画像を えらぶ」+ えらんだ ファイル名。「戻す」で「えらんで いません」に もどる)。`</head>` が 2つ あったのを 1つに。
