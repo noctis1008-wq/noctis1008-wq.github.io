@@ -125,6 +125,11 @@
 ## 作業ログ(新しいものが上)
 
 ### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
+- やったこと: さっきの「ロトムの 鳴き声を 消した」(#6)で、2つの まちがいが あったので 直した。① 自分の 手もとの 古い `zukan/index.html` で 上書きして、ほかの 人が 入れた「ファイルを えらぶ ボタンを 日本語に」(2d5cbb2)を 消して しまって いた → その 版に もどして、鳴き声だけ 消した。② `build.py` を 動かして いなかったので `TS_BUILD` が 変わらず、iframe の URL が 前と 同じで 運営者の iPhone に 古い ものが 出て いた → 作りなおした。
+- 確かめたこと: `zukan/index.html` に 日本語の ボタン(`fpick`)が あり、鳴き声(pv479)の 行が ない。`topsecret/index.html` の `TS_BUILD` が 新しく なった。
+- 次の人へ: `topsecret/zukan/index.html` を 直したら、かならず `python3 topsecret/src/build.py` も 動かす(`TS_BUILD` が 変わらないと 古い ものが 出る)。
+
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
 - やったこと: 図鑑登録メーカーで、レア・スーパーレアの ときに 鳴らして いた ロトムの 鳴き声(PV479)を 消した(運営者「鳴き声を 消して」)。文字が 流れる 音・ほかの 効果音は そのまま。素材パックは そのまま 使える。topSecret 2026-11-22b。
 - 確かめたこと: `zukan/index.html` に 鳴き声を 鳴らす 行が ない こと。
 - 次の人へ: なし。
