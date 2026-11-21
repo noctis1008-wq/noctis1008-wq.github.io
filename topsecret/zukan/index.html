@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>図鑑登録メーカー</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{--bg:#111;--panel:#1d1d1f;--fg:#eee;--sub:#bbb;--muted:#888;--line:#333;--field:#2a2a2d;--fline:#444;--acc:#2f6fd6;--btn2:#3a3a3e;--h2:#9cf}
+  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#e9ebef;--panel:#fff;--fg:#1b1d22;--sub:#4a4f59;--muted:#6b7280;--line:#d6d9df;--field:#f3f4f6;--fline:#c9cdd4;--acc:#1f56c9;--btn2:#e3e6eb;--h2:#1f56c9}}
+  :root[data-theme="light"]{--bg:#e9ebef;--panel:#fff;--fg:#1b1d22;--sub:#4a4f59;--muted:#6b7280;--line:#d6d9df;--field:#f3f4f6;--fline:#c9cdd4;--acc:#1f56c9;--btn2:#e3e6eb;--h2:#1f56c9}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:"M PLUS 1p","Yu Gothic UI","Meiryo",system-ui,sans-serif;overflow:hidden}
+  #wrap{display:flex;height:100%}
+  #stageBox{flex:1;display:flex;align-items:center;justify-content:center;background:#000;min-width:0}
+  canvas{max-width:100%;max-height:100%;aspect-ratio:16/9;background:#000}
+  #panel{width:340px;overflow-y:auto;background:var(--panel);padding:14px 16px;box-sizing:border-box;font-size:13px;border-left:1px solid var(--line)}
+  #panel h2{font-size:14px;margin:16px 0 6px;color:var(--h2);font-weight:700}
+  #panel h2:first-child{margin-top:0}
+  label{display:block;margin:6px 0 2px;color:var(--sub)}
+  input[type=text],select{width:100%;box-sizing:border-box;background:var(--field);color:var(--fg);border:1px solid var(--fline);border-radius:6px;padding:6px 8px;font:inherit}
+  input[type=range]{width:100%;accent-color:var(--acc)}
+  .row{display:flex;gap:8px}.row>div{flex:1;min-width:0}
+  button{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:8px 10px;font:inherit;cursor:pointer;margin:3px 0}
+  button.sub{background:var(--btn2);color:var(--fg)}
+  button:hover{filter:brightness(1.1)}
+  .file{display:flex;align-items:center;gap:6px}
+  .file input{flex:1;min-width:0;font-size:12px;color:var(--sub)}
+  .file button{padding:3px 8px;margin:0;font-size:12px}
+  .hint{color:var(--muted);font-size:12px;line-height:1.6;margin-top:8px}
+  #status{color:#e0a100;min-height:18px;margin-top:6px}
+  body.clean #panel{display:none}
+  /* せまい 画面（スマホ）: 上に 画面、下に パネル */
+  @media (max-width:760px){
+    #wrap{flex-direction:column}
+    #stageBox{flex:none;width:100%;aspect-ratio:16/9}
+    canvas{width:100%;height:auto}
+    #panel{width:100%;flex:1;border-left:0;border-top:1px solid var(--line)}
+  }
+</style>
+<script>try{const t=(JSON.parse(localStorage.getItem("ev-counter-v2"))||{}).theme;if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<div id="packBox" style="display:none;position:fixed;inset:0;background:#000c;z-index:10;align-items:center;justify-content:center">
+  <div style="background:var(--panel);color:var(--fg);border:1px solid var(--line);margin:16px;border-radius:10px;padding:22px 26px;max-width:460px;line-height:1.7;font-size:14px">
+    <div style="font-size:17px;font-weight:600;margin-bottom:8px">素材パックを読み込む</div>
+    このアプリは、自分の ROM から作った素材パック（<b>zukan_assets.json</b>）を読み込んで動きます。<br>
+    素材パックはこの端末のブラウザの中だけに保存され、どこにも送られません。2回目からは読み込みなしで開けます。
+    <div style="margin-top:12px"><input type="file" id="packFile" accept=".json,application/json"></div>
+    <div id="packMsg" style="color:#fc6;margin-top:8px"></div>
+  </div>
+</div>
+<div id="wrap">
+  <div id="stageBox"><canvas id="cv" width="1920" height="1080"></canvas></div>
+  <div id="panel">
+    <h2>操作</h2>
+    <button id="playBtn">▶ 再生（Space）</button>
+    <button id="recBtn">● 動画として書き出す</button>
+    <button class="sub" id="hideBtn">パネルを隠す（H）</button>
+    <button class="sub" id="fsBtn">全画面（F）</button>
+    <div id="status"></div>
+
+    <h2>色のセット</h2>
+    <select id="set">
+      <option value="N">青（通常）</option><option value="Rare">緑（レア）</option><option value="SR">黄（スーパーレア）</option>
+    </select>
+
+    <h2>名札</h2>
+    <div class="row">
+      <div><label>番号（空欄は なし）</label><input type="text" id="num"></div>
+      <div style="flex:2"><label>名前</label><input type="text" id="name"></div>
+    </div>
+
+    <h2>画像</h2>
+    <label>ポケモン（背景が透明なPNG）</label><div class="file"><input type="file" accept="image/*" data-key="poke"><button class="sub" data-reset="poke">戻す</button></div>
+    <label>完了ロゴ</label><div class="file"><input type="file" accept="image/*" data-key="logo"><button class="sub" data-reset="logo">戻す</button></div>
+
+    <h2>ポケモン</h2>
+    <div class="row">
+      <div><label>横 <span id="pxV"></span></label><input type="range" id="px" min="-210" max="210" step="1"></div>
+      <div><label>縦 <span id="pyV"></span></label><input type="range" id="py" min="-120" max="120" step="1"></div>
+    </div>
+    <label>大きさ（高さ） <span id="psV"></span></label><input type="range" id="ps" min="20" max="240" step="1">
+    <label>後光の強さ <span id="haloV"></span></label><input type="range" id="halo" min="0" max="1" step="0.05">
+    <label>後光の広がり <span id="hsV"></span></label><input type="range" id="hs" min="2" max="30" step="1">
+
+    <h2>名札の位置</h2>
+    <div class="row">
+      <div><label>横 <span id="qxV"></span></label><input type="range" id="qx" min="-210" max="210" step="1"></div>
+      <div><label>縦 <span id="qyV"></span></label><input type="range" id="qy" min="-120" max="120" step="1"></div>
+    </div>
+    <label>大きさ <span id="qsV"></span></label><input type="range" id="qs" min="0.6" max="2" step="0.05">
+
+    <h2>完了ロゴ</h2>
+    <label>大きさ <span id="lsV"></span></label><input type="range" id="ls" min="0.4" max="1.6" step="0.01">
+    <label>縦の位置 <span id="lyV"></span></label><input type="range" id="ly" min="-60" max="120" step="1">
+
+    <h2>枠と演出</h2>
+    <label>枠の左右の広がり <span id="fwV"></span></label><input type="range" id="fw" min="0" max="80" step="1">
+    <label>効果音の音量 <span id="volV"></span></label><input type="range" id="vol" min="0" max="1" step="0.05">
+    <label>最後に止めておく秒数 <span id="holdV"></span></label><input type="range" id="hold" min="0.5" max="10" step="0.5">
+    <button class="sub" id="resetAll">設定を最初に戻す</button>
+    <button class="sub" id="packReset">素材パックを入れなおす</button>
+    <div class="hint">背景・枠・名札・光の演出・文字・効果音は、ROMから取り出した本物の素材とデータです。<br>書き出しは効果音入りの動画（Chrome/Edge 推奨）。OBSで録るときは「パネルを隠す」→「全画面」。</div>
+  </div>
+</div>
+<script>
+let SCENE=null,FONTS=null,TEXSRC=null,SE={};
+const DEFAULT_IMG={poke:null,logo:null};
+const DEFAULTS={set:"N",num:"",name:"オリジナル",px:0,py:10,ps:100,halo:1,hs:6,qx:30,qy:-90,qs:1.2,ls:0.87,ly:5,fw:13,vol:0.8,hold:3};
+let S=Object.assign({},DEFAULTS);
+try{const o=JSON.parse(localStorage.getItem('zkn5_settings')||'null');if(o)Object.assign(S,o);else{const p=JSON.parse(localStorage.getItem('zkn4_settings')||'{}');delete p.qx;delete p.qy;delete p.qs;Object.assign(S,p)}}catch(e){}
+
+// ================= WebGL setup =================
+const cv=document.getElementById('cv');
+const gl=cv.getContext('webgl2',{premultipliedAlpha:false,alpha:false,preserveDrawingBuffer:true});
+const VS=`#version 300 es
+in vec2 aPos;in vec2 aUV;in vec4 aCol;uniform mat3 uMVP;out vec2 vUV;out vec4 vCol;
+void main(){vec3 p=uMVP*vec3(aPos,1.0);gl_Position=vec4(p.xy,0.0,1.0);vUV=aUV;vCol=aCol;}`;
+const FS=`#version 300 es
+precision highp float;in vec2 vUV;in vec4 vCol;uniform sampler2D uTex;uniform int uHasTex;uniform vec4 uBlack;uniform vec4 uWhite;
+uniform vec4 uTint;uniform int uMode;out vec4 o;
+void main(){vec4 t=uHasTex==1?texture(uTex,vUV):vec4(1.0);
+ vec4 c;
+ if(uMode==1){c=t;c.rgb=mix(c.rgb,uTint.rgb,uTint.a);c*=vCol;}
+ else{c.rgb=mix(uBlack.rgb,uWhite.rgb,t.rgb);c.a=mix(uBlack.a,uWhite.a,t.a);c*=vCol;}
+ o=c;}`;
+function sh(t,s){const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(x);return x}
+const prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);gl.useProgram(prog);
+const U={};['uMVP','uTex','uHasTex','uBlack','uWhite','uTint','uMode'].forEach(n=>U[n]=gl.getUniformLocation(prog,n));
+const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+const aPos=gl.getAttribLocation(prog,'aPos'),aUV=gl.getAttribLocation(prog,'aUV'),aCol=gl.getAttribLocation(prog,'aCol');
+gl.enableVertexAttribArray(aPos);gl.enableVertexAttribArray(aUV);gl.enableVertexAttribArray(aCol);
+gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,32,0);gl.vertexAttribPointer(aUV,2,gl.FLOAT,false,32,8);gl.vertexAttribPointer(aCol,4,gl.FLOAT,false,32,16);
+gl.enable(gl.BLEND);gl.uniformMatrix3fv(U.uMVP,false,[1,0,0,0,1,0,0,0,1]);gl.uniform1i(U.uTex,0);
+
+const TEX={};
+function makeTex(img){const t=gl.createTexture();const _img=img;gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);return {t,w:img.width,h:img.height,img:_img}}
+function loadImg(src){return new Promise(r=>{if(!src)return r(null);const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
+const WRAP=[gl.CLAMP_TO_EDGE,gl.REPEAT,gl.MIRRORED_REPEAT];
+
+// ================= math =================
+const mul=(a,b)=>[a[0]*b[0]+a[1]*b[3],a[0]*b[1]+a[1]*b[4],a[0]*b[2]+a[1]*b[5]+a[2],a[3]*b[0]+a[4]*b[3],a[3]*b[1]+a[4]*b[4],a[3]*b[2]+a[4]*b[5]+a[5]];
+const ap=(m,x,y)=>[m[0]*x+m[1]*y+m[2],m[3]*x+m[4]*y+m[5]];
+window.DBG={rot:1,uvRot:-1,ty:1,tx:1,mode:0};
+const WL=240*16/9;
+function trs(t,r,s){r*=DBG.rot;const c=Math.cos(r*Math.PI/180),n=Math.sin(r*Math.PI/180);return[c*s[0],-n*s[1],t[0],n*s[0],c*s[1],t[1]]}
+const IDM=[1,0,0,0,1,0];
+
+// ================= animation =================
+function evalKeys(keys,type,f){
+  if(type===1){let v=keys[0][1];for(const k of keys)if(f>=k[0])v=k[1];return v}
+  if(keys.length===1||f<=keys[0][0])return keys[0][1];
+  const L=keys[keys.length-1];if(f>=L[0])return L[1];
+  for(let i=0;i<keys.length-1;i++){const a=keys[i],b=keys[i+1];
+    if(f>=a[0]&&f<=b[0]){const dt=b[0]-a[0];if(dt<=0)return b[1];const t=(f-a[0])/dt,t2=t*t,t3=t2*t;
+      return (2*t3-3*t2+1)*a[1]+(-2*t3+3*t2)*b[1]+((t3-2*t2+t)*a[2]+(t3-t2)*b[2])*dt}}
+  return L[1]}
+class Inst{
+  constructor(name){this.L=SCENE.layouts[name];this.anims=[];this.ov={}; this.reset()}
+  reset(){this.N=this.L.nodes.map(n=>({...n,t:[...n.t],s:[...n.s],sz:[...n.sz],vc:n.vc?n.vc.map(c=>[...c]):null}));
+    this.M=this.L.mats.map(m=>({...m,black:[...m.black],white:[...m.white],srt:m.srt.map(s=>[...s])}));
+    this.byName={};this.N.forEach((n,i)=>this.byName[n.name]=i);this.matByName={};this.M.forEach((m,i)=>this.matByName[m.name]=i)}
+  play(anim,start,opt={}){this.anims.push({A:SCENE.anims[anim],start,loop:opt.loop})}
+  apply(F){this.reset();
+    for(const p of this.anims){if(F<p.start)continue;let f=F-p.start;const A=p.A;
+      if(p.loop&&A.frames>0)f=f%A.frames;else f=Math.min(f,A.frames);
+      for(const [pn,isMat,tag,idx,tgt,type,keys] of A.tracks){const v=evalKeys(keys,type,f);
+        if(isMat){const mi=this.matByName[pn];if(mi==null)continue;const m=this.M[mi];
+          if(tag==='FLMC'){if(tgt<4)m.black[tgt]=v;else if(tgt<8)m.white[tgt-4]=v}
+          else if(tag==='FLTS'){if(m.srt[idx])m.srt[idx][tgt]=v}
+        }else{const ni=this.byName[pn];if(ni==null)continue;const n=this.N[ni];
+          if(tag==='FLPA'){if(tgt===0)n.t[0]=v;else if(tgt===1)n.t[1]=v;else if(tgt===5)n.r=v;else if(tgt===6)n.s[0]=v;else if(tgt===7)n.s[1]=v;else if(tgt===8)n.sz[0]=v;else if(tgt===9)n.sz[1]=v}
+          else if(tag==='FLVC'){if(tgt===16)n.a=v;else if(n.vc)n.vc[tgt>>2][tgt&3]=v}
+          else if(tag==='FLVI'){n.vis=v?1:0}
+        }}}
+    for(const k in this.ov){const ni=this.byName[k];if(ni!=null)Object.assign(this.N[ni],this.ov[k])}
+  }
+}
+// ================= drawing =================
+let PROJ=null;
+function quad(m,x0,y0,x1,y1,uv,cols){const P=[[x0,y1],[x1,y1],[x0,y0],[x1,y0]].map(p=>ap(m,p[0],p[1]));
+  const d=new Float32Array(6*8);const idx=[0,1,2,2,1,3];
+  idx.forEach((k,i)=>{d.set([P[k][0],P[k][1],uv[k][0],uv[k][1],...cols[k]],i*8)});
+  gl.bufferData(gl.ARRAY_BUFFER,d,gl.STREAM_DRAW);gl.drawArrays(gl.TRIANGLES,0,6)}
+function setBlend(b){if(b&&b[0]===1){const F=[gl.ZERO,gl.ONE,gl.DST_COLOR,gl.ONE_MINUS_DST_COLOR,gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.DST_ALPHA,gl.ONE_MINUS_DST_ALPHA,gl.SRC_COLOR,gl.ONE_MINUS_SRC_COLOR];
+  gl.blendFuncSeparate(F[b[1]]??gl.SRC_ALPHA,F[b[2]]??gl.ONE,gl.ZERO,gl.ONE)}else gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ZERO,gl.ONE)}
+function boxOf(n){const w=n.sz[0],h=n.sz[1],ho=n.ori&3,vo=(n.ori>>2)&3;
+  const x0=ho===1?0:ho===2?-w:-w/2,y1=vo===1?0:vo===2?h:h/2;return[x0,y1-h,x0+w,y1]}
+function texUV(m,uv){if(!m.srt.length)return uv;const[tx,ty,r,sx,sy]=m.srt[0];const c=Math.cos(r*Math.PI/180),s=Math.sin(r*Math.PI/180);
+  const s2=s*DBG.uvRot;return uv.map(([u,v])=>{if(DBG.fu)u=1-u;if(DBG.fv2)v=1-v;let X=tx*DBG.tx,Y=ty*DBG.ty;let x,y;
+  if(DBG.mode===1){x=(u-0.5+X)*sx;y=(v-0.5+Y)*sy;return[c*x-s2*y+0.5,s2*x+c*y+0.5]}
+  if(DBG.mode===2){x=(u-0.5)*sx;y=(v-0.5)*sy;return[c*x-s2*y+0.5+X*sx,s2*x+c*y+0.5+Y*sy]}
+  x=(u-0.5)*sx;y=(v-0.5)*sy;return[c*x-s2*y+0.5+X,s2*x+c*y+0.5+Y]})}
+function drawInst(I,root,hooks={}){
+  const n=I.N.length,W=new Array(n),A=new Array(n),V=new Array(n);
+  for(let i=0;i<n;i++){const nd=I.N[i],p=nd.parent;
+    const local=trs(nd.t,nd.r,nd.s);W[i]=mul(p<0?root:W[p],local);
+    const pa=p<0?1:(I.N[p].ia?A[p]:1);A[i]=pa*nd.a/255;V[i]=nd.vis&&(p<0||V[p]);
+    if(!V[i])continue;
+    if(hooks[nd.name]){hooks[nd.name](W[i],A[i]);continue}
+    if(hooks.skip&&hooks.skip.includes(nd.name))continue;
+    if(nd.k==='pic'){const m=I.M[nd.mat];const tm=m.tm[0];
+      let [x0,y0,x1,y1]=boxOf(nd);let uv=nd.uv[0]?[[nd.uv[0][0],nd.uv[0][1]],[nd.uv[0][2],nd.uv[0][3]],[nd.uv[0][4],nd.uv[0][5]],[nd.uv[0][6],nd.uv[0][7]]]:[[0,0],[1,0],[0,1],[1,1]];
+      if(I.widen&&nd.sz[0]===400&&nd.sz[1]===240){const k=WL/400;x0*=k;x1*=k;uv=uv.map(([u,v])=>[0.5+(u-0.5)*k,v])}
+      uv=texUV(m,uv);
+      let T=null;if(tm){T=(hooks.tex&&hooks.tex[tm.tex])||TEX[tm.tex]}
+      if(T){gl.bindTexture(gl.TEXTURE_2D,T.t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,WRAP[tm.ws]||gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,WRAP[tm.wt]||gl.CLAMP_TO_EDGE)}
+      gl.uniform1i(U.uHasTex,T?1:0);gl.uniform1i(U.uMode,0);
+      gl.uniform4f(U.uBlack,...m.black.map(x=>x/255));gl.uniform4f(U.uWhite,...m.white.map(x=>x/255));
+      const cols=nd.vc.map(c=>[c[0]/255,c[1]/255,c[2]/255,c[3]/255*A[i]]);
+      setBlend(m.blend);quad(W[i],x0,y0,x1,y1,uv,cols)}
+    else if(nd.k==='txt'){drawText(nd,W[i],A[i],hooks.text&&hooks.text[nd.name])}
+  }}
+function drawText(nd,M,alpha,str){
+  if(str==null)return;const f=nd.font==='num_font'?FONTS.num:FONTS.std;const T=nd.font==='num_font'?TEX.__font_num:TEX.__font_std;
+  const sc=[nd.fs[0]/(nd.font==='num_font'?16:15),nd.fs[1]/f.h];
+  // measure
+  let w=0;const gs=[...str].map(c=>f.glyphs[c]||f.glyphs['？']||f.glyphs['?']);
+  gs.forEach((g,i)=>{if(g)w+=(g[4]+nd.cs)*sc[0]});
+  const [bx0,by0,bx1,by1]=boxOf(nd);const th=nd.fs[1];
+  if(w>bx1-bx0&&w>0){sc[0]*=(bx1-bx0)/w;w=bx1-bx0}
+  const hp=nd.tpos&3,vp=(nd.tpos>>2)&3;
+  let x=hp===2?bx1-w:hp===0?(bx0+bx1-w)/2:bx0;let ytop=vp===2?by0+th:vp===0?(by0+by1+th)/2:by1;
+  gl.bindTexture(gl.TEXTURE_2D,T.t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.uniform1i(U.uHasTex,1);gl.uniform1i(U.uMode,1);gl.uniform4f(U.uTint,0,0,0,0);setBlend(null);
+  const pass=(dx,dy,ct,cb)=>{let cx=x;gs.forEach(g=>{if(!g)return;const[gx,gy,l,gw,cw]=g;
+      const x0=cx+l*sc[0]+dx,x1=x0+f.cw*sc[0],y1=ytop+dy,y0=y1-f.ch*sc[1];
+      const uv=[[gx/T.w,gy/T.h],[(gx+f.cw)/T.w,gy/T.h],[gx/T.w,(gy+f.ch)/T.h],[(gx+f.cw)/T.w,(gy+f.ch)/T.h]];
+      const c1=[ct[0]/255,ct[1]/255,ct[2]/255,ct[3]/255*alpha],c2=[cb[0]/255,cb[1]/255,cb[2]/255,cb[3]/255*alpha];
+      quad(M,x0,y0,x1,y1,uv,[c1,c1,c2,c2]);cx+=(cw+nd.cs)*sc[0]})};
+  if(nd.name==='TextBox_00')pass(nd.shadow[0],nd.shadow[1],nd.shc,nd.shc);
+  pass(0,0,nd.ctop,nd.cbot)}
+function drawImage(M,alpha,T,w,h,tint){if(!T)return;gl.bindTexture(gl.TEXTURE_2D,T.t);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.uniform1i(U.uHasTex,1);gl.uniform1i(U.uMode,1);gl.uniform4f(U.uTint,...tint);setBlend(null);
+  const c=[1,1,1,alpha];quad(M,-w/2,-h/2,w/2,h/2,[[0,0],[1,0],[0,1],[1,1]],[c,c,c,c])}
+
+// ================= scene =================
+const FPS=30;
+const SETS={
+  N:{frame:'Zukan_ALA_UPP_000',over:'Zukan_ALA_UPP_008',poke:'Zukan_ALA_UPP_001_Base',comp:'Zukan_MIN_UPP_002_Completion',se:['0x95','0x51','0x52','0x49','0x4d']},
+  Rare:{frame:'Zukan_ALA_UPP_006',over:'Zukan_ALA_UPP_009',poke:'Zukan_ALA_UPP_001_Rare',comp:'Zukan_MIN_UPP_002_Completion_Rare',se:['0x96','0x51','0x4b','0x4a','0x4e'],pv:1},
+  SR:{frame:'Zukan_ALA_UPP_007',over:'Zukan_ALA_UPP_010',poke:'Zukan_ALA_UPP_001_SR',comp:'Zukan_MIN_UPP_002_Completion_SR',se:['0x97','0x51','0x4c','0x4a','0x50'],pv:1}};
+const TL={pokeIn:28,base:33,plate:65,comp:105};
+const SETX=()=>SETS[S.set]||SETS.N;
+function compLead(){return Math.max(0,SCENE.anims[SETX().comp].frames-40)}
+function endFrame(){return TL.comp+compLead()+40+Math.round(S.hold*FPS)}
+function seTimes(){const X=SETX(),x=X.se,st=TL.comp-1.3,d5=X.pv?41:1,d6=X.pv?56:16;
+  const t=[[23,x[0]],[37.5,x[1]],[44.6,x[2]],[st+d5,x[3]],[st+d6,x[4]]];if(X.pv){t.push([st+1.3,'0x70',1]);t.push([st+1.3+16.5,'pv479'])}return t}
+const LEFT=['01','02','04'],RIGHT=['00','05','07'];
+let I={};
+function buildScene(){const X=SETX();
+  I.bg=new Inst('Zukan_BGR_UPP_000');I.bg.widen=1;I.bg.play('Zukan_BGR_UPP_000_Loop',0,{loop:true});
+  I.frame=new Inst(X.frame);I.frame.play(X.frame+'_In',TL.base);I.frame.play(X.frame+'_BG_Loop',TL.base+7,{loop:true});
+  I.dark=new Inst(X.over);I.dark.widen=1;I.dark.play(X.over+'_In',TL.base);I.dark.play(X.over+'_BG_Loop',TL.base+7,{loop:true});
+  I.ball=new Inst('Zukan_ALA_UPP_003');I.ball.play('Zukan_ALA_UPP_003_Base_Wait',0);
+  I.poke=new Inst('Zukan_ALA_UPP_001');I.poke.play('Zukan_ALA_UPP_001_In',TL.pokeIn);I.poke.play(X.poke,TL.base);
+  I.plate=new Inst('Zukan_ALA_UPP_002');I.plate.play('Zukan_ALA_UPP_002_Plate_In',TL.plate);
+  I.comp=new Inst('Zukan_MIN_UPP_002');I.comp.play(X.comp,TL.comp);
+  I.fade=new Inst('Zukan_FAD_UPP_000');I.fade.play('Zukan_FAD_UPP_000_fade_in',0);
+}
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+function pokeTint(F){
+  if(F<TL.base)return[0.1,0.17,0.24,0.9];
+  const f=F-TL.base;
+  if(f<2){const k=f/2;return[0.1+0.85*k,0.17+0.8*k,0.24+0.75*k,0.9]}
+  return[0.95,0.97,0.99,0.9*(1-clamp((f-2)/4))]}
+// halo texture (white blurred silhouette of the pokemon image)
+let HALO=null,HALO_KEY='';
+function makeHalo(){const T=TEX.__poke;const key=(T?T.w+'x'+T.h:'none')+'_'+S.hs;if(key===HALO_KEY)return;HALO_KEY=key;
+  if(!T||!T.img){HALO=null;return}
+  const img=T.img,sc=256/Math.max(img.width,img.height),w=Math.round(img.width*sc),h=Math.round(img.height*sc),pad=Math.round(S.hs*2.5);
+  const c=document.createElement('canvas');c.width=w+pad*2;c.height=h+pad*2;const x=c.getContext('2d');
+  const m=document.createElement('canvas');m.width=w;m.height=h;const mx=m.getContext('2d');mx.drawImage(img,0,0,w,h);mx.globalCompositeOperation='source-in';mx.fillStyle='#fff';mx.fillRect(0,0,w,h);
+  x.filter=`blur(${S.hs}px)`;for(let i=0;i<4;i++)x.drawImage(m,pad,pad);x.filter='none';x.drawImage(m,pad,pad);
+  HALO={...makeTex(c),padX:pad/w,padY:pad/h}}
+function drawHalo(M,alpha,scale){if(!HALO||alpha<=0||S.halo<=0)return;const T=TEX.__poke;const h=S.ps,w=h*T.w/T.h;
+  const hw=w*(1+2*HALO.padX)*scale,hh=h*(1+2*HALO.padY)*scale;
+  gl.bindTexture(gl.TEXTURE_2D,HALO.t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  gl.uniform1i(U.uHasTex,1);gl.uniform1i(U.uMode,1);gl.uniform4f(U.uTint,0,0,0,0);setBlend(null);
+  const c=[1,1,1,alpha*S.halo];quad(M,-hw/2,-hh/2,hw/2,hh/2,[[0,0],[1,0],[0,1],[1,1]],[c,c,c,c])}
+function render(F){
+  gl.viewport(0,0,cv.width,cv.height);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT);
+  const root=[2/WL,0,0,0,2/240,0];
+  for(const k in I)I[k].apply(F);
+  // spread frame parts to the sides
+  for(const nm of LEFT){const i=I.frame.byName[nm];if(i!=null)I.frame.N[i].t[0]-=S.fw}
+  for(const nm of RIGHT){const i=I.frame.byName[nm];if(i!=null)I.frame.N[i].t[0]+=S.fw}
+  const lg=I.comp.byName['Picturebook_Entry_text_J'];
+  if(lg!=null&&TEX.__logo){const n=I.comp.N[lg];const w=384*S.ls;n.sz=[w,w*TEX.__logo.h/TEX.__logo.w];n.t[1]+=S.ly}
+  const bi=I.ball.byName['ball'];I.ball.N[bi].a=255*(1-clamp((F-TL.pokeIn)/5));I.ball.N[bi].ia=1;
+  drawInst(I.bg,root);
+  drawInst(I.dark,root);
+  if(F>=TL.base)drawInst(I.frame,root);
+  const P=mul(root,trs([S.px,S.py],0,[1,1]));
+  drawInst(I.ball,P);
+  makeHalo();
+  drawInst(I.poke,P,{skip:['03','00','01','02','ef_00','ef_01','ef_02'],
+    poke:(M,a)=>{const T=TEX.__poke;
+      // halos (ef_00 / ef_01 / ef_02 panes) behind the pokemon
+      if(T)for(const [nm,k] of [['ef_02',1.12],['ef_01',1.06],['ef_00',1]]){const ei=I.poke.byName[nm];const e=I.poke.N[ei];
+        const child=I.poke.N.find(n=>n.parent===ei);const ea=a*(e.a/255)*((child?child.a:255)/255);
+        if(ea>0)drawHalo(mul(M,trs(e.t,e.r,e.s)),ea,k)}
+      if(!T){drawPlaceholder(M,a);return}
+      const h=S.ps,w=h*T.w/T.h;drawImage(M,a,T,w,h,pokeTint(F))}});
+  const Q=mul(root,trs([S.qx,S.qy],0,[S.qs,S.qs]));
+  drawInst(I.plate,Q,{text:{TextBox_00:S.name,TextBox_01:S.num}});
+  drawInst(I.comp,root,{tex:{Picturebook_Entry_text:TEX.__logo}});
+  if(F<12)drawInst(I.fade,mul(root,trs([0,0],0,[WL/400,1])));
+}
+function drawPlaceholder(M,a){const h=S.ps,w=h*0.8;gl.uniform1i(U.uHasTex,0);gl.uniform1i(U.uMode,1);gl.uniform4f(U.uTint,0,0,0,0);setBlend(null);
+  const c=[1,1,1,0.35*a];quad(M,-w/2,-h/2,w/2,h/2,[[0,0],[1,0],[0,1],[1,1]],[c,c,c,c])}
+
+// ================= sound =================
+let AC=null,BUF={},DEST=null,GAIN=null;
+async function initAudio(){if(AC)return;AC=new (window.AudioContext||window.webkitAudioContext)();GAIN=AC.createGain();GAIN.connect(AC.destination);
+  DEST=AC.createMediaStreamDestination();GAIN.connect(DEST);
+  for(const [k,src] of Object.entries(SE)){try{const ab=await (await fetch(src)).arrayBuffer();BUF[k]=await AC.decodeAudioData(ab)}catch(e){}}}
+function playSE(k,when,sweep){if(!AC||!BUF[k])return;const s=AC.createBufferSource();s.buffer=BUF[k];
+  if(sweep&&AC.createStereoPanner){const p=AC.createStereoPanner();p.pan.setValueAtTime(1,when);p.pan.linearRampToValueAtTime(-1,when+s.buffer.duration);s.connect(p);p.connect(GAIN)}else s.connect(GAIN);
+  s.start(when)}
+
+// ================= playback / UI =================
+let playing=false,t0=0,raf=0;
+async function play(onEnd){cancelAnimationFrame(raf);await initAudio();if(AC.state!=='running')await AC.resume();GAIN.gain.value=S.vol;
+  buildScene();playing=true;const a0=AC.currentTime+0.05;t0=performance.now()+50;
+  for(const [f,k,sw] of seTimes())playSE(k,a0+f/FPS,sw);
+  const step=()=>{const F=Math.max(0,(performance.now()-t0)/1000*FPS);render(F);if(F<endFrame())raf=requestAnimationFrame(step);else{playing=false;onEnd&&onEnd()}};raf=requestAnimationFrame(step)}
+function preview(){if(playing)return;buildScene();render(endFrame())}
+document.getElementById('playBtn').onclick=()=>play();
+const status=document.getElementById('status');
+document.getElementById('recBtn').onclick=async()=>{
+  if(playing)return;await initAudio();const stream=cv.captureStream(60);DEST.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+  const types=['video/mp4;codecs=avc1,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm'];const type=types.find(x=>MediaRecorder.isTypeSupported(x));
+  const rec=new MediaRecorder(stream,{mimeType:type,videoBitsPerSecond:20e6});const chunks=[];rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+  rec.onstop=()=>{const blob=new Blob(chunks,{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=`図鑑登録_${S.name}.${type.includes('mp4')?'mp4':'webm'}`;a.click();status.textContent='書き出し完了'};
+  status.textContent='書き出し中…（終わるまでこのタブを表示したままに）';buildScene();render(0);rec.start();
+  setTimeout(()=>play(()=>setTimeout(()=>rec.stop(),400)),300)};
+document.getElementById('hideBtn').onclick=()=>document.body.classList.toggle('clean');
+document.getElementById('fsBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'&&e.target.type==='text')return;
+  if(e.code==='Space'){e.preventDefault();play()}else if(e.key==='h'||e.key==='H')document.body.classList.toggle('clean');else if(e.key==='f'||e.key==='F')document.getElementById('fsBtn').click()});
+function save(){localStorage.setItem('zkn5_settings',JSON.stringify(S))}
+const fields=['set','num','name','px','py','ps','halo','hs','qx','qy','qs','ls','ly','fw','vol','hold'];
+function syncUI(){fields.forEach(k=>{const el=document.getElementById(k);el.value=S[k];const v=document.getElementById(k+'V');if(v)v.textContent=S[k]})}
+fields.forEach(k=>{const el=document.getElementById(k);el.addEventListener(el.tagName==='SELECT'?'change':'input',()=>{S[k]=el.type==='range'?+el.value:el.value;const v=document.getElementById(k+'V');if(v)v.textContent=S[k];save();preview()})});
+document.getElementById('resetAll').onclick=()=>{S=Object.assign({},DEFAULTS);save();syncUI();preview()};
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('zkn2',1);r.onupgradeneeded=()=>r.result.createObjectStore('img');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function idbSet(k,v){try{const db=await idb();const t=db.transaction('img','readwrite');v==null?t.objectStore('img').delete(k):t.objectStore('img').put(v,k)}catch(e){}}
+async function idbGet(k){try{const db=await idb();return await new Promise(r=>{const q=db.transaction('img').objectStore('img').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})}catch(e){return null}}
+async function setUserImg(k,blob){const img=blob?await loadImg(URL.createObjectURL(blob)):await loadImg(DEFAULT_IMG[k]);TEX['__'+k]=img?makeTex(img):null;preview()}
+document.querySelectorAll('input[type=file]').forEach(inp=>inp.onchange=async()=>{const f=inp.files[0];if(!f)return;await idbSet(inp.dataset.key,f);setUserImg(inp.dataset.key,f)});
+document.querySelectorAll('[data-reset]').forEach(b=>b.onclick=async()=>{const k=b.dataset.reset;await idbSet(k,null);setUserImg(k,null)});
+// ---- 素材パック（ROM から作ったもの。端末の中だけに保存し、サーバーには送らない）----
+async function packGet(){try{const db=await idb();return await new Promise(r=>{const q=db.transaction('img').objectStore('img').get('__pack');q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})}catch(e){return null}}
+async function applyPack(text){const P=JSON.parse(text);if(!P.scene||!P.tex)throw new Error('pack');
+  SCENE=P.scene;FONTS=P.fonts;TEXSRC=P.tex;SE=P.se||{};DEFAULT_IMG.logo=P.logo||null;
+  for(const [k,src] of Object.entries(TEXSRC)){const img=await loadImg(src);TEX[k]=makeTex(img)}
+  for(const k of ['poke','logo']){const b=await idbGet(k);const img=b?await loadImg(URL.createObjectURL(b)):await loadImg(DEFAULT_IMG[k]);TEX['__'+k]=img?makeTex(img):null}
+  AC=null;BUF={};document.getElementById('packBox').style.display='none';preview()}
+document.getElementById('packFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const msg=document.getElementById('packMsg');
+  try{const text=await f.text();await applyPack(text);await idbSet('__pack',text)}catch(err){msg.textContent='素材パックを読み込めませんでした。zukan_assets.json を選んでください。'}};
+document.getElementById('packReset').onclick=async()=>{await idbSet('__pack',null);location.reload()};
+window.ready=(async()=>{syncUI();const t=await packGet();
+  if(t){try{await applyPack(t)}catch(e){document.getElementById('packBox').style.display='flex'}}else document.getElementById('packBox').style.display='flex';return true})();
+window.renderAt=F=>{buildScene();render(F)};
+</script>
+</body>
+</html>
