@@ -33,3 +33,13 @@ jobs:
             echo "::error title=引き継ぎメモがありません::ファイルを変えたのに HANDOFF.md が更新されていません。作業ログに記録を足してください(書き方は HANDOFF.md の先頭)。"
             exit 1
           fi
+      - name: NER's topSecret の index.html が 作りなおして あるか 確かめる
+        run: |
+          # topsecret/src/ や topsecret/zukan/ を 変えたら、python3 topsecret/src/build.py で index.html を 作りなおす
+          # (index.html の 版 TS_BUILD が かわらないと、運営者の スマホに「新しい 版」の おしらせが 出ない)
+          python3 topsecret/src/build.py
+          if ! git diff --quiet -- topsecret/index.html; then
+            echo "::error title=topSecret の 作りなおし わすれ::topsecret/src か topsecret/zukan を 変えたのに topsecret/index.html が 古い まま です。python3 topsecret/src/build.py を 実行して コミット してください。"
+            exit 1
+          fi
+          echo "✅ topsecret/index.html は 最新です。"
