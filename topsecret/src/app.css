@@ -98,3 +98,5 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
 .tb-save.dbx .tb-main{background:#0061fe;border-color:#0061fe;color:#fff}
 /* メニューの「・表示中」が「・表 / 示中」と 変に 折りかえさない ように */
 .navitem[aria-current="page"] .nt::after{display:inline-block;white-space:nowrap}
+/* 新しい 版の おしらせ（下の バーの すぐ 上） */
+.ts-upd{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tabh,56px) + 10px);z-index:40;border:0;border-radius:999px;padding:10px 18px;background:var(--tbc);color:var(--tbon);font-size:14px;font-weight:700;white-space:nowrap;box-shadow:0 6px 20px rgb(0 0 0 / .3)}

@@ -30,6 +30,11 @@ parts = {
 for k, v in parts.items():
     assert html.count(k) == 1, k
     html = html.replace(k, v)
+# 版（中身の ハッシュ）を 入れる。ひらいて いる 版と サイトの 版が ちがえば「更新」の ボタンが 出る
+import hashlib
+assert html.count("'__BUILD__'") == 1
+zk = open(os.path.join(HERE, '..', 'zukan', 'index.html'), 'rb').read()
+html = html.replace("'__BUILD__'", "'" + hashlib.sha1(html.encode() + zk).hexdigest()[:10] + "'")
 out = os.path.join(HERE, '..', 'index.html')
 open(out, 'w', encoding='utf-8').write(html)
 print(os.path.normpath(out), len(html.encode()), 'bytes')

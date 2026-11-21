@@ -27,6 +27,13 @@
   .file button{padding:3px 8px;margin:0;font-size:12px}
   .hint{color:var(--muted);font-size:12px;line-height:1.6;margin-top:8px}
   #status{color:#e0a100;min-height:18px;margin-top:6px}
+  /* ファイルを えらぶ ボタン（ブラウザ そのままの 英語の 表示を 出さない） */
+  .fpick{position:relative;display:flex;align-items:center;gap:8px;min-width:0;flex:1;margin:0;color:var(--sub);cursor:pointer}
+  .fpick input{position:absolute;width:1px;height:1px;opacity:0}
+  .fpick .fb{flex:none;background:var(--btn2);color:var(--fg);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700}
+  .fpick.main .fb{background:var(--acc);color:#fff;padding:9px 16px;font-size:14px}
+  .fpick .fn{min-width:0;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+  .fpick:focus-within .fb{outline:2px solid var(--acc);outline-offset:2px}
   body.clean #panel{display:none}
   /* せまい 画面（スマホ）: 上に 画面、下に パネル */
   @media (max-width:760px){
@@ -44,7 +51,7 @@
     <div style="font-size:17px;font-weight:600;margin-bottom:8px">素材パックを読み込む</div>
     このアプリは、自分の ROM から作った素材パック（<b>zukan_assets.json</b>）を読み込んで動きます。<br>
     素材パックはこの端末のブラウザの中だけに保存され、どこにも送られません。2回目からは読み込みなしで開けます。
-    <div style="margin-top:12px"><input type="file" id="packFile" accept=".json,application/json"></div>
+    <div style="margin-top:12px"><label class="fpick main"><span class="fb">素材パックを えらぶ</span><span class="fn"></span><input type="file" id="packFile" accept=".json,application/json"></label></div>
     <div id="packMsg" style="color:#fc6;margin-top:8px"></div>
   </div>
 </div>
@@ -70,8 +77,8 @@
     </div>
 
     <h2>画像</h2>
-    <label>ポケモン（背景が透明なPNG）</label><div class="file"><input type="file" accept="image/*" data-key="poke"><button class="sub" data-reset="poke">戻す</button></div>
-    <label>完了ロゴ</label><div class="file"><input type="file" accept="image/*" data-key="logo"><button class="sub" data-reset="logo">戻す</button></div>
+    <label>ポケモン（背景が透明なPNG）</label><div class="file"><label class="fpick"><span class="fb">画像を えらぶ</span><span class="fn">えらんで いません</span><input type="file" accept="image/*" data-key="poke"></label><button class="sub" data-reset="poke">戻す</button></div>
+    <label>完了ロゴ</label><div class="file"><label class="fpick"><span class="fb">画像を えらぶ</span><span class="fn">えらんで いません</span><input type="file" accept="image/*" data-key="logo"></label><button class="sub" data-reset="logo">戻す</button></div>
 
     <h2>ポケモン</h2>
     <div class="row">
@@ -366,6 +373,11 @@ document.getElementById('packReset').onclick=async()=>{await idbSet('__pack',nul
 window.ready=(async()=>{syncUI();const t=await packGet();
   if(t){try{await applyPack(t)}catch(e){document.getElementById('packBox').style.display='flex'}}else document.getElementById('packBox').style.display='flex';return true})();
 window.renderAt=F=>{buildScene();render(F)};
+</script>
+<script>
+// えらんだ ファイルの 名前を ボタンの 横に 出す
+document.querySelectorAll('.fpick input').forEach(i => i.addEventListener('change', () => { const f = i.files[0]; if (f) i.closest('.fpick').querySelector('.fn').textContent = f.name; }));
+document.querySelectorAll('[data-reset]').forEach(b => b.addEventListener('click', () => { const n = document.querySelector(`.fpick input[data-key="${b.dataset.reset}"]`); if (n) { n.value = ''; n.closest('.fpick').querySelector('.fn').textContent = 'えらんで いません'; } }));
 </script>
 </body>
 </html>

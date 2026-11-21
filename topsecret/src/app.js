@@ -1,3 +1,5 @@
+// サイトの 版（build.py が 中身の ハッシュを 入れる。下の「新しい 版の おしらせ」で つかう）
+const TS_BUILD = '__BUILD__';
 /* NER's topSecret: Poke tools と 同じ しくみの 1ページの アプリ（☰メニュー＋下のバー。A案、2026-11-17）
    ツール: テキストボックス メーカー（tb）・出現ずかん（ner、Poke tools から 移した）・ROM・説明書（links）
    ツールを ひらいても ページは かわらない（#tb・#ner・#links で 直接 ひらける） */
@@ -429,7 +431,7 @@ function setView(v) {
   S.view = v; save();
   Object.entries(VIEWS).forEach(([k, x]) => document.getElementById(x.el).hidden = k !== v);
   document.body.dataset.view = v;
-  if (v === 'zk') { const f = document.getElementById('zkFrame'); if (!f.src) f.src = 'zukan/'; fitZk(); }
+  if (v === 'zk') { const f = document.getElementById('zkFrame'); if (!f.src) f.src = 'zukan/?v=' + TS_BUILD; fitZk(); }
   document.getElementById('appTitle').textContent = VIEWS[v].t;
   document.querySelectorAll('[data-view],[data-tab]').forEach(b => { if ((b.dataset.view || b.dataset.tab) === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
   if (location.hash !== '#' + v) try { history.replaceState(null, '', '#' + v); } catch (e) {}
@@ -450,3 +452,30 @@ document.getElementById('tabBar').addEventListener('click', e => { const b = e.t
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 addEventListener('hashchange', () => { const h = location.hash.slice(1); if (VIEWS[h] && h !== document.body.dataset.view) setView(h); });
 setView(VIEWS[location.hash.slice(1)] ? location.hash.slice(1) : (S.view || 'tb'));
+
+/* ---------- 新しい 版の おしらせ ----------
+   ホーム画面の アプリは 古い 版の まま 残る ことが あるので、ひらいた とき・もどった ときに
+   サイトの 版（build.py が 入れる TS_BUILD）を くらべて、ちがえば 「更新」の ボタンを 出す */
+(() => {
+  const q = new URLSearchParams(location.search);
+  if (q.has('v')) { q.delete('v'); try { history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); } catch (e) {} }
+  let busy = false, last = 0;
+  async function check() {
+    if (busy || Date.now() - last < 30000 || document.getElementById('tsUpd')) return;
+    busy = true; last = Date.now();
+    try {
+      const t = await (await fetch(location.pathname + '?_=' + Date.now(), { cache: 'no-store' })).text();
+      const m = t.match(/TS_BUILD = '([0-9a-f]{10})'/);
+      if (m && m[1] !== TS_BUILD) {
+        const b = document.createElement('button');
+        b.id = 'tsUpd'; b.type = 'button'; b.className = 'ts-upd';
+        b.textContent = '新しい 版が あります（押すと 更新）';
+        b.onclick = () => { location.href = location.pathname + '?v=' + m[1] + location.hash; };
+        document.body.appendChild(b);
+      }
+    } catch (e) {}
+    busy = false;
+  }
+  check();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+})();
