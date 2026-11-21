@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-18b(テキストボックス メーカー: スクロール なしで 保存の ボタンまで 見える) — 最後の記録 2026-11-17(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22a(図鑑登録メーカー `#zk` を 追加) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -76,7 +76,7 @@
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
 | `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援・孵化・遺伝ガイド など。出現ずかんは 2026-11-17 に NER's topSecret へ 移した) | 2026.11.17a(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
-| `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-17 |
+| `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・図鑑登録メーカー(`#zk`、中身は `topsecret/zukan/index.html` を iframe で ひらく)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-22a |
 | `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
 
 - テキストボックス メーカーの Dropbox 保存: ブラウザから 直接 Dropbox(OAuth PKCE。App key だけ、秘密の 鍵は 使わない)。Dropbox の アプリの 作りかたは `topsecret/src/README_dropbox.md`。トークンは 端末の `ner-topsecret-v1` の `dbx` に だけ。入力・えらんだ 窓・保存先・形式・大きさなども `tb` に 保存(Dropbox の 画面から もどっても、ひらき なおしても 消えない)。保存の 画面は A案(保存先「この 端末 / Dropbox」→ 形式・大きさ → 1行の 説明 → この ページ / ぜんぶ)。
@@ -91,6 +91,7 @@
 
 ## 進行中・やり残し
 
+- **図鑑登録メーカー(2026-11-22a)**:ウルトラムーンの 図鑑登録の 画面を、オリジナルの ポケモン画像・名前・完了ロゴで 再生・動画に 書き出す ツール(解説動画の 素材用)。**サイトには プログラムだけ を 置き、ROM から 取り出した 画像・フォント・効果音は 置かない**(公開リポジトリ なので)。素材は 運営者が 持っている 素材パック `zukan_assets.json` を 1回 読みこむ と その 端末の IndexedDB にだけ 入る。素材パックと 作り方(取り出しの スクリプト)は 非公開の topSecret の `tools/usum_zukan_toroku/`(PR #6)。素材パックを この リポジトリに 入れない こと。運営者の iPhone で まだ 見て いない。
 - **テキストボックス メーカーの Dropbox 保存(2026-11-17b)**:運営者の iPhone で 本物の Dropbox に 保存 できた(2026-11-18。いちど 400 が 出たが、ためしなおして できた。原因は 不明 → エラーに Dropbox の 返した 文も 出す ように した)。運営者が Dropbox の アプリを 作り、App key を「くわしい 設定」に 入れる 必要が ある(`topsecret/src/README_dropbox.md`)。App key を `app.js` の `APP_KEY` に 書けば 入力は いらなく なる。
 - **NER's topSecret(2026-11-17)**:運営者の iPhone で まだ 見て いない(とくに テキストボックス メーカーの 保存の 共有メニュー)。テキストボックス メーカーは ROM(textbox.gba か 未改変の 日本版エメラルド＋サファイア)を 端末の 中で 読む。ROM の データは サイトに 置かない。ROM・説明書は 運営者の Dropbox・GitHub を ひらく だけ(共有リンクに しない)。出現ずかんの 保存は `ner-topsecret-v1`(はじめて ひらいた とき Poke tools の `ev-counter-v2` の `ner` を 引きつぐ)。Poke tools の バックアップには もう 入らない。Poke tools の CSS の `#vNer`・`.nex-*` は 残って いる(使って いない)。topsecret/src/poke.css は Poke tools の CSS を 写した もの なので、Poke tools の 見た目を 大きく かえたら 写しなおす。
 
@@ -122,6 +123,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
+- やったこと: NER's topSecret に「図鑑登録メーカー」(`#zk`)を 足した(運営者の 指示「アプリの 一つとして 追加」「claude.ai では なく ふつうの Web アプリ」)。本体は `topsecret/zukan/index.html`(WebGL で ウルトラムーンの 図鑑の レイアウト・アニメを 動かす)。topSecret の 画面からは ☰メニューと 下のバー(4つに)で ひらき、iframe で 見せる(新しい ページに 移らない。iframe は はじめて ひらいた ときに だけ 読みこむ)。ROM から 取り出した 素材は サイトに 置かず、運営者の 素材パック `zukan_assets.json` を 読みこむ 形(端末の IndexedDB にだけ 入る)。せまい 画面では 上に 画面・下に 設定。ライト/ダークは topSecret と 同じ 設定に あわせる。topSecret 2026-11-22a。
+- 確かめたこと: Playwright・ローカルの サーバーで 1280×800(ダーク)と 390×844(ライト):`#zk` で ひらく → 素材パックを 読みこむ → ポケモン画像を 入れる → 描ける、テキストボックス メーカーに もどれる、エラーなし。iframe の 中で 素材パックを 読んだ あと 開きなおしても 素材が のこる(別の テスト)。
+- 次の人へ: 素材パックは 公開リポジトリに 入れない(ROM の 素材)。運営者の iPhone で 見て もらう。
 
 ### 2026-11-18 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: テキストボックス メーカーを スクロール しなくても 保存の ボタンまで 見える ように した(運営者の 指示)。文の 欄の 高さを 画面に あわせて おさえ(`sizeEd`。あふれたら 欄の 中で スクロール、いまの ページの 行が 見える ように 動かす)、「1 / 2」の 下の 空き(まちがいの 知らせの 場所)を けした。まちがいの 知らせは プレビューの 下に 赤い 帯で かさねる(場所を とらない)。下の 説明文を 2行に 短く。

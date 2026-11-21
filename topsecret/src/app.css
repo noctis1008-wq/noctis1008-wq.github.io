@@ -1,9 +1,14 @@
 /* NER's topSecret: Poke tools の 見た目（poke.css）に 足す ぶん。
    テキストボックス メーカーの 部品は ぜんぶ tb- で はじめて、Poke tools の クラスと ぶつからない ように する */
-body{--barh:0px;--tbc:#1f56c9;--tbon:#fff;--lkc:#9a5b00}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body{--tbc:#6f9cff;--tbon:#0b1020;--lkc:#f5b74d}}
-:root[data-theme="dark"] body{--tbc:#6f9cff;--tbon:#0b1020;--lkc:#f5b74d}
+body{--barh:0px;--tbc:#1f56c9;--tbon:#fff;--lkc:#9a5b00;--zkc:#b8336a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body{--tbc:#6f9cff;--tbon:#0b1020;--lkc:#f5b74d;--zkc:#ff7aa8}}
+:root[data-theme="dark"] body{--tbc:#6f9cff;--tbon:#0b1020;--lkc:#f5b74d;--zkc:#ff7aa8}
 .tabbar-in.tb3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tabbar-in.tb4{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+/* ---------- 図鑑登録メーカー（zk-。中身は zukan/index.html を iframe で） ---------- */
+#vZk{position:fixed;left:0;right:0;top:var(--zktop,64px);bottom:var(--tabh);z-index:1}
+#vZk iframe{display:block;width:100%;height:100%;border:0;background:#000}
 
 /* ---------- テキストボックス メーカー ---------- */
 #vTb{gap:0}

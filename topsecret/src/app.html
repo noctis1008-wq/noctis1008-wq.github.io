@@ -116,13 +116,16 @@
 
 <!--VNER-->
 
+<!-- 図鑑登録メーカー（zukan/ を iframe で ひらく。素材パックは 自分の 端末の 中だけ） -->
+<div class="view" id="vZk" hidden><iframe id="zkFrame" title="図鑑登録メーカー" allow="fullscreen; autoplay"></iframe></div>
+
 <!-- ROM・説明書（押すと 自分の Dropbox・GitHub が ひらく） -->
 <div class="wrap view" id="vLinks" hidden>
   <div id="lkList"></div>
   <p class="note">ROM と 説明書は、自分の Dropbox・GitHub の ページを ひらきます（ログインした 本人だけ 見られます）。共有リンクでは ありません。項目を ふやす ときは topsecret/src/app.js の LINKS に 1行 足します。</p>
 </div>
 
-<nav id="tabBar" class="tabbar" aria-label="ツール"><div class="tabbar-in tb3" id="tabBarIn"></div></nav>
+<nav id="tabBar" class="tabbar" aria-label="ツール"><div class="tabbar-in tb4" id="tabBarIn"></div></nav>
 <div id="toast" class="toast" role="status" hidden></div>
 <script type="application/json" id="nerData">/*NERDATA*/</script>
 <script>

@@ -408,17 +408,20 @@ function renderLinks() {
 }
 
 /* ---------- ☰メニュー・下のバー（Poke tools と 同じ） ---------- */
-const VIEWS = { tb: { t: 'テキストボックス メーカー', el: 'vTb', s: 'テキストボックス', c: '--tbc' }, ner: { t: '出現ずかん', el: 'vNer', s: '出現ずかん', c: '--nex' }, links: { t: 'ROM・説明書', el: 'vLinks', s: 'ROM・説明書', c: '--lkc' } };
+const VIEWS = { tb: { t: 'テキストボックス メーカー', el: 'vTb', s: 'テキストボックス', c: '--tbc' }, ner: { t: '出現ずかん', el: 'vNer', s: '出現ずかん', c: '--nex' }, zk: { t: '図鑑登録メーカー', el: 'vZk', s: '図鑑登録', c: '--zkc' }, links: { t: 'ROM・説明書', el: 'vLinks', s: 'ROM・説明書', c: '--lkc' } };
 const VIEW_KEYS = Object.keys(VIEWS);
 const TOOL_IC = {
   tb: '<path class="f" d="M3.5 6h17v10.5H9l-5.5 4z"/><path d="M7.5 10h9M7.5 13h5.5" class="in"/>',
   ner: '<path class="f" d="M3.5 6.5l5.5-2.2 6 2.2 5.5-2.2v13.2L15 19.7l-6-2.2-5.5 2.2z"/><path d="M9 4.3v13.2M15 6.5v13.2"/>',
+  zk: '<rect class="f" x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15.5l2.5-3 2 2 3-4 2.5 5" class="in"/><circle cx="8.5" cy="9" r="1.3"/>',
   links: '<path class="f" d="M3.5 6.5h6l2 2h9v10.5h-17z"/><path d="M3.5 10.5h17" class="in"/>',
 };
 const toolNi = k => `<span class="ni" style="--c:var(${VIEWS[k].c})" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true">${TOOL_IC[k]}</svg></span>`;
 const drawer = document.getElementById('drawer'), menuBtn = document.getElementById('menuBtn');
 document.getElementById('navTools').innerHTML = VIEW_KEYS.map((k, i) => `<button class="navitem${i === VIEW_KEYS.length - 1 ? ' navlast' : ''}" type="button" data-view="${k}">${toolNi(k)}<span class="nt">${VIEWS[k].t}</span></button>`).join('');
 document.getElementById('tabBarIn').innerHTML = VIEW_KEYS.map(k => `<button class="tab" type="button" data-tab="${k}" style="--c:var(${VIEWS[k].c})" aria-label="${VIEWS[k].t}">${toolNi(k)}<span class="tl">${VIEWS[k].s}</span></button>`).join('');
+function fitZk() { const h = document.querySelector('.appbar'); if (h) document.body.style.setProperty('--zktop', h.getBoundingClientRect().bottom + 'px'); }
+addEventListener('resize', () => { if (document.body.dataset.view === 'zk') fitZk(); });
 function setView(v) {
   if (!VIEWS[v]) v = 'tb';
   const prev = document.body.dataset.view;
@@ -426,6 +429,7 @@ function setView(v) {
   S.view = v; save();
   Object.entries(VIEWS).forEach(([k, x]) => document.getElementById(x.el).hidden = k !== v);
   document.body.dataset.view = v;
+  if (v === 'zk') { const f = document.getElementById('zkFrame'); if (!f.src) f.src = 'zukan/'; fitZk(); }
   document.getElementById('appTitle').textContent = VIEWS[v].t;
   document.querySelectorAll('[data-view],[data-tab]').forEach(b => { if ((b.dataset.view || b.dataset.tab) === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
   if (location.hash !== '#' + v) try { history.replaceState(null, '', '#' + v); } catch (e) {}
