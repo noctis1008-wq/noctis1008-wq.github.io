@@ -3,6 +3,8 @@
 
   python3 topsecret/src/build.py
 
+版の ルール（作りなおして いっしょに コミット する など）は topsecret/VERSIONING.md
+
 部品:
   app.html        画面の 骨組み（☰メニュー・下のバー・テキストボックス メーカー・ROM・説明書）
   poke.css        Poke tools の 見た目（poke-tools/index.html の <style> を 写した もの。2026-11-17）

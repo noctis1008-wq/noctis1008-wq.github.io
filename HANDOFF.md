@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22d(図鑑登録メーカーの 鳴き声を 消した 版を 作りなおし・作りなおし わすれの 自動チェック) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22e(版の ルールを `topsecret/VERSIONING.md` に まとめた) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -79,6 +79,7 @@
 | `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・図鑑登録メーカー(`#zk`、中身は `topsecret/zukan/index.html` を iframe で ひらく)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-22b |
 | `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
 
+- **topSecret の 版の ルールは `topsecret/VERSIONING.md`**(変える 前に 読む)。
 - **`topsecret/src/` や `topsecret/zukan/` を 変えたら、かならず `python3 topsecret/src/build.py` で `topsecret/index.html` を 作りなおして いっしょに コミット**。index.html の 版(`TS_BUILD`)が かわらないと、ホーム画面の アプリに「新しい 版が あります」が 出ず、図鑑登録メーカーの iframe(`zukan/?v=版`)も 古い まま。わすれると 自動チェック(handoff-check.yml)が ✗ を つける。
 
 - テキストボックス メーカーの Dropbox 保存: ブラウザから 直接 Dropbox(OAuth PKCE。App key だけ、秘密の 鍵は 使わない)。Dropbox の アプリの 作りかたは `topsecret/src/README_dropbox.md`。トークンは 端末の `ner-topsecret-v1` の `dbx` に だけ。入力・えらんだ 窓・保存先・形式・大きさなども `tb` に 保存(Dropbox の 画面から もどっても、ひらき なおしても 消えない)。保存の 画面は A案(保存先「この 端末 / Dropbox」→ 形式・大きさ → 1行の 説明 → この ページ / ぜんぶ)。
@@ -125,6 +126,10 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
+- やったこと: 運営者の 指示で topSecret の 版の ルールを `topsecret/VERSIONING.md` に まとめた(TS_BUILD と 記録の 版、変えたら build.py で 作りなおす、「最新」の 行の 書き方、自動チェック、新しい ツールを iframe で 足す ときの ?v)。HANDOFF.md・build.py から 指すように した。
+- 確かめたこと: build.py の 出力が かわらない(docstring だけ)。
 
 ### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: 運営者の「再度 確認」。d7febca(ロトムの 鳴き声を 消した)で `zukan/index.html` だけ 変わり、`topsecret/index.html` が 作りなおされて いなかった → 版(TS_BUILD)が かわらず、スマホに 新しい 版の おしらせが 出ない・iframe も 古い まま に なる ところだった。build.py で 作りなおした(TS_BUILD 799101731f)。わすれ ないように handoff-check.yml に「index.html が build.py の 出力と 同じか」の 確認を 足した。いちばん上の「最新」の 行も 22b の ままだったので 直した。
