@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22a(図鑑登録メーカー `#zk` を 追加) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22b(メニューの「・表示中」の 折りかえしを 直した) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -123,6 +123,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
+- やったこと: 運営者の「NER's topSecret を 確認」で 全体を 見た。☰メニューの「テキストボックス メーカー・表示中」が「・表 / 示中」と 変に 折りかえして いたので、「・表示中」を ひとかたまりで 次の 行へ(`app.css`)。
+- 確かめたこと: build.py の 出力が コミット済みの index.html と 同じ、公開版に 図鑑登録メーカーが 出ている(WebFetch)。Playwright 393×852(ダーク)・360×740(ライト)・1280×800 で 4つの 画面(#tb #zk #ner #links)・メニュー、横に はみ出さない、エラーなし。ROM・素材パックは コミットされて いない。
+- 次の人へ: 図鑑登録メーカーの ファイルを えらぶ 所が ブラウザ そのままの「Choose File / No file chosen」(英語)。ほかの 画面に あわせるか 運営者に 聞いて いる。
 
 ### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
 - やったこと: NER's topSecret に「図鑑登録メーカー」(`#zk`)を 足した(運営者の 指示「アプリの 一つとして 追加」「claude.ai では なく ふつうの Web アプリ」)。本体は `topsecret/zukan/index.html`(WebGL で ウルトラムーンの 図鑑の レイアウト・アニメを 動かす)。topSecret の 画面からは ☰メニューと 下のバー(4つに)で ひらき、iframe で 見せる(新しい ページに 移らない。iframe は はじめて ひらいた ときに だけ 読みこむ)。ROM から 取り出した 素材は サイトに 置かず、運営者の 素材パック `zukan_assets.json` を 読みこむ 形(端末の IndexedDB にだけ 入る)。せまい 画面では 上に 画面・下に 設定。ライト/ダークは topSecret と 同じ 設定に あわせる。topSecret 2026-11-22a。

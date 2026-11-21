@@ -2791,6 +2791,8 @@ a.lk:focus-visible{outline:2px solid var(--tbc);outline-offset:2px}
 .tb-dest button[data-v=dbx][aria-pressed=true]{background:color-mix(in srgb,#0061fe 14%,var(--surface));color:color-mix(in srgb,#0061fe 72%,var(--ink))}
 .tb-sst{margin-top:8px;font-size:12px;color:var(--muted);min-height:1.5em;line-height:1.5}
 .tb-save.dbx .tb-main{background:#0061fe;border-color:#0061fe;color:#fff}
+/* メニューの「・表示中」が「・表 / 示中」と 変に 折りかえさない ように */
+.navitem[aria-current="page"] .nt::after{display:inline-block;white-space:nowrap}
 
 </style>
 </head>
