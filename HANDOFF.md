@@ -154,6 +154,11 @@
 
 ## 作業ログ(新しいものが上)
 
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
+- やったこと: 図鑑登録メーカーで「書き出した 動画に 音が 入って いない」(運営者、iPhone)。iPhone の AudioEncoder(AAC)が うまく いって いないと 見て、音を 圧縮しない PCM に し、入れものを .mov に した。mp4-muxer を やめて mediabunny 1.66.2(MPL-2.0、使う 部分だけ 約 250KB を `zukan/index.html` の 中に)に した。映像は H.264 60fps の まま。ファイル名は `図鑑登録_<名前>.mov`。build.py で 作りなおし。
+- 確かめたこと: Playwright の Chromium(H.264 が ないので 映像だけ VP9 に おきかえ)で、.mov が 映像・音とも 8.23 秒、音は pcm_s16le で 効果音 入り(max -2.1dB)。iPhone の 実機では まだ。
+- 次の人へ: 運営者は「PR は マージ・公開まで 自動で」と 指示(2026-11-22)。
+
 ### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: 運営者「ほかの 会話で 更新すると いつも 反映されない」。しらべると ① ほかの 会話は `ai/claude/…` の ブランチ+PR に 上げて いて、マージ まで 1時間 かかったり(#8・#9)マージ されずに 閉じられたり(#7)、② 古い 中身で 上書き(#6)、③ build.py わすれ、④ スマホの キャッシュ が 原因。上に「🚚 公開の しかた」の 節を 足し(main に 直接 push して よい、PR なら マージ まで、pages の 成功を 見てから 伝える、運営者が する こと)、CLAUDE.md にも 1行 足した。
 - 確かめたこと: PR の 記録(作った 時刻・マージ 時刻)、いまの main の topSecret は build.py の 出力と 同じ、図鑑登録メーカーの 日本語の ボタンは のこって いる。
