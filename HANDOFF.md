@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22e(版の ルールを `topsecret/VERSIONING.md` に まとめた) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22f(図鑑登録メーカー: iPhone でも 後光が ぼける ように。日本語の ファイルボタンを もどした) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -126,6 +126,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
+- やったこと: 図鑑登録メーカーの 後光(ポケモンの うしろの 白い ぼかし)が、iPhone では Claude 版と ちがって くっきり した 白い 影に なって いた(運営者「後光が Claude ai 版と ちがう」)。原因は canvas の `ctx.filter = blur()` が iPhone の Safari で きかない こと。JS で ぼかす `softHalo()`(箱ぼかし 3回 ≒ ガウス、4回 重ねた 濃さも 同じ 計算)に かえた。あわせて、d7febca で 消えて いた 2d5cbb2 の 日本語の ファイルボタン(.fpick)を もどした(PR #7 の 中身。#7 は これで おきかえ)。build.py で 作りなおし。
+- 確かめたこと: Chromium で もとの `ctx.filter` 版と 新しい 版を 並べて 見て、ぼけかたが ほぼ 同じ。`zukan/index.html` に ctx.filter・鳴き声の 行が ない。build.py の 出力が コミットと 同じ。
+- 次の人へ: canvas の `ctx.filter` は iPhone で きかないので 使わない。
 
 ### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVzJBJsYEJzaucN7ZJE)
 - やったこと: 運営者の 指示で topSecret の 版の ルールを `topsecret/VERSIONING.md` に まとめた(TS_BUILD と 記録の 版、変えたら build.py で 作りなおす、「最新」の 行の 書き方、自動チェック、新しい ツールを iframe で 足す ときの ?v)。HANDOFF.md・build.py から 指すように した。
