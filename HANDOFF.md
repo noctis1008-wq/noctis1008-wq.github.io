@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22f(図鑑登録メーカー: iPhone でも 後光が ぼける ように。日本語の ファイルボタンを もどした) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.17a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22g(図鑑登録メーカー: 動画の 書き出しを 1コマずつ に して、長さが おかしく ならない ように) — 最後の記録 2026-11-22(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -126,6 +126,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
+- やったこと: 図鑑登録メーカーで「動画を 書き出すと 動画の 時間が すごく 長く なる」(運営者、iPhone)。MediaRecorder(実時間で 録る)を やめ、WebCodecs で 1コマずつ 描いて H.264(60fps)・音は OfflineAudioContext で 作って AAC に し、mp4-muxer 5.2.2(MIT、`zukan/index.html` の 中に 入れた)で mp4 に まとめる `exportWebCodecs()` に した。VideoEncoder・AudioEncoder が ない ブラウザだけ 前の MediaRecorder に もどる。build.py で 作りなおし。
+- 確かめたこと: Playwright の Chromium(H.264・AAC が ないので VP9・Opus に おきかえて ためした)で、書き出した mp4 が 映像 8.23 秒・音 8.24 秒、60fps、効果音 入り。iPhone の 実機では まだ。
+- 次の人へ: 書き出しの 長さ = endFrame()+12 コマ(30fps 基準)。
 
 ### 2026-11-22 — Claude(https://claude.ai/code/session_01NCVwVxaYG4F3oTE8v4esTY)
 - やったこと: 図鑑登録メーカーの 後光(ポケモンの うしろの 白い ぼかし)が、iPhone では Claude 版と ちがって くっきり した 白い 影に なって いた(運営者「後光が Claude ai 版と ちがう」)。原因は canvas の `ctx.filter = blur()` が iPhone の Safari で きかない こと。JS で ぼかす `softHalo()`(箱ぼかし 3回 ≒ ガウス、4回 重ねた 濃さも 同じ 計算)に かえた。あわせて、d7febca で 消えて いた 2d5cbb2 の 日本語の ファイルボタン(.fpick)を もどした(PR #7 の 中身。#7 は これで おきかえ)。build.py で 作りなおし。
