@@ -614,7 +614,9 @@ async function exportWebCodecs(){
   const MB=window.Mediabunny;if(!window.VideoEncoder||!window.OfflineAudioContext||!MB)return false;
   const W=cv.width,H=cv.height,OUT=60,SR=48000;
   const vcodec=window.__zkVCodec||'avc';
-  if(!(await MB.canEncodeVideo(vcodec,{width:W,height:H,bitrate:16e6})))return false;
+  // 編集の 素材に するので 高画質（50Mbps。使えなければ 下げる）
+  let VBR=0;for(const b of [50e6,40e6,30e6,16e6])if(await MB.canEncodeVideo(vcodec,{width:W,height:H,bitrate:b})){VBR=b;break}
+  if(!VBR)return false;
   await initAudio();buildScene();
   const nF=Math.ceil((endFrame()+12)/FPS*OUT),dur=nF/OUT;
   // 音: 再生と 同じ 時間に 効果音を 置いて、まとめて 作る
@@ -624,7 +626,7 @@ async function exportWebCodecs(){
   const ab=await oac.startRendering();
   const mov=vcodec==='avc';
   const out=new MB.Output({format:mov?new MB.MovOutputFormat({fastStart:'in-memory'}):new MB.Mp4OutputFormat({fastStart:'in-memory'}),target:new MB.BufferTarget()});
-  const vs=new MB.CanvasSource(cv,{codec:vcodec,bitrate:16e6,keyFrameInterval:2});out.addVideoTrack(vs,{frameRate:OUT});
+  const vs=new MB.CanvasSource(cv,{codec:vcodec,bitrate:VBR,keyFrameInterval:1});out.addVideoTrack(vs,{frameRate:OUT});
   const as=new MB.AudioBufferSource(mov?{codec:'pcm-s16'}:{codec:'opus',bitrate:192000});out.addAudioTrack(as);
   await out.start();
   await as.add(ab);as.close();
