@@ -799,7 +799,7 @@ body[data-obsbg=white] .obsview{color:#111;text-shadow:none}
 :root[data-theme="dark"]{--dx:#ff7a63;--dx-ink:#2a0c06}
 .dxchips{display:flex;flex-wrap:wrap;gap:6px}
 .dxchips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;color:var(--ink);line-height:1.3}
-.dxchips.gens{display:grid;grid-template-columns:repeat(9,minmax(0,1fr)) minmax(0,1.9fr);gap:4px}
+.dxchips.gens{display:grid;grid-template-columns:repeat(9,minmax(0,1fr)) minmax(0,1.9fr) minmax(0,1.4fr);gap:4px}
 .dxchips.gens button{font-family:var(--f-num);padding:7px 0;font-size:14px;border-radius:10px}
 .dxchips.gens .home{font-size:11px;letter-spacing:.02em}
 .dxchips button[aria-pressed=true]{background:var(--dx);border-color:var(--dx);color:var(--dx-ink)}
@@ -2808,6 +2808,7 @@ body:not(.app) .obsapp{display:none!important}
 
 <div class="wrap view" id="vDex" hidden>
   <button id="dxCond" class="dxx-card dxx-cond" type="button" aria-haspopup="dialog" aria-label="作品と図鑑を変更"><span class="dxx-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg></span><span class="tx"><span class="t1" id="dxCondT"></span><span class="dxx-chips" id="dxChips"></span></span><span class="dxx-edit">変更<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></button>
+  <div id="dxGoC" class="dxx-seg" role="group" aria-label="集め方" hidden></div>
   <div id="dxTabs" class="dxx-tabs" role="tablist" aria-label="図鑑" hidden></div>
   <div id="dxProg" class="dxx-hero"></div>
   <div class="dxx-tb">
@@ -4809,8 +4810,18 @@ const DX_GAMES=[
   {g:9,id:'sv',n:'スカーレット・バイオレット',dex:[[31,'パルデア図鑑'],[32,'キタカミ図鑑'],[33,'ブルーベリー図鑑']],nat:'sv'},
   {g:9,id:'za',n:'LEGENDS Z-A',dex:[[34,'ミアレ図鑑'],[35,'M次元ラッシュ']]},
   {g:'home',id:'home',n:'ポケモンHOME',dex:[],nat:1025},
+  {g:'go',id:'go',n:'ポケモンGO',dex:[['r1','カントー'],['r2','ジョウト'],['r3','ホウエン'],['r4','シンオウ'],['r5','イッシュ'],['r6','カロス'],['r7','アローラ'],['r8','ガラル'],['r9','ヒスイ'],['r10','パルデア']],nat:'go'},
 ];
-const DX_GENS=[1,2,3,4,5,6,7,8,9,'home'];
+const DX_GENS=[1,2,3,4,5,6,7,8,9,'home','go'];
+/* ポケモンGO（2026.11.23a）：GO に出ているポケモンだけ。地方ごとのタブと全国。登録は「集め方」（ふつう・色違い・キラ・シャドウ・ライト）ごとに別に保存する（S.dx.reg の go / go_s / go_l / go_sh / go_p）。
+   表は 2026-11-23 時点（PvPoke の gamemaster の released ＋ バトルに出ないメタモン・ヌケニン・コフーライ・コスモッグ・コスモウム）。新しく出たら DX_GO_NO から番号を消す。
+   色違いは、まだ色違いが出ていないポケモンも数に入る（調べる元がないため）。キラは交換できない幻（DX_GO_UNT）を除く。シャドウ・ライトはシャドウがいるポケモン（DX_GO_SH）だけ */
+const dxRng=t=>{const S0=new Set();t.split(' ').forEach(x=>{const[a,b]=x.split('-').map(Number);for(let i=a;i<=(b||a);i++)S0.add(i)});return S0};
+const DX_GO_NO=dxRng('489-490 493 746 771-773 801 833-834 868-869 871 875 878-883 896-898 902 951-954 963-964 967 976 981 984-995 1001-1010 1014-1018 1020-1025'),DX_GO_SH=dxRng('1-20 23-24 27-34 37-38 41-45 48-82 86-107 109-112 114 116-117 120-121 123 125-127 129-131 137-150 152-160 163-166 169 177-182 185-190 194-195 198-200 202-205 207-213 215-217 220-221 225 227-234 237 243-250 252-264 273-277 280-282 287-289 293-297 299 302-306 309-310 318-323 325-326 328-334 339-350 353-356 359 361-365 371-383 387-400 403-405 408-411 424-426 429-432 434-435 443-445 449-454 459-462 464-467 472-478 483-488 491 495-505 509-510 519-526 529-530 532-534 538-539 543-545 554-555 557-558 562-569 574-581 588-591 595-598 607-612 616-617 622-623 633-635 641-645 650-663 674-675 686-687 694-699 708-709 714-715 731-733 736-738 751-754 756 759-760 767-770 821-823 862 901 903 979'),DX_GO_UNT=dxRng('151 251 385-386 491 494 647-649 718-721 802-803 807 890-893');
+const DX_GO_RG=[[1,151],[152,251],[252,386],[387,493],[494,649],[650,721],[722,809],[810,898],[899,905],[906,1025]];
+const DX_GO_C=[['n','ふつう'],['s','色違い'],['l','キラ'],['sh','シャドウ'],['p','ライト']];
+const dxGoC=()=>DX_GO_C.some(c=>c[0]===S.dx.goc)?S.dx.goc:'n';
+const dxGoOk=(d,c=dxGoC())=>!DX_GO_NO.has(d)&&(c==='l'?!DX_GO_UNT.has(d):c==='sh'||c==='p'?DX_GO_SH.has(d):true);
 const dxTagList=()=>{const g=dxGame().g;return DX_TAGS.filter(t=>t[0]!==32||g==='home'||g>=8)};
 const DX_TAGS=[[1,'レベル進化'],[2,'なつき進化'],[4,'石進化'],[8,'道具進化'],[16,'通信進化'],[32,'つながりのヒモ対応'],[64,'特殊な進化'],[128,'孵化限定'],[256,'配布限定'],[512,'伝説']];
 S.dx=Object.assign({game:'sv',dex:{},reg:{},filt:'all',tags:[],sort:'no',q:'',ut:[],um:{},ov:{},fold:false},S.dx||{});
@@ -4828,12 +4839,15 @@ function dxEntriesOf(g,k){
   if(k==='nat'){
     // 剣盾・SV の「全国」：その作品の図鑑（ガラル・ヨロイ島・カンムリ雪原／パルデア・キタカミ・ブルーベリー）に載っているポケモンを合わせ、重なりを除いたもの（2026.11.03a）。
     //   連れて行けても、どの図鑑にも載らないポケモン（伝説の多く・HOME からだけのポケモン）は出さない（図鑑埋めに関係ないため）。すがた違いは、もとのすがたのすぐ後に並べる
+    if(g.nat==='go'){const L=[];for(let i=1;i<=1025;i++)if(dxGoOk(i))L.push([i,i]);return L}
     if(g.nat==='swsh'||g.nat==='sv'){const U=new Set(g.dex.flatMap(d=>DEXN[d[0]][1]));return [...U].sort((a,b)=>a%10000-b%10000||a-b).map(x=>[x%10000,x])}
     return Array.from({length:g.nat},(_,i)=>[i+1,i+1]);
   }
+  if(g.id==='go'){const[a,b]=DX_GO_RG[+k.slice(1)-1],L=[];for(let i=a;i<=b;i++)if(dxGoOk(i))L.push([i,i]);return L}
   const [st,l]=DEXN[k];return l.map((s,i)=>[st+i,s]);
 }
-const dxReg=()=>{const r=S.dx.reg[S.dx.game]||(S.dx.reg[S.dx.game]={});if(S.dx.game==='sv'&&!S.dx.svf)dxSvMig(r);return r};
+const dxRegKey=()=>S.dx.game==='go'&&dxGoC()!=='n'?'go_'+dxGoC():S.dx.game;
+const dxReg=()=>{const K=dxRegKey(),r=S.dx.reg[K]||(S.dx.reg[K]={});if(S.dx.game==='sv'&&!S.dx.svf)dxSvMig(r);return r};
 /* 2026.10.31b より前の SV の登録は、ポケモンごと（すがた違いもいっしょ）だった。消さないように、もとのポケモンが登録済みなら、
    すがた違いも登録済みにして始める（どちらのすがたを捕まえたかは分からないため）。図鑑の録画を読み直すと、捕まえていないすがたは「登録を外す」に出る */
 function dxSvMig(r){let n=0;DX_SVFL.forEach(f=>{const b=f%10000;if(r[b]&&!r[f]){r[f]=r[b];n++}});S.dx.svf=1;if(n)S.dx.svfN=n;try{save()}catch(e){}}
@@ -4870,19 +4884,21 @@ const dxAb=n=>{try{return MON_SOFT_AB[n]||n}catch(e){return n}};
 const DXX_IC={check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>',filter:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>'};
 function renderDxSetup(){
   const g=dxGame(),k=dxDexKey(g);
-  document.getElementById('dxGen').innerHTML=DX_GENS.map(x=>`<button type="button" data-dxgen="${x}"${x==='home'?' class="home"':''} aria-pressed="${g.g===x}">${x==='home'?'HOME':x}</button>`).join('');
+  document.getElementById('dxGen').innerHTML=DX_GENS.map(x=>`<button type="button" data-dxgen="${x}"${typeof x==='string'?' class="home"':''} aria-pressed="${g.g===x}">${x==='home'?'HOME':x==='go'?'GO':x}</button>`).join('');
   const games=DX_GAMES.filter(x=>x.g===g.g);
   document.getElementById('dxGame').innerHTML=games.map(x=>`<button type="button" data-dxgame="${x.id}" aria-pressed="${x.id===g.id}">${x.n}</button>`).join('');
   const sv=g.nat==='swsh'||g.nat==='sv',opts=g.dex.map(d=>[String(d[0]),d[1]]);if(g.nat)opts.push(['nat',sv?'全国（図鑑を合わせたもの）':'全国図鑑']);
   document.getElementById('dxDex').innerHTML=opts.map(([v,t])=>`<button type="button" data-dxdex="${v}" aria-pressed="${v===k}">${t}</button>`).join('');
   const all=dxEntries(),reg=dxReg(),got=all.filter(([n,s])=>reg[s]).length,tot=all.length,left=tot-got;
   // 図鑑のタブ（図鑑が2つ以上ある作品だけ）。それぞれの登録済みの数を出す。登録はポケモンごとなので、どのタブで登録しても、ほかの図鑑にも入る
+  const gc=document.getElementById('dxGoC');gc.hidden=g.id!=='go';
+  if(g.id==='go')gc.innerHTML=DX_GO_C.map(([v,t])=>`<button type="button" data-dxgoc="${v}" aria-pressed="${v===dxGoC()}">${t}</button>`).join('');
   const tabs=document.getElementById('dxTabs'),V=dxViews(g);tabs.hidden=V.length<2;
   if(V.length>1)tabs.innerHTML=V.map(([v,t])=>{const E=dxEntriesOf(g,v),n=E.filter(([x,s])=>reg[s]).length;return `<button type="button" role="tab" data-dxdex="${v}" aria-selected="${v===k}"><b>${t}</b><small>${n}/${E.length}</small></button>`}).join('');
-  document.getElementById('dxProg').innerHTML=`<div class="lab"><span class="gl">${DXX_IC.check}登録済み</span><span class="left">${dxOwn()&&got?(()=>{const c1=all.filter(([n,s])=>reg[s]===1).length;return `捕まえた <b>${c1}</b>・登録だけ <b>${got-c1}</b>`})():tot&&!left?'コンプリート！':`あと <b>${left}</b>匹`}</span></div><div class="num"><b>${got}</b><span>/ ${tot}匹</span><span class="rt">${tot?Math.floor(got/tot*100):0}%</span></div><div class="dxx-hbar" role="progressbar" aria-label="登録済みの割合" aria-valuemin="0" aria-valuemax="${tot}" aria-valuenow="${got}"><span style="width:${tot?got/tot*100:0}%"></span></div>`;
+  document.getElementById('dxProg').innerHTML=`<div class="lab"><span class="gl">${DXX_IC.check}${g.id==='go'&&dxGoC()!=='n'?DX_GO_C.find(c=>c[0]===dxGoC())[1]+'・':''}登録済み</span><span class="left">${dxOwn()&&got?(()=>{const c1=all.filter(([n,s])=>reg[s]===1).length;return `捕まえた <b>${c1}</b>・登録だけ <b>${got-c1}</b>`})():tot&&!left?'コンプリート！':`あと <b>${left}</b>匹`}</span></div><div class="num"><b>${got}</b><span>/ ${tot}匹</span><span class="rt">${tot?Math.floor(got/tot*100):0}%</span></div><div class="dxx-hbar" role="progressbar" aria-label="登録済みの割合" aria-valuemin="0" aria-valuemax="${tot}" aria-valuenow="${got}"><span style="width:${tot?got/tot*100:0}%"></span></div>`;
   const dn=(opts.find(o=>o[0]===k)||['',''])[1];
   document.getElementById('dxCondT').textContent=k==='nat'&&sv?`${dxAb(g.n)}・全国（図鑑を合わせた${tot}匹）`:`${dxAb(g.n)}・${dn}（${tot}匹）`;
-  document.getElementById('dxChips').innerHTML=`<span class="dxx-chip on">${g.g==='home'?'HOME':`第${g.g}世代`}</span><span class="dxx-chip">${esc(g.n)}</span><span class="dxx-chip">作品ごとに保存</span>`;
+  document.getElementById('dxChips').innerHTML=`<span class="dxx-chip on">${g.g==='home'?'HOME':g.g==='go'?'GO':`第${g.g}世代`}</span><span class="dxx-chip">${esc(g.n)}</span><span class="dxx-chip">作品ごとに保存</span>`;
   dxSegCounts();
 }
 // すべて・未登録・登録済みの数（名前とタグの絞り込みを反映）
@@ -4976,7 +4992,8 @@ const dxClick=e=>{
   if(b.id==='dxBulkBtn'){dxBulkInfo();dxSh(dxBulkSheet,true);return}
   if(b.id==='dxSortBtn'){dxSh(dxSortSheet,true);return}
   if(d.dxqx){const i=document.getElementById('dxSearch');i.value='';S.dx.q='';save();b.hidden=true;renderDxList();i.focus();return}
-  if(d.dxgen){const gv=d.dxgen==='home'?'home':+d.dxgen,cur=dxGame();if(cur.g!==gv){S.dx.game=(S.dx.last||{})[gv]||DX_GAMES.find(x=>x.g===gv).id}renderDex();save();return}
+  if(d.dxgoc){S.dx.goc=d.dxgoc;renderDex();save();return}
+  if(d.dxgen){const gv=d.dxgen==='home'||d.dxgen==='go'?d.dxgen:+d.dxgen,cur=dxGame();if(cur.g!==gv){S.dx.game=(S.dx.last||{})[gv]||DX_GAMES.find(x=>x.g===gv).id}renderDex();save();return}
   if(d.dxgame){S.dx.game=d.dxgame;(S.dx.last||(S.dx.last={}))[dxGame().g]=d.dxgame;save();renderDex();return}
   if(d.dxdex){S.dx.dex[S.dx.game]=d.dxdex;save();renderDex();return}
   if(d.dxf){S.dx.filt=d.dxf;save();renderDxTools();renderDxList();return}
@@ -5088,6 +5105,7 @@ function dxNotes(){
     else if(g==='za')N.push('LEGENDS Z-Aにはつながりのヒモがありません。通信交換で進化させてください。');
     else N.push('この作品には、つながりのヒモを使えるLEGENDS アルセウスからポケモンを連れてこられません。通信交換で進化させてください。');
   }
+  if(has('b16')&&g==='go')N.push('ポケモンGOでは、通信進化のポケモンもアメで進化できます。交換したポケモンなら、アメはいりません。');
   if(has('b16')&&g==='la')N.push('LEGENDS アルセウスには通信交換での進化がなく、かわりにつながりのヒモや道具で進化します。');
   if(has('b128')&&['la','lgpe','za','rgby'].includes(g))N.push('この作品にはタマゴがないので、孵化限定のタグは当てはまりません。野生などで出会えることがあります。');
   if(has('b128')&&g==='home')N.push('孵化限定のポケモンは、タマゴのある作品で孵してからHOMEに預けてください。');
@@ -5925,7 +5943,7 @@ const DX_TIPK='ner-dx-camtip-off',DX_SP={phone:'<svg viewBox="0 0 24 24" fill="n
 let dxPendAct='pick';
 const dxLocalOk=()=>DX_LOCAL_GAMES.includes(dxGame().id);
 function dxShotUI(){
-  const $=x=>document.getElementById(x),g=dxGame(),k=dxDexKey(g),local=dxLocalOk(),gm=!!gmKey()&&!window.NER_APP,can=local||gm;
+  const $=x=>document.getElementById(x),g=dxGame(),k=dxDexKey(g),local=dxLocalOk(),isGo=g.id==='go',gm=!!gmKey()&&!window.NER_APP&&!isGo,can=local||gm;
   const dexName=k==='nat'?'全国図鑑':((g.dex||[]).find(d=>String(d[0])===k)||[0,''])[1];
   $('dxShotSub').textContent=dxMulti(g)?`${dxAb(g.n)}の図鑑の一覧画面を読み取り、${dxViews(g).filter(v=>v[0]!=='nat').map(v=>v[1]).join('・')}${g.nat?'・全国':''}に振り分けます`:`${dxAb(g.n)}${dexName?'・'+dexName:''}の一覧画面を読み取ります`;
   $('dxCamBtn').disabled=$('dxPickBtn').disabled=!can;
@@ -5938,6 +5956,7 @@ function dxShotUI(){
     $('dxGmCtaP').textContent=local?'スマホ内で読めなかった画面（ぼけ・反射など）も、Gemini が読み取ります。無料で使えます（Google のキーを1回だけ設定）。':'Gemini と連携すると、この作品の図鑑の画面も読み取れます。無料で使えます（Google のキーを1回だけ設定）。';
     $('dxGmMeter').hidden=!local}
   $('dxTipBtn').hidden=!can;
+  if(isGo){$('dxShotSub').textContent='ポケモンGOの図鑑は、まだ読み取りに対応していません';$('dxModeBox').innerHTML='<p class="dxc-note">一覧の左の丸を押すか、「まとめて登録・解除」で登録してください。</p>';cta.hidden=true}
 }
 {const _r=renderDxSetup;renderDxSetup=function(){_r();dxShotUI()}}
 // 撮る／選ぶ：Gemini を使うなら初めに18歳以上の確認、撮るときは初めに撮り方のコツ、それからカメラ（ファイル選び）を開く
@@ -6895,7 +6914,7 @@ document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;
 /* ---------- 個体管理 ---------- */
 const MON_GFIX="............................fffmmm..............................................nn.................nn....mm.....f.f....nn..f...m...n....n......nnn...nn.................................................n...............................n..mmf..ffnnn...nnn........................................n....................mf......................nn....nn.............................nnnnnnfmnnnnn..........................fm.f...................nn..f.....................n...........nm..fnnnnnn.nnfnnnnnn...........................................mm........ff.................................................nnn.............n......nn...mmff.......nnnmmnnmnnnn...................fff...............................n............nnnnnn....................................f..fff........nnn......n...nnnnnnnnnnnnnnnnnnnnnnnnn............................................nnfffmmm......ffn.........nnnn....nnn..nnnnnn......f..........m.......nn...............................fff........................nnnnnnnnnnnn...nnnnnnnnnnnn.nnmmmf..nnnn.n"; // n=性別なし m=オスのみ f=メスのみ
 const monGFix=sp=>sp?{n:'不明',m:'♂',f:'♀'}[MON_GFIX[sp-1]]||'':'';
-const MON_SOFTS=['ポケモンHOME','ポケモンチャンピオンズ',...DX_GAMES.filter(g=>g.id!=='home').flatMap(g=>g.id==='frlg'?[g.n,'ポケモンコロシアム','ポケモンXD 闇の旋風ダーク・ルギア']:[g.n]),'ポケモンGO','その他'];
+const MON_SOFTS=['ポケモンHOME','ポケモンチャンピオンズ',...DX_GAMES.filter(g=>g.id!=='home'&&g.id!=='go').flatMap(g=>g.id==='frlg'?[g.n,'ポケモンコロシアム','ポケモンXD 闇の旋風ダーク・ルギア']:[g.n]),'ポケモンGO','その他'];
 const MON_PLACES=[['box','ボックス'],['party','手持ち'],['day','育て屋・預かり屋'],['bbox','バトルボックス'],['other','その他']];
 const MON_BALLS=['モンスターボール','スーパーボール','ハイパーボール','マスターボール','プレミアボール','ネットボール','ダイブボール','ネストボール','リピートボール','タイマーボール','ゴージャスボール','ヒールボール','ダークボール','クイックボール','プレシャスボール','ドリームボール','ウルトラボール','サファリボール','コンペボール','パークボール','ストレンジボール','ガンテツボール：レベルボール','ガンテツボール：ルアーボール','ガンテツボール：ムーンボール','ガンテツボール：フレンドボール','ガンテツボール：ラブラブボール','ガンテツボール：ヘビーボール','ガンテツボール：スピードボール','ヒスイ：モンスターボール','ヒスイ：スーパーボール','ヒスイ：ハイパーボール','ヒスイ：ヘビーボール','ヒスイ：メガトンボール','ヒスイ：ギガトンボール','ヒスイ：フェザーボール','ヒスイ：ウイングボール','ヒスイ：ジェットボール','ヒスイ：オリジンボール'];
 const MON_TAG0=['色違い','対戦用','理想個体','6V','5V','夢特性','厳選中','育成済み','未育成','孵化余り','国際孵化','配布','交換用','図鑑用','リボン','証持ち','伝説・幻','ボール厳選'];
@@ -8655,7 +8674,7 @@ function renderUiSet(moved){
   document.getElementById('navRst').disabled=S.navOrder.join()===TOOL_KEYS.join();
 }
 function uiApply(moved,focus){save();renderTabs();renderNav();renderUiSet(moved);if(focus){const b=document.querySelector(focus);if(b&&!b.disabled)b.focus()}}
-const APP_VER='2026.11.17a';document.getElementById('appVer').textContent=APP_VER;
+const APP_VER='2026.11.23a';document.getElementById('appVer').textContent=APP_VER;
 const stSheets={tab:'stTabSheet',nav:'stNavSheet',bkx:'stBkSheet',bki:'stBkSheet'};let stOpenEl=null,stRet=null;
 function stOpen(k){const sh=document.getElementById(stSheets[k]);stRet=document.activeElement;
   if(k==='tab'||k==='nav')renderUiSet();
