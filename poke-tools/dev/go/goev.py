@@ -78,6 +78,7 @@ for T,L in sorted(cand.items()):
   u=list(dict.fromkeys(chips))
   if len(u)>1 and len(''.join(u))<=6:chip='・'.join(u)
   if not bits and cs:bits=1
+  chip={'コレクレーのコイン':'コイン999','相棒タスク・昼':'相棒・昼','相棒タスク・夜':'相棒・夜','あまーいリンゴ':'リンゴ','すっぱいリンゴ':'リンゴ','みついりりんご':'リンゴ'}.get(chip,chip)  # 一覧で切れないように短く
   out[T]=[chip,' ／ '.join(parts),min(cs) if cs else 0,bits]
 json.dump(out,open(sys.argv[2],'w'),ensure_ascii=False,separators=(',',':'))
 for T in [26,136,197,198,350,461,462,471,700,745,892,1000,809,184,186,423,983,1011]:print(T,out.get(T))
