@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.23b(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22g · 公開の しかたを 追記 — 最後の記録 2026-11-23(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.24a(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22g · 公開の しかたを 追記 — 最後の記録 2026-11-24(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -102,7 +102,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援〔ポケモンGO も〕・孵化・遺伝ガイド など。出現ずかんは 2026-11-17 に NER's topSecret へ 移した) | 2026.11.23b(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援〔ポケモンGO も〕・孵化・遺伝ガイド など。出現ずかんは 2026-11-17 に NER's topSecret へ 移した) | 2026.11.24a(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 | `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・図鑑登録メーカー(`#zk`、中身は `topsecret/zukan/index.html` を iframe で ひらく)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-22b |
 | `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
@@ -122,7 +122,7 @@
 
 ## 進行中・やり残し
 
-- **図鑑埋め支援のポケモンGO(2026.11.23a)**:GO に出ている ポケモンの 表(`DX_GO_NO`=まだ 出ていない 番号)は 2026-11-23 時点。**新しい ポケモンが GO に 出たら `DX_GO_NO` から 番号を 消す**(シャドウが 出たら `DX_GO_SH` に 足す)。色違いは まだ 色違いが 出ていない ポケモンも 数に 入って いる。カメラの 読み取りは GO に まだ 対応して いない。進化の 方法(`DX_GO_EV`)も 2026-11-23 時点。GO の 進化が 変わったら `python3 poke-tools/dev/go/goev.py <PokeMiners の latest.json> out.json` で 作りなおして 入れかえる。運営者の iPhone で まだ 見て いない。
+- **図鑑埋め支援のポケモンGO(2026.11.23a)**:GO に出ている ポケモンの 表(`DX_GO_NO`=まだ 出ていない 番号)は 2026-11-23 時点。**新しい ポケモンが GO に 出たら `DX_GO_NO` から 番号を 消す**(シャドウが 出たら `DX_GO_SH` に 足す)。色違いは まだ 色違いが 出ていない ポケモンも 数に 入って いる。カメラの 読み取りは GO に まだ 対応して いない。進化の 方法(`DX_GO_EV`)も 2026-11-23 時点。GO の 進化が 変わったら `python3 poke-tools/dev/go/goev.py <PokeMiners の latest.json> out.json` で 作りなおして 入れかえる。地域限定(`DX_GO_RGN`)も 2026-11-24 時点。運営者の iPhone で まだ 見て いない。
 - **図鑑登録メーカー(2026-11-22a)**:ウルトラムーンの 図鑑登録の 画面を、オリジナルの ポケモン画像・名前・完了ロゴで 再生・動画に 書き出す ツール(解説動画の 素材用)。**サイトには プログラムだけ を 置き、ROM から 取り出した 画像・フォント・効果音は 置かない**(公開リポジトリ なので)。素材は 運営者が 持っている 素材パック `zukan_assets.json` を 1回 読みこむ と その 端末の IndexedDB にだけ 入る。素材パックと 作り方(取り出しの スクリプト)は 非公開の topSecret の `tools/usum_zukan_toroku/`(PR #6)。素材パックを この リポジトリに 入れない こと。運営者の iPhone で まだ 見て いない。
 - **テキストボックス メーカーの Dropbox 保存(2026-11-17b)**:運営者の iPhone で 本物の Dropbox に 保存 できた(2026-11-18。いちど 400 が 出たが、ためしなおして できた。原因は 不明 → エラーに Dropbox の 返した 文も 出す ように した)。運営者が Dropbox の アプリを 作り、App key を「くわしい 設定」に 入れる 必要が ある(`topsecret/src/README_dropbox.md`)。App key を `app.js` の `APP_KEY` に 書けば 入力は いらなく なる。
 - **NER's topSecret(2026-11-17)**:運営者の iPhone で まだ 見て いない(とくに テキストボックス メーカーの 保存の 共有メニュー)。テキストボックス メーカーは ROM(textbox.gba か 未改変の 日本版エメラルド＋サファイア)を 端末の 中で 読む。ROM の データは サイトに 置かない。ROM・説明書は 運営者の Dropbox・GitHub を ひらく だけ(共有リンクに しない)。出現ずかんの 保存は `ner-topsecret-v1`(はじめて ひらいた とき Poke tools の `ev-counter-v2` の `ner` を 引きつぐ)。Poke tools の バックアップには もう 入らない。Poke tools の CSS の `#vNer`・`.nex-*` は 残って いる(使って いない)。topsecret/src/poke.css は Poke tools の CSS を 写した もの なので、Poke tools の 見た目を 大きく かえたら 写しなおす。
@@ -155,6 +155,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-24 — Claude(https://claude.ai/code/session_01NCVwVxczMWeQj6Jp7X6Lqn)
+- やったこと: 図鑑埋め支援の ポケモンGO で、地域限定の ポケモンに 出る 場所を 書いた(運営者の 指示)。`DX_GO_RGN`(Serebii の Region Exclusive Pokémon、2026-11-24 から)。くわしくの シートの「進化」の 下に「地域限定」の 枠。すがたで 地域が ちがう もの(カラナクシ・バスラオ・フラベベ・トリミアン・オドリドリ・イキリンコ・シャリタツ・ケンタロス)は すがたごとに 書く。ビビヨンは 模様の 決まり方。タグに「地域限定」(bit 1024、GO だけ)を 足したので、しぼりこめる。Poke tools 2026.11.24a
+- 確かめたこと: Playwright 360(ライト)・393(ダーク):ケンタロスの シート、「地域限定」で しぼると 54匹、SV では タグが 出ない、エラーなし・横に はみ出さない。
+- 次の人へ: 地域限定が 変わったら `DX_GO_RGN` を 直す。
 
 ### 2026-11-23 — Claude(https://claude.ai/code/session_01NCVwVxczMWeQj6Jp7X6Lqn)
 - やったこと: 図鑑埋め支援の ポケモンGO で、進化の 方法が 本編の まま だった(運営者「進化条件が go 準拠に なっていない」)。GO の 進化を `DX_GO_EV` に 入れた(PokeMiners の game_master から `poke-tools/dev/go/goev.py` で 作る。アメの 数・石や 道具・ルアーモジュール・相棒タスク・昼/夜・オス/メス・交換で アメ0 など)。一覧の チップは「アメ50」「シンオウのいし」「相棒タスク」など、くわしくは シートに。並べ方は GO では「アメの数順」。タグも GO 用(アメだけで進化・石進化・道具進化・交換でアメ0・特別な条件。孵化限定・配布限定・伝説は 本編のまま)。GO で 進化では 手に 入らない ポケモン(ヌケニン・アヤシシ・バサギリ)は そう 出す。Poke tools 2026.11.23b
