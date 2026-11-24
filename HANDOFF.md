@@ -1,6 +1,6 @@
 # 引き継ぎメモ — ポータル・NER Converter・Poke tools(noctis1008-wq.github.io)
 
-> **最新**: Converter v18 · Poke tools 2026.11.24b(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22g · 公開の しかたを 追記 — 最後の記録 2026-11-24(記録したら、この行も書き直す)
+> **最新**: Converter v18 · Poke tools 2026.11.24c(`APP_VER`)· ポータル 2026-10-21 刷新 · NER's topSecret 2026-11-22g · 公開の しかたを 追記 — 最後の記録 2026-11-24(記録したら、この行も書き直す)
 
 ## ⚠️ ルール(3 つのリポジトリ共通。人間も AI も)
 
@@ -103,7 +103,7 @@
 |---|---|---|
 | `/`(`index.html`、画像は `img/`) | ポータル(NER PORTAL SITE) | 2026-10-21 にデザイン刷新 |
 | `/converter/` | NER Converter(金銀クリスタル → 3DS VC 版のセーブ変換) | v18 |
-| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援〔ポケモンGO も〕・孵化・遺伝ガイド など。出現ずかんは 2026-11-17 に NER's topSecret へ 移した) | 2026.11.24b(`APP_VER`) |
+| `/poke-tools/` | Poke tools の Web 版(個体管理・個体値ジャッジ・図鑑埋め支援〔ポケモンGO も〕・孵化・遺伝ガイド など。出現ずかんは 2026-11-17 に NER's topSecret へ 移した) | 2026.11.24c(`APP_VER`) |
 | `/portal/`・`/privacy.html` | 旧 URL からの転送ページ | — |
 | `/topsecret/` | NER's topSecret(運営者 むけ、`noindex`)。Poke tools と 同じ しくみの 1ページの アプリ(☰メニュー＋下のバー)。ツール: テキストボックス メーカー(`#tb`)・出現ずかん(`#ner`、Poke tools から 移した)・図鑑登録メーカー(`#zk`、中身は `topsecret/zukan/index.html` を iframe で ひらく)・ROM・説明書(`#links`)。部品は `topsecret/src/`、`python3 topsecret/src/build.py` で `topsecret/index.html` を 作る(直接 書きかえない)。出現ずかんの 資料・テストは `topsecret/dev/ner-enc/` | 2026-11-22b |
 | `/textbox-maker/` | `/topsecret/#tb` への 転送ページ | — |
@@ -156,6 +156,11 @@
 ---
 
 ## 作業ログ(新しいものが上)
+
+### 2026-11-24 — Claude(https://claude.ai/code/session_01NCVwVxczMWeQj6Jp7X6Lqn)
+- やったこと: GO の 一覧の しるしを「地域限定」から「(地域の 名前)限定」に した(運営者の 指示)。`DX_GO_RCH`(例:アジア限定・北米限定・欧亜豪限定・米州アフリカ限定・NZ周辺限定)。すがたで 地域が ちがう ものは「東西で姿ちがい」「色で地域ちがい」「カットで地域差」など。360px で 切れない ように 8文字 まで に した。地域の しるしは 縮まない(`.dxlv.dxcd.dxrg`)。Poke tools 2026.11.24c
+- 確かめたこと: Playwright 360(ライト)・393(ダーク):GO の 959匹 すべての 行で 名前・しるしが 切れない・i に 重ならない、横に はみ出さない、エラーなし。
+- 次の人へ: しるしを 変える ときは 360px で 切れないか 確かめる(名前 6文字+しるし 8文字 が 目安)。
 
 ### 2026-11-24 — Claude(https://claude.ai/code/session_01NCVwVxczMWeQj6Jp7X6Lqn)
 - やったこと: 図鑑埋め支援の GO の 一覧で、i の 左に「地域限定」の しるし(赤い 線の チップ `.dxrg`、`dxRgnChip`)を 出す(運営者の 指示)。進化の チップと 両方 あるときは 2つを 縦に 重ねる(`dxChips`・`.dxchs`。`.dxst` は べつの 所で 使って いるので 使わない)。360px で 進化の チップが 切れて いた 3匹(アップリュー・オオニューラ・サーフゴー)の チップを 短く した(リンゴ・相棒・昼・コイン999。くわしくは シートの まま)。Poke tools 2026.11.24b
